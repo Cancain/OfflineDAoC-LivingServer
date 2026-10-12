@@ -27,7 +27,8 @@ jobs:
         run: cp source/server/CoreServer/config/serverconfig.example.xml source/server/CoreServer/config/serverconfig.xml
 
       - name: Build server
-        run: dotnet build "source/server/Dawn of Light.sln" -c Release
+        # SourceRevisionId stamps the commit into the build; the server logs it at startup (FORK_BUILD).
+        run: dotnet build "source/server/Dawn of Light.sln" -c Release -p:SourceRevisionId=${{ github.sha }}
 
       # Tests listed in .github/ci-excluded-tests.txt read the installed navmeshes and
       # database (the /runtime/ folder, which is never in git). Run those on your own PC.
@@ -75,6 +76,45 @@ jobs:
         with:
           name: server-test-results
           path: "**/TestResults/*.trx"
+
+      # Only after every server test passed: the installable server build (docs/RELEASE-PLAN.md).
+      - name: Package the server build
+        id: package
+        shell: pwsh
+        run: |
+          $name = (Select-String -Path source/server/GameServer/gameutils/ForkBuildInfo.cs -Pattern 'BuildName = "([^"]+)"').Matches[0].Groups[1].Value
+          $base = [regex]::Match($name, '^\d+\.\d+').Value
+          if (!$name -or !$base) { throw "No build name in ForkBuildInfo.cs" }
+          $short = "${{ github.sha }}".Substring(0, 7)
+          $dir = "package/fork-build-$name"
+          New-Item -ItemType Directory -Path "$dir/tools/claude-version", "$dir/docs" -Force | Out-Null
+          $built = "source/server/Release/lib"
+          if (!(Test-Path "$built/GameServer.dll")) { throw "No GameServer.dll in $built" }
+          Copy-Item "$built/GameServer.dll", "$built/GameServer.pdb" $dir
+          Copy-Item tools/fork-build/INSTALL.cmd, tools/fork-build/ROLLBACK.cmd, tools/fork-build/install-server-build.ps1, tools/fork-build/rollback-server-build.ps1, tools/fork-build/fork-build-common.ps1, tools/fork-build/README.txt $dir
+          Copy-Item tools/claude-version/set_bot_guilds.py, tools/claude-version/set_xp_by_level.py "$dir/tools/claude-version"
+          Copy-Item docs/BOT-GUILDS.md, docs/XP-BY-LEVEL-RANGE.md, docs/RELEASE-PLAN.md "$dir/docs"
+          $dll = (Get-FileHash "$dir/GameServer.dll" -Algorithm SHA256).Hash.ToLowerInvariant()
+          $pdb = (Get-FileHash "$dir/GameServer.pdb" -Algorithm SHA256).Hash.ToLowerInvariant()
+          Set-Content -Path "$dir/BUILD-INFO.txt" -Encoding UTF8 -Value @(
+            "BuildName=$name", "BaseRelease=$base", "Commit=${{ github.sha }}", "Branch=${{ github.ref_name }}",
+            "Built=$((Get-Date).ToUniversalTime().ToString('o'))", "GameServer.dll=$dll", "GameServer.pdb=$pdb")
+          "dir=$dir" >> $env:GITHUB_OUTPUT
+          "artifact=OfflineDAoC-server-$name-$short" >> $env:GITHUB_OUTPUT
+          Write-Host "::notice title=Server build package::$name commit $short GameServer.dll sha256 $dll"
+
+      - name: Test the installer (Windows PowerShell 5.1, fake game folders)
+        shell: pwsh
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/fork-build/test-install-scripts.ps1 -BuildDir "${{ steps.package.outputs.dir }}"
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          Write-Host "::notice title=Installer tests::all installer checks passed"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.package.outputs.artifact }}
+          path: package/
+          retention-days: 90
 
   launcher:
     runs-on: windows-latest
