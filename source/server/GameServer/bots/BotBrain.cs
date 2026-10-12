@@ -1594,7 +1594,8 @@ namespace DOL.AI.Brain
 
             DateTime now = DateTime.UtcNow;
             if (!AutonomousBotChat.ShouldSpeak(now, _lastIdleRoleplayUtc,
-                    bot.InCombat || bot.IsAttacking || bot.IsCasting || bot.IsOnStableMasterRoute))
+                    bot.InCombat || bot.IsAttacking || bot.IsCasting || bot.IsOnStableMasterRoute,
+                    null, AutonomousBotPersonality.ChatRateFactor(bot)))
                 return;
 
             OfflineWorldBotRecord record = bot.PersistentRecord;

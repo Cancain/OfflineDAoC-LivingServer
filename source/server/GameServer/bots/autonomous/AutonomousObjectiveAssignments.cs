@@ -368,7 +368,7 @@ public static class AutonomousObjectiveAssignments
                     else if (TakesBattleground(bot, soloNeeded + groupNeeded))
                         kind = eAutonomousObjectiveKind.Battleground;
                     else if (AutonomousBotGoalPolicy.IsConfigured && rvrNeeded + soloNeeded + groupNeeded == 0)
-                        kind = AutonomousBotGoalPolicy.Choose(bot.Level);
+                        kind = AutonomousBotPersonality.ChooseGoal(bot, () => AutonomousBotGoalPolicy.Choose(bot.Level));
                     else
                         kind = ChoosePveObjective(target, assignedSolo, assignedGroup);
 
@@ -417,7 +417,7 @@ public static class AutonomousObjectiveAssignments
             bot.PersistentRecord.ObjectiveRvrEligibleUtc = AutonomousBotGoalPolicy.IsConfigured ? string.Empty : PveCompletionRequired;
         if (TryBeginBetweenTaskServices(bot))
             return;
-        Assign(bot, AutonomousBotGoalPolicy.IsConfigured ? AutonomousBotGoalPolicy.Choose(bot.Level) :
+        Assign(bot, AutonomousBotGoalPolicy.IsConfigured ? AutonomousBotPersonality.ChooseGoal(bot, () => AutonomousBotGoalPolicy.Choose(bot.Level)) :
             bot.Level >= 50 && !leavingRvr ? RollLevelFiftyObjective() : eAutonomousObjectiveKind.SoloPve,
             (bot.Realm, bot.Level >= 50 ? 50 : bot.Level >= 20 ? 20 : 0), GameLoop.GameLoopTime);
         bot.PersistentRecord.CurrentCampId = string.Empty;
@@ -629,7 +629,7 @@ public static class AutonomousObjectiveAssignments
         // when completely full: otherwise the next task leaves loot on the ground.
         BetweenTaskPlan plan = RollBetweenTaskPlan(bot.HasSpendableAutonomousTrainingPoints,
             AutonomousBotEconomy.IsBackpackNearlyFull(bot), Random.Shared.NextDouble(), Random.Shared.NextDouble());
-        bool downtime = AutonomousTownDowntime.RollAtTaskBoundary(Random.Shared.NextDouble());
+        bool downtime = AutonomousBotPersonality.RollTownBreak(bot, Random.Shared.NextDouble());
         if (!plan.Train && !plan.Unload && !downtime) return false;
         OfflineWorldBotRecord record = bot.PersistentRecord;
         record.ObjectiveKind = eAutonomousObjectiveKind.SoloPve.ToString();
@@ -667,7 +667,7 @@ public static class AutonomousObjectiveAssignments
                 $"goal=\"{bot.PersistentRecord.CurrentGoal}\" activity=\"{bot.PersistentRecord.Activity}\" " +
                 $"assignment=\"{bot.PersistentRecord.ObjectiveAssignmentId}\"");
         bool pveRequired = bot.PersistentRecord.ObjectiveRvrEligibleUtc == PveCompletionRequired;
-        Assign(bot, AutonomousBotGoalPolicy.IsConfigured ? AutonomousBotGoalPolicy.Choose(bot.Level) :
+        Assign(bot, AutonomousBotGoalPolicy.IsConfigured ? AutonomousBotPersonality.ChooseGoal(bot, () => AutonomousBotGoalPolicy.Choose(bot.Level)) :
             bot.Level >= 50 && !pveRequired ? RollLevelFiftyObjective() : eAutonomousObjectiveKind.SoloPve,
             (bot.Realm, bot.Level >= 50 ? 50 : bot.Level >= 20 ? 20 : 0), GameLoop.GameLoopTime);
     }

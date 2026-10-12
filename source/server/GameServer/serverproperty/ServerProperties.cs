@@ -2392,6 +2392,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("guild", "bot_guild_alliances", "When bot guilds are on: each realm's RvR and raiding bot guilds form one alliance (up to four guilds); a player in one of them hears its alliance chat. Alliances with a player's guild are never touched.", true)]
 		public static bool BOT_GUILD_ALLIANCES;
 
+		/// <summary>
+		/// Autonomous gamebots have personality types and traits that tilt how they spend their time.
+		/// </summary>
+		[ServerProperty("bots", "bot_personalities_enabled", "Autonomous gamebots get a personality (Leveler, Socialite, Daredevil, Explorer, Crafter, No-lifer) and traits, fixed from their id, that tilt town breaks, solo versus group goals, dungeon choice, camp choice and how often they talk (see docs/BOT-PERSONALITIES.md). Hard rules never change. False keeps today's behavior.", false)]
+		public static bool BOT_PERSONALITIES_ENABLED;
+
 
 
 		#endregion

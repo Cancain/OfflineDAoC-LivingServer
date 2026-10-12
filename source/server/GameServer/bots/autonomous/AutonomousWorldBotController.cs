@@ -3276,7 +3276,8 @@ namespace DOL.GS
                 // every dungeon candidate before the preference was rolled.
                 AutonomousBotDecisionEngine.Camp[] categoryCandidates = legal.ToArray();
                 environment = AutonomousBotDecisionEngine.SelectPveEnvironment(
-                    categoryCandidates, groupSize, planningLevel, Random.Shared);
+                    categoryCandidates, groupSize, planningLevel, Random.Shared,
+                    AutonomousBotPersonality.DungeonPreferencePercent(_groupDirective.Leader ?? bot));
                 legal = categoryCandidates.Where(camp => environment == AutonomousBotDecisionEngine.PveEnvironment.Dungeon
                     ? camp.IsDungeon : !camp.IsDungeon);
                 GameBot groupLeader = _groupDirective.Leader ?? bot;
@@ -3304,7 +3305,8 @@ namespace DOL.GS
                     legal, _recentFailedSoloTargets, GameLoop.GameLoopTime);
                 AutonomousBotDecisionEngine.Camp[] categoryCandidates = legal.ToArray();
                 environment = AutonomousBotDecisionEngine.SelectPveEnvironment(
-                    categoryCandidates, groupSize, planningLevel, Random.Shared);
+                    categoryCandidates, groupSize, planningLevel, Random.Shared,
+                    AutonomousBotPersonality.DungeonPreferencePercent(bot));
                 legal = categoryCandidates.Where(camp => environment == AutonomousBotDecisionEngine.PveEnvironment.Dungeon
                     ? camp.IsDungeon : !camp.IsDungeon);
             }
@@ -3327,8 +3329,9 @@ namespace DOL.GS
             // This is the deployed selection point. Each distinct verified
             // location has one entry; outdoor draws are weighted by live spawns
             // (capped) with no distance or name preference.
+            // Solo bots add their personality's taste to the live-spawn weight; groups keep the shared draw.
             AutonomousBotDecisionEngine.Camp chosen = AutonomousBotDecisionEngine.SelectWithinEnvironment(
-                legalCells, environment, Random.Shared);
+                legalCells, environment, Random.Shared, sharedGroup ? null : AutonomousBotPersonality.CampWeigher(bot));
             bool usedDeathFallback = false;
             if (chosen == null && !sharedGroup && _deathDifficultySteps > 0)
             {
@@ -3369,6 +3372,7 @@ namespace DOL.GS
             _patrolDestination = null;
             _pendingStableChoice = null;
             bot.PersistentRecord.CurrentCampId = selected.Id;
+            AutonomousBotPersonality.RememberZone(bot, selected.ZoneName);
             SetStatus(bot, $"Planning route to {selected.MonsterName}", GoalText(), decision.Reason,
                 selected.MonsterName, selected.ZoneName, true);
         }
