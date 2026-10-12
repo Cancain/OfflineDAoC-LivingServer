@@ -16207,6 +16207,2600 @@
      "text": "so everything is everything. got it :)"
     }
    ]
+  },
+  {
+   "id": "first_realm_ability",
+   "topic": "realm_abilities",
+   "realm": "*",
+   "levels": [
+    40,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Daredevil",
+      "Leveler"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "{q} first realm ability, what is everyone buying?"
+    },
+    {
+     "role": "B",
+     "text": "purge. a stun or mez you can shrug off wins more fights than anything"
+    },
+    {
+     "role": "C",
+     "text": "purge is pricey for a first pick, cheap passives add up faster"
+    },
+    {
+     "role": "B",
+     "text": "passives do not help when you are mezzed for half the fight"
+    },
+    {
+     "role": "D",
+     "text": "depends on the class, a caster wants different things than a tank"
+    },
+    {
+     "role": "C",
+     "text": "true, my healer friend swears by mastery of concentration"
+    },
+    {
+     "role": "B",
+     "text": "cast through the hits, sure, still buying purge first"
+    },
+    {
+     "role": "A",
+     "text": "ok so the answer is it depends. classic"
+    }
+   ]
+  },
+  {
+   "id": "group_setup",
+   "topic": "group_setup",
+   "realm": "*",
+   "levels": [
+    35,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Socialite",
+      "Leveler"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "whats the ideal 8man, honestly?"
+    },
+    {
+     "role": "B",
+     "text": "two healers, a mezzer, a speed class, a tank, and damage for the rest"
+    },
+    {
+     "role": "C",
+     "text": "that is the dream. in practice you take whoever is online"
+    },
+    {
+     "role": "D",
+     "text": "give me four damage classes and one healer, fights end before they start"
+    },
+    {
+     "role": "B",
+     "text": "until the other group mezzes your healer and you all fold"
+    },
+    {
+     "role": "D",
+     "text": "then we die fast and run back fast, still fun"
+    },
+    {
+     "role": "C",
+     "text": "the best group is the one where people actually assist"
+    },
+    {
+     "role": "A",
+     "text": "assist. right. who is main assist tonight?"
+    }
+   ]
+  },
+  {
+   "id": "assist",
+   "topic": "assist",
+   "realm": "*",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "NoLifer",
+      "Leveler"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "why does every group fight turn into everyone hitting something different?"
+    },
+    {
+     "role": "B",
+     "text": "nobody uses /assist. one target, everyone on it, that is the whole secret"
+    },
+    {
+     "role": "C",
+     "text": "i like picking my own targets though"
+    },
+    {
+     "role": "B",
+     "text": "and that is why the healer on the other side never dies"
+    },
+    {
+     "role": "C",
+     "text": "ok fine, but the main assist better be fast"
+    },
+    {
+     "role": "A",
+     "text": "setting up an assist macro right now"
+    }
+   ]
+  },
+  {
+   "id": "mez_breaks",
+   "topic": "mez_breaks",
+   "realm": "*",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Sorcerer",
+      "Healer",
+      "Bard",
+      "Minstrel",
+      "Mentalist"
+     ]
+    },
+    "C": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "who broke the mez on that last pull?"
+    },
+    {
+     "role": "C",
+     "text": "in my defense it was standing right there"
+    },
+    {
+     "role": "B",
+     "text": "it was standing there because it was mezzed"
+    },
+    {
+     "role": "C",
+     "text": "ok in my defense i did not read the group chat"
+    },
+    {
+     "role": "B",
+     "text": "rule one: do not touch the sleeping ones"
+    },
+    {
+     "role": "A",
+     "text": "lol. noted for the next pull"
+    }
+   ]
+  },
+  {
+   "id": "pulling",
+   "topic": "pulling",
+   "realm": "*",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "can we agree only one person pulls tonight?"
+    },
+    {
+     "role": "B",
+     "text": "yes please, two pullers means double the adds"
+    },
+    {
+     "role": "C",
+     "text": "but the puller is slow, i can grab the next one while they kill this"
+    },
+    {
+     "role": "B",
+     "text": "and then the healer runs out of power and we all lie down"
+    },
+    {
+     "role": "D",
+     "text": "the puller sets the pace, everyone else enjoys the ride"
+    },
+    {
+     "role": "C",
+     "text": "fine, i will just stand here looking impatient"
+    },
+    {
+     "role": "A",
+     "text": "perfect, thank you"
+    }
+   ]
+  },
+  {
+   "id": "named_camping",
+   "topic": "named_drops",
+   "realm": "*",
+   "levels": [
+    30,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler",
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Crafter"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Explorer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "camping a named for a drop for three hours now, worth it?"
+    },
+    {
+     "role": "B",
+     "text": "a good named drop beats anything you can buy at that level"
+    },
+    {
+     "role": "C",
+     "text": "or i could make you something just as good in an evening"
+    },
+    {
+     "role": "B",
+     "text": "crafted has no procs. that drop has a proc"
+    },
+    {
+     "role": "C",
+     "text": "the proc fires once a fight and you paid three hours for it"
+    },
+    {
+     "role": "D",
+     "text": "i like the hunt itself, the drop is a bonus"
+    },
+    {
+     "role": "A",
+     "text": "one more hour. then i call a crafter"
+    }
+   ]
+  },
+  {
+   "id": "dragon_raid",
+   "topic": "dragons",
+   "realm": "*",
+   "levels": [
+    45,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "NoLifer",
+      "Daredevil"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "anyone going on the dragon raid this weekend?"
+    },
+    {
+     "role": "B",
+     "text": "of course, the whole realm shows up for the dragon"
+    },
+    {
+     "role": "C",
+     "text": "last time half the raid died to the first breath"
+    },
+    {
+     "role": "D",
+     "text": "is it even worth it? hundreds of people and one loot table"
+    },
+    {
+     "role": "B",
+     "text": "it is not about the loot, it is about being there when it falls"
+    },
+    {
+     "role": "C",
+     "text": "and the stories after, those are the best part"
+    },
+    {
+     "role": "D",
+     "text": "ok, i will come for the stories"
+    },
+    {
+     "role": "A",
+     "text": "bring patience and a healer you trust"
+    }
+   ]
+  },
+  {
+   "id": "housing",
+   "topic": "housing",
+   "realm": "*",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Crafter",
+      "Socialite"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Leveler",
+      "NoLifer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "is a house worth the coin?"
+    },
+    {
+     "role": "B",
+     "text": "a house is a home, plus storage, plus somewhere to show off"
+    },
+    {
+     "role": "C",
+     "text": "it is a weekly rent bill for a room you visit twice a month"
+    },
+    {
+     "role": "B",
+     "text": "decorate it right and your friends will visit too"
+    },
+    {
+     "role": "C",
+     "text": "my friends are in the frontier, not in my living room"
+    },
+    {
+     "role": "A",
+     "text": "maybe a small cottage to start"
+    }
+   ]
+  },
+  {
+   "id": "altitis",
+   "topic": "alts",
+   "realm": "*",
+   "levels": [
+    1,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Explorer",
+      "Socialite"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Leveler",
+      "NoLifer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "i have six alts and none of them past 30. help"
+    },
+    {
+     "role": "B",
+     "text": "alts are how you learn the game, every class teaches you something"
+    },
+    {
+     "role": "C",
+     "text": "one main to 50 teaches you more than six half-done characters"
+    },
+    {
+     "role": "B",
+     "text": "and if you get bored of your main?"
+    },
+    {
+     "role": "C",
+     "text": "then you push through, 50 is worth it"
+    },
+    {
+     "role": "A",
+     "text": "so the cure for alt-itis is more alt-itis. got it"
+    }
+   ]
+  },
+  {
+   "id": "grey_kills",
+   "topic": "grey_xp",
+   "realm": "*",
+   "levels": [
+    1,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "is anyone else still killing greys for loot?"
+    },
+    {
+     "role": "B",
+     "text": "greys give nothing. yellow and orange, that is where the xp is"
+    },
+    {
+     "role": "C",
+     "text": "oranges if you have a healer, reds if you are brave"
+    },
+    {
+     "role": "B",
+     "text": "reds if you like your bind point"
+    },
+    {
+     "role": "C",
+     "text": "my bind point and i are close friends"
+    },
+    {
+     "role": "A",
+     "text": "blues it is, i am a coward"
+    }
+   ]
+  },
+  {
+   "id": "epic_armor",
+   "topic": "epics",
+   "realm": "*",
+   "levels": [
+    45,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler",
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Crafter"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "is the epic armor worth the quest?"
+    },
+    {
+     "role": "B",
+     "text": "the look alone is worth it, everyone knows you finished the epic"
+    },
+    {
+     "role": "C",
+     "text": "the stats get outclassed by a decent crafted suit"
+    },
+    {
+     "role": "B",
+     "text": "crafted does not have that look"
+    },
+    {
+     "role": "C",
+     "text": "you can dye crafted any color you like"
+    },
+    {
+     "role": "A",
+     "text": "i will do the quest for the look and wear crafted for the fights"
+    }
+   ]
+  },
+  {
+   "id": "death_penalty",
+   "topic": "death_penalty",
+   "realm": "*",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "lost half a bubble to one death, the penalty is brutal"
+    },
+    {
+     "role": "B",
+     "text": "that is why you consider before you pull"
+    },
+    {
+     "role": "C",
+     "text": "the penalty is what makes the win feel good"
+    },
+    {
+     "role": "B",
+     "text": "easy to say when it is not your xp bar going backwards"
+    },
+    {
+     "role": "C",
+     "text": "i have died five times tonight, still smiling"
+    },
+    {
+     "role": "A",
+     "text": "you are not well"
+    }
+   ]
+  },
+  {
+   "id": "loot_rules",
+   "topic": "loot_rules",
+   "realm": "*",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "group loot rules tonight? need before greed?"
+    },
+    {
+     "role": "B",
+     "text": "need before greed, roll for anything nobody needs"
+    },
+    {
+     "role": "C",
+     "text": "random loot is fair, everyone gets the same chance"
+    },
+    {
+     "role": "B",
+     "text": "then a wizard gets the shield and sells it"
+    },
+    {
+     "role": "C",
+     "text": "and the tank buys it off him, everyone wins"
+    },
+    {
+     "role": "D",
+     "text": "just do not ninja it and we are fine"
+    },
+    {
+     "role": "A",
+     "text": "need before greed it is"
+    }
+   ]
+  },
+  {
+   "id": "dungeon_or_outside",
+   "topic": "leveling_route",
+   "realm": "*",
+   "levels": [
+    20,
+    34
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Explorer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "dungeon or outdoor camps for the 20s?"
+    },
+    {
+     "role": "B",
+     "text": "dungeons, the camp bonus and the respawns are better"
+    },
+    {
+     "role": "C",
+     "text": "outdoors, you can see the adds coming and run if it goes bad"
+    },
+    {
+     "role": "B",
+     "text": "running is for people who do not have a mezzer"
+    },
+    {
+     "role": "C",
+     "text": "having a mezzer is for people who have friends online"
+    },
+    {
+     "role": "A",
+     "text": "outdoor tonight, dungeon this weekend"
+    }
+   ]
+  },
+  {
+   "id": "speed_class",
+   "topic": "speed",
+   "realm": "*",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Skald",
+      "Minstrel",
+      "Bard"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "why does every group ask for a speed class first?"
+    },
+    {
+     "role": "B",
+     "text": "because walking everywhere is slow and boring"
+    },
+    {
+     "role": "C",
+     "text": "and because speed wins the run home after a bad fight"
+    },
+    {
+     "role": "B",
+     "text": "i am a speed bot with feelings, remember that"
+    },
+    {
+     "role": "C",
+     "text": "a speed bot with feelings and great songs"
+    },
+    {
+     "role": "A",
+     "text": "we love you, speed class, never leave"
+    }
+   ]
+  },
+  {
+   "id": "stun_mez_det",
+   "topic": "stuns",
+   "realm": "*",
+   "levels": [
+    35,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "chain stunned for ten seconds and died without moving"
+    },
+    {
+     "role": "B",
+     "text": "determination. it shortens stuns and mez, buy it"
+    },
+    {
+     "role": "C",
+     "text": "points spent there are points not spent on damage"
+    },
+    {
+     "role": "B",
+     "text": "damage does not help when you cannot move"
+    },
+    {
+     "role": "C",
+     "text": "then i will just stay out of stun range"
+    },
+    {
+     "role": "A",
+     "text": "buying a little determination, thanks"
+    }
+   ]
+  },
+  {
+   "id": "keep_claims",
+   "topic": "keep_claims",
+   "realm": "*",
+   "levels": [
+    40,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "our guild claimed {keep}, it actually means something now"
+    },
+    {
+     "role": "B",
+     "text": "a claim is a target, every enemy zerg will come for it"
+    },
+    {
+     "role": "C",
+     "text": "and every member will show up to defend it, that is the fun"
+    },
+    {
+     "role": "B",
+     "text": "until it is 3am and nobody is online"
+    },
+    {
+     "role": "C",
+     "text": "then we take it back the next night"
+    },
+    {
+     "role": "A",
+     "text": "guild night at {keep}, everyone come"
+    }
+   ]
+  },
+  {
+   "id": "off_hour_raids",
+   "topic": "off_hours",
+   "realm": "*",
+   "levels": [
+    40,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler",
+      "Socialite"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "they took our relic at four in the morning again"
+    },
+    {
+     "role": "B",
+     "text": "hitting a keep when nobody is awake is not winning"
+    },
+    {
+     "role": "C",
+     "text": "a relic left unguarded is a relic waiting to be taken"
+    },
+    {
+     "role": "B",
+     "text": "there is no fight in that, just walking in"
+    },
+    {
+     "role": "C",
+     "text": "then guard it. war has no bedtime"
+    },
+    {
+     "role": "A",
+     "text": "setting an alarm for the next one, apparently"
+    }
+   ]
+  },
+  {
+   "id": "bind_point",
+   "topic": "bind_points",
+   "realm": "*",
+   "levels": [
+    1,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Explorer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "where does everyone bind?"
+    },
+    {
+     "role": "B",
+     "text": "close to your camp, every death is a short walk"
+    },
+    {
+     "role": "C",
+     "text": "in town, so i can restock after every death"
+    },
+    {
+     "role": "B",
+     "text": "a long run back eats more time than the restock"
+    },
+    {
+     "role": "C",
+     "text": "a full bag eats more than both"
+    },
+    {
+     "role": "A",
+     "text": "binding next to the merchant then"
+    }
+   ]
+  },
+  {
+   "id": "pet_classes_rvr",
+   "topic": "pets_rvr",
+   "realm": "*",
+   "levels": [
+    35,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Bonedancer",
+      "Spiritmaster",
+      "Theurgist",
+      "Cabalist",
+      "Necromancer",
+      "Enchanter",
+      "Druid",
+      "Animist",
+      "Hunter"
+     ]
+    },
+    "C": {
+     "type": [
+      "NoLifer",
+      "Daredevil"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "are pet classes any good in the frontier?"
+    },
+    {
+     "role": "C",
+     "text": "pets get mezzed, rooted, killed, then the owner is alone"
+    },
+    {
+     "role": "B",
+     "text": "or they soak hits while i cast from safety"
+    },
+    {
+     "role": "C",
+     "text": "a smart group kills the owner first"
+    },
+    {
+     "role": "B",
+     "text": "a smart owner stays behind the group"
+    },
+    {
+     "role": "A",
+     "text": "so it depends on the owner. like everything"
+    }
+   ]
+  },
+  {
+   "id": "solo_or_group",
+   "topic": "solo_vs_group",
+   "realm": "*",
+   "levels": [
+    1,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "do you prefer solo or group leveling?"
+    },
+    {
+     "role": "B",
+     "text": "group, the xp is better and the time goes faster"
+    },
+    {
+     "role": "C",
+     "text": "group, but only with people who talk"
+    },
+    {
+     "role": "D",
+     "text": "solo, nobody blames me when it goes wrong"
+    },
+    {
+     "role": "B",
+     "text": "nobody saves you either"
+    },
+    {
+     "role": "D",
+     "text": "that is half the thrill"
+    },
+    {
+     "role": "A",
+     "text": "groups for me, i need the company"
+    }
+   ]
+  },
+  {
+   "id": "healer_or_shaman",
+   "topic": "mid_main_healer",
+   "realm": "mid",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Healer"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": [
+      "Shaman"
+     ]
+    },
+    "D": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "{q} healer or shaman for a group's main heals?"
+    },
+    {
+     "role": "B",
+     "text": "healer. bigger heals, group heals, and pac mez on top"
+    },
+    {
+     "role": "C",
+     "text": "shaman heals fine and the debuffs make every fight shorter"
+    },
+    {
+     "role": "B",
+     "text": "shorter fights do not matter if the tank falls over"
+    },
+    {
+     "role": "C",
+     "text": "with my debuffs the tank takes half the damage anyway"
+    },
+    {
+     "role": "D",
+     "text": "take both and stop arguing, you two are the best pair in midgard"
+    },
+    {
+     "role": "A",
+     "text": "fair, healer and shaman it is"
+    }
+   ]
+  },
+  {
+   "id": "cave_shaman",
+   "topic": "cave_shaman",
+   "realm": "mid",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Shaman"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "is a cave shaman just a dps class that can heal a bit?"
+    },
+    {
+     "role": "B",
+     "text": "subterranean is diseases and damage over time, it changes the whole fight"
+    },
+    {
+     "role": "C",
+     "text": "groups want heals from a shaman, not dots"
+    },
+    {
+     "role": "B",
+     "text": "groups want things dead. a diseased target heals for less"
+    },
+    {
+     "role": "C",
+     "text": "tell that to the tank at a quarter health"
+    },
+    {
+     "role": "A",
+     "text": "maybe half and half? mending and cave"
+    }
+   ]
+  },
+  {
+   "id": "skald_role",
+   "topic": "skald_role",
+   "realm": "mid",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Skald"
+     ]
+    },
+    "C": {
+     "type": [
+      "NoLifer",
+      "Leveler"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "are skalds just speed bots with axes?"
+    },
+    {
+     "role": "B",
+     "text": "battlesongs is more than speed, the shouts hurt"
+    },
+    {
+     "role": "C",
+     "text": "in a group the speed is the reason we invite you"
+    },
+    {
+     "role": "B",
+     "text": "i know, and i will play it, but let me swing sometimes"
+    },
+    {
+     "role": "C",
+     "text": "swing all you want, just keep the song up"
+    },
+    {
+     "role": "A",
+     "text": "speed on, axes out. everyone happy"
+    }
+   ]
+  },
+  {
+   "id": "thane_identity",
+   "topic": "thane_identity",
+   "realm": "mid",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Thane"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "is a thane a tank or a caster?"
+    },
+    {
+     "role": "B",
+     "text": "both. stormcalling hits hard and i can still take a beating"
+    },
+    {
+     "role": "C",
+     "text": "jack of all trades, master of none"
+    },
+    {
+     "role": "B",
+     "text": "the master of none still kills you while you think about it"
+    },
+    {
+     "role": "C",
+     "text": "fair, the lightning is no joke"
+    },
+    {
+     "role": "A",
+     "text": "thane life sounds fun honestly"
+    }
+   ]
+  },
+  {
+   "id": "zerker_or_savage",
+   "topic": "zerker_savage",
+   "realm": "mid",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Berserker"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": [
+      "Savage"
+     ]
+    },
+    "D": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "zerker or savage for a new alt?"
+    },
+    {
+     "role": "B",
+     "text": "zerker, two axes and berserk style, classic midgard"
+    },
+    {
+     "role": "C",
+     "text": "savage, the self buffs and hand to hand are the new hotness"
+    },
+    {
+     "role": "B",
+     "text": "those buffs eat your own health"
+    },
+    {
+     "role": "C",
+     "text": "and the extra swings make up for it"
+    },
+    {
+     "role": "D",
+     "text": "either way you will die first, it is tradition"
+    },
+    {
+     "role": "A",
+     "text": "lol. savage, i want to try the new class"
+    }
+   ]
+  },
+  {
+   "id": "bonedancer",
+   "topic": "bonedancer",
+   "realm": "mid",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Bonedancer"
+     ]
+    },
+    "C": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "bonedancers in the frontier, good or just lag?"
+    },
+    {
+     "role": "B",
+     "text": "three pets doing damage while i stay safe, good"
+    },
+    {
+     "role": "C",
+     "text": "kill the commander and the army falls apart"
+    },
+    {
+     "role": "B",
+     "text": "then i resummon from behind the wall"
+    },
+    {
+     "role": "C",
+     "text": "and we are back to lag"
+    },
+    {
+     "role": "A",
+     "text": "bring the army, i like the chaos"
+    }
+   ]
+  },
+  {
+   "id": "sm_or_rm",
+   "topic": "sm_rm",
+   "realm": "mid",
+   "levels": [
+    35,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Spiritmaster"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": [
+      "Runemaster"
+     ]
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "spiritmaster or runemaster for a group?"
+    },
+    {
+     "role": "B",
+     "text": "spiritmaster, the pet tanks and keeps the adds off us"
+    },
+    {
+     "role": "C",
+     "text": "runemaster, the damage is the reason fights end"
+    },
+    {
+     "role": "B",
+     "text": "fights end faster when nobody gets added on"
+    },
+    {
+     "role": "C",
+     "text": "fights end fastest when the target is already dead"
+    },
+    {
+     "role": "A",
+     "text": "one of each then, perfect"
+    }
+   ]
+  },
+  {
+   "id": "sb_weapons",
+   "topic": "shadowblade_weapons",
+   "realm": "mid",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Shadowblade"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "left axe or two-handed for a shadowblade?"
+    },
+    {
+     "role": "B",
+     "text": "left axe, the extra swings stack the poison faster"
+    },
+    {
+     "role": "C",
+     "text": "the big two-hander opener drops casters before they move"
+    },
+    {
+     "role": "B",
+     "text": "one big hit, then you are just a weak fighter in the open"
+    },
+    {
+     "role": "C",
+     "text": "one big hit is all you need on a caster"
+    },
+    {
+     "role": "A",
+     "text": "left axe, i like stabbing a lot"
+    }
+   ]
+  },
+  {
+   "id": "warrior_boring",
+   "topic": "warrior_boring",
+   "realm": "mid",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Warrior"
+     ]
+    },
+    "C": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "are warriors the most boring class in midgard?"
+    },
+    {
+     "role": "B",
+     "text": "boring is the group never dying because i hold everything"
+    },
+    {
+     "role": "C",
+     "text": "you hit buttons and get hit, where is the excitement"
+    },
+    {
+     "role": "B",
+     "text": "the excitement is watching you live because of me"
+    },
+    {
+     "role": "C",
+     "text": "ok that is a good comeback"
+    },
+    {
+     "role": "A",
+     "text": "respect the warrior"
+    }
+   ]
+  },
+  {
+   "id": "spindel_or_varulv",
+   "topic": "mid_40s",
+   "realm": "mid",
+   "levels": [
+    38,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Explorer",
+      "Daredevil"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "spindelhalla or varulvhamn for the 40s?"
+    },
+    {
+     "role": "B",
+     "text": "spindelhalla, the halls are packed with camps and the xp is steady"
+    },
+    {
+     "role": "C",
+     "text": "varulvhamn, fewer groups fighting over the same pulls"
+    },
+    {
+     "role": "B",
+     "text": "fewer groups because the wolves hit like trains"
+    },
+    {
+     "role": "C",
+     "text": "and drop like trains too"
+    },
+    {
+     "role": "A",
+     "text": "spindel tonight, varulv when i am braver"
+    }
+   ]
+  },
+  {
+   "id": "aegir_or_classic",
+   "topic": "aegir",
+   "realm": "mid",
+   "levels": [
+    30,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Explorer"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "anyone level on aegir or is it all spindelhalla?"
+    },
+    {
+     "role": "B",
+     "text": "aegir is gorgeous and the camps are empty, try iarnwood"
+    },
+    {
+     "role": "C",
+     "text": "empty because the old camps are proven"
+    },
+    {
+     "role": "B",
+     "text": "proven and crowded. i like having a camp to myself"
+    },
+    {
+     "role": "C",
+     "text": "i like knowing exactly what i will get"
+    },
+    {
+     "role": "A",
+     "text": "trying gripklosa this weekend, will report back"
+    }
+   ]
+  },
+  {
+   "id": "smite_or_rejuv",
+   "topic": "cleric_spec",
+   "realm": "alb",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Cleric"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": []
+    },
+    "D": {
+     "type": [],
+     "class": [
+      "Armsman",
+      "Paladin",
+      "Mercenary",
+      "Reaver"
+     ]
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "smite cleric or rejuv cleric?"
+    },
+    {
+     "role": "B",
+     "text": "smite, i can solo and still heal the group"
+    },
+    {
+     "role": "C",
+     "text": "rejuv, a group needs heals more than another damage dealer"
+    },
+    {
+     "role": "D",
+     "text": "as the guy getting hit, i vote rejuv"
+    },
+    {
+     "role": "B",
+     "text": "you would vote for anything that keeps you alive"
+    },
+    {
+     "role": "D",
+     "text": "correct"
+    },
+    {
+     "role": "A",
+     "text": "rejuv for groups, smite for solo, settled"
+    }
+   ]
+  },
+  {
+   "id": "polearm_or_twohand",
+   "topic": "armsman_weapon",
+   "realm": "alb",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Armsman"
+     ]
+    },
+    "C": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "polearm or two handed on an armsman?"
+    },
+    {
+     "role": "B",
+     "text": "polearm, the reach and the styles feel right"
+    },
+    {
+     "role": "C",
+     "text": "two handed has better follow-ups in some fights"
+    },
+    {
+     "role": "B",
+     "text": "both hit like a falling tree, honestly"
+    },
+    {
+     "role": "C",
+     "text": "and both need a cleric behind you"
+    },
+    {
+     "role": "A",
+     "text": "polearm it is, i like the reach"
+    }
+   ]
+  },
+  {
+   "id": "paladin_worth",
+   "topic": "paladin",
+   "realm": "alb",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Paladin"
+     ]
+    },
+    "C": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "is a paladin worth inviting over another fighter?"
+    },
+    {
+     "role": "B",
+     "text": "the chants carry the whole group, endurance alone wins long fights"
+    },
+    {
+     "role": "C",
+     "text": "the damage is low though"
+    },
+    {
+     "role": "B",
+     "text": "the damage is low because i am busy keeping you running"
+    },
+    {
+     "role": "C",
+     "text": "twisting chants is hard to do well"
+    },
+    {
+     "role": "A",
+     "text": "a good paladin is gold then"
+    }
+   ]
+  },
+  {
+   "id": "necro",
+   "topic": "necromancer",
+   "realm": "alb",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Necromancer"
+     ]
+    },
+    "C": {
+     "type": [
+      "NoLifer",
+      "Daredevil"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "necromancers, overpowered or just strange?"
+    },
+    {
+     "role": "B",
+     "text": "strange. i am the pet, the pet is me, everyone is confused"
+    },
+    {
+     "role": "C",
+     "text": "confused until the shade drains them to nothing"
+    },
+    {
+     "role": "B",
+     "text": "and then someone kills the pet and i am a ghost in a robe"
+    },
+    {
+     "role": "C",
+     "text": "fair, it is a weird class"
+    },
+    {
+     "role": "A",
+     "text": "the new classes are all weird and i love it"
+    }
+   ]
+  },
+  {
+   "id": "wiz_or_sorc",
+   "topic": "albion_casters",
+   "realm": "alb",
+   "levels": [
+    35,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Wizard"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": [
+      "Sorcerer"
+     ]
+    },
+    "D": {
+     "type": [],
+     "class": [
+      "Theurgist"
+     ]
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "best caster in albion, go"
+    },
+    {
+     "role": "B",
+     "text": "wizard. fire, earth, cold, things die from across the room"
+    },
+    {
+     "role": "C",
+     "text": "sorcerer. i mez the room, then your fire actually lands"
+    },
+    {
+     "role": "D",
+     "text": "theurgist. my pets do the job while you two argue"
+    },
+    {
+     "role": "B",
+     "text": "pets die to one area spell"
+    },
+    {
+     "role": "D",
+     "text": "and come right back"
+    },
+    {
+     "role": "A",
+     "text": "so the answer is all three, with a cleric"
+    }
+   ]
+  },
+  {
+   "id": "minstrel",
+   "topic": "minstrel",
+   "realm": "alb",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Minstrel"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "are minstrels a speed bot or a real class?"
+    },
+    {
+     "role": "B",
+     "text": "speed, mez, charm, and a sword. very real class"
+    },
+    {
+     "role": "C",
+     "text": "in a group i mainly want the speed though"
+    },
+    {
+     "role": "B",
+     "text": "i know. i also want respect"
+    },
+    {
+     "role": "C",
+     "text": "here is your respect, now speed please"
+    },
+    {
+     "role": "A",
+     "text": "lol, sing on"
+    }
+   ]
+  },
+  {
+   "id": "reaver_or_merc",
+   "topic": "reaver_merc",
+   "realm": "alb",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Reaver"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": [
+      "Mercenary"
+     ]
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "reaver or mercenary for a new fighter?"
+    },
+    {
+     "role": "B",
+     "text": "reaver, flex has reach and soulrending makes fights weird for the enemy"
+    },
+    {
+     "role": "C",
+     "text": "merc, dual wield and evade, fast and honest"
+    },
+    {
+     "role": "B",
+     "text": "honest and predictable"
+    },
+    {
+     "role": "C",
+     "text": "predictable and alive"
+    },
+    {
+     "role": "A",
+     "text": "trying reaver, i like weird"
+    }
+   ]
+  },
+  {
+   "id": "barrows_or_avalon",
+   "topic": "alb_40s",
+   "realm": "alb",
+   "levels": [
+    38,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Explorer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "barrows or the avalon isle camps for the 40s?"
+    },
+    {
+     "role": "B",
+     "text": "stonehenge barrows, everyone knows the pulls and the xp is fast"
+    },
+    {
+     "role": "C",
+     "text": "avalon isle, the drakoran camps are open and the view is better"
+    },
+    {
+     "role": "B",
+     "text": "the view does not give you levels"
+    },
+    {
+     "role": "C",
+     "text": "the empty camp does"
+    },
+    {
+     "role": "A",
+     "text": "barrows tonight, avalon on the weekend"
+    }
+   ]
+  },
+  {
+   "id": "scout_range",
+   "topic": "scouts",
+   "realm": "alb",
+   "levels": [
+    35,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Scout"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "the other realms say scouts are overpowered at range"
+    },
+    {
+     "role": "B",
+     "text": "the other realms have never tried to keep a scout alive up close"
+    },
+    {
+     "role": "C",
+     "text": "we do hit hard from very far away though"
+    },
+    {
+     "role": "B",
+     "text": "only if they stand in the open. nobody should stand in the open"
+    },
+    {
+     "role": "A",
+     "text": "so the advice to the enemy is take cover. noted"
+    }
+   ]
+  },
+  {
+   "id": "druid_bard_warden",
+   "topic": "hib_healer",
+   "realm": "hib",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Druid"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": [
+      "Bard"
+     ]
+    },
+    "D": {
+     "type": [],
+     "class": [
+      "Warden"
+     ]
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "druid, bard or warden as the group healer?"
+    },
+    {
+     "role": "B",
+     "text": "druid, the heals are biggest and the pet helps in a pinch"
+    },
+    {
+     "role": "C",
+     "text": "bard heals and mezzes and gives speed, that is three jobs"
+    },
+    {
+     "role": "D",
+     "text": "warden can heal and still take a hit in melee"
+    },
+    {
+     "role": "B",
+     "text": "three jobs means none done perfectly"
+    },
+    {
+     "role": "C",
+     "text": "none done perfectly beats one done alone"
+    },
+    {
+     "role": "A",
+     "text": "two of the three then. bard always"
+    }
+   ]
+  },
+  {
+   "id": "bards_do_everything",
+   "topic": "bard",
+   "realm": "hib",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Bard"
+     ]
+    },
+    "C": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "why is every hib group built around a bard?"
+    },
+    {
+     "role": "B",
+     "text": "speed home, mez on the adds, heals in a pinch. we do it all"
+    },
+    {
+     "role": "C",
+     "text": "and you get focused first in every fight because of it"
+    },
+    {
+     "role": "B",
+     "text": "which means i am important"
+    },
+    {
+     "role": "C",
+     "text": "which means you die first"
+    },
+    {
+     "role": "A",
+     "text": "protect the bard, always"
+    }
+   ]
+  },
+  {
+   "id": "enchanter_pbae",
+   "topic": "enchanter_pbae",
+   "realm": "hib",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Enchanter"
+     ]
+    },
+    "C": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "is enchanter area damage too strong in dungeons?"
+    },
+    {
+     "role": "B",
+     "text": "pull the room to me and watch it vanish"
+    },
+    {
+     "role": "C",
+     "text": "until something resists and the whole room eats you"
+    },
+    {
+     "role": "B",
+     "text": "that is what the bard's mez is for"
+    },
+    {
+     "role": "C",
+     "text": "and what the druid's rez is for"
+    },
+    {
+     "role": "A",
+     "text": "pull carefully then, and stand near the druid"
+    }
+   ]
+  },
+  {
+   "id": "eld_spec",
+   "topic": "eldritch",
+   "realm": "hib",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Eldritch"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "void, light or mana eldritch?"
+    },
+    {
+     "role": "B",
+     "text": "void, the biggest single hits hibernia has"
+    },
+    {
+     "role": "C",
+     "text": "light, steadier damage and a few tricks void does not have"
+    },
+    {
+     "role": "B",
+     "text": "tricks are nice, a dead target is nicer"
+    },
+    {
+     "role": "C",
+     "text": "a target that cannot see straight cannot hit our healer"
+    },
+    {
+     "role": "A",
+     "text": "void for groups, light for solo maybe"
+    }
+   ]
+  },
+  {
+   "id": "hero_champ_bm",
+   "topic": "hib_tanks",
+   "realm": "hib",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Hero"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": [
+      "Champion"
+     ]
+    },
+    "D": {
+     "type": [],
+     "class": [
+      "Blademaster"
+     ]
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "hero, champion or blademaster for the front?"
+    },
+    {
+     "role": "B",
+     "text": "hero, the shield and the spear hold anything"
+    },
+    {
+     "role": "C",
+     "text": "champion, my debuffs make the whole group hit harder"
+    },
+    {
+     "role": "D",
+     "text": "blademaster, two blades and the damage to end it"
+    },
+    {
+     "role": "B",
+     "text": "and who takes the hits while you both do damage?"
+    },
+    {
+     "role": "C",
+     "text": "you, obviously"
+    },
+    {
+     "role": "A",
+     "text": "one of each, it is a party"
+    }
+   ]
+  },
+  {
+   "id": "ns_or_ranger",
+   "topic": "hib_stealth",
+   "realm": "hib",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Nightshade"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": [
+      "Ranger"
+     ]
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "nightshade or ranger for hunting the frontier?"
+    },
+    {
+     "role": "B",
+     "text": "nightshade, close in, crit strike, gone before they turn around"
+    },
+    {
+     "role": "C",
+     "text": "ranger, i hit them from range and they never see me at all"
+    },
+    {
+     "role": "B",
+     "text": "until they close the gap"
+    },
+    {
+     "role": "C",
+     "text": "they have to find me first"
+    },
+    {
+     "role": "A",
+     "text": "either way, someone is getting stabbed"
+    }
+   ]
+  },
+  {
+   "id": "animist_shrooms",
+   "topic": "animist",
+   "realm": "hib",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Animist"
+     ]
+    },
+    "C": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "animists, great keep defenders or just turret lag?"
+    },
+    {
+     "role": "B",
+     "text": "plant the shrooms on the walls and nobody gets near the door"
+    },
+    {
+     "role": "C",
+     "text": "and the frame rate drops to nothing"
+    },
+    {
+     "role": "B",
+     "text": "a slow enemy is a dead enemy"
+    },
+    {
+     "role": "C",
+     "text": "a slow ally is also a dead ally"
+    },
+    {
+     "role": "A",
+     "text": "shrooms on the walls, effects off, everyone happy"
+    }
+   ]
+  },
+  {
+   "id": "valewalker",
+   "topic": "valewalker",
+   "realm": "hib",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Valewalker"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "what does a valewalker actually do?"
+    },
+    {
+     "role": "B",
+     "text": "a scythe, arboreal path, and a lot of confused looks"
+    },
+    {
+     "role": "C",
+     "text": "i grouped with one, still not sure what it did"
+    },
+    {
+     "role": "B",
+     "text": "it kept you alive, you just did not notice"
+    },
+    {
+     "role": "C",
+     "text": "maybe, the fights did go well"
+    },
+    {
+     "role": "A",
+     "text": "mysterious class, i like it"
+    }
+   ]
+  },
+  {
+   "id": "spraggon_or_muire",
+   "topic": "hib_dungeons",
+   "realm": "hib",
+   "levels": [
+    15,
+    25
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Explorer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "spraggon den or muire tomb at this level?"
+    },
+    {
+     "role": "B",
+     "text": "spraggon den, the pulls are clean and the respawn is fast"
+    },
+    {
+     "role": "C",
+     "text": "muire tomb, the mummy hags give great xp"
+    },
+    {
+     "role": "B",
+     "text": "and hit like a falling tree"
+    },
+    {
+     "role": "C",
+     "text": "that is what the druid is for"
+    },
+    {
+     "role": "A",
+     "text": "den tonight, tomb next week"
+    }
+   ]
   }
  ]
 }

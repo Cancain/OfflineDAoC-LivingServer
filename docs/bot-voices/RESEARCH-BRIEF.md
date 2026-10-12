@@ -217,6 +217,65 @@ Each becomes a short scene with two sides. The lines are new and keep both sides
 20. **New-player advice:** "don't rush, you'll miss the camps" versus "level fast, the game starts at
     50".
 
+**Added in the second batch** (also period knowledge, to confirm):
+- **Group play:**
+  - the first realm ability (Purge, Mastery of Concentration, Determination);
+  - the ideal 8-player group;
+  - assist discipline;
+  - who broke the mez;
+  - one puller or two;
+  - loot rules;
+  - dungeon or outdoor camps;
+  - solo or group;
+  - why every group wants a speed class;
+  - pet classes in RvR;
+  - stuns and Determination.
+- **Other topics everyone argued:**
+  - camping a named monster or buying crafted;
+  - dragon raids;
+  - houses;
+  - alts;
+  - killing greys;
+  - epic armor;
+  - the death penalty;
+  - keep claims;
+  - relic raids at odd hours;
+  - where to bind.
+- **Midgard:**
+  - Healer or Shaman;
+  - "cave" Shamans;
+  - the Skald's role;
+  - Thane as tank or caster;
+  - Berserker or Savage;
+  - Bonedancers;
+  - Spiritmaster or Runemaster;
+  - Shadowblade weapons;
+  - Warriors;
+  - Spindelhalla or Varulvhamn;
+  - Aegir or the classic zones.
+- **Albion:**
+  - smite or rejuvenation Clerics;
+  - Armsman weapons;
+  - Paladins' worth;
+  - Necromancers;
+  - Wizard, Sorcerer or Theurgist;
+  - Minstrels;
+  - Reaver or Mercenary;
+  - the Barrows or Avalon Isle;
+  - Scout range.
+- **Hibernia:**
+  - Druid, Bard or Warden;
+  - Bards doing everything;
+  - Enchanter area damage;
+  - Eldritch specs;
+  - Hero, Champion or Blademaster;
+  - Nightshade or Ranger;
+  - Animist mushrooms on keep walls;
+  - Valewalkers;
+  - Spraggon Den or Muire Tomb.
+
+The full scenes are in [DEBATES.md](DEBATES.md).
+
 ## 8. What saved forum threads would add
 
 - **Confirmation** of every period-knowledge item above.
