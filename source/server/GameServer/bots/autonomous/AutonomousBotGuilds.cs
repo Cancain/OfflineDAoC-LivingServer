@@ -113,6 +113,10 @@ public static class AutonomousBotGuilds
                     continue;
                 BotGuildCharter charter = Enum.TryParse(row.Charter, out BotGuildCharter parsed) ? parsed : BotGuildCharter.Leveling;
                 BotGuilds[row.GuildId] = new BotGuildInfo(row.GuildId, (eRealm)row.Realm, charter, row.Ordinal);
+                // Guilds founded before dues existed get their charter's dues once.
+                Guild loaded = GuildMgr.GetGuildByGuildID(row.GuildId);
+                if (!loaded.IsGuildDuesOn() && AutonomousBotGuildEconomy.DefaultDuesPercent(charter) > 0)
+                    AutonomousBotGuildEconomy.SetCharterDues(loaded, charter);
             }
             foreach (OfflineBotGuildMemberRecord row in GameServer.Database.SelectAllObjects<OfflineBotGuildMemberRecord>())
             {
@@ -258,6 +262,8 @@ public static class AutonomousBotGuilds
             dbRank.Dirty = true;
             GameServer.Database.SaveObject(dbRank);
         }
+
+        AutonomousBotGuildEconomy.SetCharterDues(guild, charter);
 
         var row = new OfflineBotGuildRecord
         {

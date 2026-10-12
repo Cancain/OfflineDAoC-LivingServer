@@ -292,6 +292,8 @@ public static class AutonomousBotGuildSocial
         Guild guild = bot.Guild;
         bool botGuild = AutonomousBotGuilds.TryGetBotGuild(guild.GuildID, out AutonomousBotGuilds.BotGuildInfo info);
         bool officer = botGuild && bot.GuildRank != null && bot.GuildRank.RankLevel <= 1;
+        if (botGuild && bot.GuildRank?.RankLevel == 0)
+            AutonomousBotGuildEconomy.TryBuyBuff(bot, info.Charter);
 
         if (officer && InvitesEnabled && TryOfferNearby(bot, guild))
             return true;

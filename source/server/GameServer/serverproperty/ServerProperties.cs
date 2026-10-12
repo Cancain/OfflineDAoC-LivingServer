@@ -2366,6 +2366,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("guild", "bot_guild_claims_keeps", "When bot guilds are on: after a realm takes a keep or tower, a bot guild with enough members inside claims it (claim_num, half for towers; guilds_claim_limit), never while a real player of that realm is inside. Its warbands answer first when that keep is attacked.", true)]
 		public static bool BOT_GUILD_CLAIMS_KEEPS;
 
+		/// <summary>
+		/// Guilded gamebots pay dues from real looted coin, earn merit points, and bot guild leaders buy guild buffs.
+		/// </summary>
+		[ServerProperty("guild", "bot_guild_economy", "When bot guilds are on: guilded gamebots pay their guild's dues from the real coin they loot, their level-ups earn the guild merit points as a player's do, and bot guild leaders spend 1,000 merit points on a 24-hour guild buff.", true)]
+		public static bool BOT_GUILD_ECONOMY;
+
 
 
 		#endregion

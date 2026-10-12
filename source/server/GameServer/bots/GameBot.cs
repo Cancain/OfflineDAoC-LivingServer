@@ -1491,9 +1491,13 @@ namespace DOL.GS
         public TryPickUpResult TryAutoPickUpMoney(GameMoney money)
         {
             money.AssertLockAcquisition();
+            long share = AutonomousBotGuildEconomy.ShareAfterDues(this, money.Value, out long dues);
             if (!IsAutonomousWorldBot || IsTemporaryGroupHelper || DatabaseID <= 0 ||
-                !AutonomousBotEconomy.AddMoney(DatabaseID, money.Value))
+                !AutonomousBotEconomy.AddMoney(DatabaseID, share))
                 return TryPickUpResult.DoesNotWant;
+            // Guild dues come out of the same real coin; a full bank leaves them with the bot.
+            if (!AutonomousBotGuildEconomy.DepositDues(this, dues))
+                AutonomousBotEconomy.AddMoney(DatabaseID, dues);
 
             money.RemoveFromWorld();
             AutonomousStuckWatchdog.MarkProgress(this, eAutonomousProgressKind.Loot);
@@ -1647,7 +1651,10 @@ namespace DOL.GS
                 Endurance = MaxEndurance;
                 AutonomousBotStatusPersistence.Queue(this, true);
                 if (IsAutonomousWorldBot)
+                {
+                    AutonomousBotGuildEconomy.OnBotLevelsGained(this, previousLevel);
                     AutonomousBotGuildSocial.OnBotLevelUp(this);
+                }
             }
             else
             {
