@@ -13,6 +13,72 @@
 > of Camelot, which is a very different, modern experience. If that interests you, please visit the
 > official site: [darkageofcamelot.com](https://www.darkageofcamelot.com/).
 
+# Offline DAoC: Social Expansion
+
+**Single-player Dark Age of Camelot that feels like a live 2003 server.** This fork of
+[shadowofze's Offline DAoC](https://github.com/shadowofze/OfflineDAoC) gives its bots a social life.
+They join guilds and recruit you, each has its own personality, and they talk the way players did in
+2002–2003, down to the build arguments in /faction.
+
+> **Status: in testing, not released yet.** The first release is planned for shadowofze's 0.36b once
+> he publishes it. Watch this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases).
+
+## Why
+
+Peak servers felt alive because of the people: the guild that adopted you at level 12, the officer
+who called keep defense, the regular who said "ding" at the same camp every night, the endless
+arguments over specs. Offline DAoC's bots already level, group, trade and fight on their own. The
+Social Expansion makes them feel like a community, not just a population.
+
+## What it adds
+
+| Feature | What you'll see |
+|---|---|
+| **Bot guilds** | Each realm has its own bot guilds, a few big and many small, each with a purpose: leveling, social, RvR, raiding or crafting. Bots wear guild names, chat in /gu, group with guildmates, and recruit you when you ask "lf guild". Guilds claim and defend keeps, pay dues, earn merit, buy guild buffs and form alliances. You can also /ginvite bots into your own guild. |
+| **Bot personalities** | Every bot is one of six types: Leveler, Socialite, Daredevil, Explorer, Crafter or No-lifer. Each also has five traits (curiosity, risk, sociability, patience, chattiness). Personality tilts how a bot spends its time: who lingers in town, who chases orange cons, who goes looking for zones they haven't seen. Target any bot and type `/personality`. |
+| **Bot voices** | 842 lines written for the era and checked against period slang, chosen by realm, class, level, situation and personality. Each bot writes in one of five styles (plain, terse, chatty, proper or typo-prone). No line repeats in a realm within six hours. |
+| **/faction debates** | 296 multi-bot conversations: class and spec arguments, relic and keep alerts, dragon raids, Darkness Falls, buffbots, zergs, realm pride and more. A different cast plays one every 30–45 minutes while you're online. |
+| **XP by level range** | Separate player and bot XP rates for level bands. The suggested setting keeps levels 1–34 worth playing and compresses the 35–50 grind. |
+
+## Safe to try
+
+- **Everything starts switched off.** Turn each feature on with a one-line switch, and off again
+  the same way. With all of them off, it plays exactly like the base game.
+- **It never breaks the base game's rules.** Real loot, the Realm Exchange, stablemaster routes,
+  bots earning their armor and the other owner rules are untouched.
+- **Install and undo in one click.** The installer checks that your game is the right version,
+  backs up every file it replaces, and verifies each copy. `ROLLBACK.cmd` puts the originals back.
+- **It's tested.** 2,810 automated server tests pass on every build. In-game testing is underway.
+
+## How to get it (once released)
+
+1. Install the matching Offline DAoC from [shadowofze's releases](https://github.com/shadowofze/OfflineDAoC/releases).
+2. Download the Social Expansion build from this repository's Releases and put its folder in your game folder.
+3. Close the game and server, then double-click `INSTALL.cmd`.
+4. Switch features on with the scripts in `tools\claude-version` (Python 3).
+
+## Details
+
+- [Bot guilds: design and status](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.35-chris.1/docs/BOT-GUILDS.md)
+- [Bot personalities, voices and debates](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.35-chris.1/docs/BOT-PERSONALITIES.md)
+- [XP by level range](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.35-chris.1/docs/XP-BY-LEVEL-RANGE.md)
+
+## Credits
+
+- **[shadowofze](https://github.com/shadowofze/OfflineDAoC)** made Offline DAoC: the bots, the world
+  and everything this builds on. All of that work is his.
+- **[OpenDAoC](https://github.com/OpenDAoC/OpenDAoC-Core)** is the open-source server underneath.
+- **[stefanrows](https://github.com/stefanrows/OfflineDAoC)**: the core bot-guild membership code is
+  adapted from his fork.
+- The Social Expansion is directed by Chris
+  ([chris4aker](https://github.com/chris4aker)) and written with Claude (Anthropic).
+
+Same license as the original: GPL-3.0.
+
+---
+
+*Everything below is the original Offline DAoC README.*
+
 # Offline DAoC — single-player Dark Age of Camelot with bots
 
 Offline DAoC is a local, single-player Dark Age of Camelot (Classic + Shrouded Isles, 1.65 rules)
