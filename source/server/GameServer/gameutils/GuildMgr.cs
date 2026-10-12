@@ -64,10 +64,19 @@ namespace DOL.GS
             if (guild == null)
                 return null;
 
+            Dictionary<string, GuildMemberView> views;
+
             lock (_lock)
             {
-                return !_guildMemberViews.TryGetValue(guild, out Dictionary<string, GuildMemberView> value) ?  null : new(value);
+                if (!_guildMemberViews.TryGetValue(guild, out Dictionary<string, GuildMemberView> value))
+                    return null;
+
+                views = new(value);
             }
+
+            // Autonomous gamebot members are not character rows; add them from their own table.
+            AutonomousBotGuilds.AppendMemberViews(guild, views);
+            return views;
         }
 
         public static Guild CreateGuild(eRealm realm, string guildName, GamePlayer creator = null)
