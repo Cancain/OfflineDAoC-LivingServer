@@ -2360,6 +2360,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("guild", "bot_guild_recruit_player", "When bot guild social life is on: bot guild officers may invite you to their guild with a yes/no dialog (when you ask for a guild, or now and then when you are nearby and unguilded).", true)]
 		public static bool BOT_GUILD_RECRUIT_PLAYER;
 
+		/// <summary>
+		/// Bot guilds claim keeps and towers their realm takes, under the usual claim rules.
+		/// </summary>
+		[ServerProperty("guild", "bot_guild_claims_keeps", "When bot guilds are on: after a realm takes a keep or tower, a bot guild with enough members inside claims it (claim_num, half for towers; guilds_claim_limit), never while a real player of that realm is inside. Its warbands answer first when that keep is attacked.", true)]
+		public static bool BOT_GUILD_CLAIMS_KEEPS;
+
 
 
 		#endregion

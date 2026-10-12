@@ -57,6 +57,14 @@ public static class AutonomousBotGuildChatLines
                 $"heading to {where} with the guild crew", $"guild group at {where} if anyone wants to swap in later");
     }
 
+    public static string KeepClaimed(string keep, string guild, Random random) => Pick(random,
+        $"{keep} is ours! claimed for {guild}", $"we claimed {keep}, nice work everyone", $"{guild} holds {keep} now. lets keep it",
+        $"claimed {keep}. somebody bring the guards some tea");
+
+    public static string KeepUnderAttack(string keep, Random random) => Pick(random,
+        $"{keep} is under attack! everyone who can, get there", $"they are hitting our keep at {keep}, need bodies",
+        $"{keep} needs defenders now", $"defend {keep}! our claim, our problem");
+
     public static string Farewell(string player, Random random) => Pick(random,
         $"night {player}", $"cya {player}", $"later {player}", "gn", $"take care {player}");
 
@@ -226,6 +234,8 @@ public static class AutonomousBotGuildChatLines
             yield return OfferInviteNearby(player, "Cleric", guild, random);
             yield return GuildGroup(3, zone, false, random);
             yield return GuildGroup(3, zone, true, random);
+            yield return KeepClaimed("Caer Benowyc", guild, random);
+            yield return KeepUnderAttack("Caer Benowyc", random);
             foreach (BotGuildCharter charter in Enum.GetValues<BotGuildCharter>())
             {
                 yield return Idle(charter, "Cleric", level, zone, random);

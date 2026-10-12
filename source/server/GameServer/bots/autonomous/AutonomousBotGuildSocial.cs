@@ -220,6 +220,25 @@ public static class AutonomousBotGuildSocial
         ScheduleGuildLine(speaker, guild, 3_000 + Random.Shared.Next(4_000), () => Lines.GuildGroup(guildmates, zone, rvr, Random.Shared));
     }
 
+    /// <summary>Called when a bot guild claims a keep.</summary>
+    public static void OnKeepClaimed(GameBot speaker, Guild guild, string keepName)
+    {
+        if (!Enabled || speaker == null || guild == null || !HasListener(guild))
+            return;
+        ScheduleGuildLine(speaker, guild, 2_000 + Random.Shared.Next(2_000), () => Lines.KeepClaimed(keepName, guild.Name, Random.Shared));
+    }
+
+    /// <summary>Called when the defense response starts for a keep; its claiming guild calls for help.</summary>
+    public static void OnClaimedKeepAttacked(Guild guild, string keepName)
+    {
+        if (!Enabled || guild == null || !HasListener(guild))
+            return;
+        GameBot speaker = guild.GetOnlineBotMembers().Where(Eligible)
+            .OrderBy(bot => bot.GuildRank?.RankLevel ?? AutonomousBotGuildPlanner.LowestRank).FirstOrDefault();
+        if (speaker != null)
+            ScheduleGuildLine(speaker, guild, 1_500 + Random.Shared.Next(2_000), () => Lines.KeepUnderAttack(keepName, Random.Shared));
+    }
+
     /// <summary>Called after a player's /gu line was sent to the guild.</summary>
     public static void OnPlayerGuildChat(GamePlayer player, string message)
     {
