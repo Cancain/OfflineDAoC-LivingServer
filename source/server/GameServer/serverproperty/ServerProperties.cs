@@ -2348,6 +2348,18 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("guild", "bot_guild_min_level", "Lowest level at which an autonomous gamebot is placed in a bot guild.", 5)]
 		public static int BOT_GUILD_MIN_LEVEL;
 
+		/// <summary>
+		/// Bot guild members talk in guild chat and recruit in /faction (when bot guilds are on).
+		/// </summary>
+		[ServerProperty("guild", "bot_guild_social", "When bot guilds are on: guild members greet, congratulate and chat in guild chat when a real member can hear, answer your /gu, and bot guild officers recruit in /faction.", true)]
+		public static bool BOT_GUILD_SOCIAL;
+
+		/// <summary>
+		/// Bot guild officers may invite a player into their guild with a yes/no dialog.
+		/// </summary>
+		[ServerProperty("guild", "bot_guild_recruit_player", "When bot guild social life is on: bot guild officers may invite you to their guild with a yes/no dialog (when you ask for a guild, or now and then when you are nearby and unguilded).", true)]
+		public static bool BOT_GUILD_RECRUIT_PLAYER;
+
 
 
 		#endregion

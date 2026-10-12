@@ -963,7 +963,10 @@ namespace DOL.GS
 
             base.ProcessDeath(killer);
             if (IsAutonomousWorldBot)
+            {
                 AutonomousBotStatusPersistence.Queue(this);
+                AutonomousBotGuildSocial.OnBotDeath(this);
+            }
             StartDeathRecoveryTimer();
         }
 
@@ -1643,6 +1646,8 @@ namespace DOL.GS
                 Mana = MaxMana;
                 Endurance = MaxEndurance;
                 AutonomousBotStatusPersistence.Queue(this, true);
+                if (IsAutonomousWorldBot)
+                    AutonomousBotGuildSocial.OnBotLevelUp(this);
             }
             else
             {

@@ -59,7 +59,7 @@ jobs:
             echo "::warning title=Server tests::No test results file found"
           fi
           # Re-run the tests of the feature on this branch so their own count is visible too.
-          classes="${REPORT_TEST_CLASSES:-UT_AutonomousBotGuilds}"
+          classes="${REPORT_TEST_CLASSES:-UT_AutonomousBotGuild}"
           filter=""
           for c in $classes; do filter="${filter:+$filter|}FullyQualifiedName~$c"; done
           out=$(dotnet test source/server/Tests/Tests.csproj -c Release --no-build --filter "$filter" 2>&1 || true)
