@@ -98,9 +98,14 @@ namespace DOL.GS.Tests
                 first.Add(name);
             }
 
+            // The same inputs, with the same names already taken, give the same names again.
             var again = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             for (int ordinal = 0; ordinal < 120; ordinal++)
-                Assert.That(Planner.NameFor(realm, Planner.CharterFor(ordinal), ordinal, again.Contains), Is.EqualTo(first[ordinal]));
+            {
+                string name = Planner.NameFor(realm, Planner.CharterFor(ordinal), ordinal, again.Contains);
+                Assert.That(name, Is.EqualTo(first[ordinal]));
+                again.Add(name);
+            }
         }
 
         [Test]
