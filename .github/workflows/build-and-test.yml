@@ -1,0 +1,62 @@
+# Builds the server and runs the tests that do not need installed game files.
+# Draft CI: first runs may need small fixes. See .github/ci-excluded-tests.txt.
+name: build-and-test
+
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  server:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Create local server config (build only needs it to exist)
+        shell: bash
+        run: cp source/server/CoreServer/config/serverconfig.example.xml source/server/CoreServer/config/serverconfig.xml
+
+      - name: Build server
+        run: dotnet build "source/server/Dawn of Light.sln" -c Release
+
+      # Tests listed in .github/ci-excluded-tests.txt read the installed navmeshes and
+      # database (the /runtime/ folder, which is never in git). Run those on your own PC.
+      - name: Test server (without installed-game-file tests)
+        shell: bash
+        run: |
+          filter=""
+          while IFS= read -r name; do
+            name="${name%$'\r'}"
+            [ -z "$name" ] && continue
+            filter="${filter:+$filter&}FullyQualifiedName!~.$name"
+          done < .github/ci-excluded-tests.txt
+          dotnet test source/server/Tests/Tests.csproj -c Release --no-build --filter "$filter" --logger "trx;LogFileName=server.trx"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: server-test-results
+          path: "**/TestResults/*.trx"
+
+  launcher:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    # Informational for now: some launcher tests expect a particular local setup.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Test launcher
+        run: dotnet test source/tools/OfflineDaoc.Launcher.Tests/OfflineDaoc.Launcher.Tests.csproj -c Release
