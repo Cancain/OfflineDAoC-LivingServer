@@ -239,7 +239,7 @@ public static class AutonomousBotDebates
         VC.Scene scene;
         bool reset;
         lock (heard)
-            scene = ChooseScene(AutonomousBotVoices.Corpus.Scenes, realm, heard, online.Select(bot => bot.Level).ToArray(), Random.Shared, out reset);
+            scene = ChooseScene(AutonomousBotVoices.Corpus.Scenes, realm, heard, online.Select(bot => (int)bot.Level).ToArray(), Random.Shared, out reset);
         Dictionary<string, long> cast = scene == null ? null : Cast(scene, online.Select(CandidateOf).ToArray(), Random.Shared);
         Dictionary<string, string> shared = null;
         if (cast != null)
