@@ -104,6 +104,32 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void GuildmateRank_OnlySameGuildWhenEnabled()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(AutonomousBotGuilds.GuildmateRank(true, "g1", "g1"), Is.Zero);
+                Assert.That(AutonomousBotGuilds.GuildmateRank(true, "g1", "g2"), Is.EqualTo(1));
+                Assert.That(AutonomousBotGuilds.GuildmateRank(true, null, null), Is.EqualTo(1), "Two guildless bots aren't guildmates.");
+                Assert.That(AutonomousBotGuilds.GuildmateRank(true, "", ""), Is.EqualTo(1));
+                Assert.That(AutonomousBotGuilds.GuildmateRank(false, "g1", "g1"), Is.EqualTo(1), "Off keeps today's ordering.");
+            });
+        }
+
+        [Test]
+        public void SharedGuildId_NeedsTwoMembers()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(Social.SharedGuildId(["a", "b", null, "c"]), Is.Null);
+                Assert.That(Social.SharedGuildId(["a", "b", "b", null]), Is.EqualTo("b"));
+                Assert.That(Social.SharedGuildId(["a", "a", "b", "b", "b"]), Is.EqualTo("b"));
+                Assert.That(Social.SharedGuildId(["b", "b", "a", "a"]), Is.EqualTo("a"), "Ties go to the lowest id.");
+                Assert.That(Social.SharedGuildId(null), Is.Null);
+            });
+        }
+
+        [Test]
         public void ChooseGuild_PrefersTheOpenRecruiterThenFitThenSize()
         {
             var guilds = new[]

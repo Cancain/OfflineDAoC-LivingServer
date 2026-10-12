@@ -70,6 +70,13 @@ public static class AutonomousBotGuilds
 
     public static bool TryGetMembership(long botId, out Membership membership) => Members.TryGetValue(botId, out membership);
 
+    /// <summary>0 when the candidate is in the leader's guild (bot guilds on), else 1. Used to order group candidates.</summary>
+    public static int GuildmateRank(GameBot leader, GameBot candidate) =>
+        GuildmateRank(Enabled, leader?.Guild?.GuildID, candidate?.Guild?.GuildID);
+
+    public static int GuildmateRank(bool enabled, string leaderGuildId, string candidateGuildId) =>
+        enabled && !string.IsNullOrEmpty(leaderGuildId) && string.Equals(leaderGuildId, candidateGuildId, StringComparison.Ordinal) ? 0 : 1;
+
     #region Server lifecycle
 
     [GameServerStartedEvent]

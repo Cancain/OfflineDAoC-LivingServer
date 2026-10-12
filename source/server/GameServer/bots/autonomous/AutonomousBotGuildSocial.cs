@@ -190,6 +190,36 @@ public static class AutonomousBotGuildSocial
         }, 3_000 + Random.Shared.Next(3_000));
     }
 
+    /// <summary>The guild that most members of a new group share, if at least two do.</summary>
+    public static string SharedGuildId(IEnumerable<string> memberGuildIds)
+    {
+        return (memberGuildIds ?? Enumerable.Empty<string>())
+            .Where(id => !string.IsNullOrEmpty(id))
+            .GroupBy(id => id, StringComparer.Ordinal)
+            .Where(group => group.Count() >= 2)
+            .OrderByDescending(group => group.Count())
+            .ThenBy(group => group.Key, StringComparer.Ordinal)
+            .Select(group => group.Key)
+            .FirstOrDefault();
+    }
+
+    /// <summary>Called when the group coordinator forms a bot group; guild groups say so in guild chat.</summary>
+    public static void OnGroupFormed(GameBot[] members, bool rvr)
+    {
+        if (!Enabled || members == null || members.Length < 2)
+            return;
+        string guildId = SharedGuildId(members.Select(member => member?.Guild?.GuildID));
+        if (guildId == null)
+            return;
+        GameBot speaker = members.FirstOrDefault(member => member?.Guild?.GuildID == guildId && Eligible(member));
+        Guild guild = speaker?.Guild;
+        if (guild == null || !HasListener(guild))
+            return;
+        int guildmates = members.Count(member => member?.Guild == guild);
+        string zone = speaker.CurrentZone?.Description;
+        ScheduleGuildLine(speaker, guild, 3_000 + Random.Shared.Next(4_000), () => Lines.GuildGroup(guildmates, zone, rvr, Random.Shared));
+    }
+
     /// <summary>Called after a player's /gu line was sent to the guild.</summary>
     public static void OnPlayerGuildChat(GamePlayer player, string message)
     {

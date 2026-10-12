@@ -47,6 +47,16 @@ public static class AutonomousBotGuildChatLines
         $"welcome to {guild}, {player}!", $"welcome {player}!", $"glad to have you {player}", $"welcome aboard {player}",
         $"hey {player}, welcome. ask if you need anything");
 
+    public static string GuildGroup(int guildmates, string zone, bool rvr, Random random)
+    {
+        string where = string.IsNullOrWhiteSpace(zone) ? "the usual spot" : zone;
+        return rvr
+            ? Pick(random, $"{guildmates} of us heading out to the frontier, join up if you can", "guild warband forming, frontier bound",
+                $"rolling out with {guildmates} guildies, wish us luck")
+            : Pick(random, $"guild group forming in {where}, {guildmates} of us so far", $"{guildmates} guildies grouped up in {where}",
+                $"heading to {where} with the guild crew", $"guild group at {where} if anyone wants to swap in later");
+    }
+
     public static string Farewell(string player, Random random) => Pick(random,
         $"night {player}", $"cya {player}", $"later {player}", "gn", $"take care {player}");
 
@@ -214,6 +224,8 @@ public static class AutonomousBotGuildChatLines
             yield return Farewell(player, random);
             yield return OfferInvite(player, guild, random);
             yield return OfferInviteNearby(player, "Cleric", guild, random);
+            yield return GuildGroup(3, zone, false, random);
+            yield return GuildGroup(3, zone, true, random);
             foreach (BotGuildCharter charter in Enum.GetValues<BotGuildCharter>())
             {
                 yield return Idle(charter, "Cleric", level, zone, random);
