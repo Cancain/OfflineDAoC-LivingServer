@@ -1,0 +1,49 @@
+# Looking-for-group talk. New writing (see docs/bot-voices).
+
+@kind lfg
+@topic lfg
+@who *
+@needs solo
+@levels 1-50
+lfg {level} {class}, pst
+{level} {class} lfg, anywhere is fine
+lfg, {level} {class}, will travel
+any groups need a {level} {class}?
+{level} {class} looking for a group, can be on in a minute
+lfg {camp} or anywhere with xp
+lf group, {class} {level}, have potions and patience
+lfg for a few hours, {level} {class}
+{level} {class} lfg, not picky about the camp
+looking for a group to level with, {class} {level}
+lfg near {zone}, {level} {class}
+@levels 20-50
+lfg {dungeon}, {level} {class}, know the pulls
+lfg xp, {level} {class}, been soloing too long
+@class Healer,Cleric,Druid,Shaman,Bard,Friar,Mentalist,Warden
+{level} {class} lfg, i heal, you pull, everyone wins
+healer lfg, {level}, wont let you die (much)
+@class Armsman,Warrior,Hero,Paladin
+{level} {class} lfg, can tank, have a big shield
+tank lfg, {level}, i hold aggro and complain about it
+@class Sorcerer,Healer,Bard,Minstrel,Mentalist
+{level} {class} lfg, can mez, will mez, love mez
+
+@kind lfg
+@topic lfm
+@who *
+@needs in_group
+@levels 1-50
+lfm at {camp}, {count} spots open
+group at {camp} needs a healer, pst
+lf tank for {camp}, we have heals and dps
+lfm {dungeon}, need {count} more
+anyone want to join us at {camp}? xp is steady
+lf puller for {camp}, ours just went to bed
+group has room near {zone}, all classes welcome
+need one more for {camp}, pst
+lfm, healer and tank found, need dps
+group forming for {dungeon}, meet at the entrance
+@levels 20-50
+lf mezzer for {dungeon}, adds are killing us
+lf main assist, our last one was asleep at the keyboard
+lfm {dungeon} run, should take about an hour

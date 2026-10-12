@@ -1,0 +1,177 @@
+# What each personality type likes to talk about. New writing (see docs/bot-voices).
+
+@kind ambient
+@topic leveler
+@who Leveler
+@levels 1-50
+xp per hour matters more than anything
+i timed it: {monster} at {camp} is the best xp for my level
+no fun, just efficiency
+the trainer is my favorite npc
+bubbles per kill, that is my metric
+ran the numbers, grouping beats solo by a lot
+i log in, i grind, i log out. perfect night
+anyone else track how long each level takes?
+camp bonus is free xp, never skip it
+one more level, then sleep. i say that every night
+i pick camps by respawn speed, nothing else matters
+already planning which camp to hit at {level}
+spent the evening at {camp}, got exactly what i wanted
+i skip the scenery, the scenery doesnt give xp
+whoever invented the camp bonus deserves a statue
+another night, another level, another trainer visit
+
+@kind ambient
+@topic crafter
+@who Crafter
+@levels 1-50
+the price of metal bars went up again
+just spent my whole evening at the forge, worth it
+anyone need armor? my skill is finally high enough to be useful
+crafting tip: buy materials in bulk, the merchants never run out
+i know every merchant price in {capital} by heart
+failed three times in a row, the forge hates me tonight
+my favorite sound is a successful craft
+i keep a list of who ordered what, do not tell anyone
+there is no such thing as too many materials
+my bank is half materials, half regret
+spellcrafting makes me nervous every single time
+i craft, therefore i am poor
+somebody please order something, i need the skill points
+crafted a set for a friend, they wore it once and died, typical
+if it has a quality number, i have opinions about it
+the exchange prices tonight are wild
+
+@kind ambient
+@topic socialite
+@who Socialite
+@levels 1-50
+how is everyone tonight?
+anyone want to hang out in {capital} for a bit?
+i miss my old group, they all went to bed
+love seeing new faces around {zone}
+who is up for a group just for the company?
+tell me your best death story, i have three
+anyone in a guild that takes chatty people?
+the realm feels alive tonight, good vibes
+i have met more friends here than at work
+who is the funniest person you have grouped with?
+group invites are my love language
+anyone else stay up too late because the group was fun?
+we should all meet up in {capital} sometime
+sometimes i log in just to talk
+i remember everyone i group with, it is a problem
+
+@kind ambient
+@topic explorer
+@who Explorer
+@levels 1-50
+i want to see every zone in the realm before i hit 50
+there is a spot near {zone} where the sunset is perfect
+anyone know what is at the far end of {zone}?
+i found a path i have never seen on anyone's map
+walked to {zone} just to look around, no regrets
+heard a rumor about a named that wanders near {zone}
+the realm is so much bigger than people think
+anyone ever climbed the hills behind {zone}?
+i keep a journal of every camp i find
+got lost on purpose tonight, best night in a while
+there is a ruin past {zone} that nobody talks about
+i explore first and level later, it works for me
+found a hidden camp with {monster}, telling only my friends
+every zone has a secret if you look long enough
+the maps lie, the roads go further than they show
+i will be in {zone} if anyone wants to see something cool
+
+@kind ambient
+@topic daredevil
+@who Daredevil
+@levels 1-50
+solo an orange, they said. it would be fine, they said
+pulled a red by accident, killed it on purpose
+i like my fights a little too close
+yellow cons are for warming up
+i do not run from fights, i run toward them
+who wants to try the deep room in {dungeon}?
+just took on {count} {monster} at once, still standing
+if the healer is not nervous, i am not pulling hard enough
+my bind point knows me well
+anyone want to see something stupid and brave?
+the best xp is on the edge of disaster
+nearly died three times, best hour all week
+i pull what others walk around
+dungeons are better when nobody knows the way
+if it cons purple, i want to know what it drops
+life is short, pull the big one
+
+@kind ambient
+@topic nolifer
+@who NoLifer
+@levels 20-50
+already have my 50 template planned on paper
+anyone else up at this hour? i never sleep
+i know every respawn timer at {camp}
+realm rank matters more than gear, change my mind
+i have an alt for every realm and still want more
+i log in before work and after work
+the meta right now is small groups, the zerg is for tourists
+max spec at 50 or spread points, the eternal question
+if your spellcraft is not capped you are leaving power on the table
+realm abilities are where the real power is
+farming seals in darkness falls again, the grind never ends
+i have the frontier map memorized
+when this one hits 50 i start the next
+anyone want to talk group setups with me?
+the respawn is the real enemy
+i measure my nights in realm points
+
+@kind ambient
+@topic newbie
+@who *
+@levels 1-12
+is there a way to see how much xp i need?
+what does the con color mean exactly?
+how do i get back to my bind point?
+what is a realm ability?
+do i need to train every level?
+how do people know where the camps are?
+is it ok to fight in someone else's camp?
+my backpack is full already, what do i keep?
+why do the guards attack monsters that chase me?
+what does lfg mean?
+how do i join a guild?
+are the other realms going to attack me here?
+
+@kind ambient
+@topic veteran
+@who *
+@levels 40-50
+tip for new folks: train your skills every level, it adds up
+dont rush, the 20s are where you learn your class
+consider before you pull, it saves a lot of deaths
+camp bonus is real, find a quiet spot and stay
+group when you can, solo when you must
+keep a few potions handy, thank me later
+spec for what you enjoy, not what the forums say
+your bind point is a lifesaver, set it near your camp
+a good healer is worth more than any drop
+if a group wipes, laugh, regroup, try again
+the frontier is a different game, go when you are ready
+crafters are your friends, be nice to them
+
+@kind ambient
+@topic humor
+@who *
+@levels 1-50
+my pet has better gear than me
+spent more time running back from my bind than fighting tonight
+i swear the monsters respawn faster when i am oom
+why is every useful merchant on the other side of town
+my sense of direction is a grey con
+i took a wrong turn and found three new ways to die
+who put that cliff there
+somebody tell my healer i am sorry
+i was going to log off an hour ago
+the game says blue con. the game is lying
+dinner is ready, says my family, for the third time
+the road to {zone} is longer every time i walk it

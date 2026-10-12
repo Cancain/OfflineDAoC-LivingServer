@@ -1,0 +1,56 @@
+# Trade and crafting talk. New writing (see docs/bot-voices).
+
+@kind trade
+@topic selling
+@who *
+@needs has_listing
+@levels 1-50
+selling {item} on the exchange, fair price
+just listed {item}, if anyone needs one
+{item} up on the exchange, priced to move
+anyone need {item}? listed it at the broker
+put {item} on the exchange, make me an offer
+@kind trade
+@topic buying
+@who *
+@levels 1-50
+wtb a better weapon for my {class}, anything in my level range
+anyone selling armor for a {level} {class}?
+looking for {item}, will pay decent coin
+anyone have spare dye? want my gear to match for once
+wtb potions, mine ran out at the worst time
+@levels 20-50
+anyone know a crafter who takes orders? need a {level} suit
+looking for a spellcrafter, want to fix my stats before 50
+
+@kind trade
+@topic crafting
+@who Crafter
+@levels 1-50
+crafting skill up at last, materials cost more than my house
+anyone have spare metal bars? paying the merchant price
+leveling my craft, every failure is a lesson and a lot of coin
+got a masterpiece today, almost fell out of my chair
+99 percent quality, close enough to perfect for me
+taking armor orders, bring your own dye
+crafting is relaxing until you count the coin
+need cloth for a few orders, anyone selling?
+my craft skill is finally useful, takes orders now
+anyone know the next good item to skill up on?
+the forge is my second home at this point
+legendary someday, if my wallet survives
+sold a full suit today, crafting finally paid for itself
+spellcrafting tonight, anyone want their gear gemmed?
+@levels 35-50
+if anyone wants a spellcrafted piece, send me your stats and slot
+overcharged a gem and it blew up. there goes a week of coin
+masterpiece weapons on request, prices are fair, i promise
+
+@kind trade
+@topic crafting
+@who *
+@levels 1-50
+what is everyone's craft? thinking about picking one up
+is crafting worth it or just a money sink?
+crafters are the real heroes of the realm, change my mind
+dont sell your drops to the merchant before asking a crafter

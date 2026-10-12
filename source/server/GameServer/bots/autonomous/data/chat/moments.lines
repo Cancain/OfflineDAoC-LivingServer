@@ -1,0 +1,94 @@
+# Small moments: levels, deaths, camps, full bags, travel. New writing (see docs/bot-voices).
+
+@kind ding
+@who *
+@needs just_leveled
+ding!
+ding {level} :)
+ding, finally
+ding {level}, off to the trainer
+{level}! slow but steady
+ding! only took all night
+ding {level}, time for new spells
+@who Socialite
+ding!! ty everyone who grouped with me tonight
+@who Leveler
+ding {level}, on schedule
+@who NoLifer
+ding {level}. next.
+
+@kind reply
+@intent banter
+@topic congrats
+@who *
+grats!
+gz
+nice, grats
+gz, long road
+grats, now go train
+
+@kind death
+@who *
+@needs just_died
+well that went badly
+note to self: do not pull two {monster}
+that {monster} was not blue
+oops
+back to my bind, see you in a bit
+anyone near {zone} who can rez?
+that was entirely my fault
+@who Daredevil
+worth it
+@who Leveler
+there goes my xp, ugh
+
+@kind camp
+@who *
+@needs at_camp
+anyone else camping here? happy to share
+camp check, anyone at {camp}?
+mind if i hunt nearby? wont take your pulls
+this spot is taken, i think, will move on
+been here an hour, {monster} respawn nice and fast
+room for one more here if anyone needs it
+@needs at_camp,in_group
+holding {camp}, we pull left, you can have the right side
+@who Daredevil
+@needs at_camp
+pulling the whole room, stand back
+
+@kind ambient
+@topic bags
+@who *
+@needs bag_full
+bags are full again, heading to town
+how do my bags fill up this fast
+off to the merchant, back in a bit
+selling junk, then right back to it
+@who Crafter
+full bags of materials, best kind of full
+
+@kind ambient
+@topic travel
+@who *
+@needs traveling
+on my way to {zone}, long walk
+heading to {zone}, anyone want to travel together?
+taking the horse to {zone}, back in a few
+walking to {zone} because i spent my coin on armor
+road trip to {zone}, wish me luck
+anyone know the fastest way to {zone}?
+
+@kind ambient
+@topic town
+@who *
+@needs in_town
+taking a break in {capital}, legs need it
+town is busy tonight
+sitting by the trainer pretending to be busy
+anyone in town want to group after this?
+just restocked, heading back out soon
+@who Socialite
+best part of the night is hanging out in town honestly
+@who Crafter
+the forge is warm and the coin is cold
