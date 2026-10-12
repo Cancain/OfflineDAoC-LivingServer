@@ -15,6 +15,7 @@ import argparse
 import datetime
 import math
 import os
+import re
 import sqlite3
 import subprocess
 from pathlib import Path
@@ -27,6 +28,10 @@ DESCRIPTIONS = {
     'bot_xp_rate_by_level': 'Optional XP rate by level range for autonomous gamebots (set by set_xp_by_level.py).',
 }
 MAXIMUM_RATE = 1000.0
+# ASCII only, as the server's int.TryParse / double.TryParse with the invariant culture: Python's own
+# int() and float() would also accept "3_0" or non-ASCII digits, which the server rejects.
+LEVEL = re.compile(r'[0-9]+')
+RATE = re.compile(r'[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)([eE][+-]?[0-9]+)?')
 
 
 def parse(spec):
@@ -39,16 +44,13 @@ def parse(spec):
             raise ValueError(f'"{entry}" is not in the form first-last:rate')
         levels, rate_text = (part.strip() for part in entry.split(':'))
         bounds = [b.strip() for b in levels.split('-', 1)] if '-' in levels else [levels, levels]
-        if not all(b.isdigit() and 1 <= int(b) <= 255 for b in bounds):
+        if not all(LEVEL.fullmatch(b) and 1 <= int(b) <= 255 for b in bounds):
             raise ValueError(f'"{levels}" is not a level range')
         first, last = int(bounds[0]), int(bounds[1])
         if last < first:
             raise ValueError(f'"{levels}" ends before it starts')
-        try:
-            rate = float(rate_text)
-        except ValueError:
-            rate = float('nan')
-        if ',' in rate_text or not math.isfinite(rate) or rate <= 0 or rate > MAXIMUM_RATE:
+        rate = float(rate_text) if RATE.fullmatch(rate_text) else float('nan')
+        if not math.isfinite(rate) or rate <= 0 or rate > MAXIMUM_RATE:
             raise ValueError(f'"{rate_text}" is not a rate above 0 and at most {MAXIMUM_RATE:g}')
         for a, b, _ in ranges:
             if first <= b and last >= a:
@@ -92,7 +94,7 @@ def main():
         spec = getattr(args, who)
         if spec is not None:
             ranges = parse(spec)
-            values[KEYS[who]] = ';'.join(f'{a}-{b}:{r:g}' for a, b, r in ranges)
+            values[KEYS[who]] = ';'.join(f'{a}-{b}:{r:.15g}' for a, b, r in ranges)
 
     with sqlite3.connect(args.db.as_uri() + '?mode=ro', uri=True) as source:
         before = current(source)
@@ -131,4 +133,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except ValueError as error:
+        raise SystemExit(f'Not changed: {error}')

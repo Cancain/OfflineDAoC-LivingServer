@@ -31,6 +31,9 @@ rate.
 | Zone XP bonus | Uses the range rate | Uses the range rate |
 | In RvR zones | Keeps `rvr_zones_xp_rate`, as before | Range rate × `rvr_zones_xp_rate`, as `bot_xp_rate` was |
 
+- **Same parts as the flat rates:** like `xp_rate` and `bot_xp_rate`, the range rate multiplies the
+  base XP of a kill and the zone bonus. Camp, group and other bonuses are added on top unmultiplied,
+  as before. The per-kill XP cap is applied before any rate.
 - **Which level counts:** the character's level when the XP arrives.
 - **Not affected:** companion bots (`/spawn`, `/raid`) and Bounty Master rewards. Bounty rewards
   still use `xp_rate`.
@@ -46,6 +49,10 @@ These come from the Living World plan (model v4):
 | Gamebots | 1.5× | 2.5× | 6× |
 
 ## Setting them
+
+The helper script is in this fork, not in the 0.35 download. Copy
+`tools/claude-version/set_xp_by_level.py` into your playable folder's `tools\claude-version\` first,
+along with a server build that has these settings.
 
 **Close the server, launcher and game first.** Then, from the playable folder:
 
@@ -63,6 +70,13 @@ python tools\claude-version\set_xp_by_level.py --off --apply
 
 The launcher's XP buttons still set the flat `xp_rate` and `bot_xp_rate`. Those flat rates are what
 applies outside your ranges.
+
+**Resets:**
+- **The progress transfer tool resets the XP settings.** After a transfer into a new install it sets
+  `xp_rate` and `bot_xp_rate` back to 1, and it now also clears both range settings. Set them again
+  afterwards.
+- **Public packages always ship with both settings off.** `build_release_035.py` clears them and
+  checks that they are empty.
 
 ## Status
 
