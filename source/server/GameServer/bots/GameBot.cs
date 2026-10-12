@@ -501,6 +501,9 @@ namespace DOL.GS
             set => _guild = value;
         }
 
+        /// <summary>The bot's rank in its guild (set by <see cref="Guild.AddBotMember"/>), or null.</summary>
+        public DbGuildRank GuildRank { get; set; }
+
         #endregion
 
         #region IGamePlayer — Duel System

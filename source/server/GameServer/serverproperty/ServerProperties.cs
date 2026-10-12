@@ -2330,6 +2330,24 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("guild", "guild_banner_lost_time", "When a banner is lost to the enemy how many minutes is the wait before purchase is allowed?", (ushort)1440)]
 		public static ushort GUILD_BANNER_LOST_TIME;
 
+		/// <summary>
+		/// Autonomous gamebots form realm guilds, carry guild names and can be invited into a player's guild.
+		/// </summary>
+		[ServerProperty("guild", "bot_guilds_enabled", "Autonomous gamebots form and join realm guilds (see docs/BOT-GUILDS.md), and players can /ginvite them. False keeps every gamebot guildless; saved memberships are kept.", false)]
+		public static bool BOT_GUILDS_ENABLED;
+
+		/// <summary>
+		/// Share of eligible autonomous gamebots placed in bot guilds.
+		/// </summary>
+		[ServerProperty("guild", "bot_guild_share", "Share (0 to 1) of eligible autonomous gamebots that bot guild formation places in guilds.", 0.70)]
+		public static double BOT_GUILD_SHARE;
+
+		/// <summary>
+		/// Lowest level at which an autonomous gamebot joins a bot guild.
+		/// </summary>
+		[ServerProperty("guild", "bot_guild_min_level", "Lowest level at which an autonomous gamebot is placed in a bot guild.", 5)]
+		public static int BOT_GUILD_MIN_LEVEL;
+
 
 
 		#endregion
