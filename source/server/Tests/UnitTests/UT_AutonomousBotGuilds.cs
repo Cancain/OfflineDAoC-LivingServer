@@ -10,9 +10,26 @@ using Planner = DOL.GS.AutonomousBotGuildPlanner;
 
 namespace DOL.GS.Tests
 {
-    [TestFixture]
+    [TestFixture, NonParallelizable]
     public class UT_AutonomousBotGuilds
     {
+        // Guild and GameObject load data from GameServer in their static constructors, so every test runs
+        // with an empty server double. Without it, the first test to touch them breaks those types for the
+        // whole test run.
+        private static readonly IObjectDatabase EmptyDatabase = DispatchProxy.Create<IObjectDatabase, DOL.UnitTests.UT_UnobservedConcentration.EmptyReads>();
+        private sealed class Server : GameServer { protected override IObjectDatabase DataBaseImpl => EmptyDatabase; }
+        private GameServer _previousServer;
+
+        [SetUp]
+        public void InstallServerDouble()
+        {
+            _previousServer = GameServer.Instance;
+            GameServer.LoadTestDouble((Server)RuntimeHelpers.GetUninitializedObject(typeof(Server)));
+        }
+
+        [TearDown]
+        public void RestoreServer() => GameServer.LoadTestDouble(_previousServer);
+
         [TestCase(0, 0.7, 0)]
         [TestCase(10, 0.7, 7)]
         [TestCase(100, 0.7, 70)]
