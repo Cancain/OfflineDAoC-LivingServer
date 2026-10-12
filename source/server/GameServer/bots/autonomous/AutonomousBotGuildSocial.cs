@@ -299,10 +299,15 @@ public static class AutonomousBotGuildSocial
             return true;
         if (officer && TryRecruit(bot, guild, info))
             return true;
-        if (!HasListener(guild))
+        BotGuildCharter charter = botGuild ? info.Charter : BotGuildCharter.Social;
+        // RvR and raiding guilds sometimes talk on their alliance channel instead.
+        Alliance alliance = guild.alliance;
+        bool allianceLine = AutonomousBotGuildAlliances.Enabled && alliance != null &&
+            AutonomousBotGuildAlliances.IsAllianceCharter(charter) && Random.Shared.NextDouble() < 0.3 &&
+            AutonomousBotGuildAlliances.HasListener(alliance);
+        if (!allianceLine && !HasListener(guild))
             return false;
 
-        BotGuildCharter charter = botGuild ? info.Charter : BotGuildCharter.Social;
         GameBot[] online = guild.GetOnlineBotMembers();
         lock (Sync)
         {
@@ -311,7 +316,13 @@ public static class AutonomousBotGuildSocial
                 return false;
             LastIdleByGuild[guild.GuildID] = GameLoop.GameLoopTime;
         }
-        SendGuildLine(guild, bot.Name, Lines.Idle(charter, bot.ClassName, bot.Level, bot.CurrentZone?.Description, Random.Shared));
+        string idle = Lines.Idle(charter, bot.ClassName, bot.Level, bot.CurrentZone?.Description, Random.Shared);
+        if (allianceLine)
+        {
+            AutonomousBotGuildAlliances.SendLine(alliance, bot.Name, idle);
+            return true;
+        }
+        SendGuildLine(guild, bot.Name, idle);
 
         // Sometimes a guildmate picks it up.
         if (Random.Shared.NextDouble() < 0.3)

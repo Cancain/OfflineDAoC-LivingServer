@@ -100,7 +100,7 @@ def clean_world(database: Path, policy: dict) -> dict:
     con.execute("DELETE FROM ServerProperty WHERE lower(`Key`) = 'bot_guilds_enabled' OR lower(`Key`) LIKE 'bot\\_guild\\_%' ESCAPE '\\'")
     # Starting guild definitions and ranks are world data; their earned state is not.
     con.execute("UPDATE Guild SET RealmPoints=0,BountyPoints=0,Bank=0,MeritPoints=0,Webpage='',Email='',"
-                "Motd='',oMotd='',HaveGuildHouse=0,GuildHouseNumber=0")
+                "Motd='',oMotd='',HaveGuildHouse=0,GuildHouseNumber=0,AllianceID=''")
     con.execute("UPDATE DBHouse SET OwnerID='',GuildName='',GuildHouse=0,HasConsignment=0,KeptMoney=0,Model=0,Name='' "
                 "WHERE COALESCE(OwnerID,'')<>''")
     con.execute("UPDATE Keep SET Realm=OriginalRealm,ClaimedGuildName='' WHERE OriginalRealm IN (1,2,3)")

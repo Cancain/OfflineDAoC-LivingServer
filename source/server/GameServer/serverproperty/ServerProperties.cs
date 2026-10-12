@@ -2372,6 +2372,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("guild", "bot_guild_economy", "When bot guilds are on: guilded gamebots pay their guild's dues from the real coin they loot, their level-ups earn the guild merit points as a player's do, and bot guild leaders spend 1,000 merit points on a 24-hour guild buff.", true)]
 		public static bool BOT_GUILD_ECONOMY;
 
+		/// <summary>
+		/// Each realm's RvR and raiding bot guilds form one alliance.
+		/// </summary>
+		[ServerProperty("guild", "bot_guild_alliances", "When bot guilds are on: each realm's RvR and raiding bot guilds form one alliance (up to four guilds); a player in one of them hears its alliance chat. Alliances with a player's guild are never touched.", true)]
+		public static bool BOT_GUILD_ALLIANCES;
+
 
 
 		#endregion

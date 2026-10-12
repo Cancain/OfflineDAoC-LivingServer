@@ -187,6 +187,8 @@ public static class AutonomousBotGuilds
 
         if (changed.Count > 0)
             NpcService.Instance.Post(RebindLiveBots, changed.ToArray());
+        if (AutonomousBotGuildAlliances.Enabled)
+            NpcService.Instance.Post(AutonomousBotGuildAlliances.ReconcileAll, 0);
     }
 
     private static void ReconcileRealm(eRealm realm, IReadOnlyList<OfflineWorldBotRecord> roster, double share, int minLevel,
