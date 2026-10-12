@@ -1,0 +1,118 @@
+# More everyday material: nights, waiting, advice answers, extra memory lines. New writing.
+
+@kind ambient
+@topic night
+@who *
+@levels 1-50
+late night crew checking in
+anyone else up way too late?
+quiet night, perfect for a long camp
+the realm is busy tonight, love it
+one more pull, then bed. probably
+coffee and camping, the perfect combo
+kids are asleep, time to level
+weekend at last, long session tonight
+just got home, what did i miss?
+everyone is out hunting tonight it seems
+long day, short session, lets make it count
+logged in to check my bags, staying for hours apparently
+
+@kind ambient
+@topic waiting
+@who *
+@levels 1-50
+sitting for power, chat with me
+waiting on a respawn, the most dangerous time to think
+med break, anyone want to talk?
+my health bar is filling slower than the respawn
+waiting for my group to log in
+waiting on the boat, as usual
+waiting for buffs to come back up
+standing around the bind stone again
+anyone else waiting on a group or just me?
+
+@kind ambient
+@topic rumor
+@who Explorer,Socialite
+@levels 1-50
+heard someone saw a named near {zone} that drops something great
+someone said there is a secret room in {dungeon}
+rumor is the {monster} at {camp} drop more than coin sometimes
+anyone know if the stories about {zone} at night are true?
+heard a group wiped in {dungeon} on a pull nobody expected
+people say the old camps in {zone} still have the best spawns
+
+@kind reply
+@intent help
+@who *
+@levels 35-50
+spend your spec points on your main line first, it pays off
+the {dungeon} pulls are easier if you clear the pats first
+for xp at your level, try {camp}
+if you are stuck, find a group, solo slows down a lot past 30
+train your weapon skill, it matters more than people think
+@levels 1-19
+not sure, i am new too
+i think the trainer can help, he helped me
+ask in faction, people usually answer
+
+@kind reply
+@intent grouping
+@who *
+@levels 1-19
+i am low level but can come along
+lets duo, i need the company
+@levels 20-50
+our group could use a {class} like you, where are you?
+how many are you? we have room for {count}
+
+@kind reply
+@intent trading
+@who Crafter
+@levels 1-50
+i can make that, send me the details
+my prices are fair, ask anyone
+got materials for that, give me an hour
+
+@kind lfg
+@topic lfg
+@who *
+@needs solo
+@levels 1-50
+anyone near {zone} want to team up?
+looking for a duo partner, {level} {class}
+lfg or lf duo, {level} {class}, chill and patient
+any guild running groups tonight? {class} {level} here
+{level} {class}, lfg, can stay a few hours
+
+@kind thanks
+@topic group
+@who *
+{player}, ty for the patience with my pulls at {place}
+still talk about that group at {place}, ty {player}
+@topic heal
+@who *
+{player} you kept me alive at {place}, owe you one
+@topic rez
+@who *
+{player} rezzed me in the worst spot at {place}, legend
+
+@kind greet
+@mood friendly
+@who *
+{player}! the best {player_class} i know
+there you are {player}, we were just talking about you
+@who Leveler
+{player}, still leveling? i am two ahead of you now :)
+@who Crafter
+{player}, need anything crafted? friend price for you
+@who Daredevil
+{player}! up for something stupid tonight?
+@who Explorer
+{player}, found a spot near {place} you would love
+
+@kind gossip
+@mood friendly
+@who *
+{player} is the kind of {player_class} you hope shows up when things go wrong
+anyone know if {player} is on tonight? want to group again

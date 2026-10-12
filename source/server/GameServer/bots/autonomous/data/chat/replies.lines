@@ -1,0 +1,175 @@
+# Replies to what a player (or another bot) says, by the intent the classifier finds.
+# New writing (see docs/bot-voices).
+
+@kind reply
+@intent greeting
+@who *
+hey :)
+hail
+hi there
+hey, good to see someone else out here
+evening
+o/
+hey hey
+greetings, good hunting
+yo
+hello! nice night for it
+@who Socialite
+hey!! how is everyone doing tonight
+hi hi, welcome back
+
+@kind reply
+@intent farewell
+@who *
+night!
+take care
+gn, safe travels
+cya next time
+later
+see ya, have fun
+sleep well, the mobs will still be here tomorrow
+bye :)
+
+@kind reply
+@intent banter
+@who *
+lol
+heh
+ha, fair
+true story
+i felt that one
+cant argue with that
+that is the most realm thing i have heard all day
+same here honestly
+you and me both
+lol yeah
+@who Daredevil
+bet you cant solo it
+@who Socialite
+haha love it
+
+@kind reply
+@intent abuse
+@who *
+easy there
+ok then
+noted
+someone had a rough night
+lets keep it friendly
+deep breaths, its just a game
+@mood cool
+wow ok
+not worth arguing about
+
+@kind reply
+@intent grouping
+@who *
+how many do you have?
+what level and class?
+i can help if you are near {zone}
+where are you camping?
+i am in a group right now but might be free soon
+need a healer still? i know one
+pst me if you still need someone
+might be able to join in a bit
+@needs solo
+im free, what are you hunting?
+could join, {level} {class}
+@needs in_group
+our group is full right now, sorry
+try {camp}, there were people looking earlier
+
+@kind reply
+@intent grinding
+@who *
+{camp} has been good for me lately
+how is the xp where you are?
+i just came from {camp}, it was busy
+{monster} are decent xp if you can pull them clean
+try {camp}, ask in faction if it is taken
+dont forget the camp bonus, find a quiet spot
+i hear {dungeon} is good for that level
+grind is a grind, keep going
+
+@kind reply
+@intent travel
+@who *
+the stable master saves a lot of walking
+follow the road and avoid the hills at night
+it is a long walk, bring a friend
+take the horse from {capital}, cheaper than dying on the way
+i went that way earlier, watch out for adds near the bridge
+head out the gate and follow the road, cant miss it
+i think there is a horse route close to there
+
+@kind reply
+@intent dungeon
+@who *
+dungeons need a puller who knows the layout
+i would bring a healer and a mezzer for that one
+{dungeon} is good xp if your group is solid
+watch the wandering pats in there
+take it slow, one pull at a time
+anyone who has been there knows the pulls, ask in faction
+the deeper rooms are worth it if you can hold the adds
+
+@kind reply
+@intent rvr
+@who *
+the frontier was busy earlier
+i heard there was fighting near {keep}
+the realm needs defenders more than attackers some nights
+group up before you head out there
+stealthers everywhere tonight, careful
+relics are the real prize
+if you see the zerg coming, call it in faction
+
+@kind reply
+@intent trading
+@who *
+check the exchange first, prices are better than the merchant
+a crafter can probably make that for you
+sell it on the exchange, someone will want it
+what are you asking for it?
+depends on the bonuses honestly
+i would hold onto it if it is an upgrade for an alt
+merchants pay half, the exchange pays more if you can wait
+
+@kind reply
+@intent help
+@who *
+what do you need?
+ask away
+i can try to help, what is it?
+check your trainer first, it fixes a lot
+happens to everyone, dont worry
+consider before you pull, saves a lot of deaths
+use /stick if you get lost following someone
+@levels 35-50
+spec for what you enjoy, the rest comes later
+dont forget your realm abilities at 50
+
+@kind reply
+@intent ignoreoutofworld
+@who *
+lets keep it about the realm :)
+not touching that one, back to the camp
+we have enough wars in game, heh
+that is a conversation for another channel
+
+@kind reply
+@intent unknown
+@who *
+hm
+not sure what you mean
+yeah?
+could be
+interesting
+fair enough
+maybe, maybe not
+i will think about it
+huh
+@who Socialite
+tell me more
+@who Explorer
+is that near {zone}?
