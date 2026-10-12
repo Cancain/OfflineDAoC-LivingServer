@@ -2,8 +2,9 @@
 
 Goal: autonomous gamebots belong to guilds the way 2003 players did. Each realm has a spread of
 bot guilds, a few big and many small, each with a purpose (its **charter**). Bots carry the guild
-name over their heads and show up in the guild window. Later phases add guild chat, grouping with
-guildmates, guild keeps, the bank and guild buffs. You can invite a bot into your own guild.
+name over their heads, show up in the guild window, talk in guild chat, group with guildmates,
+recruit you, claim and defend keeps, pay dues, earn merit and buy guild buffs, and form realm
+alliances. You can invite a bot into your own guild, or join one of theirs.
 
 This affects only **autonomous gamebots**. Companion bots (`/spawn`, `/raid`) and real players
 keep today's behavior.
@@ -100,7 +101,7 @@ Protectors, Tir na Nog Adventurers).
   listed as optional tables (`OptionalProgressTables`), because a server creates them on its first
   start; a database that never ran this version simply has nothing to carry.
 
-### 3.4 In game (phase 1)
+### 3.4 Membership and the guild window (phase 1)
 
 - **Over its head:** a guilded bot shows its guild name to its own realm.
 - **Guild window and `/gc who`:**
@@ -117,58 +118,171 @@ Protectors, Tir na Nog Adventurers).
 - **`/gc remove <name>`** works on bot members of your guild.
 - **Formation leaves bots in your guild alone.**
 
-### 3.5 Later phases (not built yet)
+### 3.5 Guild social life (phase 2)
 
-1. **Social:**
-   - guild chat lines from the bot-voices corpus (bots only "talk" in guild chat when a real
-     member can hear);
-   - bots answer your `/gu`;
-   - bots greet guildmates;
-   - guild-based memory and loyalty.
-2. **Grouping:** bots prefer guildmates when forming groups; Leveling guilds pick shared camps;
-   bot guild officers invite you to their guild (a yes/no dialog).
-3. **RvR:**
-   - RvR guilds muster and raid together;
-   - they claim keeps and towers (needs a bot claim path; `Claim` takes a `GamePlayer` today)
-     and defend their claims.
-4. **Economy:**
-   - dues from bots' real coin loot into the guild bank (the owner's real-economy rule holds);
-   - guild buffs bought with merit or bounty points;
-   - emblems on bot cloaks.
-5. **Guild houses and alliances.**
+Bots only "talk" in a guild channel a real member can hear (rank with guild-chat hearing). Lines
+are short, lowercase and period-plain (`AutonomousBotGuildChatLines`).
 
-### 3.6 Settings (default off)
+| Event | What happens |
+|---|---|
+| You log in | 1–3 online guildmates greet you after a few seconds (at most once per 10 minutes) |
+| You level | 1–3 guildmates congratulate you |
+| A bot levels | half the time it says "ding"; 1–2 others congratulate it |
+| A bot dies | sometimes it grumbles in guild chat (at most once per guild per 2 minutes) |
+| Quiet times | a guildmate says something that fits the charter (Social every ~4 minutes; Crafting every ~9; busier guilds up to 3× as often); sometimes another answers |
+| You write in `/gu` | 0–3 bots answer: greetings, thanks, goodnights, group offers from bots near your level, and questions through the existing knowledge answers; a bot named in your line answers itself (at most once per 6 seconds per guild) |
+| A bot group forms with 2+ guildmates | one of them says so in guild chat |
+
+**Recruiting and joining a bot guild:**
+- **Recruiting posts:** a bot guild officer posts in `/faction`, at most once per realm every 25
+  minutes, and only while an unguilded player of that realm (level 5+) is online.
+- **Asking for a guild:** write "lf guild", "looking for a guild" and the like in `/faction` or
+  `/say`. Within 5 minutes of a recruiting post, "me" or "interested" also counts.
+  - The guild that just recruited answers if one of its members is online. Otherwise the guild
+    whose charter best fits your level answers.
+  - Its highest-ranked online member replies, and you get a **yes/no dialog**.
+  - Yes: you join at the lowest rank and are welcomed.
+  - No: no more offers for 24 hours.
+- **Unprompted offers:** now and then, an officer standing near you while you're unguilded and
+  within 10 levels offers an invite, at most once a day per character.
+
+### 3.6 Grouping (phase 3)
+
+**Formation order:** group formation orders candidates guildmates-first (shuffled within each tier).
+- In **PvE**, the leader's guildmates get the first claim on role slots; class roles still decide
+  the final group.
+- In **RvR**, warbands fill with guildmates first.
+
+### 3.7 Keeps (phase 4)
+
+- **Claims:** after a realm takes a keep or tower, a bot guild with enough members inside claims it
+  under the player rules:
+  - the keep's realm;
+  - not under attack;
+  - not a relic, portal or battleground keep;
+  - `guilds_claim_limit` (1 in the release);
+  - `claim_num` members inside (8; 4 for a tower).
+- **When:** attempts run every 20 seconds for about three minutes after the capture.
+- **Most members inside wins;** ties go to RvR, then Raiding.
+- **You get the first chance:** a bot guild never claims while a real player of that realm is in
+  the keep.
+- **Effects of a claim:** the keep's guards and banners take the guild, and in the release the keep
+  rises from level 4 to 5 (`starting_keep_claim_level`). The claim is announced realm-wide as
+  usual, and in guild chat.
+- **Defense:** when a claimed keep is attacked, the existing defense response orders the claiming
+  guild's warbands first and never holds them in its 30% reserve. An officer calls for help in
+  guild chat. This also applies to bots in **your** guild if your guild claimed the keep.
+- **`AbstractGameKeep.ClaimForGuild(Guild)`** is the new guild-level claim. `Claim(GamePlayer)`
+  now calls it with the player's guild, so player claims behave as before.
+
+### 3.8 Economy (phase 5)
+
+- **Dues:** a guilded bot pays its guild's dues share of the real coin it loots into the guild
+  bank, with the player formula. A full bank leaves the coin with the bot, so nothing is created
+  or lost. Bot guilds charge by charter:
+
+  | Charter | Dues |
+  |---|---|
+  | RvR, Raiding | 5% |
+  | Crafting | 3% |
+  | Leveling | 2% |
+  | Social | none |
+
+  Your guild keeps whatever dues its leader set; bots you invited pay them.
+- **Merit points:** a bot's level-ups earn its guild the same merit points as a player's
+  (`level × (3 + level/25)`, one award per level gained).
+- **Buffs:** a bot guild's leader spends 1,000 merit points on a 24-hour buff, the same price and
+  effect as `/gc buff`, and only buff types the server offers:
+  - RvR: realm points;
+  - Crafting: crafting haste;
+  - the rest: experience.
+
+  The experience buff already counted for bots (`GameBot` XP award), and it counts for you if
+  you're in that guild.
+
+### 3.9 Alliances (phase 6)
+
+- **Formation:** in each realm, the RvR and raiding bot guilds form one alliance of up to four
+  guilds, led by the oldest RvR guild. It uses the same `Alliance` objects and `GuildAlliance` table
+  as `/gc ainvite`, and is created on the game loop after formation.
+- **Player alliances:** alliances that include a player's guild are never touched.
+- **Alliance chat:** RvR and raiding bots sometimes talk on the alliance channel when a real member
+  of the alliance can hear.
+
+### 3.10 Not built, and why
+
+- **Guild houses:** buying and furnishing a house needs the housing system's lot and rent flow,
+  and bots would never use the house. A bot guild house would be decoration only.
+- **Emblems:**
+  - Bot guilds have no emblem, so a keep they claim shows the default banner.
+  - The emblem number packs a logo id, and which logo ids each realm's client offers isn't known
+    here. A guessed id could draw nothing or another realm's logo.
+  - Needs a check in the client first.
+- **Shared Leveling-guild camps:** guildmates group first (phase 3), but a Leveling guild doesn't
+  pick one camp for its members outside groups.
+- **Spending the guild bank:** bot guilds collect dues but don't spend the bank yet (in this
+  server, banks have no built-in use besides withdrawals).
+- **Bot-to-bot memory and loyalty, and guild-based memory of you:** this comes with the bot-voices
+  memory work (`docs/bot-voices/DESIGN.md`, step 3).
+
+### 3.11 Settings (all off until `bot_guilds_enabled`)
 
 | Setting | Default | Meaning |
 |---|---|---|
-| `bot_guilds_enabled` | False | Formation, binding and bot invites. Off keeps every bot guildless and today's behavior. |
+| `bot_guilds_enabled` | False | the master switch: formation, membership, invites and everything below. Off keeps every bot guildless and today's behavior. |
 | `bot_guild_share` | 0.70 | share of eligible bots placed in bot guilds |
 | `bot_guild_min_level` | 5 | lowest level that joins a bot guild |
+| `bot_guild_social` | True | guild chat, greetings, replies, recruiting (phase 2) |
+| `bot_guild_recruit_player` | True | bot officers may invite you (phase 2) |
+| `bot_guild_claims_keeps` | True | keep claims and claim defense (phase 4) |
+| `bot_guild_economy` | True | dues, merit points, buffs (phase 5) |
+| `bot_guild_alliances` | True | realm alliances (phase 6) |
+
+Phase 3 (grouping) has no switch of its own; it follows `bot_guilds_enabled`.
 
 **To turn on:**
 - **Script:** `python tools/claude-version/set_bot_guilds.py --on --apply`, with the server
   closed. It backs up the database first.
+- **One part off:** for example `--claims off --apply`.
 - **In game:** with GM rights, `/serverproperties refresh` after changing the database.
+
+**Release safety:**
+- The release builder deletes every `bot_guild*` setting, so a release ships with bot guilds off.
+- It empties the bot guild tables and alliances, deletes non-starting guilds and their ranks, and
+  blanks starting guilds' alliance ids.
 
 ## 4. Tests
 
-**Automated (`UT_AutonomousBotGuilds`):**
-- guild counts and sizes;
-- the charter pattern;
-- names are unique, in-realm and pass the format check;
-- placement is stable and deterministic and respects level and realm;
-- ranks;
-- invite rules;
-- bot members can be added to and removed from a `Guild`.
+**Automated, in CI on every push** (`UT_AutonomousBotGuilds`, `UT_AutonomousBotGuildSocial`,
+`UT_AutonomousBotGuildKeeps`, `UT_AutonomousBotGuildEconomy`, `UT_AutonomousBotGuildAlliances`):
+- **Formation:** guild counts, sizes, charters, names, placement, ranks, invite rules, adding and
+  removing bot members.
+- **Chat lines:** filled, short and in era; reply classification; guild requests; chat pacing;
+  responder counts; which guild answers you; guildmate ordering.
+- **Keeps:** every claim rule; members needed; claimant choice; defense priority.
+- **Economy:** dues conserve coin; merit formula; charter dues; buff choice.
+- **Alliances:** alliance planning.
 
-**In game (owner):**
-- turn it on and log in after 10 minutes;
-- see guild names over your realm's bots;
-- `/ginvite` a bot;
-- check the guild window;
-- `/gc remove` it.
+What the tests cover is the rules. The live behavior (timers, chat delivery, dialogs, claims,
+alliances) only runs in a real server.
+
+**In game (owner), with `--on`:**
+1. Log in after 10 minutes. Guild names show over your realm's bots.
+2. Write "lf guild" in `/faction`: an officer answers and a dialog appears. Accept; you should be
+   welcomed in guild chat.
+3. In the guild, say "hi" in `/gu`; log out and back in; level up. Bots should answer, greet and
+   congratulate, without flooding.
+4. Watch guild chat for 30 minutes: idle lines, dings, guild groups forming.
+5. `/gc info`: the bank should grow from dues, and merit points from bot level-ups; a buff may
+   appear once merit reaches 1,000.
+6. Take a keep with a bot warband and stay outside it. A bot guild should claim it within about 3
+   minutes. Then attack a keep your bot guild holds from the other side (GM tools), or watch for
+   it, and check that its guildmates rally.
+7. In an RvR guild, watch `/as` for alliance chatter.
+8. `/ginvite` a bot into your own guild and `/gc remove` it.
 
 ## 5. Status
 
-Phase 1 is on `feature/bot-guilds`. Automated test results are in the CI run. **Nothing has been
-checked in game yet.**
+- **Phases 1–6** are on `feature/bot-guilds`.
+- **Automated tests:** green in CI (the full server suite plus the guild tests); see the latest run.
+- **Nothing has been checked in game yet.**

@@ -115,6 +115,7 @@ public static class AutonomousBotGuilds
                 BotGuilds[row.GuildId] = new BotGuildInfo(row.GuildId, (eRealm)row.Realm, charter, row.Ordinal);
                 // Guilds founded before dues existed get their charter's dues once.
                 Guild loaded = GuildMgr.GetGuildByGuildID(row.GuildId);
+                ApplyMemberRankRights(loaded);
                 if (!loaded.IsGuildDuesOn() && AutonomousBotGuildEconomy.DefaultDuesPercent(charter) > 0)
                     AutonomousBotGuildEconomy.SetCharterDues(loaded, charter);
             }
@@ -266,6 +267,7 @@ public static class AutonomousBotGuilds
         }
 
         AutonomousBotGuildEconomy.SetCharterDues(guild, charter);
+        ApplyMemberRankRights(guild);
 
         var row = new OfflineBotGuildRecord
         {
@@ -277,6 +279,30 @@ public static class AutonomousBotGuilds
         if (Log.IsInfoEnabled)
             Log.Info($"Bot guilds: founded {charter} guild \"{name}\" in {realm}");
         return info;
+    }
+
+    /// <summary>The rank a player joins a bot guild at: 8, the lowest rank that may speak in guild chat.</summary>
+    public const int PlayerJoinRank = 8;
+
+    /// <summary>
+    /// Ranks 7 and 8 of a bot guild also hear alliance chat (by default only ranks 0-6 do), so a
+    /// player who joins hears the realm alliance. Saves only what changed.
+    /// </summary>
+    public static void ApplyMemberRankRights(Guild guild)
+    {
+        if (guild == null)
+            return;
+        for (int level = 7; level <= PlayerJoinRank; level++)
+        {
+            DbGuildRank rank = guild.GetRankByID(level);
+            if (rank == null || rank.AcHear && rank.GcHear && rank.GcSpeak)
+                continue;
+            rank.AcHear = true;
+            rank.GcHear = true;
+            rank.GcSpeak = true;
+            rank.Dirty = true;
+            GameServer.Database.SaveObject(rank);
+        }
     }
 
     // Callers hold Sync.

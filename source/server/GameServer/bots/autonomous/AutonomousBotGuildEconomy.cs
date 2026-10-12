@@ -106,7 +106,10 @@ public static class AutonomousBotGuildEconomy
         if (!Enabled || guild == null)
             return;
         long merit = MeritForLevels(previousLevel, bot.Level);
-        if (merit > 0)
+        if (merit <= 0)
+            return;
+        // Bot XP awards can run in parallel; GainMeritPoints is a plain add.
+        lock (guild)
             guild.GainMeritPoints(merit);
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
@@ -445,7 +446,8 @@ public static class AutonomousBotGuildSocial
 
     private static void SendInviteDialog(GamePlayer player, GameBot officer, Guild guild)
     {
-        if (player?.Out == null || guild == null)
+        // Never replace another open yes/no question (a buff purchase, a boat, a battlegroup invite).
+        if (player?.Out == null || guild == null || player.CustomDialogCallback != null)
             return;
         string officerName = officer.Name;
         string guildId = guild.GuildID;
@@ -465,7 +467,8 @@ public static class AutonomousBotGuildSocial
                 answering.Out.SendMessage("You are still in a guild, you'll have to leave it first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            if (answering.Realm != target.Realm || !target.AddPlayer(answering))
+            DbGuildRank joinRank = target.GetRankByID(AutonomousBotGuilds.PlayerJoinRank) ?? target.GetRankByID(AutonomousBotGuildPlanner.LowestRank);
+            if (answering.Realm != target.Realm || joinRank == null || !target.AddPlayer(answering, joinRank))
                 return;
             GameBot[] speakers = Speakers(target);
             int count = Math.Min(speakers.Length, 1 + (Random.Shared.NextDouble() < 0.5 ? 1 : 0));

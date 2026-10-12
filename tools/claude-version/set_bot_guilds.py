@@ -4,6 +4,14 @@
   python tools\\claude-version\\set_bot_guilds.py --on --apply          (turn bot guilds on)
   python tools\\claude-version\\set_bot_guilds.py --share 0.6 --apply   (60% of eligible bots in guilds)
   python tools\\claude-version\\set_bot_guilds.py --off --apply         (every gamebot guildless again)
+  python tools\\claude-version\\set_bot_guilds.py --claims off --apply  (one part off; the others stay on)
+
+Parts, each on by default and only active while bot guilds are on:
+  --social     guild chat, greetings, replies to your /gu, recruiting in /faction
+  --recruit    bot officers invite you to their guild (yes/no dialog)
+  --claims     bot guilds claim keeps their realm takes, and defend them first
+  --economy    dues from real loot, merit points, guild buffs
+  --alliances  each realm's RvR and raiding bot guilds form one alliance
 
 Needs a server build with AutonomousBotGuilds.cs; older servers ignore these settings.
 Turning it off keeps the saved guilds and memberships; turning it on again restores them.
@@ -24,7 +32,22 @@ DESCRIPTIONS = {
                           '/ginvite them. False keeps every gamebot guildless; saved memberships are kept.',
     'bot_guild_share': 'Share (0 to 1) of eligible autonomous gamebots that bot guild formation places in guilds.',
     'bot_guild_min_level': 'Lowest level at which an autonomous gamebot is placed in a bot guild.',
+    'bot_guild_social': 'When bot guilds are on: guild members greet, congratulate and chat in guild chat when a real '
+                        'member can hear, answer your /gu, and bot guild officers recruit in /faction.',
+    'bot_guild_recruit_player': 'When bot guild social life is on: bot guild officers may invite you to their guild with '
+                                'a yes/no dialog (when you ask for a guild, or now and then when you are nearby and unguilded).',
+    'bot_guild_claims_keeps': 'When bot guilds are on: after a realm takes a keep or tower, a bot guild with enough members '
+                              'inside claims it (claim_num, half for towers; guilds_claim_limit), never while a real player '
+                              'of that realm is inside. Its warbands answer first when that keep is attacked.',
+    'bot_guild_economy': 'When bot guilds are on: guilded gamebots pay their guild\'s dues from the real coin they loot, '
+                         'their level-ups earn the guild merit points as a player\'s do, and bot guild leaders spend 1,000 '
+                         'merit points on a 24-hour guild buff.',
+    'bot_guild_alliances': 'When bot guilds are on: each realm\'s RvR and raiding bot guilds form one alliance (up to four '
+                           'guilds); a player in one of them hears its alliance chat. Alliances with a player\'s guild are '
+                           'never touched.',
 }
+PARTS = {'social': 'bot_guild_social', 'recruit': 'bot_guild_recruit_player', 'claims': 'bot_guild_claims_keeps',
+         'economy': 'bot_guild_economy', 'alliances': 'bot_guild_alliances'}
 NUMBER = re.compile(r'(0(\.[0-9]+)?|1(\.0+)?)')
 LEVEL = re.compile(r'[0-9]{1,2}')
 
@@ -50,6 +73,8 @@ def main():
     switch.add_argument('--off', action='store_true', help='turn bot guilds off (saved guilds are kept)')
     parser.add_argument('--share', help='share of eligible bots in guilds, 0 to 1 (default 0.7)')
     parser.add_argument('--min-level', help='lowest level that joins a bot guild, 1 to 50 (default 5)')
+    for part in PARTS:
+        parser.add_argument(f'--{part}', choices=['on', 'off'], help=f'turn the {part} part on or off')
     parser.add_argument('--apply', action='store_true', help='write the change (server, launcher and game closed)')
     parser.add_argument('--db', type=Path, default=DB, help=argparse.SUPPRESS)
     args = parser.parse_args()
@@ -66,16 +91,20 @@ def main():
         if not LEVEL.fullmatch(level) or not 1 <= int(level) <= 50:
             raise ValueError(f'"{args.min_level}" is not a level from 1 to 50')
         values['bot_guild_min_level'] = str(int(level))
+    for part, key in PARTS.items():
+        choice = getattr(args, part)
+        if choice is not None:
+            values[key] = 'True' if choice == 'on' else 'False'
 
     with sqlite3.connect(args.db.as_uri() + '?mode=ro', uri=True) as source:
         before = current(source)
     for key, value in before.items():
-        print(f'{key:20s} now: {value if value not in (None, "") else "(not set: server default)"}')
+        print(f'{key:26s} now: {value if value not in (None, "") else "(not set: server default)"}')
     if not values:
-        print('Nothing to change. Use --on, --off, --share or --min-level.')
+        print('Nothing to change. Use --on, --off, --share, --min-level or a part (--social, --claims, ...).')
         return
     for key, value in values.items():
-        print(f'{key:20s} new: {value}')
+        print(f'{key:26s} new: {value}')
     if not args.apply:
         print('Dry run only; the database was not changed. Add --apply to write it.')
         return
