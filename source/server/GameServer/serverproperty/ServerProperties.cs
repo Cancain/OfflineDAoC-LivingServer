@@ -2398,6 +2398,18 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("bots", "bot_personalities_enabled", "Autonomous gamebots get a personality (Leveler, Socialite, Daredevil, Explorer, Crafter, No-lifer) and traits, fixed from their id, that tilt town breaks, solo versus group goals, dungeon choice, camp choice and how often they talk (see docs/BOT-PERSONALITIES.md). Hard rules never change. False keeps today's behavior.", false)]
 		public static bool BOT_PERSONALITIES_ENABLED;
 
+		/// <summary>
+		/// Autonomous gamebots speak lines from the bot-voices corpus in their own writing style.
+		/// </summary>
+		[ServerProperty("bots", "bot_voices_enabled", "Autonomous gamebots say pre-written, period lines (docs/bot-voices/DESIGN.md) chosen by personality, level, realm, class and situation, each in its own writing style, without repeating a line in a realm within 6 hours. False keeps today's lines.", false)]
+		public static bool BOT_VOICES_ENABLED;
+
+		/// <summary>
+		/// Bots of a realm hold debates and long threads in /faction.
+		/// </summary>
+		[ServerProperty("bots", "bot_voices_debates", "When bot voices are on: bots of a realm play the corpus's debates and long threads in /faction while you are online, one at a time, 30-45 minutes apart, never repeating a scene until all have played.", true)]
+		public static bool BOT_VOICES_DEBATES;
+
 
 
 		#endregion

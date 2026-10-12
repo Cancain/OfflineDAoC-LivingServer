@@ -1,0 +1,274 @@
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using DOL.GS.Keeps;
+using DOL.GS.ServerProperties;
+using DOL.Logging;
+using VC = DOL.GS.AutonomousBotVoiceCorpus;
+
+namespace DOL.GS;
+
+/// <summary>
+/// Bot voices (docs/bot-voices/DESIGN.md, part of the Social Expansion): live bots say lines from
+/// the embedded corpus instead of the generic phrase lists, chosen by kind, realm, class, level,
+/// personality and situation, written in the bot's own style, never repeating a line in a realm
+/// within 6 hours. Every caller keeps its old line when nothing fits or the setting is off.
+/// </summary>
+public static class AutonomousBotVoices
+{
+    private static readonly Logger Log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly Lazy<VC> Loaded = new(Load);
+    private static readonly ConcurrentDictionary<long, long> LeveledAt = new();
+    private static readonly ConcurrentDictionary<long, long> DiedAt = new();
+    public static readonly VC.RecentLines Recent = new();
+
+    public const long JustLeveledMs = 3 * 60_000;
+    public const long JustDiedMs = 3 * 60_000;
+
+    public static VC Corpus => Loaded.Value;
+
+    public static bool Enabled => Properties.BOT_VOICES_ENABLED && Corpus != null;
+
+    private static VC Load()
+    {
+        try
+        {
+            Assembly assembly = typeof(AutonomousBotVoices).Assembly;
+            string Read(string suffix)
+            {
+                string name = assembly.GetManifestResourceNames().SingleOrDefault(n => n.EndsWith(suffix, StringComparison.Ordinal));
+                if (name == null)
+                    throw new FileNotFoundException($"embedded resource *{suffix} is missing");
+                using Stream stream = assembly.GetManifestResourceStream(name);
+                using var reader = new StreamReader(stream);
+                return reader.ReadToEnd();
+            }
+            VC corpus = VC.Parse(Read("chat.corpus.json"), Read("chat.voices.json"));
+            if (Log.IsInfoEnabled)
+                Log.Info($"Bot voices: loaded {corpus.Lines.Length} lines, {corpus.Scenes.Length} scenes, {corpus.Voices.Length} voices");
+            return corpus;
+        }
+        catch (Exception exception)
+        {
+            Log.Error("Bot voices: could not load the corpus; bots keep their old lines", exception);
+            return null;
+        }
+    }
+
+    #region Context
+
+    public static void NoteLevelUp(GameBot bot)
+    {
+        if (bot?.DatabaseID > 0)
+            LeveledAt[bot.DatabaseID] = GameLoop.GameLoopTime;
+    }
+
+    public static void NoteDeath(GameBot bot)
+    {
+        if (bot?.DatabaseID > 0)
+            DiedAt[bot.DatabaseID] = GameLoop.GameLoopTime;
+    }
+
+    public static VC.Speaker SpeakerFor(GameBot bot)
+    {
+        var flags = new HashSet<string>(StringComparer.Ordinal);
+        OfflineWorldBotRecord record = bot.PersistentRecord;
+        flags.Add(bot.Group != null ? "in_group" : "solo");
+        if (bot.CurrentRegion?.IsDungeon == true || bot.CurrentZone?.IsDungeon == true) flags.Add("in_dungeon");
+        if (bot.CurrentZone?.IsRvR == true || bot.CurrentRegion?.IsRvR == true) flags.Add("in_rvr");
+        if (!string.IsNullOrEmpty(record?.TravelDestination)) flags.Add("traveling");
+        else if (!string.IsNullOrEmpty(record?.CurrentCampId)) flags.Add("at_camp");
+        if (record != null && AutonomousObjectiveAssignments.IsIntentionalTownIdle(record, DateTime.UtcNow)) flags.Add("in_town");
+        if (LeveledAt.TryGetValue(bot.DatabaseID, out long leveled) && GameLoop.GameLoopTime - leveled < JustLeveledMs) flags.Add("just_leveled");
+        if (DiedAt.TryGetValue(bot.DatabaseID, out long died) && GameLoop.GameLoopTime - died < JustDiedMs) flags.Add("just_died");
+        if (AutonomousBotEconomy.IsBackpackNearlyFull(bot)) flags.Add("bag_full");
+        return new VC.Speaker(bot.DatabaseID, bot.Name, bot.Realm, bot.CharacterClass?.Name ?? bot.ClassName ?? string.Empty,
+            bot.Level, AutonomousBotPersonality.For(bot).Type, flags);
+    }
+
+    /// <summary>A realm dungeon a bot of this level would use (Kirstena's 2002 ranges, checked against the world database).</summary>
+    public static string DungeonFor(eRealm realm, int level)
+    {
+        (string Name, int Low, int High)[] dungeons = realm switch
+        {
+            eRealm.Albion => [("Tomb of Mithra", 7, 17), ("Tepok's Mine", 16, 24), ("Keltoi Fogou", 19, 28),
+                ("the Catacombs of Cardova", 24, 40), ("Stonehenge Barrows", 36, 50)],
+            eRealm.Midgard => [("Nisse's Lair", 8, 21), ("Cursed Tomb", 18, 28), ("Vendo Caverns", 20, 35),
+                ("Varulvhamn", 25, 40), ("Spindelhalla", 33, 50)],
+            eRealm.Hibernia => [("Muire Tomb", 12, 20), ("Spraggon Den", 15, 25), ("Koalinth Tribal Caverns", 20, 30),
+                ("Treibh Caillte", 27, 40), ("Coruscating Mine", 30, 45)],
+            _ => [],
+        };
+        var fitting = dungeons.Where(d => level >= d.Low - 2 && level <= d.High + 2).ToArray();
+        if (fitting.Length == 0)
+            fitting = dungeons.OrderBy(d => Math.Abs((d.Low + d.High) / 2 - level)).Take(1).ToArray();
+        return fitting.Length == 0 ? null : fitting[Random.Shared.Next(fitting.Length)].Name;
+    }
+
+    public static string CapitalOf(eRealm realm) => realm switch
+    {
+        eRealm.Albion => "Camelot",
+        eRealm.Midgard => "Jordheim",
+        eRealm.Hibernia => "Tir na Nog",
+        _ => null,
+    };
+
+    public static string EnemyOf(eRealm realm, Random random)
+    {
+        eRealm[] others = new[] { eRealm.Albion, eRealm.Midgard, eRealm.Hibernia }.Where(r => r != realm).ToArray();
+        return others.Length == 0 ? null : GlobalConstants.RealmToName(others[random.Next(others.Length)]);
+    }
+
+    /// <summary>A frontier keep of the realm and the zone it stands in (so a line names a real pair).</summary>
+    public static (string Keep, string Zone) FrontierKeepOf(eRealm realm, Random random)
+    {
+        try
+        {
+            AbstractGameKeep[] keeps = GameServer.KeepManager.GetFrontierKeeps()
+                .Where(keep => keep.Realm == realm && !keep.IsPortalKeep && !string.IsNullOrEmpty(keep.Name)).ToArray();
+            if (keeps.Length == 0)
+                return (null, null);
+            AbstractGameKeep chosen = keeps[random.Next(keeps.Length)];
+            return (chosen.Name, chosen.CurrentRegion?.GetZone(chosen.X, chosen.Y)?.Description);
+        }
+        catch
+        {
+            return (null, null);
+        }
+    }
+
+    /// <summary>
+    /// Slot values from a live bot. Shared values (keep, frontier, enemy, capital, dungeon, camp)
+    /// can be passed in so every speaker in a scene names the same ones.
+    /// </summary>
+    public static Dictionary<string, string> SlotsFor(GameBot bot, Random random, IReadOnlyDictionary<string, string> shared = null)
+    {
+        OfflineWorldBotRecord record = bot.PersistentRecord;
+        string zone = bot.CurrentZone?.Description;
+        string item = bot.Inventory?.AllItems.FirstOrDefault(entry => entry != null &&
+            entry.SlotPosition >= (int)eInventorySlot.FirstBackpack && entry.SlotPosition <= (int)eInventorySlot.LastBackpack)?.Name;
+        string monster = !string.IsNullOrWhiteSpace(record?.TargetName) ? record.TargetName.Trim().ToLowerInvariant() : null;
+        var slots = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["me"] = bot.Name,
+            ["class"] = (bot.CharacterClass?.Name ?? bot.ClassName)?.ToLowerInvariant(),
+            ["level"] = bot.Level.ToString(),
+            ["realm"] = GlobalConstants.RealmToName(bot.Realm),
+            ["zone"] = zone,
+            ["monster"] = monster,
+            ["item"] = item,
+            ["count"] = random.Next(2, 5).ToString(),
+            ["q"] = VC.Openers[random.Next(VC.Openers.Length)],
+        };
+        if (shared != null)
+        {
+            foreach (var pair in shared)
+                slots[pair.Key] = pair.Value;
+        }
+        else
+        {
+            foreach (var pair in SharedSlots(bot.Realm, bot.Level, random, bot.CurrentRegion?.IsDungeon == true ? zone : null))
+                slots[pair.Key] = pair.Value;
+        }
+        return slots;
+    }
+
+    /// <summary>Values a whole conversation shares: one keep, one frontier, one enemy, one capital, one dungeon.</summary>
+    public static Dictionary<string, string> SharedSlots(eRealm realm, int level, Random random, string currentDungeon = null)
+    {
+        (string keep, string frontier) = FrontierKeepOf(realm, random);
+        string dungeon = currentDungeon ?? DungeonFor(realm, level);
+        return new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["keep"] = keep,
+            ["frontier"] = frontier,
+            ["enemy"] = EnemyOf(realm, random),
+            ["capital"] = CapitalOf(realm),
+            ["dungeon"] = dungeon,
+            ["camp"] = dungeon,
+        };
+    }
+
+    #endregion
+
+    /// <summary>A corpus line of a kind for this bot, or false (the caller keeps its old line).</summary>
+    public static bool TryLine(GameBot bot, string kind, out string text, string intent = null, Random random = null)
+    {
+        text = null;
+        if (!Enabled || bot == null || !bot.IsAutonomousWorldBot || bot.DatabaseID <= 0)
+            return false;
+        random ??= Random.Shared;
+        try
+        {
+            return Corpus.TryPick(kind, SpeakerFor(bot), SlotsFor(bot, random), Recent, DateTime.UtcNow, random,
+                out text, out _, intent);
+        }
+        catch (Exception exception)
+        {
+            Log.Warn($"Bot voices: no line for {bot.Name} ({kind})", exception);
+            return false;
+        }
+    }
+
+    /// <summary>Picks the kind of an unprompted line from the bot's situation and personality.</summary>
+    public static string AmbientKind(GameBot bot, bool faction, Random random)
+    {
+        var speaker = SpeakerFor(bot);
+        BotPersonalityType type = speaker.Type;
+        var options = new List<(string Kind, double Weight)> { ("ambient", 6) };
+        if (speaker.Flags.Contains("solo") && bot.Level >= 5)
+            options.Add(("lfg", type is BotPersonalityType.Socialite or BotPersonalityType.Leveler ? 3 : 1.5));
+        if (type == BotPersonalityType.Crafter || speaker.Flags.Contains("bag_full"))
+            options.Add(("trade", type == BotPersonalityType.Crafter ? 3 : 1.5));
+        if (speaker.Flags.Contains("in_rvr") || bot.Level >= 40 && type is BotPersonalityType.NoLifer or BotPersonalityType.Daredevil)
+            options.Add(("rvr", speaker.Flags.Contains("in_rvr") ? 4 : 1));
+        if (!faction && speaker.Flags.Contains("at_camp"))
+            options.Add(("camp", 2));
+        double draw = random.NextDouble() * options.Sum(o => o.Weight);
+        foreach ((string kind, double weight) in options)
+        {
+            if (draw < weight)
+                return kind;
+            draw -= weight;
+        }
+        return "ambient";
+    }
+
+    /// <summary>Intent names in the corpus are the chat model's, lowercased.</summary>
+    public static string IntentName(eAutonomousChatIntent intent) => intent.ToString().ToLowerInvariant();
+
+    #region Moments (ding, death) in /say when a player is near
+
+    public static void OnBotLevelUp(GameBot bot)
+    {
+        NoteLevelUp(bot);
+        SayMoment(bot, "ding", 0.35, 1_500);
+    }
+
+    public static void OnBotDeath(GameBot bot)
+    {
+        NoteDeath(bot);
+        SayMoment(bot, "death", 0.25, 3_000);
+    }
+
+    private static void SayMoment(GameBot bot, string kind, double chance, int delayMs)
+    {
+        if (!Enabled || bot?.CurrentRegion == null || Random.Shared.NextDouble() >= chance)
+            return;
+        bool heard = ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion)
+            .Any(player => player.ObjectState == GameObject.eObjectState.Active && bot.IsWithinRadius(player, WorldMgr.SAY_DISTANCE));
+        if (!heard)
+            return;
+        _ = new ECSGameTimer(bot, _ =>
+        {
+            if (bot.ObjectState == GameObject.eObjectState.Active && TryLine(bot, kind, out string line))
+                bot.Say(line);
+            return 0;
+        }, delayMs + Random.Shared.Next(1_500));
+    }
+
+    #endregion
+}

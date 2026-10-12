@@ -44,7 +44,8 @@ public static class AutonomousBotChatCoordinator
         if (!Eligible(starter))
             return false;
 
-        bool factionAudience = HasFactionAudience(starter.Realm);
+        // A running debate scene owns the realm's /faction for its duration (AutonomousBotDebates).
+        bool factionAudience = HasFactionAudience(starter.Realm) && !AutonomousBotDebates.IsRunning(starter.Realm);
         bool localAudience = HasLocalAudience(starter);
         if (!factionAudience && !localAudience)
             return false;
@@ -284,7 +285,7 @@ public static class AutonomousBotChatCoordinator
                 ? knowledge
                 : directed
                     ? GenerateDirectedReply(message)
-                    : faction ? GenerateFactionReply(message) : GenerateLocalReply(responder, message);
+                    : VoicedReply(responder, message, () => faction ? GenerateFactionReply(message) : GenerateLocalReply(responder, message));
             if (!TryAddDistinctResponse(scheduledResponses, response, out response))
                 continue;
             Schedule(responder, 1_300 + scheduledIndex++ * 1_800 + Random.Shared.Next(1_200), () =>
@@ -312,7 +313,8 @@ public static class AutonomousBotChatCoordinator
         for (int index = 0; index < count; index++)
         {
             GameBot responder = eligible[index];
-            string response = hasKnowledge ? knowledge : faction ? GenerateFactionReply(opening) : GenerateLocalReply(responder, opening);
+            string response = hasKnowledge ? knowledge
+                : VoicedReply(responder, opening, () => faction ? GenerateFactionReply(opening) : GenerateLocalReply(responder, opening));
             if (!TryAddDistinctResponse(scheduledResponses, response, out response))
                 continue;
             Schedule(responder, 1_700 + scheduledCount++ * 2_100 + Random.Shared.Next(1_300), () =>
@@ -337,6 +339,15 @@ public static class AutonomousBotChatCoordinator
                     starter.Say(closing);
             });
         }
+    }
+
+    /// <summary>A corpus reply for the line's intent in the responder's voice, else the old reply.</summary>
+    private static string VoicedReply(GameBot responder, string incoming, Func<string> fallback)
+    {
+        if (AutonomousBotVoices.Enabled && AutonomousBotVoices.TryLine(responder, "reply", out string voiced,
+                AutonomousBotVoices.IntentName(AutonomousChatIntentModel.Predict(incoming))))
+            return voiced;
+        return fallback();
     }
 
     private static void Schedule(GameBot speaker, int delay, Action action)
@@ -367,6 +378,11 @@ public static class AutonomousBotChatCoordinator
 
     private static string BuildAmbientOpening(GameBot starter, AutonomousBotChat.Context context, bool faction)
     {
+        // Bot voices first (corpus lines by personality, situation and style); the old lines are the fallback.
+        if (AutonomousBotVoices.Enabled &&
+            AutonomousBotVoices.TryLine(starter, AutonomousBotVoices.AmbientKind(starter, faction, Random.Shared), out string voiced))
+            return voiced;
+
         if (Random.Shared.NextDouble() < 0.18)
         {
             string activity = Clean(starter.PersistentRecord?.Activity, string.Empty);

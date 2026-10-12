@@ -5,6 +5,10 @@ each piece is in, and the plan to code, test, install and release it.
 
 **New development stops here** until this release is played and fixed.
 
+**Scope change (Chris, 2026-10-12):** the release waits for bot personalities, voices and debates,
+and ships everything together as the "Social Expansion". Those were built after this audit; see
+the workstream table and stage 5b.
+
 ## 1. Audit
 
 ### 1.1 Base
@@ -21,7 +25,8 @@ each piece is in, and the plan to code, test, install and release it.
 |---|---|---|---|---|---|
 | XP rate by level range | `feature/xp-by-level-range` | Code, helper script `set_xp_by_level.py`, release and transfer clean-up, doc | Green | **Not tested** | Yes, off until set |
 | Bot guilds, phases 1–6 | `feature/bot-guilds` | Formation, chat, recruiting you, grouping, keep claims and defense, dues, merit, buffs, alliances; helper `set_bot_guilds.py`; doc | Green (95 tests) | **Not tested** | Yes, off until turned on |
-| Bot voices | `feature/bot-voices` | Research brief, design, corpus (842 lines, 296 scenes), build and preview tools. **No game code.** | Corpus checker passes | n/a | Data only; no effect (not embedded in the build) |
+| Bot voices: data | `feature/bot-voices` | Research brief, design, corpus (842 lines, 296 scenes), build and preview tools | Corpus checker passes | n/a | Yes, as the voices' data |
+| Bot personalities, voices and debates | `feature/bot-personalities` | Types and traits that tilt town breaks, goals, dungeons, camps and chattiness; the corpus embedded in the server with writing styles; /faction debates; `/personality`; helper `set_bot_social.py`; doc `BOT-PERSONALITIES.md` | Personalities green (2,788 tests); voices and debates tests added | **Not tested** | Yes, off until turned on |
 | Living-world planning | `living-world/trade-sim` | Roadmap, audit, data check, Kirstena's Atlas check, trade, persona and RvR simulators | n/a | n/a | No (planning) |
 | CI (GitHub Actions, Windows) | on every branch | Build, launcher, full server tests, feature test counts | n/a | n/a | Yes (tooling) |
 
@@ -113,13 +118,28 @@ Each stage ends with a check. Nothing moves on until the check passes.
 4. **If one part misbehaves,** switch just that part off (for example `--claims off`) and note it.
 5. **Pass when** the checklist is complete with no blocking problem.
 
+### Stage 5b: personalities, voices and debates
+
+1. **Turn on:** with the server closed, run
+   `python tools\claude-version\set_bot_social.py --all on --apply`, start, and play for an hour.
+2. **Check:**
+   1. `/personality` on a few bots: types and writing styles vary.
+   2. Towns: about as busy as the baseline; some bots linger, some barely stop.
+   3. /faction and /say: lines vary, fit the moment and sound like 2003; no `{` or `}`.
+   4. A "ding" or death line from a bot near you, now and then.
+   5. A debate in /faction within about 10 minutes of starting, then one every 30–45 minutes.
+3. **Watch for:** repeated lines, debates talking over other chat, bots idling in town too long.
+4. **If one part misbehaves,** switch just that part off (`--debates off`, `--voices off`,
+   `--personalities off`) and note it.
+5. **Pass when** the checks hold with no blocking problem.
+
 ### Stage 6: fix round
 
 1. **Fix:** each problem found is fixed on its feature branch, then merged into the release
    branch.
 2. **Build:** CI builds a new zip (`0.35-chris.2`, …).
 3. **Retest** only the affected checklist items.
-4. **Repeat** until stages 3–5 pass.
+4. **Repeat** until stages 3–5b pass.
 
 ### Stage 7: release
 
@@ -145,12 +165,14 @@ changes.
 
 ### After the release: the next coding project
 
-**Bot voices, step 2:** load the corpus in the server, with voices, line choice and settings, then
-test it in game the same way. After that come memory (step 3) and the living-world population
-work (M1).
+**Bot memory of you** (bot-voices step 3), with Chris's OK: greetings by name, thanks for a rez,
+gossip and invites. It also unlocks the corpus lines that are skipped today. After that, the
+living-world population work (M1).
 
-## 3. Decisions needed from Chris
+## 3. Decisions from Chris (2026-10-12)
 
-1. **Go** for stage 1 (packaging and safety tooling).
-2. **Delete** the two stale branches (`living-world/roadmap`, `ci/github-actions`).
-3. **Release visibility** at stage 7: public release, or a draft for yourself only.
+1. **Stage 1:** go. Done.
+2. **Stale branches:** delete. Claude's token can't delete branches (HTTP 403), so Chris deletes
+   `living-world/roadmap` and `ci/github-actions` on GitHub.
+3. **Release visibility:** public, at stage 7, after the tests pass.
+4. **Scope:** hold the release for personalities, voices and debates ("Social Expansion").

@@ -51,6 +51,7 @@ foreach ($folder in @('runtime\server', 'runtime\server\lib', 'runtime\server\wi
     Check ((Sha (Join-Path $game "$folder\GameServer.pdb")) -eq $info['GameServer.pdb']) "new pdb in $folder"
 }
 Check (Test-Path (Join-Path $game 'tools\claude-version\set_bot_guilds.py')) 'helper scripts installed'
+Check (Test-Path (Join-Path $game 'tools\claude-version\set_bot_social.py')) 'social switch installed'
 Check (@(Get-ChildItem (Join-Path $game 'runtime\server\deployment-backups') -Directory).Count -eq 1) 'one backup folder'
 $again = Run 'install-server-build.ps1' @('-GameFolder', $game)
 Check ($again.Code -eq 0 -and $again.Output -match 'Already installed') 'reinstall is a no-op'
@@ -58,6 +59,7 @@ $rollback = Run 'rollback-server-build.ps1' @('-GameFolder', $game)
 Check ($rollback.Code -eq 0) "rollback succeeds`n$($rollback.Output)"
 Check ((Sha (Join-Path $game 'runtime\server\lib\GameServer.dll')) -eq $original) 'rollback restores the original dll'
 Check (!(Test-Path (Join-Path $game 'tools\claude-version\set_bot_guilds.py'))) 'rollback removes helpers it added'
+Check (!(Test-Path (Join-Path $game 'tools\claude-version\set_bot_social.py'))) 'rollback removes the social switch'
 $nothing = Run 'rollback-server-build.ps1' @('-GameFolder', $game)
 Check ($nothing.Code -ne 0) 'a second rollback has nothing to undo'
 $reinstall = Run 'install-server-build.ps1' @('-GameFolder', $game)

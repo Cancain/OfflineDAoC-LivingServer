@@ -23,7 +23,9 @@ namespace DOL.GS.Commands
 				return;
 			}
 			string state = AutonomousBotPersonality.Enabled ? string.Empty : " (personalities are switched off, so it doesn't act on it)";
-			client.Out.SendMessage($"{bot.Name}: {AutonomousBotPersonality.Describe(AutonomousBotPersonality.For(bot))}{state}",
+			string voice = AutonomousBotVoices.Corpus?.VoiceFor(bot.DatabaseID).Name;
+			string voiceText = voice == null ? string.Empty : $"; writes {voice}{(AutonomousBotVoices.Enabled ? string.Empty : " (voices off)")}";
+			client.Out.SendMessage($"{bot.Name}: {AutonomousBotPersonality.Describe(AutonomousBotPersonality.For(bot))}{state}{voiceText}",
 				eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 	}

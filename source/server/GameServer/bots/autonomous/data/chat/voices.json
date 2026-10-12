@@ -27,7 +27,7 @@
    "capitalize": false,
    "end_period": false,
    "strip_punctuation": true,
-   "abbreviate": {"you": "u", "your": "ur", "please": "pls", "thanks": "ty", "people": "ppl", "because": "cuz", "right now": "rn", "though": "tho", "about": "abt", "tonight": "tonite", "anyone": "any1"},
+   "abbreviate": {"you": "u", "your": "ur", "please": "pls", "thanks": "ty", "people": "ppl", "because": "cuz", "though": "tho", "about": "abt", "tonight": "tonite", "anyone": "any1"},
    "expand": {},
    "emote_chance": 0.0,
    "typo_chance": 0.0

@@ -98,6 +98,8 @@ def clean_world(database: Path, policy: dict) -> dict:
     con.execute("DELETE FROM Guild WHERE IsStartingGuild<>1")
     # Bot guilds ship off (server defaults); set_bot_guilds.py turns them on in a played install.
     con.execute("DELETE FROM ServerProperty WHERE lower(`Key`) = 'bot_guilds_enabled' OR lower(`Key`) LIKE 'bot\\_guild\\_%' ESCAPE '\\'")
+    # Social Expansion switches ship off too (server defaults).
+    con.execute("DELETE FROM ServerProperty WHERE lower(`Key`) = 'bot_personalities_enabled' OR lower(`Key`) LIKE 'bot\\_voices\\_%' ESCAPE '\\'")
     # Starting guild definitions and ranks are world data; their earned state is not.
     con.execute("UPDATE Guild SET RealmPoints=0,BountyPoints=0,Bank=0,MeritPoints=0,Webpage='',Email='',"
                 "Motd='',oMotd='',HaveGuildHouse=0,GuildHouseNumber=0,AllianceID=''")
@@ -155,6 +157,8 @@ def verify_clean(con: sqlite3.Connection, policy: dict) -> dict:
     assert con.execute("SELECT COUNT(*) FROM Guild WHERE IsStartingGuild<>1").fetchone()[0] == 0, "non-starting guilds"
     assert con.execute("SELECT COUNT(*) FROM ServerProperty WHERE lower(`Key`) IN "
                        "('bot_guilds_enabled') OR lower(`Key`) LIKE 'bot\\_guild\\_%' ESCAPE '\\'").fetchone()[0] == 0, "bot guild settings"
+    assert con.execute("SELECT COUNT(*) FROM ServerProperty WHERE lower(`Key`) = 'bot_personalities_enabled' "
+                       "OR lower(`Key`) LIKE 'bot\\_voices\\_%' ESCAPE '\\'").fetchone()[0] == 0, "social expansion settings"
     assert con.execute("SELECT COUNT(*) FROM GuildRank WHERE GuildID NOT IN "
                        "(SELECT GuildID FROM Guild WHERE IsStartingGuild=1)").fetchone()[0] == 0, "orphan guild ranks"
     for table in policy["ProgressTables"] + policy.get("OptionalProgressTables", []) + policy["ClearTables"] + ["FactionAggroLevel"]:

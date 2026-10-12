@@ -92,8 +92,8 @@ jobs:
           if (!(Test-Path "$built/GameServer.dll")) { throw "No GameServer.dll in $built" }
           Copy-Item "$built/GameServer.dll", "$built/GameServer.pdb" $dir
           Copy-Item tools/fork-build/INSTALL.cmd, tools/fork-build/ROLLBACK.cmd, tools/fork-build/install-server-build.ps1, tools/fork-build/rollback-server-build.ps1, tools/fork-build/fork-build-common.ps1, tools/fork-build/README.txt $dir
-          Copy-Item tools/claude-version/set_bot_guilds.py, tools/claude-version/set_xp_by_level.py "$dir/tools/claude-version"
-          Copy-Item docs/BOT-GUILDS.md, docs/XP-BY-LEVEL-RANGE.md, docs/RELEASE-PLAN.md "$dir/docs"
+          Copy-Item tools/claude-version/set_bot_guilds.py, tools/claude-version/set_bot_social.py, tools/claude-version/set_xp_by_level.py "$dir/tools/claude-version"
+          Copy-Item docs/BOT-GUILDS.md, docs/BOT-PERSONALITIES.md, docs/XP-BY-LEVEL-RANGE.md, docs/RELEASE-PLAN.md "$dir/docs"
           $dll = (Get-FileHash "$dir/GameServer.dll" -Algorithm SHA256).Hash.ToLowerInvariant()
           $pdb = (Get-FileHash "$dir/GameServer.pdb" -Algorithm SHA256).Hash.ToLowerInvariant()
           Set-Content -Path "$dir/BUILD-INFO.txt" -Encoding UTF8 -Value @(

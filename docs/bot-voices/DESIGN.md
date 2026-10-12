@@ -215,6 +215,10 @@ N seconds.
 
 ## 5. Settings (all off by default until the playtest)
 
+**Status (2026-10-12):** `bot_voices_enabled` and `bot_voices_debates` exist (see
+[../BOT-PERSONALITIES.md](../BOT-PERSONALITIES.md)). The others come with memory (step 3) and aren't
+in the server yet.
+
 | Setting | Default | Meaning |
 |---|---|---|
 | `bot_voices_enabled` | False | use the corpus; off keeps today's lines |
@@ -244,6 +248,11 @@ N seconds.
 - Watch for repetition and anything out of era.
 
 ## 7. Order of work
+
+**Status (2026-10-12):** steps 1, 2 and 4 are in the server on `feature/bot-personalities`, off by
+default, with unit tests; nothing has been checked in game yet. Step 3 (memory) hasn't started, so
+lines with `{player}`, `{place}` or `{player_class}` are skipped. Details:
+[../BOT-PERSONALITIES.md](../BOT-PERSONALITIES.md).
 
 1. **Research brief, this design and the first corpus** (this branch). No game code yet.
 2. **Voices:**

@@ -966,6 +966,7 @@ namespace DOL.GS
             {
                 AutonomousBotStatusPersistence.Queue(this);
                 AutonomousBotGuildSocial.OnBotDeath(this);
+                AutonomousBotVoices.OnBotDeath(this);
             }
             StartDeathRecoveryTimer();
         }
@@ -1654,6 +1655,7 @@ namespace DOL.GS
                 {
                     AutonomousBotGuildEconomy.OnBotLevelsGained(this, previousLevel);
                     AutonomousBotGuildSocial.OnBotLevelUp(this);
+                    AutonomousBotVoices.OnBotLevelUp(this);
                 }
             }
             else
