@@ -68,7 +68,10 @@ applies outside your ranges.
 
 - **Automated tests:**
   - `UT_LevelRangeXpRates` covers parsing and the range lookup;
-  - `UT_BotXpRateSeparation` covers bot scaling, including RvR zones.
+  - `UT_BotXpRateSeparation` covers bot scaling, including RvR zones;
+  - on GitHub's Windows build (2026-10-11): 47 of 47 of these pass on their own, and the full
+    server suite passes (2,674 of 2,674, without the 47 test classes that need installed game
+    files).
 - **In-game check:** not done yet. Check it by killing a few monsters at a level inside and outside
   a range and comparing the XP messages with the flat rate.
 - **Code:** `source/server/GameServer/gameutils/LevelRangeXpRates.cs`, used by `GamePlayer` and
