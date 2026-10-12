@@ -62,6 +62,8 @@ jobs:
           out=$(dotnet test source/server/Tests/Tests.csproj -c Release --no-build --filter "$filter" 2>&1 || true)
           summary=$(echo "$out" | grep -E "(Passed|Failed)!" | tail -n 1)
           echo "::notice title=Feature tests ($classes)::${summary:-no summary line found}"
+          failed=$(echo "$out" | grep -E "^\s*Failed [A-Za-z_]" | sed -E 's/^\s*Failed //; s/ \[.*//' | head -n 10 | paste -sd ';' -)
+          if [ -n "$failed" ]; then echo "::warning title=Failed feature tests::$failed"; fi
 
       - uses: actions/upload-artifact@v4
         if: always()

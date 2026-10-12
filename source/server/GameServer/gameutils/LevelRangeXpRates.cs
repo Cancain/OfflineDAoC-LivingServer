@@ -75,9 +75,14 @@ namespace DOL.GS
                 bool ok = TryParse(spec, out LevelRange[] ranges, out string error);
                 parsed = new Parsed(spec, ok ? ranges : null, error);
                 cache = parsed;
+                // Check the level first, as the rest of the server does: before logging starts
+                // (for example in unit tests) the logger has no queue to write to.
                 if (ok)
-                    Log.Info($"{settingName} in use: {spec}");
-                else
+                {
+                    if (Log.IsInfoEnabled)
+                        Log.Info($"{settingName} in use: {spec}");
+                }
+                else if (Log.IsWarnEnabled)
                     Log.Warn($"{settingName} is invalid and is ignored ({error}); the flat rate stays in use. Value: \"{spec}\"");
             }
 
