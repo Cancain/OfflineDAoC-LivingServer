@@ -98,6 +98,9 @@ def main():
     print(f"\n-- debate scene: {scene['id']} ({SAMPLE[realm]['realm']}, /faction) --")
     cast = {}
     for beat in scene['beats']:
+        if beat['role'] == '~':
+            print(f"   ... quiet for {beat['pause']} seconds ...")
+            continue
         who = cast.setdefault(beat['role'], f"{rng.choice(SAMPLE[realm]['classes'])}{len(cast) + 1}")
         voice = rng.choices(names, shares)[0]
         print(f"({who}) <Faction> {voice_apply(fill(beat['text'], realm, rng, 40), voices[voice], rng)}")

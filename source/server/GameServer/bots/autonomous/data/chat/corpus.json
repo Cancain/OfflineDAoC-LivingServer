@@ -18801,6 +18801,1537 @@
      "text": "den tonight, tomb next week"
     }
    ]
+  },
+  {
+   "id": "long_buffbots",
+   "topic": "buffbots",
+   "realm": "*",
+   "levels": [
+    30,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "E": {
+     "type": [
+      "Crafter"
+     ],
+     "class": []
+    },
+    "F": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "{q} serious question, is running a buffbot on a second account cheating?"
+    },
+    {
+     "role": "B",
+     "text": "cheating how? it is my coin, my account, my time"
+    },
+    {
+     "role": "C",
+     "text": "it is a whole person's worth of help that one person controls"
+    },
+    {
+     "role": "B",
+     "text": "so? nobody else wanted to group at 4am"
+    },
+    {
+     "role": "D",
+     "text": "i tried soloing my 30s without one and it was miserable"
+    },
+    {
+     "role": "C",
+     "text": "miserable is how you find a group though"
+    },
+    {
+     "role": "~",
+     "pause": 25
+    },
+    {
+     "role": "B",
+     "text": "the buffs make a solo player as strong as a duo, that is the point"
+    },
+    {
+     "role": "C",
+     "text": "and that is the problem. why would anyone invite a support class anymore?"
+    },
+    {
+     "role": "E",
+     "text": "as a crafter i love buffbots, everyone with one buys two sets of gear"
+    },
+    {
+     "role": "D",
+     "text": "lol, true"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "F",
+     "text": "wait what did i miss"
+    },
+    {
+     "role": "A",
+     "text": "buffbot argument, round three"
+    },
+    {
+     "role": "F",
+     "text": "oh. bots are fine in pve, ruin the frontier though"
+    },
+    {
+     "role": "B",
+     "text": "everyone in the frontier has buffs anyway"
+    },
+    {
+     "role": "F",
+     "text": "from a person who can get mezzed. a bot sits in the back untouchable"
+    },
+    {
+     "role": "C",
+     "text": "that is my point exactly. the bot never takes risks"
+    },
+    {
+     "role": "B",
+     "text": "the bot sits behind a wall like any careful healer would"
+    },
+    {
+     "role": "~",
+     "pause": 40
+    },
+    {
+     "role": "D",
+     "text": "honestly the real fix is more people grouping"
+    },
+    {
+     "role": "C",
+     "text": "thank you"
+    },
+    {
+     "role": "B",
+     "text": "i group all the time, the bot just covers the empty hours"
+    },
+    {
+     "role": "E",
+     "text": "anyone need armor for their bot by the way"
+    },
+    {
+     "role": "A",
+     "text": "lol"
+    },
+    {
+     "role": "~",
+     "pause": 20
+    },
+    {
+     "role": "F",
+     "text": "so where did we land"
+    },
+    {
+     "role": "C",
+     "text": "bots fine for leveling, not in the frontier"
+    },
+    {
+     "role": "B",
+     "text": "bots fine everywhere, people just like to complain"
+    },
+    {
+     "role": "D",
+     "text": "we landed nowhere, same as always"
+    },
+    {
+     "role": "A",
+     "text": "good talk everyone :)"
+    }
+   ]
+  },
+  {
+   "id": "long_stealth",
+   "topic": "stealthers",
+   "realm": "*",
+   "levels": [
+    35,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler",
+      "Crafter"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    },
+    "E": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "third time tonight a stealther got me on the road to {keep}"
+    },
+    {
+     "role": "B",
+     "text": "same. you cannot even see them before the stun lands"
+    },
+    {
+     "role": "C",
+     "text": "you are walking alone through the frontier at night, what did you expect"
+    },
+    {
+     "role": "B",
+     "text": "i expected to reach the keep"
+    },
+    {
+     "role": "D",
+     "text": "honestly i love it, keeps you on your toes"
+    },
+    {
+     "role": "B",
+     "text": "easy to say when it is not your bind point you are running from"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "E",
+     "text": "you could just ask in faction for a group to travel with"
+    },
+    {
+     "role": "A",
+     "text": "i did, nobody answered"
+    },
+    {
+     "role": "C",
+     "text": "that is the real lesson. the frontier punishes people alone"
+    },
+    {
+     "role": "B",
+     "text": "so leveling players should never set foot out there?"
+    },
+    {
+     "role": "C",
+     "text": "they should travel with friends, like everyone else does"
+    },
+    {
+     "role": "~",
+     "pause": 35
+    },
+    {
+     "role": "D",
+     "text": "or you buy see-hidden friends. i mean literally, a group with a stealther in it"
+    },
+    {
+     "role": "E",
+     "text": "lol stealther escorts"
+    },
+    {
+     "role": "B",
+     "text": "so to stop stealthers i need my own stealther"
+    },
+    {
+     "role": "D",
+     "text": "yes. welcome to the frontier"
+    },
+    {
+     "role": "~",
+     "pause": 25
+    },
+    {
+     "role": "C",
+     "text": "for what it is worth, stealthers die instantly to any real group"
+    },
+    {
+     "role": "B",
+     "text": "then why do they never fight real groups"
+    },
+    {
+     "role": "C",
+     "text": "because we are not stupid"
+    },
+    {
+     "role": "A",
+     "text": "ok that one made me laugh"
+    },
+    {
+     "role": "E",
+     "text": "invite me next time you head out, i will come"
+    },
+    {
+     "role": "A",
+     "text": "deal, leaving in five"
+    }
+   ]
+  },
+  {
+   "id": "long_relic_loss",
+   "topic": "relics",
+   "realm": "*",
+   "levels": [
+    40,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "E": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    },
+    "F": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "we lost the relic. how did we lose the relic"
+    },
+    {
+     "role": "B",
+     "text": "they hit the keep with forty people while we were split across the map"
+    },
+    {
+     "role": "C",
+     "text": "i was there, we had maybe twelve defenders"
+    },
+    {
+     "role": "D",
+     "text": "i was leveling, sorry"
+    },
+    {
+     "role": "B",
+     "text": "half the realm was leveling, that is the problem"
+    },
+    {
+     "role": "D",
+     "text": "i am allowed to level"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "E",
+     "text": "we should take it back tonight"
+    },
+    {
+     "role": "B",
+     "text": "with what army? look at the frontier, it is empty"
+    },
+    {
+     "role": "C",
+     "text": "post a time and people will come"
+    },
+    {
+     "role": "F",
+     "text": "i can bring my guild, maybe eight of us"
+    },
+    {
+     "role": "E",
+     "text": "that is a start"
+    },
+    {
+     "role": "~",
+     "pause": 40
+    },
+    {
+     "role": "B",
+     "text": "honestly the realm with the most people will always hold the relics"
+    },
+    {
+     "role": "C",
+     "text": "then we fight smarter, not bigger"
+    },
+    {
+     "role": "B",
+     "text": "smarter does not knock down a door"
+    },
+    {
+     "role": "F",
+     "text": "rams do. who can build rams?"
+    },
+    {
+     "role": "E",
+     "text": "i can carry one"
+    },
+    {
+     "role": "~",
+     "pause": 25
+    },
+    {
+     "role": "D",
+     "text": "ok i will come after this level, maybe twenty minutes"
+    },
+    {
+     "role": "C",
+     "text": "meet at the portal keep in half an hour"
+    },
+    {
+     "role": "B",
+     "text": "fine. i will scout their numbers first"
+    },
+    {
+     "role": "A",
+     "text": "this is the most organized we have been all week"
+    },
+    {
+     "role": "F",
+     "text": "do not jinx it"
+    },
+    {
+     "role": "~",
+     "pause": 60
+    },
+    {
+     "role": "C",
+     "text": "how many are we so far?"
+    },
+    {
+     "role": "E",
+     "text": "i count fourteen and two rams"
+    },
+    {
+     "role": "B",
+     "text": "they have twenty around the keep, it is doable if we hit the door fast"
+    },
+    {
+     "role": "A",
+     "text": "lets go"
+    }
+   ]
+  },
+  {
+   "id": "long_best_class_mid",
+   "topic": "best_class",
+   "realm": "mid",
+   "levels": [
+    1,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Healer",
+      "Shaman"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": [
+      "Berserker",
+      "Savage",
+      "Warrior",
+      "Thane"
+     ]
+    },
+    "D": {
+     "type": [],
+     "class": [
+      "Runemaster",
+      "Spiritmaster",
+      "Bonedancer"
+     ]
+    },
+    "E": {
+     "type": [],
+     "class": [
+      "Skald"
+     ]
+    },
+    "F": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "new to midgard, what class should i roll?"
+    },
+    {
+     "role": "C",
+     "text": "zerker. two axes, big numbers, no thinking"
+    },
+    {
+     "role": "B",
+     "text": "healer. every group wants one and you will never wait for an invite"
+    },
+    {
+     "role": "D",
+     "text": "runemaster if you like watching things melt from a distance"
+    },
+    {
+     "role": "E",
+     "text": "skald, everyone loves you because you make them run fast"
+    },
+    {
+     "role": "A",
+     "text": "ok that is four answers"
+    },
+    {
+     "role": "F",
+     "text": "welcome to midgard"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "B",
+     "text": "real talk, healers never have trouble finding groups"
+    },
+    {
+     "role": "C",
+     "text": "and never have fun soloing"
+    },
+    {
+     "role": "B",
+     "text": "pac healers solo fine if they are careful"
+    },
+    {
+     "role": "C",
+     "text": "careful is a polite word for slow"
+    },
+    {
+     "role": "~",
+     "pause": 25
+    },
+    {
+     "role": "D",
+     "text": "casters are the middle ground, solo okay, group great"
+    },
+    {
+     "role": "E",
+     "text": "skald is the middle ground. you can fight and the group loves you"
+    },
+    {
+     "role": "C",
+     "text": "you just want a speed bot for yourself"
+    },
+    {
+     "role": "E",
+     "text": "i AM the speed bot"
+    },
+    {
+     "role": "~",
+     "pause": 35
+    },
+    {
+     "role": "F",
+     "text": "what do you want to do at 50? frontier or dungeons?"
+    },
+    {
+     "role": "A",
+     "text": "probably both"
+    },
+    {
+     "role": "F",
+     "text": "then healer or skald, both get invited to everything"
+    },
+    {
+     "role": "C",
+     "text": "or zerker and get invited to nothing but have fun anyway"
+    },
+    {
+     "role": "A",
+     "text": "lol"
+    },
+    {
+     "role": "~",
+     "pause": 20
+    },
+    {
+     "role": "B",
+     "text": "whatever you pick, find a guild. it matters more than the class"
+    },
+    {
+     "role": "D",
+     "text": "true"
+    },
+    {
+     "role": "A",
+     "text": "thanks everyone, going to try a skald first"
+    },
+    {
+     "role": "E",
+     "text": "the right answer"
+    }
+   ]
+  },
+  {
+   "id": "long_leveling_hib",
+   "topic": "leveling_route",
+   "realm": "hib",
+   "levels": [
+    1,
+    30
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Explorer"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    },
+    "E": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "just hit 10, where should i go next?"
+    },
+    {
+     "role": "B",
+     "text": "lough derg is done for you, head to connacht"
+    },
+    {
+     "role": "C",
+     "text": "or silvermine, the view is great and the monsters are tougher"
+    },
+    {
+     "role": "B",
+     "text": "tougher means slower at 10"
+    },
+    {
+     "role": "E",
+     "text": "tougher means more fun"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "D",
+     "text": "find people your level in mag mell first, everything is faster in a group"
+    },
+    {
+     "role": "A",
+     "text": "mag mell is empty right now"
+    },
+    {
+     "role": "D",
+     "text": "then ask in faction, like you just did :)"
+    },
+    {
+     "role": "~",
+     "pause": 25
+    },
+    {
+     "role": "B",
+     "text": "around 15 try muire tomb if you can get a group"
+    },
+    {
+     "role": "C",
+     "text": "take a druid, the mummy hags hurt"
+    },
+    {
+     "role": "E",
+     "text": "take a druid and pull two hags at once"
+    },
+    {
+     "role": "B",
+     "text": "please do not listen to that"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "A",
+     "text": "and after that?"
+    },
+    {
+     "role": "B",
+     "text": "spraggon den in your 20s, best xp around"
+    },
+    {
+     "role": "C",
+     "text": "shannon estuary is calmer if you want to solo between groups"
+    },
+    {
+     "role": "D",
+     "text": "and the battleground at 20, you will love it"
+    },
+    {
+     "role": "E",
+     "text": "or hate it if the twinks are out"
+    },
+    {
+     "role": "~",
+     "pause": 20
+    },
+    {
+     "role": "A",
+     "text": "this is great, thank you all"
+    },
+    {
+     "role": "B",
+     "text": "train every level, do not forget"
+    },
+    {
+     "role": "C",
+     "text": "and look at the scenery once in a while"
+    },
+    {
+     "role": "A",
+     "text": "will do"
+    }
+   ]
+  },
+  {
+   "id": "long_zerg_vs_8man",
+   "topic": "zerg",
+   "realm": "*",
+   "levels": [
+    40,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Socialite",
+      "Leveler"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    },
+    "E": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "ok settle this. is following the zerg real rvr or not"
+    },
+    {
+     "role": "B",
+     "text": "the zerg is a crowd walking from keep to keep. real fights are 8 against 8"
+    },
+    {
+     "role": "C",
+     "text": "the zerg takes keeps and relics, that is literally the war"
+    },
+    {
+     "role": "B",
+     "text": "and nobody in it needs to know how to play"
+    },
+    {
+     "role": "C",
+     "text": "half the realm does not have a set group, the zerg is where they fit in"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "D",
+     "text": "i do both. zerg when i want points, small group when i want a fight"
+    },
+    {
+     "role": "E",
+     "text": "same, the zerg is a warm bath, the 8man is a cold shower"
+    },
+    {
+     "role": "B",
+     "text": "the 8man is where you learn your class"
+    },
+    {
+     "role": "C",
+     "text": "the zerg is where you learn the map"
+    },
+    {
+     "role": "~",
+     "pause": 35
+    },
+    {
+     "role": "A",
+     "text": "what about lag though"
+    },
+    {
+     "role": "B",
+     "text": "exactly. forty people in one place and everyone is a slideshow"
+    },
+    {
+     "role": "C",
+     "text": "turn your effects down and stop complaining"
+    },
+    {
+     "role": "D",
+     "text": "lol"
+    },
+    {
+     "role": "~",
+     "pause": 25
+    },
+    {
+     "role": "E",
+     "text": "honestly the best night is when a small group catches the zerg on a bridge"
+    },
+    {
+     "role": "D",
+     "text": "holding a choke point with eight people against thirty, nothing beats it"
+    },
+    {
+     "role": "B",
+     "text": "see, that is real rvr"
+    },
+    {
+     "role": "C",
+     "text": "and the thirty still take the keep afterwards"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "A",
+     "text": "so we need both"
+    },
+    {
+     "role": "C",
+     "text": "we always needed both"
+    },
+    {
+     "role": "B",
+     "text": "fine. but my group still laughs at the zerg"
+    },
+    {
+     "role": "E",
+     "text": "and the zerg still owns the map"
+    },
+    {
+     "role": "A",
+     "text": "perfect, nobody changed their mind. very rvr"
+    }
+   ]
+  },
+  {
+   "id": "long_crafting_rant",
+   "topic": "crafting_economy",
+   "realm": "*",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Crafter"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "E": {
+     "type": [
+      "Crafter"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "why does a crafted suit cost so much?"
+    },
+    {
+     "role": "B",
+     "text": "you know what metal bars cost? and how many fail before one comes out right?"
+    },
+    {
+     "role": "C",
+     "text": "i could farm a named for a week and still pay less"
+    },
+    {
+     "role": "B",
+     "text": "then farm the named. let me know how the stats look"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "E",
+     "text": "and do not forget the hours on the skill. every point of skill is coin burned"
+    },
+    {
+     "role": "C",
+     "text": "that is your choice though, nobody asked you to craft"
+    },
+    {
+     "role": "E",
+     "text": "everybody asked, the moment they wanted armor"
+    },
+    {
+     "role": "~",
+     "pause": 25
+    },
+    {
+     "role": "D",
+     "text": "spellcrafting is where the real cost is, gems are not cheap"
+    },
+    {
+     "role": "B",
+     "text": "and one overcharge gone wrong eats the profit of three orders"
+    },
+    {
+     "role": "C",
+     "text": "so do not overcharge"
+    },
+    {
+     "role": "B",
+     "text": "then your stats are worse and you complain about that instead"
+    },
+    {
+     "role": "~",
+     "pause": 35
+    },
+    {
+     "role": "A",
+     "text": "is there a cheaper way?"
+    },
+    {
+     "role": "E",
+     "text": "buy a plain crafted piece and fill it with drops for the other slots"
+    },
+    {
+     "role": "D",
+     "text": "or wait until 50 and do the whole suit once"
+    },
+    {
+     "role": "C",
+     "text": "or stop worrying and level"
+    },
+    {
+     "role": "B",
+     "text": "or tip your crafter"
+    },
+    {
+     "role": "A",
+     "text": "lol ok, what do you charge for a chest piece"
+    },
+    {
+     "role": "B",
+     "text": "send me your stats and level, we can talk"
+    }
+   ]
+  },
+  {
+   "id": "long_nerf_thread",
+   "topic": "nerfs",
+   "realm": "*",
+   "levels": [
+    35,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    },
+    "E": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "F": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "is it just me or does my class feel weaker since the last patch"
+    },
+    {
+     "role": "B",
+     "text": "every class feels weaker after a patch, it is the law"
+    },
+    {
+     "role": "C",
+     "text": "they changed a lot of styles, maybe your favorite combo got slower"
+    },
+    {
+     "role": "A",
+     "text": "maybe. still feels bad"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "D",
+     "text": "i swear every patch someone says their class is dead"
+    },
+    {
+     "role": "B",
+     "text": "and then that someone is still playing it a month later"
+    },
+    {
+     "role": "E",
+     "text": "i just want to level, i do not care what they change"
+    },
+    {
+     "role": "~",
+     "pause": 25
+    },
+    {
+     "role": "F",
+     "text": "honestly the other realm's version of my class is the real problem"
+    },
+    {
+     "role": "C",
+     "text": "every realm says that about every other realm"
+    },
+    {
+     "role": "F",
+     "text": "because it is true every time"
+    },
+    {
+     "role": "D",
+     "text": "lol"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "C",
+     "text": "real advice: try other specs before you decide it is the patch"
+    },
+    {
+     "role": "A",
+     "text": "you might be right, i have not touched my spec in twenty levels"
+    },
+    {
+     "role": "B",
+     "text": "or roll something new, nerfs cannot catch you if you keep moving"
+    },
+    {
+     "role": "E",
+     "text": "or just keep playing, it is still the best game around"
+    },
+    {
+     "role": "A",
+     "text": "fair enough, going to respec and see"
+    }
+   ]
+  },
+  {
+   "id": "long_worst_wipe",
+   "topic": "worst_wipe",
+   "realm": "*",
+   "levels": [
+    20,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "E": {
+     "type": [
+      "Explorer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "storytime. what is the worst wipe you have ever been part of?"
+    },
+    {
+     "role": "B",
+     "text": "i pulled an entire room in {dungeon} because i thought it was one monster"
+    },
+    {
+     "role": "C",
+     "text": "lol we have all been there"
+    },
+    {
+     "role": "B",
+     "text": "eight of us, everyone dead in ten seconds, healer still typing"
+    },
+    {
+     "role": "~",
+     "pause": 25
+    },
+    {
+     "role": "D",
+     "text": "mine was a train. someone ran past us with half the dungeon behind them"
+    },
+    {
+     "role": "E",
+     "text": "the classic. did they at least yell train?"
+    },
+    {
+     "role": "D",
+     "text": "they yelled sorry. after"
+    },
+    {
+     "role": "C",
+     "text": "sorry is the least helpful word in the game"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "C",
+     "text": "mine was my own fault, i forgot to rebuff and the tank went down on the first pull"
+    },
+    {
+     "role": "A",
+     "text": "rebuffs, the silent killer"
+    },
+    {
+     "role": "E",
+     "text": "mine was exploring. found a pretty cave, it was full of purples"
+    },
+    {
+     "role": "B",
+     "text": "love it"
+    },
+    {
+     "role": "~",
+     "pause": 35
+    },
+    {
+     "role": "D",
+     "text": "worst part is the run back"
+    },
+    {
+     "role": "B",
+     "text": "worst part is explaining to the group in chat"
+    },
+    {
+     "role": "C",
+     "text": "worst part is when it happens again ten minutes later"
+    },
+    {
+     "role": "A",
+     "text": "this is why i love this game"
+    },
+    {
+     "role": "E",
+     "text": "same honestly"
+    },
+    {
+     "role": "B",
+     "text": "who wants to go wipe somewhere tonight"
+    },
+    {
+     "role": "D",
+     "text": "lol i am in"
+    }
+   ]
+  },
+  {
+   "id": "long_dragon_planning",
+   "topic": "dragon",
+   "realm": "*",
+   "levels": [
+    45,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Leveler"
+     ],
+     "class": []
+    },
+    "E": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    },
+    "F": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "anyone interested in a dragon raid this weekend?"
+    },
+    {
+     "role": "B",
+     "text": "yes. how many do we have?"
+    },
+    {
+     "role": "A",
+     "text": "two guilds so far, maybe thirty people"
+    },
+    {
+     "role": "C",
+     "text": "we need way more than that for a dragon"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "E",
+     "text": "i will be there, i want to see the breath with my own eyes"
+    },
+    {
+     "role": "D",
+     "text": "what does it drop? is it worth a whole night"
+    },
+    {
+     "role": "B",
+     "text": "the loot is a lottery, the experience is the point"
+    },
+    {
+     "role": "D",
+     "text": "the experience of dying to a breath attack?"
+    },
+    {
+     "role": "E",
+     "text": "exactly"
+    },
+    {
+     "role": "~",
+     "pause": 35
+    },
+    {
+     "role": "F",
+     "text": "how do we split the loot with that many people"
+    },
+    {
+     "role": "C",
+     "text": "rolls per guild, then per person"
+    },
+    {
+     "role": "B",
+     "text": "or points for showing up, like the bigger guilds do"
+    },
+    {
+     "role": "F",
+     "text": "points sound fair, rolls sound fun"
+    },
+    {
+     "role": "~",
+     "pause": 25
+    },
+    {
+     "role": "C",
+     "text": "i will post the time in faction every hour until then"
+    },
+    {
+     "role": "A",
+     "text": "saturday night, meet in the capital"
+    },
+    {
+     "role": "D",
+     "text": "ok i am in, but only if somebody brings a lot of healers"
+    },
+    {
+     "role": "B",
+     "text": "healers first, everyone else second"
+    },
+    {
+     "role": "E",
+     "text": "and nobody stands in front of the head"
+    },
+    {
+     "role": "A",
+     "text": "rule one of dragons. see everyone saturday"
+    }
+   ]
+  },
+  {
+   "id": "long_alb_casters",
+   "topic": "caster_pride",
+   "realm": "alb",
+   "levels": [
+    35,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Wizard"
+     ]
+    },
+    "C": {
+     "type": [],
+     "class": [
+      "Sorcerer"
+     ]
+    },
+    "D": {
+     "type": [],
+     "class": [
+      "Theurgist"
+     ]
+    },
+    "E": {
+     "type": [],
+     "class": [
+      "Cabalist"
+     ]
+    },
+    "F": {
+     "type": [],
+     "class": [
+      "Cleric"
+     ]
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "settle this, best caster in albion?"
+    },
+    {
+     "role": "B",
+     "text": "wizard. fire from across the room, nothing else needed"
+    },
+    {
+     "role": "C",
+     "text": "sorcerer. without my mez your fire lands on a crowd that kills us all"
+    },
+    {
+     "role": "D",
+     "text": "theurgist. my pets win fights while you two argue"
+    },
+    {
+     "role": "E",
+     "text": "cabalist. dots and a simulacrum, slow but nothing escapes"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "F",
+     "text": "as the cleric who heals all of you, the best caster is the one standing behind the tank"
+    },
+    {
+     "role": "B",
+     "text": "ouch"
+    },
+    {
+     "role": "C",
+     "text": "fair though"
+    },
+    {
+     "role": "~",
+     "pause": 25
+    },
+    {
+     "role": "D",
+     "text": "real talk, pets carry solo play. no caster solos like a theurgist"
+    },
+    {
+     "role": "E",
+     "text": "necromancers might disagree"
+    },
+    {
+     "role": "D",
+     "text": "necromancers are not even sure what they are"
+    },
+    {
+     "role": "B",
+     "text": "and wizards solo just fine if you kite"
+    },
+    {
+     "role": "C",
+     "text": "kiting is just running with extra steps"
+    },
+    {
+     "role": "~",
+     "pause": 30
+    },
+    {
+     "role": "A",
+     "text": "what about the frontier?"
+    },
+    {
+     "role": "B",
+     "text": "wizards, big damage ends fights"
+    },
+    {
+     "role": "C",
+     "text": "sorcerers, a mezzed group cannot fight back"
+    },
+    {
+     "role": "F",
+     "text": "clerics, because none of you survive without me"
+    },
+    {
+     "role": "E",
+     "text": "lol she is not wrong"
+    },
+    {
+     "role": "~",
+     "pause": 20
+    },
+    {
+     "role": "A",
+     "text": "so the answer is everyone needs a cleric"
+    },
+    {
+     "role": "F",
+     "text": "the answer is always that"
+    },
+    {
+     "role": "B",
+     "text": "fine. wizard is still the best"
+    },
+    {
+     "role": "C",
+     "text": "sure it is"
+    }
+   ]
   }
  ]
 }

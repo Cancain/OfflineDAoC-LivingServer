@@ -178,6 +178,22 @@ A line whose slot can't be filled is skipped, never sent half-empty.
    per realm.
 3. **Pick** by weight, fill the slots, apply the voice, and cap the length at 160 characters.
 
+### 3.5 Long threads
+
+**Format:** a scene can run 15–30 lines with up to six speakers (roles A–F). `~ N` marks a lull of
+N seconds.
+
+**Pacing at runtime:**
+- each line waits 3–10 seconds, longer for longer lines (typing time);
+- a long thread takes about 4–8 minutes.
+
+**Interruptions:**
+- **A speaker who goes into combat or logs off is replaced** by another bot of the same realm that fits
+  the role, or the thread skips that speaker's remaining lines.
+- **If fewer than two speakers are left,** the thread ends early, as real ones did.
+
+**Variety:** at most one long thread per realm every 45–60 minutes. Short scenes fill the gaps.
+
 ## 4. Rates
 
 - **Kept from today:** never in combat or while casting; only when you can hear (for /say) or are

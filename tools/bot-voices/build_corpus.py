@@ -174,6 +174,13 @@ def parse_file(path, problems):
                     problems.append(str(error))
             continue
         if scene is not None:
+            pause = re.fullmatch(r'~\s*(\d+)', text)
+            if pause:
+                seconds = int(pause.group(1))
+                if not 5 <= seconds <= 600:
+                    problems.append(f'{where}: a pause must be 5-600 seconds')
+                scene['beats'].append(dict(role='~', pause=seconds))
+                continue
             m = re.fullmatch(r'([A-Z]):\s*(.+)', text)
             if not m:
                 problems.append(f'{where}: scene beats look like "A: text"')
@@ -186,8 +193,8 @@ def parse_file(path, problems):
         check_text(text, tags, where, problems)
         lines.append(dict(tags, text=text, where=where, **{'class': list(tags['class'])}))
     for s in scenes:
-        roles_used = {b['role'] for b in s['beats']}
-        if len(s['beats']) < 3:
+        roles_used = {b['role'] for b in s['beats'] if b['role'] != '~'}
+        if sum(1 for b in s['beats'] if b['role'] != '~') < 3:
             problems.append(f'{s["where"]}: scene {s["id"]} needs at least 3 beats')
         if len(roles_used) < 2:
             problems.append(f'{s["where"]}: scene {s["id"]} needs at least 2 speakers')
@@ -242,7 +249,9 @@ def main():
         raise SystemExit(1)
 
     by_kind = collections.Counter(x['kind'] for x in lines)
-    print(f'{len(lines)} lines, {len(scenes)} debate scenes, {sum(len(s["beats"]) for s in scenes)} scene beats')
+    spoken = [sum(1 for b in s['beats'] if b['role'] != '~') for s in scenes]
+    print(f'{len(lines)} lines, {len(scenes)} debate scenes, {sum(spoken)} scene lines '
+          f'(longest {max(spoken)}, {sum(1 for n in spoken if n >= 20)} scenes of 20+ lines)')
     print('by kind: ' + ', '.join(f'{k} {n}' for k, n in sorted(by_kind.items())))
     print('by realm: ' + ', '.join(f'{k} {n}' for k, n in sorted(collections.Counter(x["realm"] for x in lines).items())))
     print('by type (lines that name types): ' + ', '.join(
