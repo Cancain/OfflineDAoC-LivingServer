@@ -5,6 +5,8 @@ This is a server-only build for Offline DAoC 0.35 / 0.35b. It replaces GameServe
 two features, both OFF until you switch them on:
 
   - XP rate by level range ........ docs\XP-BY-LEVEL-RANGE.md
+    (the plan's values keep levels 1-34 worth playing and compress the 35-50 grind:
+     you 3x / 5x / 12x, bots 1.5x / 2.5x / 6x for levels 1-19 / 20-34 / 35-50)
   - Bot guilds .................... docs\BOT-GUILDS.md
 
 With both off, the game should play exactly like the normal 0.35.
@@ -30,7 +32,7 @@ replaced.
 
 SWITCHING FEATURES ON (server closed; needs Python 3)
 ---------------------------------------------------
-  python tools\claude-version\set_xp_by_level.py --player "1-20:3" --apply
+  python tools\claude-version\set_xp_by_level.py --player "1-19:3;20-34:5;35-50:12" --bots "1-19:1.5;20-34:2.5;35-50:6" --apply
   python tools\claude-version\set_xp_by_level.py --off --apply
   python tools\claude-version\set_bot_guilds.py --on --apply
   python tools\claude-version\set_bot_guilds.py --off --apply

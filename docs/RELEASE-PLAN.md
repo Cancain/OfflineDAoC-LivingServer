@@ -85,10 +85,14 @@ Each stage ends with a check. Nothing moves on until the check passes.
 
 ### Stage 4: XP by level range
 
-1. **Set rates:** with the server closed, run
-   `python tools\claude-version\set_xp_by_level.py --player "1-20:3" --apply`.
-2. **Check in game:** kill a few blue or yellow monsters at level 10 or so; the XP should be about
-   3× the baseline. Above level 20, the flat rate applies again.
+1. **Set the plan's rates:** with the server closed, run
+   `python tools\claude-version\set_xp_by_level.py --player "1-19:3;20-34:5;35-50:12" --bots "1-19:1.5;20-34:2.5;35-50:6" --apply`.
+   This is the goal from the roadmap's model v4: keep levels 1–34 worth playing, and compress the
+   35–50 grind.
+2. **Check in game:**
+   - At about level 10, kill a few blue or yellow monsters: the XP should be about 3× the baseline.
+   - On a character in the 20s it should be about 5×.
+   - Above 35 (a /level GM character is fine) it should be about 12×.
 3. **Turn it off** with `--off --apply`.
 4. **Pass when** the numbers match.
 
