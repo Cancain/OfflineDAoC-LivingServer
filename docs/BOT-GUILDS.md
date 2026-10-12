@@ -85,6 +85,9 @@ Protectors, Tir na Nog Adventurers).
 - **When it runs:** 90 seconds after start, then every 10 minutes. It reads the roster and writes
   only its own two tables (below) and new `Guild`/`GuildRank` rows, so it never competes with the
   bots' own status saves.
+- **New guilds:** they are founded on the game loop. A pass that founds guilds places members only in
+  guilds that already exist; a follow-up pass 30 seconds later fills the new ones. So the first
+  members appear about 2 minutes after start.
 
 ### 3.3 Storage
 

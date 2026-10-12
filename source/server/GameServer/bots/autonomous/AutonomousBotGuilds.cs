@@ -58,8 +58,13 @@ public static class AutonomousBotGuilds
     private static readonly ConcurrentDictionary<string, BotGuildInfo> BotGuilds = new(StringComparer.Ordinal);
     private static readonly ConcurrentDictionary<long, BotSummary> Summaries = new();
     private static readonly Dictionary<long, OfflineBotGuildMemberRecord> MemberRows = new();
+    private static readonly ConcurrentDictionary<(eRealm Realm, int Ordinal), byte> PendingCreations = new();
     private static Timer _timer;
     private static int _reconciling;
+    private static int _followUpRequested;
+
+    /// <summary>Delay of the pass that fills guilds founded by the previous pass.</summary>
+    public const int FollowUpReconcileDelayMs = 30_000;
 
     public static bool Enabled => Properties.BOT_GUILDS_ENABLED;
 
@@ -145,6 +150,8 @@ public static class AutonomousBotGuilds
         {
             Volatile.Write(ref _reconciling, 0);
         }
+        if (Interlocked.Exchange(ref _followUpRequested, 0) != 0)
+            _timer?.Change(FollowUpReconcileDelayMs, ReconcileIntervalMs);
     }
 
     #endregion
@@ -205,12 +212,16 @@ public static class AutonomousBotGuilds
 
         List<BotGuildInfo> guilds = BotGuilds.Values.Where(info => info.Realm == realm).OrderBy(info => info.Ordinal).ToList();
         int nextOrdinal = guilds.Count == 0 ? 0 : guilds.Max(info => info.Ordinal) + 1;
-        while (guilds.Count < desired)
+        // New guilds are founded on the game loop (GuildMgr, Guild timers); this pass places members only
+        // in guilds that already exist, and a follow-up pass 30 seconds later fills the new ones.
+        for (int missing = desired - guilds.Count; missing > 0; missing--)
         {
-            BotGuildInfo created = CreateBotGuild(realm, nextOrdinal++, nowUtc);
-            if (created == null)
-                break;
-            guilds.Add(created);
+            int ordinal = nextOrdinal++;
+            if (PendingCreations.TryAdd((realm, ordinal), 0))
+            {
+                NpcService.Instance.Post(CreateBotGuildOnGameLoop, (realm, ordinal, nowUtc));
+                Interlocked.Exchange(ref _followUpRequested, 1);
+            }
         }
         if (guilds.Count == 0)
             return;
@@ -241,6 +252,22 @@ public static class AutonomousBotGuilds
                 SetMembership(botId, guild.GuildId, rank, null);
                 changed.Add(botId);
             }
+        }
+    }
+
+    private static void CreateBotGuildOnGameLoop((eRealm Realm, int Ordinal, string NowUtc) request)
+    {
+        try
+        {
+            CreateBotGuild(request.Realm, request.Ordinal, request.NowUtc);
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"Bot guilds: could not found guild {request.Ordinal} for {request.Realm}", exception);
+        }
+        finally
+        {
+            PendingCreations.TryRemove((request.Realm, request.Ordinal), out _);
         }
     }
 
