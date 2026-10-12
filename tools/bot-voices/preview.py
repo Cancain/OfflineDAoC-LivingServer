@@ -101,9 +101,11 @@ def main():
         if beat['role'] == '~':
             print(f"   ... quiet for {beat['pause']} seconds ...")
             continue
+        if beat.get('optional') and rng.random() < 0.5:
+            continue
         who = cast.setdefault(beat['role'], f"{rng.choice(SAMPLE[realm]['classes'])}{len(cast) + 1}")
         voice = rng.choices(names, shares)[0]
-        print(f"({who}) <Faction> {voice_apply(fill(beat['text'], realm, rng, 40), voices[voice], rng)}")
+        print(f"({who}) <Faction> {voice_apply(fill(rng.choice(beat.get('variants') or [beat['text']]), realm, rng, 40), voices[voice], rng)}")
 
 
 if __name__ == '__main__':

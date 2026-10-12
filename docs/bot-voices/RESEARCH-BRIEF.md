@@ -276,6 +276,22 @@ Each becomes a short scene with two sides. The lines are new and keep both sides
 
 The full scenes are in [DEBATES.md](DEBATES.md).
 
+**Mechanics used in lines but not yet confirmed** (period knowledge; first things to check):
+- **Death:**
+  - praying at your grave to win back some experience;
+  - constitution loss after deaths, cured by a healer in town;
+  - experience can go down (lines say the bar "goes backwards" and never claim a lost level).
+- **Travel and binding:**
+  - `/bind` at a bind stone;
+  - boats to the Shrouded Isles.
+- **Respecs exist** (lines never say how or when).
+- **Class details:**
+  - disease reduces healing;
+  - Savages fight with claw-like hand-to-hand weapons.
+- **Rules of the world:**
+  - players leave Thidranki at 25;
+  - enemy-realm speech can't be understood.
+
 ## 8. What saved forum threads would add
 
 - **Confirmation** of every period-knowledge item above.

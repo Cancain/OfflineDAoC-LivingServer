@@ -38,8 +38,13 @@ def main():
             out += [f'### {s["id"].replace("_", " ")}', '',
                     f'Levels {s["levels"][0]}–{s["levels"][1]} · {spoken} lines · about {minutes:.0f} min' +
                     (f' · roles: {roles}' if roles else ''), '']
-            out += [f'- *(quiet for {b["pause"]} seconds)*' if b['role'] == '~' else f'- **{b["role"]}:** {b["text"]}'
-                    for b in s['beats']]
+            for b in s['beats']:
+                if b['role'] == '~':
+                    out.append(f'- *(quiet for {b["pause"]} seconds)*')
+                    continue
+                opt = ' *(sometimes)*' if b.get('optional') else ''
+                alts = b.get('variants') or [b['text']]
+                out.append(f'- **{b["role"]}:**{opt} ' + (alts[0] if len(alts) == 1 else ' / '.join(f'"{v}"' for v in alts)))
             out.append('')
     OUT.write_text('\n'.join(out), encoding='utf-8')
     print('wrote', OUT.relative_to(ROOT), len(scenes), 'scenes')

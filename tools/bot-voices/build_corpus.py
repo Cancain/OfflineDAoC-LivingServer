@@ -181,13 +181,20 @@ def parse_file(path, problems):
                     problems.append(f'{where}: a pause must be 5-600 seconds')
                 scene['beats'].append(dict(role='~', pause=seconds))
                 continue
-            m = re.fullmatch(r'([A-Z]):\s*(.+)', text)
+            m = re.fullmatch(r'(\?)?([A-F]):\s*(.+)', text)
             if not m:
-                problems.append(f'{where}: scene beats look like "A: text"')
+                problems.append(f'{where}: scene beats look like "A: text" (roles A-F, "?" for optional)')
                 continue
-            role, beat = m.groups()
-            check_text(beat, dict(kind='debate', needs=[]), where, problems)
-            scene['beats'].append(dict(role=role, text=beat))
+            optional, role, beat = m.groups()
+            variants = [v.strip() for v in beat.split(' | ')]
+            if any(not v for v in variants):
+                problems.append(f'{where}: empty alternative')
+            for v in variants:
+                check_text(v, dict(kind='debate', needs=[]), where, problems)
+                if re.match(r'\??[A-F]:\s', v):
+                    problems.append(f'{where}: an alternative starts with a role marker: {v}')
+            scene['beats'].append(dict(role=role, text=variants[0], variants=variants, optional=bool(optional),
+                                       where=where))
             continue
         check_tags(tags, where, problems)
         check_text(text, tags, where, problems)
@@ -220,6 +227,17 @@ def main():
         l, s = parse_file(path, problems)
         lines += l
         scenes += s
+    # A sentence may appear in only one scene, or every thread starts sounding the same.
+    beat_seen = {}
+    for sc in scenes:
+        for b in sc['beats']:
+            for v in b.get('variants', []):
+                key = norm(v)
+                if len(key) > 12 and key in beat_seen and beat_seen[key] != sc['id']:
+                    problems.append(f'{b["where"]}: same line as scene {beat_seen[key]}: {v}')
+                beat_seen.setdefault(key, sc['id'])
+        for b in sc['beats']:
+            b.pop('where', None)
     seen = {}
     for line in lines:
         key = (line['kind'], norm(line['text']))
@@ -250,6 +268,11 @@ def main():
 
     by_kind = collections.Counter(x['kind'] for x in lines)
     spoken = [sum(1 for b in s['beats'] if b['role'] != '~') for s in scenes]
+    import math
+    ways = [math.prod(len(b['variants']) * (2 if b['optional'] else 1) for b in s['beats'] if b['role'] != '~')
+            for s in scenes]
+    print(f'scene variations: median {sorted(ways)[len(ways) // 2]} ways to play a scene, '
+          f'{sum(1 for w in ways if w >= 100)} scenes with 100+ ways')
     print(f'{len(lines)} lines, {len(scenes)} debate scenes, {sum(spoken)} scene lines '
           f'(longest {max(spoken)}, {sum(1 for n in spoken if n >= 20)} scenes of 20+ lines)')
     print('by kind: ' + ', '.join(f'{k} {n}' for k, n in sorted(by_kind.items())))

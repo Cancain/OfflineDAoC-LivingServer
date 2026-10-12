@@ -192,7 +192,14 @@ N seconds.
   the role, or the thread skips that speaker's remaining lines.
 - **If fewer than two speakers are left,** the thread ends early, as real ones did.
 
-**Variety:** at most one long thread per realm every 45–60 minutes. Short scenes fill the gaps.
+**Variety:**
+- **Spacing:** at most one long thread per realm every 45–60 minutes. Short scenes fill the gaps.
+- **No repeats until the pool is used up:** the server remembers which scenes each of your
+  characters' realms has heard (a small saved list). It never replays a scene until every scene that
+  fits has played.
+- **Fresh wording each time:** every line has 2–3 alternative wordings (`|`), and optional lines
+  (`?`) come and go. When a scene does come back, it reads differently: the median scene has about
+  1,500 combinations.
 
 ## 4. Rates
 
