@@ -53,6 +53,8 @@ jobs:
             counters=$(grep -o '<Counters [^>]*>' "$trx" | head -n 1 || true)
             get() { echo "$counters" | grep -o " $1=\"[0-9]*\"" | grep -o '[0-9]*' || true; }
             echo "::notice title=Server tests::total $(get total), executed $(get executed), passed $(get passed), failed $(get failed)"
+            failedAll=$(grep -o '<UnitTestResult [^>]*outcome="Failed"[^>]*>' "$trx" | grep -o 'testName="[^"]*"' | sed 's/testName=//; s/"//g' | head -n 10 | paste -sd ';' - || true)
+            if [ -n "$failedAll" ]; then echo "::warning title=Failed server tests::$failedAll"; fi
           else
             echo "::warning title=Server tests::No test results file found"
           fi
