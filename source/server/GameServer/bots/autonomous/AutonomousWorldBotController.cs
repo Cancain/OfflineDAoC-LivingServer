@@ -4535,7 +4535,12 @@ namespace DOL.GS
             Vector3 escape;
             ushort escapeRegion;
             string escapeName;
-            if (_camp != null &&
+            // 2026-10-16 (owner's session, Camelot Hills): Haroorwin failed the same route every 7 seconds for minutes,
+            // each failure an 800-query, 2-9 second AI turn that froze the server (rubberbanding). Every escape was a short
+            // hop beside the pocket and reset the failure count, so it never reached the real relocation. Repeated
+            // failures in one spot now skip the short hops.
+            bool localHopsLeft = _terminalRouteFailuresInPocket < AutonomousRouteRecoveryPolicy.FailuresBeforeSafeRelocation;
+            if (localHopsLeft && _camp != null &&
                 AutonomousRouteHotspotRepair.TryGetAuditedCampEscape(
                     PathfindingProvider.Instance, bot.CurrentRegion, bot.CurrentRegionID,
                     _camp.MonsterName, current, out escape))
@@ -4543,13 +4548,13 @@ namespace DOL.GS
                 escapeRegion = bot.CurrentRegionID;
                 escapeName = _camp.ZoneName;
             }
-            else if (AutonomousRouteHotspotRepair.TryGetImmediateEscape(
+            else if (localHopsLeft && AutonomousRouteHotspotRepair.TryGetImmediateEscape(
                     PathfindingProvider.Instance, bot.CurrentRegion, bot.CurrentRegionID, current, out escape))
             {
                 escapeRegion = bot.CurrentRegionID;
                 escapeName = bot.CurrentZone?.Description ?? $"region {escapeRegion}";
             }
-            else if (_camp != null &&
+            else if (localHopsLeft && _camp != null &&
                      AutonomousRouteHotspotRepair.TryResolveStarterDungeonRouteSurface(
                          PathfindingProvider.Instance, bot.CurrentRegion, bot.CurrentRegionID,
                          _camp.RegionId, current, out escape))
@@ -4601,7 +4606,10 @@ namespace DOL.GS
                      $"to={escapeRegion}:{(int)escape.X},{(int)escape.Y},{(int)escape.Z} " +
                      $"terminalFailures={_terminalRouteFailuresInPocket}");
             ResetRouteOrderState();
-            ResetRepeatedRouteFailures();
+            // A short hop keeps the pocket's failure count (the bot comes back to the same spot); a real relocation clears it.
+            if (!localHopsLeft || escapeRegion != failedSourceRegion ||
+                Vector3.DistanceSquared(_lastTerminalRouteFailurePosition, escape) > AutonomousRouteRecoveryPolicy.RepeatedFailureRadius * AutonomousRouteRecoveryPolicy.RepeatedFailureRadius * 16)
+                ResetRepeatedRouteFailures();
             bot.MarkAutonomousStateDirty();
             AutonomousBotStatusPersistence.Queue(bot);
             AutonomousStuckWatchdog.MarkProgress(bot, eAutonomousProgressKind.Recovery);

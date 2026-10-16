@@ -493,6 +493,32 @@ public static class AutonomousRouteHotspotRepair
         else
             return false;
 
+        // 2026-10-16 (owner's session): this scan ran up to 250 full zone-route proofs in one AI turn (8.8 s, 830 path
+        // queries) and repeated on every failure of the same bot, freezing the whole server every few seconds. The answer
+        // for a spot is remembered for ten minutes, and one scan proves at most StarterSurfaceProofBudget candidates.
+        var cacheKey = (sourceRegion, dungeonRegion, (int)MathF.Floor(position.X / 512), (int)MathF.Floor(position.Y / 512));
+        long now = GameLoop.GameLoopTime;
+        if (StarterSurfaceCache.TryGetValue(cacheKey, out var cached) && cached.Until > now)
+        {
+            recovery = cached.Recovery ?? default;
+            return cached.Recovery.HasValue;
+        }
+        if (StarterSurfaceCache.Count > 4096) StarterSurfaceCache.Clear();
+        bool found = ScanStarterDungeonRouteSurface(nav, region, portal, position, out recovery);
+        StarterSurfaceCache[cacheKey] = (now + StarterSurfaceCacheMilliseconds, found ? recovery : null);
+        return found;
+    }
+
+    public const int StarterSurfaceProofBudget = 12;
+    public const long StarterSurfaceCacheMilliseconds = 10 * 60_000;
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<(ushort, ushort, int, int), (long Until, Vector3? Recovery)>
+        StarterSurfaceCache = new();
+
+    private static bool ScanStarterDungeonRouteSurface(IPathfindingMgr nav, Region region, Vector3 portal, Vector3 position,
+        out Vector3 recovery)
+    {
+        recovery = default;
+        int proofs = 0;
         Zone portalZone = region.GetZone((int)portal.X, (int)portal.Y);
         if (portalZone == null || !nav.HasNavmesh(portalZone))
             return false;
@@ -516,8 +542,11 @@ public static class AutonomousRouteHotspotRepair
                     horizontalSearch, horizontalSearch, 1_024, nav.DefaultFilters);
                 if (!candidate.HasValue ||
                     Vector2.Distance(new(candidate.Value.X, candidate.Value.Y), new(position.X, position.Y)) > 1_850 ||
-                    Vector3.DistanceSquared(candidate.Value, position) <= 32 * 32 ||
-                    !AutonomousRendezvousNavigation.HasLocalExit(nav, candidateZone, candidate.Value) ||
+                    Vector3.DistanceSquared(candidate.Value, position) <= 32 * 32)
+                    continue;
+                if (++proofs > StarterSurfaceProofBudget)
+                    return false;
+                if (!AutonomousRendezvousNavigation.HasLocalExit(nav, candidateZone, candidate.Value) ||
                     !HasCompleteZoneRoute(nav, region, candidateZone, portalZone,
                         candidate.Value, portalFloor.Value))
                     continue;
