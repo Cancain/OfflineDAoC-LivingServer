@@ -1143,12 +1143,19 @@ func _emote(d: Dictionary) -> void:
 	var v := _view_of(int(d.oid))
 	if v and v.has_method("play_emote"):
 		v.call("play_emote", int(d.emote))
-	# a level gained (GamePlayer.OnLevelUp sends eEmote.LvlUp 0x2A to everyone in view, you too): the client's LvlUp
-	# effect 8007, the trifecta and its sound (owner 2026-10-15: none at 1 -> 2 on the server - only the offline
-	# experience path played it, PlayerData.leveled_up)
-	if int(d.emote) == 0x2A and v is Node3D:
+	# the emote's own effect and sound, as the client's emotes.csv "Spell" column gives them: a level gained
+	# (GamePlayer.OnLevelUp, eEmote.LvlUp 0x2A) the trifecta (owner 2026-10-15: none at 1 -> 2 on the server), /bind
+	# (GamePlayer.Bind sends the realm's bind emote to everyone in view, you too) the bindstone rings and sound
+	# (owner 2026-10-16) - the server only sends the emote id, the client draws the rest
+	var fx := int(EMOTE_FX.get(int(d.emote), 0))
+	if fx and v is Node3D:
 		var snd = v.get("sounds")
-		SpellFx.emote(8007, v, snd as CharacterSounds)
+		SpellFx.emote(fx, v, snd as CharacterSounds)
+
+
+## emotes.csv (gamedata.mpk): emote id -> its client effect (Spell column), every row that has one
+const EMOTE_FX := {18: 8001, 20: 8000, 21: 8300, 42: 8007, 43: 8005, 44: 8006, 45: 4054, 72: 8008, 73: 8010,
+		74: 8006, 75: 8009}
 
 
 ## The server asks whether one living can see another (its LoS checks for spells, archery, aggro): a ray between their

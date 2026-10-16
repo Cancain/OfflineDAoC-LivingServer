@@ -418,17 +418,18 @@ static func _ghost_shader(src: Shader) -> Array:
 	DEPTH = FRAGCOORD.z * 0.997;")
 		d = d.replace("//CUTOUT", "ALPHA = 0.0;
 	DEPTH = FRAGCOORD.z * 0.997;")
-		# the see-through pass: the texture's own alpha as its opacity (the old client blends a ghost by it - skin and
-		# tint-mask areas see-through, the rest more solid; owner 2026-10-15: "you are missing a step"), a little
-		# whitened
+		# the see-through pass: the part's own colours - skin tone, dyes - evenly see-through, a little whitened. Only
+		# hair takes its texture alpha (its coverage); on faces the alpha is gloss and on clothes the tint mask, and as
+		# opacity it left skin and dyed armour the most see-through - no skin or armour colour under the ghost (owner
+		# 2026-10-16, after the 2026-10-15 texture-alpha pass)
 		var l := mode.sub(code, "render_mode blend_mix, depth_draw_never, cull_back, shadows_disabled;
 uniform float ghost_alpha = 0.85;
-uniform float ghost_white = 0.2;")
+uniform float ghost_white = 0.0;")
 		l = l.replace("ALPHA = c.a;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;", "ALBEDO = mix(ALBEDO, vec3(1.0), ghost_white);
 	ALPHA = c.a * ghost_alpha;")
 		l = l.replace("//CUTOUT", "ALBEDO = mix(ALBEDO, vec3(1.0), ghost_white);
-	ALPHA = c.a * ghost_alpha;")
+	ALPHA = ghost_alpha;")
 		var ds := Shader.new()
 		ds.code = d
 		var ls := Shader.new()

@@ -511,7 +511,14 @@ static func add_rest_reset(anim: AnimationPlayer) -> void:
 	if root == null:
 		return
 	var lib := anim.get_animation_library("")
-	if lib == null or lib.has_animation("RESET"):
+	if lib == null:
+		return
+	# every copy of a figure shares its scene's animation library: the first copy adds RESET, the rest only need the
+	# deterministic mixer - they returned before it was set, so every figure but the first of its race kept the run
+	# clip's cloak bones (the idle doesn't key 'cloak control02') and stopped with the cloak flowing out behind
+	# (owner 2026-10-16: bots and NPCs, never your own character)
+	anim.deterministic = true
+	if lib.has_animation("RESET"):
 		return
 	var reset := Animation.new()
 	reset.length = 0.001

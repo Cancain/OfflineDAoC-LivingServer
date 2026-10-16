@@ -322,6 +322,16 @@ func _play(clip: String, speed := 1.0) -> void:
 	_anim.speed_scale = speed
 
 
+## Wounded: the 1.65 client's own rule (game.dll 0x438b5c, after the run speed from the server's MaxSpeed percent): below
+## 35% health the speed is scaled by health / 35, never under a tenth - the server slows only NPCs (MaxSpeedCalculator),
+## so the new client ran at full speed at any health (owner 2026-10-16). Not while flying (the GM speed case).
+func _wounded_mult() -> float:
+	var pct := int(PlayerData.health * 100.0)
+	if flying or pct >= 35:
+		return 1.0
+	return maxf(pct / 35.0, 0.1)
+
+
 func set_flying(on: bool) -> void:
 	flying = on
 	collision_mask = 0 if on else ZoneLoader.LAYER_WALL   # fly through buildings and terrain
@@ -830,7 +840,8 @@ func _physics_step(delta: float) -> void:
 		speed = CLASSIC_SIDE_SPEED                    # DAoC's slow side-step
 	elif walking or _key(KEY_SHIFT):
 		speed = WALK_SPEED
-	var wish := local.rotated(Vector3.UP, char_yaw) * speed * speed_mult * buff_speed * snare_mult * encumbrance * stealth_mult
+	var wish := local.rotated(Vector3.UP, char_yaw) * speed * speed_mult * buff_speed * snare_mult * encumbrance * stealth_mult \
+			* _wounded_mult()
 	if cc != "":
 		wish = Vector3.ZERO                             # stunned / mesmerized / rooted: no moving
 

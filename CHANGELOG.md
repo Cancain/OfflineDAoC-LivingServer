@@ -43,6 +43,11 @@ Everything added since 0.35, in one complete download, and a new game client. Th
 - The new client's download comes in independent, checked parts: each is unpacked and deleted before the next, so
   the install never needs twice its size on disk.
 - It needs a graphics card that supports Vulkan or DirectX 12. It does not need the .NET Framework 3.5 feature.
+- Emotes show their effects as in the original client: /bind shows your realm's bindstone rings and plays its sound,
+  and every emote with an effect in the original client's emote table (pray, level up and the rest) shows it.
+- Below 35% health you move slower, as in the original client: your speed is scaled by your health / 35%, never
+  below 10%.
+- Ghostly NPCs (spirit pets and similar) show their skin tone and armour colours under the see-through look.
 - Its source code is in [source/new-client](source/new-client); see [docs/NEW-CLIENT.md](docs/NEW-CLIENT.md).
 
 **Bots and raids**
