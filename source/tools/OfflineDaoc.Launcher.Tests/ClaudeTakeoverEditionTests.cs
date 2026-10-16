@@ -51,8 +51,8 @@ public sealed class ClaudeTakeoverEditionTests
         Assert.That(enabled, Does.Contain(63), "the default (the b edition) keeps the Sluaghbinder in the Hibernian pool");
     }
 
-    [TestCase(true, "VERSION 0.35b")]
-    [TestCase(false, "VERSION 0.35")]
+    [TestCase(true, "VERSION 0.36b")]
+    [TestCase(false, "VERSION 0.36")]
     public void VersionLabelNamesTheInstalledEdition(bool customClass, string expected)
     {
         MethodInfo label = Launcher.GetType("OfflineDaoc.Launcher.MainForm")!.GetMethod("VersionLabel", HiddenStatic)!;

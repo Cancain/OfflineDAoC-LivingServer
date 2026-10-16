@@ -17,6 +17,8 @@ namespace DOL.GS;
 public static partial class AutonomousRvrEventLayer
 {
     public const long BattleLifetimeMilliseconds = 4 * 60 * 60_000L;
+    /// <summary>Time a marching relic army has to reach its keep (a keep siege has the usual hour).</summary>
+    public const long RelicMarchMilliseconds = 2 * 60 * 60_000L;
 
     [DOL.GS.ServerProperties.ServerProperty("autonomous", "rvr_siege_staged_assault",
         "Keep sieges gather the attackers at a siege camp and assault together (108 present, or a viable force at the one-hour deadline) instead of each warband walking in alone.", true)]
@@ -56,6 +58,9 @@ public static partial class AutonomousRvrEventLayer
         public bool PreparationNoticeSent;
         public long CreatedTick;
         public bool AttackObserved;
+        /// <summary>Started by a player or the test harness (ForceStart): joined first, and it takes the army of an
+        /// automatic siege by the same realm that has not begun fighting yet.</summary>
+        public bool Forced;
         public bool ThirdRealmIntervenes = Random.Shared.NextDouble() < RealmEventPolicy.ThirdRealmChance;
         public bool DefenseMustering, DefenseMarching;
         public long DefenseMusterDeadlineTick, DefenseMusterStartTick;
@@ -78,10 +83,17 @@ public static partial class AutonomousRvrEventLayer
         public bool Marching = true;
         public long MusterDeadlineTick;
         public bool MusterExtended;
+        public int MusterExtensions;
         public readonly Dictionary<long, (string Force, long Tick, GameBot Bot, Vector3 Position)> Mustered = new();
         // The marching column: one leader walks the route, the mustered army keeps with it (run 17: armies that
         // walked 50,000+ units one by one lost half their strength to roaming enemies before the siege camp).
         public GameBot MarchLeader;
+        // The leader reports each turn it actually leads (TryMarchWithArmy); a leader held by something else (its
+        // group's rendezvous, resting, shopping) is replaced, and set aside for a while.
+        public long MarchLeaderSinceTick, MarchLeaderHeartbeatTick;
+        public readonly Dictionary<long, long> StaleLeaders = new();
+        // Last tick each marcher actually took a march turn (its group's own rendezvous can hold it instead).
+        public readonly Dictionary<long, long> MarchTurns = new();
         public readonly Dictionary<long, (string Force, eRealm Realm, long Tick, GameBot Bot, Vector3 Position, ushort Region)> Present = new();
         public readonly Dictionary<string, int[]> Slots = new(StringComparer.Ordinal);
         public readonly Dictionary<long, (string Force, long ProgressTick, double BestDistance, Vector3 Position, ushort Region)> Travel = new();
@@ -115,9 +127,10 @@ public static partial class AutonomousRvrEventLayer
             Events[target.Id] = new ActiveEvent
             {
                 TargetId = target.Id, Target = target, AttackerRealm = attacker,
-                DefenderRealm = target.OwningRealm, RelicKeep = target.IsRelicKeep,
+                DefenderRealm = target.OwningRealm, RelicKeep = target.IsRelicKeep, Forced = true,
                 CreatedTick = now, ExpiresTick = now + RealmEventPolicy.RecruitmentMilliseconds(Random.Shared.NextDouble())
             };
+            SupersedeAutomaticSieges(Events[target.Id], now);
             RealmEventNotices.Queue(target.Id, attacker, $"Warbands are marching on {target.Name}. Join the assault as you arrive!");
             RealmEventRecords.Begin(target.Id, target.Name, target.IsRelicKeep ? "Relic keep" : "Keep", GlobalConstants.RealmToName(attacker), "Forced continuous siege; defender: " + GlobalConstants.RealmToName(target.OwningRealm));
             // Staged assault: the attackers gather at their physical siege camp and the battle opens
@@ -310,7 +323,8 @@ public static partial class AutonomousRvrEventLayer
             // spreading warbands across several nearly empty objectives.
             foreach (ActiveEvent active in Events.Values
                          .Where(active => !active.DefenseReaction)
-                         .OrderBy(active => active.BattleStarted)
+                         .OrderByDescending(active => active.Forced)
+                         .ThenBy(active => active.BattleStarted)
                          .ThenByDescending(active => JoinPriority(active, force))
                          .ThenBy(active => active.TargetId, StringComparer.Ordinal))
             {
@@ -546,11 +560,23 @@ public static partial class AutonomousRvrEventLayer
     // Quicker rallies (owner 2026-10-07: relic rallies took over an hour): 12 minutes to gather, one 5-minute extension.
     public const long HomeMusterMilliseconds = 12 * 60_000;
     public const long MusterExtensionMilliseconds = 5 * 60_000;
+    // Relic sieges need the larger army (MarchThreshold 170). Run 9 (2026-10-14): the Dun Dagda muster marched at its
+    // 12+5 minute deadline with 60 of 171 assigned, reached the keep with 12 and lost 186 bots to Hibernia. A relic
+    // muster gets 25 minutes and, while it is under 120, up to six 10-minute extensions. Run 15 (2026-10-16): after two
+    // extensions the Dun Dagda army marched with 98, about 60 reached the keep and the relic guards (three times a
+    // keep guard's health, untouchable from range) and 44 defenders killed them in four minutes; run 13's 135 took the
+    // gate to 3%.
+    public const long RelicMusterMilliseconds = 25 * 60_000;
+    public const long RelicMusterExtensionMilliseconds = 10 * 60_000;
+    public const int RelicMusterExtensions = 6;
     // The army marches once it can start the battle on arrival (108 for a keep, 170 for a relic keep,
     // or 85% of the attackers assigned when fewer). Run 14: marching at 64 sent half an army against
     // full-strength defenders; it lost the field before the battle could start (34 present, then 8).
     public static int MarchThreshold(bool relic, int assigned) =>
         Math.Max(8, Math.Min(relic ? 170 : 108, assigned * 85 / 100));
+
+    /// <summary>Attackers at their posts that open a marched siege without the leader: 60% of the army that marched, at least 8.</summary>
+    public static int ArrivalQuorum(int marchedAttackers) => Math.Max(8, marchedAttackers * 6 / 10);
 
     /// <summary>The march leader reached the keep: the marched army attacks at once.</summary>
     public static void ReportArmyArrived(string targetId, long nowTick)
@@ -597,10 +623,11 @@ public static partial class AutonomousRvrEventLayer
 
     private static void BeginMuster(ActiveEvent active, long nowTick, long milliseconds = HomeMusterMilliseconds)
     {
+        if (active.RelicKeep && !active.Retake && milliseconds == HomeMusterMilliseconds) milliseconds = RelicMusterMilliseconds;
         active.Marching = false;
         active.MusterDeadlineTick = nowTick + milliseconds;
         // The forward rally keeps its full hour after the march order.
-        active.ExpiresTick = Math.Max(active.ExpiresTick, nowTick + HomeMusterMilliseconds + RealmEventPolicy.RecruitmentMilliseconds(0));
+        active.ExpiresTick = Math.Max(active.ExpiresTick, nowTick + Math.Max(milliseconds, HomeMusterMilliseconds) + RealmEventPolicy.RecruitmentMilliseconds(0));
     }
 
     // The defense gathers as one quick rally (nearest friendly keep) and goes in together: it marches at
@@ -653,7 +680,10 @@ public static partial class AutonomousRvrEventLayer
         if (active.Marching) return;
         active.Marching = true;
         active.MarchedAttackers = MusterAttendance(active, nowTick);
-        active.ExpiresTick = Math.Max(active.ExpiresTick, nowTick + RealmEventPolicy.RecruitmentMilliseconds(0));
+        // A relic keep lies deep in the enemy realm: the Dun Dagda army (run 4) needed well over an hour from its
+        // Emain Macha muster through the defenders on the way and failed at the one-hour mark.
+        active.ExpiresTick = Math.Max(active.ExpiresTick, nowTick + (active.RelicKeep ? RelicMarchMilliseconds
+            : RealmEventPolicy.RecruitmentMilliseconds(0)));
         RealmEventNotices.Queue(active.TargetId, active.AttackerRealm, $"The army marches on {active.Target.Name}! Form up at the siege camp.");
         var log = DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
         if (log.IsInfoEnabled) log.Info($"RVR_SIEGE_MARCH target={active.TargetId} mustered={MusterAttendance(active, nowTick)} reason=\"{reason}\"");
@@ -669,11 +699,47 @@ public static partial class AutonomousRvrEventLayer
         {
             if (!Events.TryGetValue(targetId, out var active) || active.BattleStarted || !active.Marching || active.Mustered.Count == 0)
                 return null;
-            if (IsLiveArmyMember(active, active.MarchLeader)) return active.MarchLeader;
-            active.MarchLeader = active.Mustered.Values.Select(entry => entry.Bot).Where(bot => IsLiveArmyMember(active, bot))
-                .OrderBy(bot => bot.DatabaseID).FirstOrDefault();
+            long now = GameLoop.GameLoopTime;
+            if (IsLiveArmyMember(active, active.MarchLeader))
+            {
+                // Run 2026-10-13: the relic army for Castle Excalibur waited 45 minutes at Hadrian's Wall
+                // ("Waiting with the army") behind a leader whose group sat at its rendezvous and never led.
+                // A leader in a fight is leading too: the column holds or joins it (run 6: armies fought all the way
+                // and their leaders were replaced every minute).
+                if (now - Math.Max(active.MarchLeaderSinceTick, active.MarchLeaderHeartbeatTick) < MarchLeaderSilenceMilliseconds ||
+                    active.MarchLeader.InCombatInLast((int)MarchLeaderSilenceMilliseconds))
+                    return active.MarchLeader;
+                active.StaleLeaders[active.MarchLeader.DatabaseID] = now + MarchLeaderStaleMilliseconds;
+                var log = DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
+                if (log.IsInfoEnabled) log.Info($"RVR_MARCH_LEADER_REPLACED target={targetId} leader={active.MarchLeader.Name} " +
+                    $"reason=\"no leading turn for {MarchLeaderSilenceMilliseconds / 1000} seconds\"");
+            }
+            foreach (long id in active.StaleLeaders.Where(pair => pair.Value <= now).Select(pair => pair.Key).ToArray())
+                active.StaleLeaders.Remove(id);
+            // Run 5: most of the Castle Excalibur army sat at its parties' rendezvous, and picking leaders by id
+            // replaced one every 30 seconds for an hour. Prefer a marcher that is actually taking march turns.
+            GameBot[] candidates = active.Mustered.Values.Select(entry => entry.Bot)
+                .Where(bot => IsLiveArmyMember(active, bot) && !active.StaleLeaders.ContainsKey(bot.DatabaseID)).ToArray();
+            active.MarchLeader = candidates
+                .Where(bot => active.MarchTurns.TryGetValue(bot.DatabaseID, out long turn) && now - turn < MarchLeaderSilenceMilliseconds)
+                .OrderBy(bot => bot.DatabaseID).FirstOrDefault() ?? candidates.OrderBy(bot => bot.DatabaseID).FirstOrDefault();
+            active.MarchLeaderSinceTick = now;
             return active.MarchLeader;
         }
+    }
+
+    public const long MarchLeaderSilenceMilliseconds = 30_000;
+    public const long MarchLeaderStaleMilliseconds = 10 * 60_000;
+
+    /// <summary>A marcher took a march turn; for the leader that is a leading turn (walking, regrouping or holding).</summary>
+    public static void ReportMarchLeading(string targetId, GameBot bot)
+    {
+        lock (Sync)
+            if (Events.TryGetValue(targetId, out var active) && bot != null)
+            {
+                active.MarchTurns[bot.DatabaseID] = GameLoop.GameLoopTime;
+                if (active.MarchLeader == bot) active.MarchLeaderHeartbeatTick = GameLoop.GameLoopTime;
+            }
     }
 
     /// <summary>The mustered attackers still alive and in the world (the marching column).</summary>
@@ -756,6 +822,19 @@ public static partial class AutonomousRvrEventLayer
         lock (Sync)
             return Events.Values.Any(entry => !entry.BattleStarted && entry.ExpiresTick > nowTick &&
                 (entry.Attackers.ContainsKey(forceId) || entry.Defenders.ContainsKey(forceId) || entry.ThirdRealm.ContainsKey(forceId)));
+    }
+
+    /// <summary>
+    /// A force in any running siege, mustering and marching included. Run 8 (2026-10-14): the relic army for Dun Dagda
+    /// spent ninety minutes "Marching with the army" while its groups' rendezvous held them ("Meeting up with group",
+    /// "Waiting for regroup leader"), some still in Midgard; the rendezvous stood aside only once a battle had begun.
+    /// </summary>
+    public static bool IsEventForce(string forceId, long nowTick)
+    {
+        lock (Sync)
+            return Events.Values.Any(entry => entry.ExpiresTick > nowTick &&
+                (entry.Attackers.ContainsKey(forceId) || entry.Defenders.ContainsKey(forceId) || entry.ThirdRealm.ContainsKey(forceId))) ||
+                CarrierEvents.Values.Any(entry => entry.ExpiresTick > nowTick && entry.Participants.Values.Any(realm => realm.ContainsKey(forceId)));
     }
 
     public static bool IsBattleForce(string forceId, long nowTick)
@@ -865,7 +944,11 @@ public static partial class AutonomousRvrEventLayer
             // waiting for 85% of the cap (54) while it was whittled down to 19. Owner 2026-10-07 (all RvR, relic and
             // battleground sieges): once the threshold is reached the siege starts, no waiting at the keep. The
             // muster threshold was met before the march, so the army attacks as soon as it reaches the keep.
-            if (MarchedArmy(active) && inPosition && realm == active.AttackerRealm)
+            // Run 2026-10-13: a straggler that walked in on its own opened Caer Sursbrooke with one attacker present
+            // (the column far behind) and the siege was repelled. Posts open it only once most of the army that marched
+            // stands there; the march leader's arrival (ReportArmyArrived) still opens it for the whole column.
+            if (MarchedArmy(active) && inPosition && realm == active.AttackerRealm &&
+                Attendance(active, active.AttackerRealm, nowTick) >= ArrivalQuorum(active.MarchedAttackers))
                 StartBattle(active, nowTick, "the marching army reached the keep and attacks at once; defenders and third-realm reinforcements may respond");
             else if (nowTick - active.CreatedTick >= RealmEventPolicy.EarliestAssaultMilliseconds &&
                 Ready(active, active.Marching, nowTick))
@@ -1048,14 +1131,16 @@ public static partial class AutonomousRvrEventLayer
             // road (medallions, frontier teleporter); too few to ever start the battle. A thin muster waits
             // once more, ten minutes, for the army that is genuinely on its way.
             int gathered = active.Mustered.Count;
-            if (!active.Retake && !active.MusterExtended && gathered < RealmEventPolicy.DynamicStartThreshold(active.RelicKeep, true))
+            bool mayExtend = active.RelicKeep ? active.MusterExtensions < RelicMusterExtensions : !active.MusterExtended;
+            if (!active.Retake && mayExtend && gathered < RealmEventPolicy.DynamicStartThreshold(active.RelicKeep, true))
             {
                 active.MusterExtended = true;
-                active.MusterDeadlineTick = nowTick + MusterExtensionMilliseconds;
+                active.MusterExtensions++;
+                active.MusterDeadlineTick = nowTick + (active.RelicKeep ? RelicMusterExtensionMilliseconds : MusterExtensionMilliseconds);
                 active.ExpiresTick = Math.Max(active.ExpiresTick, active.MusterDeadlineTick + RealmEventPolicy.RecruitmentMilliseconds(0));
                 var log = DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
                 if (log.IsInfoEnabled) log.Info($"RVR_MUSTER_EXTENDED target={active.TargetId} mustered={gathered} " +
-                    $"needed={RealmEventPolicy.DynamicStartThreshold(active.RelicKeep, true)} minutes={MusterExtensionMilliseconds / 60_000}");
+                    $"needed={RealmEventPolicy.DynamicStartThreshold(active.RelicKeep, true)} minutes={(active.RelicKeep ? RelicMusterExtensionMilliseconds : MusterExtensionMilliseconds) / 60_000}");
                 continue;
             }
             GiveMarchOrder(active, nowTick, "muster deadline reached; marching with the attackers gathered");
@@ -1139,6 +1224,30 @@ public static partial class AutonomousRvrEventLayer
         Cooldowns[active.TargetId] = nowTick + TargetCooldownMilliseconds;
         var log = DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
         if (log.IsInfoEnabled) log.Info($"RVR_EVENT_ENDED target={active.TargetId} reason=\"{reason}\"");
+    }
+
+    /// <summary>
+    /// Run 7 (2026-10-14): a relic siege forced on Dun Dagda got no attackers at all, because Midgard's warbands were
+    /// already committed to an automatic siege of Dun Crauchon that had not begun. A forced siege takes over such a
+    /// rally: its warbands are recorded as the forced siege's attackers and muster for it instead.
+    /// </summary>
+    private static void SupersedeAutomaticSieges(ActiveEvent forced, long nowTick)
+    {
+        foreach (ActiveEvent active in Events.Values.Where(active => active != forced && !active.Forced && !active.DefenseReaction &&
+                     !active.BattleStarted && active.AttackerRealm == forced.AttackerRealm).ToArray())
+        {
+            foreach (var (force, members) in active.Attackers)
+                if (forced.Attackers.Values.Sum() + members <= Capacity(forced)) forced.Attackers[force] = members;
+            int moved = active.Attackers.Count;
+            RealmEventRecords.Finish(active.TargetId, "Superseded", $"A forced siege of {forced.Target.Name} took this rally's army",
+                active.Attackers.Values.Sum() + active.Defenders.Values.Sum() + active.ThirdRealm.Values.Sum());
+            // Its defenders and third realm go back to their own choices (not released: nothing ended for them).
+            Events.Remove(active.TargetId);
+            Cooldowns[active.TargetId] = nowTick + TargetCooldownMilliseconds;
+            var log = DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
+            if (log.IsInfoEnabled)
+                log.Info($"RVR_EVENT_SUPERSEDED target={active.TargetId} by={forced.TargetId} warbands={moved}");
+        }
     }
 
     private static bool TryJoin(Dictionary<string, int> participants, Force force, int cap)

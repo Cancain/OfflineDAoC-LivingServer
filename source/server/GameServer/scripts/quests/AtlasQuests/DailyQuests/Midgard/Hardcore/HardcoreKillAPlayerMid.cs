@@ -62,7 +62,7 @@ namespace DOL.GS.DailyQuest
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
 				{
-					if (npc.CurrentRegionID == 100 && npc.X == 766767 && npc.Y == 670636)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 766767, 670636))
 					{
 						SucciMid = npc;
 						break;

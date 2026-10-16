@@ -74,7 +74,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 763734 && npc.Y == 646142)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 763734, 646142))
 					{
 						Freeya = npc;
 						break;
@@ -124,7 +124,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 101 && npc.X == 30621 && npc.Y == 32310)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 101, 30621, 32310))
 					{
 						VikingDextz = npc;
 						break;

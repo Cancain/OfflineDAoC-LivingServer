@@ -95,7 +95,7 @@ public class LostStoneofArawn : BaseQuest
 
         if (npcs.Length > 0)
             foreach (var npc in npcs)
-                if (npc.CurrentRegionID == 51 && npc.X == 435217 && npc.Y == 495273)
+                if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 51, 435217, 495273))
                 {
                     Honaytrt = npc;
                     break;
@@ -126,7 +126,7 @@ public class LostStoneofArawn : BaseQuest
 
         if (npcs.Length > 0)
             foreach (var npc in npcs)
-                if (npc.CurrentRegionID == 51 && npc.X == 30763 && npc.Y == 29908)
+                if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 51, 30763, 29908))
                 {
                     Nchever = npc;
                     break;
@@ -158,7 +158,7 @@ public class LostStoneofArawn : BaseQuest
 
         if (npcs.Length > 0)
             foreach (var npc in npcs)
-                if (npc.CurrentRegionID == 51 && npc.X == 404696 && npc.Y == 503469)
+                if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 51, 404696, 503469))
                 {
                     Ohonat = npc;
                     break;

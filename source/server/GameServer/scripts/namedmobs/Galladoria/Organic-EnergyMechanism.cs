@@ -196,7 +196,7 @@ namespace DOL.AI.Brain
         {
             if (Body.InCombatInLast(40 * 1000) == false && Body.InCombatInLast(45 * 1000))
                 ClearAggroList();
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 Body.Health = Body.MaxHealth;
                 RandomTarget = null;

@@ -476,16 +476,16 @@ namespace DOL.GS
                         _nextRvrPlanReview = nowTick + 45_000;
                         _rvrDestination = ChooseRvrDestination(bot);
                     }
-                    if (AutonomousRvrEventLayer.IsBattleForce(eventForce, nowTick))
+                    if (AutonomousRvrEventLayer.IsEventForce(eventForce, nowTick))
                         return ExecuteRvr(brain, bot);
                 }
                 if (_groupDirective?.IsDynamic == true && _groupDirective.Phase == "Regrouping" &&
-                    !AutonomousRvrEventLayer.IsBattleForce(_groupDirective.GroupId, nowTick))
+                    !AutonomousRvrEventLayer.IsEventForce(_groupDirective.GroupId, nowTick))
                     return HandleRecoveryRegroup(brain, bot);
                 if (_groupDirective?.IsDynamic == true &&
                     AutonomousBotGroupCoordinator.IsAssemblyPhase(_groupDirective.Phase) &&
                     !(_groupDirective.ObjectiveKind == eAutonomousObjectiveKind.RvR &&
-                      AutonomousRvrEventLayer.IsBattleForce(_groupDirective.GroupId, nowTick)))
+                      AutonomousRvrEventLayer.IsEventForce(_groupDirective.GroupId, nowTick)))
                 {
                     // A wipe/no-show resize invalidates the old shared
                     // camp even when the group ID itself has not changed.
@@ -4341,6 +4341,19 @@ namespace DOL.GS
         {
             bot.GoalDiagnosticAttempt?.RouteFailed(failureStatus.ToString());
 
+            // Standing just off the walkable mesh, no route can start (several bots at once beside Vindsaul Faste and
+            // Caer Diogel, 2026-10-13): step onto the nearest real floor, then plan again from there.
+            if (AutonomousNavigationSurface.TryNearestWalkableFloor(PathfindingProvider.Instance, bot.CurrentZone, current, 300,
+                    out Vector3 floorStep) &&
+                bot.MoveInRegion(bot.CurrentRegionID, (int)floorStep.X, (int)floorStep.Y, (int)floorStep.Z, bot.Heading, true))
+            {
+                Log.Info($"AUTONOMOUS_FLOOR_STEP bot={bot.Name} id={bot.DatabaseID} region={bot.CurrentRegionID} " +
+                         $"from={(int)current.X},{(int)current.Y},{(int)current.Z} to={(int)floorStep.X},{(int)floorStep.Y},{(int)floorStep.Z} " +
+                         $"distance={Vector2.Distance(new(current.X, current.Y), new(floorStep.X, floorStep.Y)):0}");
+                _routeStallReplans = 0;
+                return true;
+            }
+
             // The Jordheim exchange room has one collision pocket whose Detour
             // polygon is connected on paper but whose physical approach stops at
             // the same coordinates. Use the existing validated same-service
@@ -4522,7 +4535,12 @@ namespace DOL.GS
             Vector3 escape;
             ushort escapeRegion;
             string escapeName;
-            if (_camp != null &&
+            // 2026-10-16 (owner's session, Camelot Hills): Haroorwin failed the same route every 7 seconds for minutes,
+            // each failure an 800-query, 2-9 second AI turn that froze the server (rubberbanding). Every escape was a short
+            // hop beside the pocket and reset the failure count, so it never reached the real relocation. Repeated
+            // failures in one spot now skip the short hops.
+            bool localHopsLeft = _terminalRouteFailuresInPocket < AutonomousRouteRecoveryPolicy.FailuresBeforeSafeRelocation;
+            if (localHopsLeft && _camp != null &&
                 AutonomousRouteHotspotRepair.TryGetAuditedCampEscape(
                     PathfindingProvider.Instance, bot.CurrentRegion, bot.CurrentRegionID,
                     _camp.MonsterName, current, out escape))
@@ -4530,19 +4548,30 @@ namespace DOL.GS
                 escapeRegion = bot.CurrentRegionID;
                 escapeName = _camp.ZoneName;
             }
-            else if (AutonomousRouteHotspotRepair.TryGetImmediateEscape(
+            else if (localHopsLeft && AutonomousRouteHotspotRepair.TryGetImmediateEscape(
                     PathfindingProvider.Instance, bot.CurrentRegion, bot.CurrentRegionID, current, out escape))
             {
                 escapeRegion = bot.CurrentRegionID;
                 escapeName = bot.CurrentZone?.Description ?? $"region {escapeRegion}";
             }
-            else if (_camp != null &&
+            else if (localHopsLeft && _camp != null &&
                      AutonomousRouteHotspotRepair.TryResolveStarterDungeonRouteSurface(
                          PathfindingProvider.Instance, bot.CurrentRegion, bot.CurrentRegionID,
                          _camp.RegionId, current, out escape))
             {
                 escapeRegion = bot.CurrentRegionID;
                 escapeName = bot.CurrentZone?.Description ?? $"region {escapeRegion}";
+            }
+            else if (_terminalRouteFailuresInPocket >= AutonomousRouteRecoveryPolicy.FailuresBeforeSafeRelocation &&
+                     AutonomousRealmRaid.TryDungeonRegroupPoint(bot, out ushort raidRegion, out Vector3 raidFront) &&
+                     Vector3.DistanceSquared(current, raidFront) > 300f * 300f)
+            {
+                // A raider inside its raid's dungeon rejoins the raid front, not its capital. Run 9 (2026-10-14):
+                // Hibernia's Darkness Falls raiders arriving at the entrance (46,325 / 40,969) could not route the
+                // 15,000+ units to the front, were sent to Tir na Nog, rode back and failed again, 338 times.
+                escapeRegion = raidRegion;
+                escape = raidFront;
+                escapeName = "the raid front";
             }
             else
             {
@@ -4577,7 +4606,10 @@ namespace DOL.GS
                      $"to={escapeRegion}:{(int)escape.X},{(int)escape.Y},{(int)escape.Z} " +
                      $"terminalFailures={_terminalRouteFailuresInPocket}");
             ResetRouteOrderState();
-            ResetRepeatedRouteFailures();
+            // A short hop keeps the pocket's failure count (the bot comes back to the same spot); a real relocation clears it.
+            if (!localHopsLeft || escapeRegion != failedSourceRegion ||
+                Vector3.DistanceSquared(_lastTerminalRouteFailurePosition, escape) > AutonomousRouteRecoveryPolicy.RepeatedFailureRadius * AutonomousRouteRecoveryPolicy.RepeatedFailureRadius * 16)
+                ResetRepeatedRouteFailures();
             bot.MarkAutonomousStateDirty();
             AutonomousBotStatusPersistence.Queue(bot);
             AutonomousStuckWatchdog.MarkProgress(bot, eAutonomousProgressKind.Recovery);
@@ -4732,8 +4764,13 @@ namespace DOL.GS
             return IsZoneAccessible(realm, zone);
         }
 
+        // An exit of the region the bot already stands in is always usable (the realm row, portal-row and target
+        // checks still apply). Run 4 (2026-10-14): 77 bots saved inside Summoner's Hall after a raid logged in there,
+        // found no usable crossing (the hall is no ordinary-goal zone) and stood still until the 15-minute rescue.
         private static bool IsCrossingSourceAccessible(eRealm realm, ushort currentRegion, DbZonePoint point) =>
             AutonomousDarknessFallsPolicy.CanEvacuateThroughHomeExit(realm, currentRegion, point) ||
+            point.SourceRegion == currentRegion && WorldMgr.GetRegion(currentRegion) is { } here &&
+                AutonomousCapnBryGoalCatalog.IsClassicOrShroudedIslesExpansion(here.Expansion) ||
             IsRegionPointAccessible(realm, point.SourceRegion, point.SourceX, point.SourceY);
 
         private bool RetireStaleDarknessFallsGoalAndEvacuate(GameBot bot)

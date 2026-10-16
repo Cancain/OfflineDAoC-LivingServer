@@ -48,6 +48,32 @@ public static class AutonomousZoneSeams
     public static Crossing[] For(ushort region, ushort from, ushort to) =>
         Data.Value.TryGetValue((region, from, to), out Crossing[] crossings) ? crossings : null;
 
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<ushort, Dictionary<(ushort Zone, int Area), (ushort Zone, int Area)[]>>
+        AreaGraphs = new();
+
+    /// <summary>
+    /// The region's connected ground as a graph: (zone, walkable area) to (neighbouring zone, area) for
+    /// every listed crossing with area ids. Empty for regions or files without area data.
+    /// </summary>
+    public static Dictionary<(ushort Zone, int Area), (ushort Zone, int Area)[]> AreaGraph(ushort region) =>
+        AreaGraphs.GetOrAdd(region, id =>
+        {
+            var links = new Dictionary<(ushort, int), HashSet<(ushort, int)>>();
+            foreach (var ((r, from, to), crossings) in Data.Value)
+            {
+                if (r != id) continue;
+                foreach (Crossing crossing in crossings)
+                {
+                    if (crossing.InsideArea < 0 || crossing.OutsideArea < 0) continue;
+                    if (!links.TryGetValue((from, crossing.InsideArea), out var next)) links[(from, crossing.InsideArea)] = next = new();
+                    next.Add((to, crossing.OutsideArea));
+                }
+            }
+            var graph = new Dictionary<(ushort Zone, int Area), (ushort Zone, int Area)[]>();
+            foreach (var pair in links) graph[pair.Key] = [.. pair.Value];
+            return graph;
+        });
+
     private static Dictionary<(ushort, ushort, ushort), Crossing[]> Load()
     {
         var result = new Dictionary<(ushort, ushort, ushort), Crossing[]>();

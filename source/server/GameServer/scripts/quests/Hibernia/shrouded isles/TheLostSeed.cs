@@ -78,7 +78,7 @@ namespace DOL.GS.Quests.Hibernia
 
         if (npcs.Length > 0)
             foreach (var npc in npcs)
-                if (npc.CurrentRegionID == 181 && npc.X == 382809 && npc.Y == 421409)
+                if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 181, 382809, 421409))
                 {
 	                Terod = npc;
                     break;
@@ -109,7 +109,7 @@ namespace DOL.GS.Quests.Hibernia
 
         if (npcs.Length > 0)
             foreach (var npc in npcs)
-                if (npc.CurrentRegionID == 181 && npc.X == 380514 && npc.Y == 421419)
+                if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 181, 380514, 421419))
                 {
 	                Kredril = npc;
                     break;
@@ -140,7 +140,7 @@ namespace DOL.GS.Quests.Hibernia
         npcs = WorldMgr.GetNPCsByName("Emolia", eRealm.Hibernia);
         if (npcs.Length > 0)
             foreach (var npc in npcs)
-                if (npc.CurrentRegionID == 181 && npc.X == 404696 && npc.Y == 503469)
+                if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 181, 404696, 503469))
                 {
 	                Emolia = (HiberniaSITeleporter)npc;
                     break;
@@ -174,7 +174,7 @@ namespace DOL.GS.Quests.Hibernia
         npcs = WorldMgr.GetNPCsByName("Jandros", eRealm.Hibernia);
         if (npcs.Length > 0)
 	        foreach (var npc in npcs)
-		        if (npc.CurrentRegionID == 181 && npc.X == 404696 && npc.Y == 503469)
+		        if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 181, 404696, 503469))
 		        {
 			        Jandros = npc;
 			        break;

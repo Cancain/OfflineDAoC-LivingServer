@@ -115,7 +115,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 201 && npc.X == 32927 && npc.Y == 32743)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 201, 32927, 32743))
 					{
 						Brigit = npc;
 						break;
@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 200 && npc.X == 470547 && npc.Y == 531497)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 200, 470547, 531497))
 					{
 						Caithor = npc as GhostOfCaithor;
 						break;
@@ -1336,7 +1336,6 @@ namespace DOL.GS.Quests.Hibernia
 						case "fulfill":
 							if (quest.Step == 2)
 							{
-								RemoveItem(player, Moonstone);
 								if (player.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack,
 									    eInventorySlot.LastBackpack))
 								{

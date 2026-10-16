@@ -97,7 +97,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 408557 && npc.Y == 651675)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 408557, 651675))
 					{
 						Roben = npc;
 						break;
@@ -130,7 +130,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 322231 && npc.Y == 671546)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 322231, 671546))
 					{
 						Blythe = npc as SisterBlythe;
 						break;
@@ -830,7 +830,6 @@ namespace DOL.GS.Quests.Albion
 						case "defeat":
 							if (quest.Step == 2)
 							{
-								RemoveItem(player, statue_of_arawn);
 								if (player.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack,
 									    eInventorySlot.LastBackpack))
 								{

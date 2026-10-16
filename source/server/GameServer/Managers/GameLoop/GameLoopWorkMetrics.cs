@@ -48,9 +48,15 @@ namespace DOL.GS
             if (ms > GameLoop.TickDuration) counters.OverBudget++;
 
             long now = Stopwatch.GetTimestamp();
-            if (_reportAt == 0) _reportAt = now + 60 * Stopwatch.Frequency;
+            if (_reportAt == 0)
+            {
+                _reportAt = now + 60 * Stopwatch.Frequency;
+                ServerMemoryDiagnostics.EnsureStarted();
+                AutonomousZoneRoads.Preload();
+            }
             if (now < _reportAt) return;
             _reportAt = now + 60 * Stopwatch.Frequency;
+            ServerMemoryDiagnostics.Minute();
             if (Stages.TryGetValue("NpcService", out Counters npc) && npc.Count > 0)
                 PublishBotAiDelay(new BotAiDelayReport(DateTime.UtcNow, npc.TotalMs / npc.Count, npc.MaxMs, npc.Count));
             ReportStallMinute();

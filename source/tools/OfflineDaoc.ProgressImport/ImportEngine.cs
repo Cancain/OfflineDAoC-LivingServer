@@ -20,18 +20,18 @@ public sealed record ImportSummary(long Accounts, long Characters, long Bots, lo
 
 /// <summary>
 /// Moves saved progress (account, characters, items, money, houses, guild state, bots) from any
-/// earlier Offline DAoC folder — v0.3, v0.31, v0.31b, v0.32, v0.32b, v0.33, v0.33b, v0.34, v0.34b, the "new class
-/// test" builds — into a NEW 0.35 folder. The old folder is only read. The new folder keeps its own
+/// earlier Offline DAoC folder — v0.3, v0.31, v0.31b, v0.32, v0.32b, v0.33, v0.33b, v0.34, v0.34b, v0.35, v0.35b, the "new class
+/// test" builds — into a NEW 0.36 folder. The old folder is only read. The new folder keeps its own
 /// world, rules, edition and launcher settings; only the saved-progress tables are replaced, after a
 /// backup.
 /// </summary>
 public static class ImportEngine
 {
     /// <summary>This release; the "b" edition has the custom class, the plain one does not.</summary>
-    public const string Release = "0.35";
+    public const string Release = "0.36";
     public static readonly Policy Rules = JsonSerializer.Deserialize<Policy>(File.ReadAllText(Path.Combine(AppContext.BaseDirectory,"progress-policy.json")))!;
     const int SluaghbinderClass = 63, AcolyteClass = 16, Hibernia = 3;
-    // The Sluaghbinder client of 0.33b/0.34b, and of 0.35b (classic war map, red quest markers, QUEST GUIDE button).
+    // The Sluaghbinder client of 0.33b/0.34b, and of 0.35b / 0.36b (classic war map, red quest markers, QUEST GUIDE button).
     static readonly string[] SluaghbinderClientSha256 = ["01b1848e79b31d2822811effb3d3b098e07015db2d3db1178df5ba31ed805e96",
         "e1d471bb19108610ab9c8ca77dd41af40afe716685b03f4cdeda88c05678463b"];
 
@@ -63,6 +63,9 @@ public static class ImportEngine
         using var q=c.CreateCommand();q.CommandText=$"PRAGMA {schema}.table_info({Q(table)})";
         using var r=q.ExecuteReader();var result=new List<string>();while(r.Read())result.Add(r.GetString(1));return result;
     }
+    // 0.36c: the new client's launcher (new-client\runtime) shares the game's runtime, so it must be closed too.
+    static string[] WithNewClient(params string[] runtimes) =>
+        runtimes.SelectMany(r=>new[]{r,Path.GetFullPath(Path.Combine(r,"..","new-client","runtime"))}).ToArray();
     static void CheckClosed(params string[] roots)
     {
         if(System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners().Any(p=>p.Port==10300))
@@ -74,7 +77,7 @@ public static class ImportEngine
             string name=process.ProcessName;
             if(name.Equals("CoreServer",StringComparison.OrdinalIgnoreCase))
                 throw new InvalidOperationException("Stop the DAoC server before importing progress.");
-            if(name is not ("OfflineDAoC" or "game" or "camelot" or "connect"))continue;
+            if(name is not ("OfflineDAoC" or "game" or "camelot" or "connect" or "Godot_v4.7.2-stable_mono_win64"))continue;
             try
             {
                 string? file=process.MainModule?.FileName;
@@ -180,7 +183,7 @@ public static class ImportEngine
     {
         string old=LocateRuntime(oldFolder),current=LocateRuntime(newFolder);
         if(string.Equals(old,current,StringComparison.OrdinalIgnoreCase))throw new InvalidOperationException("Old and new folders must be different.");
-        CheckClosed(old,current);
+        CheckClosed(WithNewClient(old,current));
         string oldDb=Path.Combine(old,"data","opendaoc.sqlite3.db"),newDb=Path.Combine(current,"data","opendaoc.sqlite3.db");
         var summary=Inspect(old);
         var notes=new List<string>{$"Source: {old} (launcher version {summary.Version}{(summary.SluaghbinderClient?", Sluaghbinder client":"")})."};
@@ -303,7 +306,7 @@ public static class ImportEngine
                 Exec(c,"COMMIT; DETACH DATABASE old;");Integrity(c);
             }
             if(!keepNewCredentials)File.WriteAllText(credentialStage,$"Account: {account}\r\nPassword: {password}\r\n");
-            CheckClosed(old,current);
+            CheckClosed(WithNewClient(old,current));
             progress("Installing verified progress. Please do not close this window…");
             using(var c=Open(newDb,false))Exec(c,"PRAGMA wal_checkpoint(TRUNCATE); PRAGMA journal_mode=DELETE;");
             File.Replace(staged,newDb,null);swapped=true;

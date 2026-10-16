@@ -14,7 +14,22 @@ public static class RealmRaidMuster
     /// <summary>Why the last failed <see cref="TryRoute"/> on this thread failed (for the start log).</summary>
     [ThreadStatic] public static string LastRouteFailure;
 
+    /// <summary>
+    /// The zone crossings from start to goal. A hub's <paramref name="via"/> is only a fallback: the direct plan comes
+    /// first and the trip is forced through the via zone only when that fails. Innis Carthaig's via (far south in Bog of
+    /// Cullen) sent the Cuuldurach raid 30,000 units south and back although the direct plan crosses at the right
+    /// place (owner 2026-10-13).
+    /// </summary>
     public static bool TryRoute(Region region, IPathfindingMgr nav, eRealm realm, Vector3 start, Vector3 goal, out Vector3[] seams, Vector3? via = null)
+    {
+        if (via.HasValue && TryRouteThrough(region, nav, realm, start, goal, out seams, null)) return true;
+        string direct = LastRouteFailure;
+        if (TryRouteThrough(region, nav, realm, start, goal, out seams, via)) return true;
+        if (via.HasValue) LastRouteFailure = $"{LastRouteFailure} (direct: {direct})";
+        return false;
+    }
+
+    private static bool TryRouteThrough(Region region, IPathfindingMgr nav, eRealm realm, Vector3 start, Vector3 goal, out Vector3[] seams, Vector3? via)
     {
         seams = [];
         Zone from = region?.GetZone((int)start.X,(int)start.Y);

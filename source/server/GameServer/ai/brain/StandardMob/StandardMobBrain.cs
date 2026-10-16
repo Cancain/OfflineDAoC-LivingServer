@@ -280,6 +280,8 @@ namespace DOL.AI.Brain
         /// Checks whether living has someone on its aggrolist
         /// </summary>
         public virtual bool HasAggro => !AggroList.IsEmpty;
+        /// <summary>Entries on the aggro list (diagnostics).</summary>
+        public int AggroCount => AggroList.Count;
 
         /// <summary>
         /// Add aggro table of this brain to that of another living.
@@ -342,6 +344,7 @@ namespace DOL.AI.Brain
             }
 
             AggroList.AddOrUpdate(living, Add, Update, aggroAmount);
+            (living as GameNPC)?.NoteAggroHolder(this);
 
             if (living is GamePlayer player)
             {
@@ -392,8 +395,8 @@ namespace DOL.AI.Brain
             if (pet == null)
                 return;
 
-            if (!AggroList.ContainsKey(pet))
-                AggroList.TryAdd(pet, new(0));
+            if (!AggroList.ContainsKey(pet) && AggroList.TryAdd(pet, new(0)))
+                pet.NoteAggroHolder(this);
 
             IControlledBrain[] controlledBrains = pet.ControlledNpcList;
 
@@ -410,14 +413,16 @@ namespace DOL.AI.Brain
                 if (subPet == null)
                     continue;
 
-                if (!AggroList.ContainsKey(subPet))
-                    AggroList.TryAdd(subPet, new(0));
+                if (!AggroList.ContainsKey(subPet) && AggroList.TryAdd(subPet, new(0)))
+                    subPet.NoteAggroHolder(this);
             }
         }
 
         public virtual void RemoveFromAggroList(GameLiving living)
         {
             AggroList.TryRemove(living, out _);
+            _tempAggroList?.TryRemove(living, out _);
+            (living as GameNPC)?.ForgetAggroHolder(this);
         }
 
         public List<OrderedAggroListElement> GetOrderedAggroList()
@@ -474,6 +479,8 @@ namespace DOL.AI.Brain
         public virtual void ClearAggroList()
         {
             CanBaf = true; // Mobs that drop out of combat can BAF again.
+            foreach (GameLiving held in AggroList.Keys)
+                (held as GameNPC)?.ForgetAggroHolder(this);
             AggroList.Clear();
             _tempAggroList = null;
 
@@ -676,6 +683,10 @@ namespace DOL.AI.Brain
 
             // Only attack if green+ to target
             if (realTarget.IsObjectGreyCon(Body))
+                return false;
+
+            // A monster the player must talk to for a quest step leaves that player alone (QuestTalkTruce).
+            if (realTarget is GamePlayer questPlayer && DOL.GS.Quests.QuestTalkTruce.Holds(Body, questPlayer))
                 return false;
 
             // If this npc have Faction return the AggroAmount to Player

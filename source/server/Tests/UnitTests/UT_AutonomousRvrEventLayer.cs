@@ -49,6 +49,39 @@ public sealed class UT_AutonomousRvrEventLayer
     }
 
     [Test]
+    public void ForcedSiegeTakesTheArmyOfAnUnstartedAutomaticSiege()
+    {
+        // Run 7 (2026-10-14): a forced relic siege got no attackers; the realm's warbands were committed to an
+        // automatic keep siege still mustering.
+        AutonomousRvrEventLayer.StagedAssault = true;
+        var keep = new AutonomousRvrEventLayer.LiveObjective("keep-auto", "Dun Crauchon", AutonomousRvrEventLayer.Intent.AssaultKeep,
+            eRealm.Hibernia, 163, 100, 100, 0, false, 0, 0, 2, 2);
+        var relic = new AutonomousRvrEventLayer.LiveObjective("relic-forced", "Dun Dagda", AutonomousRvrEventLayer.Intent.AssaultRelicKeep,
+            eRealm.Hibernia, 163, 300, 300, 0, true, 0, 0, 2, 2);
+        var force = new AutonomousRvrEventLayer.Force("a", eRealm.Midgard, 8, 50, 2);
+        Assert.That(AutonomousRvrEventLayer.ChooseOrJoin(force, new[] { keep }, 1, 0).TargetId, Is.EqualTo("keep-auto"));
+
+        Assert.That(AutonomousRvrEventLayer.ForceStart(relic, eRealm.Midgard, 2, out _), Is.True);
+
+        Assert.That(System.Linq.Enumerable.Select(AutonomousRvrEventLayer.Snapshot(), e => e.TargetId), Is.EquivalentTo(new[] { "relic-forced" }));
+        Assert.That(AutonomousRvrEventLayer.ChooseOrJoin(force, new[] { keep, relic }, 3, 0).TargetId, Is.EqualTo("relic-forced"));
+    }
+
+    [Test]
+    public void MusteringArmyIsAnEventForceBeforeItsBattle()
+    {
+        // Run 8: group rendezvous held a mustering relic army because only a started battle exempted it.
+        AutonomousRvrEventLayer.StagedAssault = true;
+        var keep = new AutonomousRvrEventLayer.LiveObjective("keep-muster", "Dun Crauchon", AutonomousRvrEventLayer.Intent.AssaultKeep,
+            eRealm.Hibernia, 163, 100, 100, 0, false, 0, 0, 2, 2);
+        var force = new AutonomousRvrEventLayer.Force("m", eRealm.Midgard, 8, 50, 2);
+        AutonomousRvrEventLayer.ChooseOrJoin(force, new[] { keep }, 1, 0);
+        Assert.That(AutonomousRvrEventLayer.IsBattleForce("m", 2), Is.False);
+        Assert.That(AutonomousRvrEventLayer.IsEventForce("m", 2), Is.True);
+        Assert.That(AutonomousRvrEventLayer.IsEventForce("other", 2), Is.False);
+    }
+
+    [Test]
     public void KeepAssaultIsSharedButParticipationIsCapped()
     {
         var keep = new AutonomousRvrEventLayer.LiveObjective("keep-1", "Dun Crauchon", AutonomousRvrEventLayer.Intent.AssaultKeep,

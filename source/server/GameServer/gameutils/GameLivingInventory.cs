@@ -275,6 +275,17 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="slot">SlotPosition to check</param>
 		/// <returns>the slot if it's valid or eInventorySlot.Invalid if not</returns>
+		/// <summary>
+		/// A bound of a search range (GetItemRange, GetFirstItemByID/ObjectType/Name). The special "first/last empty"
+		/// values still resolve through <see cref="GetValidInventorySlot"/>; a plain slot number is used as it is, since
+		/// the search only looks up slots that hold items. Validating the bounds made eInventorySlot.Max_Inv (249, the last
+		/// housing slot, not a player slot) Invalid, so every Min_Inv..Max_Inv search of a player's inventory found nothing:
+		/// Tainted Magic's "have the ale" step could never complete and quest items were handed out again and again
+		/// (quest probe, 2026-10-15).
+		/// </summary>
+		protected eInventorySlot SearchBound(eInventorySlot slot) =>
+			slot < eInventorySlot.Invalid ? GetValidInventorySlot(slot) : slot;
+
 		protected virtual eInventorySlot GetValidInventorySlot(eInventorySlot slot)
 		{
 			if ((slot >= eInventorySlot.RightHandWeapon && slot <= eInventorySlot.FourthQuiver)
@@ -378,8 +389,8 @@ namespace DOL.GS
 		/// <returns>all items found</returns>
 		public virtual ICollection<DbInventoryItem> GetItemRange(eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
-			minSlot = GetValidInventorySlot(minSlot);
-			maxSlot = GetValidInventorySlot(maxSlot);
+			minSlot = SearchBound(minSlot);
+			maxSlot = SearchBound(maxSlot);
 			if (minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
 				return null;
 
@@ -419,8 +430,8 @@ namespace DOL.GS
 		/// <returns>found item or null</returns>
 		public DbInventoryItem GetFirstItemByID(string uniqueID, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
-			minSlot = GetValidInventorySlot(minSlot);
-			maxSlot = GetValidInventorySlot(maxSlot);
+			minSlot = SearchBound(minSlot);
+			maxSlot = SearchBound(maxSlot);
 			if (minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
 				return null;
 
@@ -459,8 +470,8 @@ namespace DOL.GS
 		/// <returns>found item or null</returns>
 		public DbInventoryItem GetFirstItemByObjectType(int objectType, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
-			minSlot = GetValidInventorySlot(minSlot);
-			maxSlot = GetValidInventorySlot(maxSlot);
+			minSlot = SearchBound(minSlot);
+			maxSlot = SearchBound(maxSlot);
 			if (minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
 				return null;
 
@@ -499,8 +510,8 @@ namespace DOL.GS
 		/// <returns>found item or null</returns>
 		public DbInventoryItem GetFirstItemByName(string name, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
-			minSlot = GetValidInventorySlot(minSlot);
-			maxSlot = GetValidInventorySlot(maxSlot);
+			minSlot = SearchBound(minSlot);
+			maxSlot = SearchBound(maxSlot);
 			if (minSlot == eInventorySlot.Invalid || maxSlot == eInventorySlot.Invalid)
 				return null;
 

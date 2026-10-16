@@ -445,9 +445,9 @@
       "level": 70,
       "classType": "DOL.GS.HighLordSaeor",
       "spawn": [
-        49971,
+        49796,
         38134,
-        15969
+        15925
       ],
       "reasons": [
         "scripted"
@@ -489,8 +489,8 @@
       "classType": "DOL.GS.HighLordOro",
       "spawn": [
         45048,
-        25015,
-        15967
+        25215,
+        15924
       ],
       "reasons": [
         "scripted"
@@ -1119,9 +1119,9 @@
       "level": 71,
       "classType": "DOL.GS.PrincessNahemah",
       "spawn": [
-        18329,
+        18560,
         24840,
-        17246
+        17203
       ],
       "reasons": [
         "scripted"

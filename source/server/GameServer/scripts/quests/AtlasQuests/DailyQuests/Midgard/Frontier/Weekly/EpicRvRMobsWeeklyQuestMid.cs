@@ -75,7 +75,7 @@ namespace DOL.GS.WeeklyQuest.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 766401 && npc.Y == 670349)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 766401, 670349))
 					{
 						Herou = npc;
 						break;

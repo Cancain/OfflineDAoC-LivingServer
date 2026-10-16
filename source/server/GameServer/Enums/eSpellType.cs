@@ -433,6 +433,9 @@ namespace DOL.GS
         // Isolated Sluaghbinder epic-quest service summons.  These are not
         // combat pets: the handler creates a stationary service NPC and does
         // not register it with the normal controlled-pet list.
-        SluaghbinderEpicSummon
+        SluaghbinderEpicSummon,
+
+        // Sluaghbinder class realm ability: a snare that tightens every second, then bursts (AtlasOF_CripplingPlague).
+        SluaghbinderCripplingPlague
     }
 }

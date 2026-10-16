@@ -1,0 +1,11 @@
+<Project Sdk="Godot.NET.Sdk/4.7.2">
+  <!-- Bot plan phase 3 (owner 2026-10-10): the bot world's core is C#, the rest of the game stays GDScript. Build with
+       the .NET SDK (offline: nuget.config points at the Godot .NET build's own packages in tools\godot_net). -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Nullable>disable</Nullable>
+    <Optimize>true</Optimize>
+    <RootNamespace>MMOEngine</RootNamespace>
+  </PropertyGroup>
+</Project>

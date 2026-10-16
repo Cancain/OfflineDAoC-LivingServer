@@ -3990,30 +3990,47 @@ namespace DOL.AI.Brain
             // AutonomousPetSupport. Keeping them out of this combat selector
             // prevents a second cooldown/queue from recasting buffs or treating
             // one-shot power transfer as idle upkeep.
+            GameLiving servant = servantBrain.Body;
             commands = commands.Where(spell => spell.IsHarmful &&
                 Body.IsWithinRadius(target, Math.Max(1, spell.CalculateEffectiveRange(Body))) &&
+                ServantCanReach(target, spell) &&
                 ServantPayloadNeedsApplication(target, spell));
 
-            // The normal spell construction already reduced each line to its
-            // learned, level-valid ranks. Prefer the highest legal commands but
-            // retain some variation between equally useful servant actions.
+            // One command per servant line (the highest learned rank of each payload kind), so every line gets used.
+            // Taking the four highest-level commands overall kept out the lower-level area debuffs (Shroud of
+            // Affliction, Vortex of Anguish) whenever damage lines had higher ranks (owner report 2026-10-15).
             Spell[] best = commands
-                .OrderByDescending(spell => spell.Level)
-                .ThenByDescending(spell => spell.SubSpellID)
-                .Take(4)
+                .GroupBy(ServantCommandKind)
+                .Select(line => line.OrderByDescending(spell => spell.Level).ThenByDescending(spell => spell.SubSpellID).First())
                 .ToArray();
             if (best.Length == 0)
                 return false;
 
-            Spell command = BotBody.IsEndgameCompanion
-                ? TemporaryCompanionBalance.HighestSpell(best)
-                : best[Random.Shared.Next(best.Length)];
+            // A debuff the target does not have yet goes first, on a single enemy as on a pack: area debuffs are worth
+            // casting on one target too.
+            Spell[] debuffs = best.Where(spell => SkillBase.GetSpellByID(spell.SubSpellID) is { } payload && IsServantDebuff(payload)).ToArray();
+            Spell command = debuffs.Length > 0
+                ? debuffs[Random.Shared.Next(debuffs.Length)]
+                : BotBody.IsEndgameCompanion
+                    ? TemporaryCompanionBalance.HighestSpell(best)
+                    : best[Random.Shared.Next(best.Length)];
             GameObject oldTarget = Body.TargetObject;
             Body.TargetObject = target;
             bool cast = Body.CastSpell(command, ResolveKnownSpellLine(command), false);
             Body.TargetObject = oldTarget;
             _nextNecromancerCommandTick = GameLoop.GameLoopTime + (cast ? 750 : 2_000);
             return cast;
+
+            // A point-blank payload (Billowing Death and its ranks: range 0, radius 350) bursts around the servant, so
+            // the servant, not the shade, must stand by the target. It was sent from 1,500 away and hit nothing.
+            bool ServantCanReach(GameLiving commandTarget, Spell wrapper)
+            {
+                Spell payload = SkillBase.GetSpellByID(wrapper.SubSpellID);
+                if (payload == null || payload.Range > 0 || payload.Radius <= 0)
+                    return true;
+                return servant.CurrentRegionID == commandTarget.CurrentRegionID &&
+                       servant.IsWithinRadius(commandTarget, Math.Max(100, payload.Radius * 8 / 10));
+            }
 
             bool ServantPayloadNeedsApplication(GameLiving commandTarget, Spell wrapper)
             {
@@ -4027,6 +4044,22 @@ namespace DOL.AI.Brain
                 return payload.Duration <= 0 || !LivingHasEffect(commandTarget, payload);
             }
         }
+
+        /// <summary>A servant command's line: what its payload does, its damage type, and whether it is single-target,
+        /// a targeted area or a burst around the servant.</summary>
+        public static string ServantCommandKind(Spell wrapper)
+        {
+            Spell payload = SkillBase.GetSpellByID(wrapper.SubSpellID);
+            if (payload == null)
+                return $"wrapper:{wrapper.ID}";
+            string shape = payload.Radius <= 0 ? "single" : payload.Range <= 0 ? "pbaoe" : "area";
+            return $"{payload.SpellType}/{payload.DamageType}/{shape}";
+        }
+
+        /// <summary>Stat, resist, armor and speed debuffs (Shroud of Affliction, Vortex of Anguish and the like).</summary>
+        public static bool IsServantDebuff(Spell payload) =>
+            payload.SpellType == eSpellType.SpeedDecrease ||
+            payload.SpellType.ToString().Contains("Debuff", StringComparison.Ordinal);
 
         private SpellLine ResolveKnownSpellLine(Spell spell)
         {
@@ -4235,6 +4268,11 @@ namespace DOL.AI.Brain
                 return false;
 
             bool casted = false;
+
+            // No pet near an encounter that devours pets (AutonomousPetSupport.PetEaterNear).
+            if ((AutonomousPetSupport.IsMainPetSummon(spell.SpellType) || spell.SpellType == eSpellType.SummonMinion) &&
+                AutonomousPetSupport.PetEaterNear(Body) != null)
+                return false;
 
             Body.TargetObject = null;
 

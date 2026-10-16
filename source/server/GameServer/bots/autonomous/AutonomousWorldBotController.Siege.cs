@@ -208,7 +208,15 @@ namespace DOL.GS
                     _siegePositionTarget = target;
                     _siegePosition = ChooseSiegePosition(bot, target, _siegeKind, engines, keep, out string blocked);
                     if (_siegePosition == null)
-                    { SiegeLog(bot, "placement_blocked", null, $"kind={_siegeKind} target={target.Name} {blocked}"); _siegeNextAttempt = now + 15_000; return false; }
+                    {
+                        // Run 13 (2026-10-16): Dun Dagda's ram never found a spot (unconnected=34 of 35, 159 times) after the
+                        // outer gate fell; which door, the gate's state and the bot's spot show where the approach breaks.
+                        string doorInfo = target is GameKeepDoor kd
+                            ? $" door={kd.DoorId} index={SiegeDoorNumber(kd)} at={kd.X},{kd.Y},{kd.Z} gate={string.Join("/", keep.Doors.Values.Where(d => SiegeDoorNumber(d) == 1).Select(d => $"{d.DoorId}:{(d.IsAlive ? "alive" : "broken")}:{d.State}"))}"
+                            : "";
+                        SiegeLog(bot, "placement_blocked", null, $"kind={_siegeKind} target={target.Name}{doorInfo} from={(int)bot.X},{(int)bot.Y},{(int)bot.Z} {blocked}");
+                        _siegeNextAttempt = now + 15_000; return false;
+                    }
                 }
                 if (Vector3.Distance(new(bot.X, bot.Y, bot.Z), _siegePosition.Value) > (_siegeKind == BotSiegeKind.Ballista ? 55 : 90))
                 { IssuePath(bot, _siegePosition.Value, preciseArrival:true); SiegeStatus(bot, "Moving to verified siege position", target); return true; }
@@ -351,15 +359,22 @@ namespace DOL.GS
         internal static GameKeepDoor SiegeDoor(GameBot bot, AbstractGameKeep keep) =>
             keep.Doors.Values.Where(d=>d.IsAlive && d.IsAttackableDoor && d.State==eDoorState.Closed)
                 .OrderBy(d=>PosternLike(keep, d) ? 1 : 0)
-                .ThenBy(d=>d.DoorIndex)
+                .ThenBy(SiegeDoorNumber)
                 .ThenByDescending(d=>Vector2.DistanceSquared(new(d.X,d.Y),new(keep.X,keep.Y)))
                 .ThenBy(bot.GetDistanceTo).FirstOrDefault();
 
         /// <summary>For a door behind the outer gate (the keep door), the gate's position: attackers reach it from that
         /// side. Null for the gate itself and for anything that is not a keep door.</summary>
         internal static Vector2? InnerDoorApproach(AbstractGameKeep keep, GameObject door) =>
-            door is GameKeepDoor inner && inner.DoorIndex != 1 &&
-            keep.Doors.Values.FirstOrDefault(d => d.DoorIndex == 1) is { } gate ? new Vector2(gate.X, gate.Y) : null;
+            door is GameKeepDoor inner && SiegeDoorNumber(inner) != 1 &&
+            keep.Doors.Values.FirstOrDefault(d => SiegeDoorNumber(d) == 1) is { } gate ? new Vector2(gate.X, gate.Y) : null;
+
+        /// <summary>
+        /// The door's number within its keep (the id's last two digits). GameKeepDoor.DoorIndex keeps only the last digit,
+        /// so a relic keep's doors 10 and 11 read 0 and 1: run 14 (2026-10-16) Midgard's rams went for Dun Dagda's door 10
+        /// ("index 0", by the keep centre) while the gate still stood, and found no reachable spot 159 times.
+        /// </summary>
+        public static int SiegeDoorNumber(GameKeepDoor door) => door.DoorId % 100;
 
         /// <summary>A postern, or the other half of one (within 200 of a flagged postern door).</summary>
         internal static bool PosternLike(AbstractGameKeep keep, GameKeepDoor door) =>

@@ -7,7 +7,8 @@ internal static class Program
     {
         if (args.Length == 1 && args[0] == "--prepare-portable-account")
         {
-            PortableCredentials.ReadOrCreate(AppContext.BaseDirectory);
+            // the new client's launcher keeps its account with the game it plays (server_root.txt)
+            PortableCredentials.ReadOrCreate(MainForm.ServerRootFor(AppContext.BaseDirectory));
             return;
         }
         ApplicationConfiguration.Initialize();

@@ -70,7 +70,7 @@ namespace DOL.GS.DailyQuest.Hibernia
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
 				{
-					if (npc.CurrentRegionID == 250 && npc.X == 18658 && npc.Y == 18710)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 250, 18658, 18710))
 					{
 						PazzHib = npc;
 						break;

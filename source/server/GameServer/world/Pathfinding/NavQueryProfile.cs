@@ -11,7 +11,7 @@ namespace DOL.GS
     /// </summary>
     public static class NavQueryProfile
     {
-        public enum Kind { PathStraight, ClosestPoint, OtherQuery, ZoneStep, Corridor, Count }
+        public enum Kind { PathStraight, ClosestPoint, OtherQuery, ZoneStep, Corridor, Road, Count }
 
         [ThreadStatic] private static int[] _calls;
         [ThreadStatic] private static long[] _ticks;

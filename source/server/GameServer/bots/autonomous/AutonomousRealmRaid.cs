@@ -71,6 +71,9 @@ namespace DOL.GS
             public Vector3? Anchor;
             public Vector3 AnchorCenter;
             public ushort AnchorRegion;
+            // A post search that found nothing is not repeated for the same spot for a while (see TryBattlePost).
+            public Vector3 FailedPostCenter;
+            public long FailedPostUntil;
             public View View;
             public View DestinationView;
             public readonly HashSet<long> CatchingUp = new();
@@ -86,6 +89,31 @@ namespace DOL.GS
         private static volatile (ushort Region, int X, int Y)[] _raidDestinations = [];
         private static readonly Dictionary<(ushort Region, int X, int Y), long> RecentDestinations = new();
         private const long DestinationMemory = 15 * 60_000;
+
+        public static bool HasActiveRaidIn(ushort region)
+        {
+            foreach (var d in _raidDestinations)
+                if (d.Region == region) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Run 8 (2026-10-14): the Albion raid in Darkness Falls stood 6,000-10,000 units short of Prince Ba'alorien
+        /// for forty minutes, fighting essence shredders, naburite drinkers and succubi that came back every 100-180
+        /// seconds (263 essence shredders alone), and skipped him untouched. While a bot raid is inside Darkness
+        /// Falls, Summoner's Hall, Caer Sidi or Galladoria, the ordinary monsters there stay down for ten minutes;
+        /// bosses, epic encounters and scripted adds keep their own timers, and nothing changes once the raid ends.
+        /// </summary>
+        public const int RaidTrashRespawnMilliseconds = 10 * 60_000;
+        public static readonly ushort[] SlowRespawnRegions = [249, 248, 60, 191];
+
+        public static int RaidRespawnInterval(GameNPC npc, int interval)
+        {
+            if (interval <= 0 || interval >= RaidTrashRespawnMilliseconds || npc is IGameEpicNpc or GameSummonedPet or GameBot ||
+                npc.Realm != eRealm.None || Array.IndexOf(SlowRespawnRegions, npc.CurrentRegionID) < 0 || !HasActiveRaidIn(npc.CurrentRegionID))
+                return interval;
+            return RaidTrashRespawnMilliseconds;
+        }
 
         public static bool IsActiveRaidDestination(ushort region, int x, int y)
         {
@@ -277,6 +305,18 @@ namespace DOL.GS
         public static bool Start(string id, eRealm realm, out string reason, bool forced = false)
         {
             RealmRaidMuster.Hub rallyHub = RealmRaidMuster.Hubs.FirstOrDefault(h => h.Event == id);
+            // A forced dungeon raid proves its entrance before reserving 300 bots: a route that can never be built
+            // reports why at once instead of after the roster is gathered (forced Darkness Falls, 2026-10-11).
+            Definition preview = forced ? Definitions.FirstOrDefault(d => d.Id == id && d.Realm == realm) : null;
+            if (preview is { IsDungeon: true } && !RealmRaidMuster.Hubs.Where(h => h.Event == id).Any(h =>
+                    RealmRaidDungeonRoute.TryCreate(preview.Region, preview.Trigger, preview.FinalTypes, out _, realm,
+                        preview.IsNeutral ? h.Region : (ushort)0, preview.Objectives, h.Center)))
+            {
+                reason = $"The dungeon entrance/final approach could not be validated ({RealmRaidDungeonRoute.LastFailure}). No party was assigned.";
+                Log.Warn($"REALM_RAID_START_UNAVAILABLE event={id} reason=\"no validated entrance\" detail=\"{RealmRaidDungeonRoute.LastFailure}\"");
+                return false;
+            }
+            if (preview != null) SupersedeAutomatic(realm, id);
             GameBot[][] recruits = forced && rallyHub != null
                 ? AutonomousBotGroupCoordinator.PlanForcedRaid(realm, rallyHub.Region, rallyHub.Center) : [];
             if (forced && recruits.Sum(p => p.Length) < RealmRaidRecruitmentPolicy.MaximumBots)
@@ -307,7 +347,7 @@ namespace DOL.GS
                                 realm, definition.IsNeutral ? hub.Region : (ushort)0, definition.Objectives, hub.Center))
                         {
                             reason = "The dungeon entrance/final approach could not be validated. No party was assigned.";
-                            Log.Warn($"REALM_RAID_START_UNAVAILABLE event={id} hub=\"{hub.Name}\" reason=\"no validated entrance\"");
+                            Log.Warn($"REALM_RAID_START_UNAVAILABLE event={id} hub=\"{hub.Name}\" reason=\"no validated entrance\" detail=\"{RealmRaidDungeonRoute.LastFailure}\"");
                             continue;
                         }
                         candidate.DungeonRoute = route;
@@ -695,16 +735,27 @@ namespace DOL.GS
                     raid.Definition.Region, (int)point.X, (int)point.Y, (int)point.Z, false, false, raid.Boss.Level), hold);
         }
 
+        public const long FailedPostRetryMilliseconds = 30_000;
+
         private static bool TryBattlePost(Raid raid, Party party, Vector3 center, ushort region, out Vector3 point)
         {
             if (party.Anchor.HasValue && party.AnchorRegion == region &&
                 Vector3.DistanceSquared(center, party.AnchorCenter) < 128 * 128)
             { point = party.Anchor.Value; return true; }
+            // Run 4 (2026-10-14): around Prince Abdin no post was free, and every party re-ran the full post search
+            // (about 300 path queries, 1-3 s) on every AI turn; 414 such turns averaged 1,026 ms.
+            long now = GameLoop.GameLoopTime;
+            if (now < party.FailedPostUntil && Vector3.DistanceSquared(center, party.FailedPostCenter) < 128 * 128)
+            { point = default; return false; }
             Zone zone = WorldMgr.GetRegion(region)?.GetZone((int)center.X, (int)center.Y);
             Vector3[] occupied = raid.Parties.Values.Where(p => p != party && p.Anchor.HasValue && p.AnchorRegion == region)
                 .Select(p => p.Anchor.Value).ToArray();
             if (!RealmRaidFormation.TryResolve(PathfindingProvider.Instance, zone, center, party.FormationSlot, occupied, out point))
+            {
+                party.FailedPostCenter = center;
+                party.FailedPostUntil = now + FailedPostRetryMilliseconds;
                 return false;
+            }
             party.Anchor = point; party.AnchorRegion = region; party.AnchorCenter = center;
             return true;
         }
@@ -744,6 +795,25 @@ namespace DOL.GS
                 destination = raid.DungeonRoute != null ? party.Staging :
                     new Vector3(party.DestinationView.Camp.X, party.DestinationView.Camp.Y, party.DestinationView.Camp.Z);
                 via = raid.Hub.Via;
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Where a raider who died inside a raid dungeon releases: the raid's muster hub (the town players bind at for it).
+        /// Run 14 (2026-10-16): epic dungeons have no bind point, so Caer Sidi's fallen released to Camelot and walked back
+        /// across the realm; 67 of the 300 were left inside when Bane of Hope reset at 37%.
+        /// </summary>
+        public static bool TryRaidRelease(GameBot bot, out ushort region, out Point3D point)
+        {
+            region = 0; point = null;
+            Group group = bot?.Group;
+            if (group == null) return false;
+            lock (Sync)
+            {
+                if (!Membership.TryGetValue(group, out var raid) || raid.DungeonRoute == null || raid.Hub == null) return false;
+                region = raid.Hub.Region;
+                point = new Point3D((int)raid.Hub.Center.X, (int)raid.Hub.Center.Y, (int)raid.Hub.Center.Z);
                 return true;
             }
         }
@@ -989,6 +1059,18 @@ namespace DOL.GS
         }
 
         private const string StoppedByPlayer = "Stopped by the player";
+
+        // Runs 12 and 13 (2026-10-15/16): an automatic Darkness Falls or Summoner's Hall rally opened a minute before the
+        // forced raid and held 140+ of the realm's level-50 bots, so forced Galladoria reserved only 288 of 300 and forced
+        // Caer Sidi rallied 143 of the 200 it needs. A forced expedition ends the realm's automatic rallies that have not
+        // started yet (no cooldown), the way a forced siege supersedes an unstarted automatic siege.
+        private static void SupersedeAutomatic(eRealm realm, string forcedId)
+        {
+            lock (Sync)
+                foreach (Raid automatic in Raids.Values.Where(r => r.Definition.Realm == realm && !r.Forced && !r.Started &&
+                             r.Definition.Id != forcedId).ToArray())
+                    End(automatic, GameLoop.GameLoopTime, $"{StoppedByPlayer}: superseded by the forced {forcedId} expedition.");
+        }
 
         /// <summary>Launcher "Stop event": ends an active dragon or epic dungeon expedition now.</summary>
         public static bool Stop(string id, out string reason)

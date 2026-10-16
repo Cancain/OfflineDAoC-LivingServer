@@ -1,0 +1,56 @@
+OFFLINE DAOC 0.35 "CLAUDE TAKEOVER III" - VERIFICATION
+
+Source and builds
+- Server (Release build): 2,725 automated tests passed, 0 failed.
+- Launcher: 105 automated tests passed, 0 failed.
+- The release server is built from the development server's source plus the
+  edition switch.
+
+Package checks (build_release_035.py)
+- The runtime was copied 1:1 from a snapshot of the 0.35 development install:
+  31,915 files, each hashed. Logs, backups, accounts and run-state files are
+  excluded.
+- The world database passes SQLite quick_check. It has the same tables as 0.34
+  and no accounts, characters, bots, inventories, houses or auctions. Keeps and
+  relics are at their original realms. GM is off, XP is 1x, the bot target is 0
+  and automatic account creation is on.
+- The 0.35 edition database has enable_sluaghbinder = False, with the
+  Sluaghbinder trainer, wisp and class skill rows removed.
+- The 0.35 edition game.dll is the normal v0.32 client with the bounty marker,
+  quest marker range, classic war map and Quest Journal button patches applied.
+  Compared byte for byte with the 0.35b client, the only differences are the
+  two Sluaghbinder patches (class label and race links) and the file checksum.
+
+End-to-end smoke test (smoke_release_035.py), both editions
+- The launcher created the install's own account.txt.
+- The server started using only the bundled .NET runtime.
+- A login through connect.exe (as ENTER REALM does) made the server create a
+  fresh 'offline' account at player level.
+- The server shut down cleanly.
+
+Progress transfer tests (test_release_import_035.py, real saves, copies only)
+- The owner's development save (3 characters, 6,000 bots, 107,872 inventory
+  entries) into 0.35b: exact counts for every saved table, and the old login
+  carried over. The 0.35b server then started on that save in 16 seconds and
+  the imported account logged in through connect.exe.
+- The same save into 0.35: refused, because it has a Sluaghbinder character.
+  Nothing was changed.
+- A played 0.34b save (3 characters, 6,000 bots, 73,527 inventory entries)
+  into 0.35b: exact counts. Into 0.35: refused (Sluaghbinder character).
+- A played 0.34 save (5,873 bots, 177,738 inventory entries) into 0.35 and
+  into 0.35b: exact counts.
+- A played 0.33b save (6,000 bots, 181,042 inventory entries) into 0.35b:
+  exact counts. Into 0.35: refused until the player confirms; after
+  confirmation the 127 Sluaghbinder bots and their items stayed behind and the
+  other bots transferred.
+- A played 0.33 save (5,873 bots) into 0.35: exact counts.
+- A save with no account.txt: the account was kept, with a new password stored
+  in the server's own format.
+- A clean 0.34b install (no account): the new install keeps its own.
+- In every case the old folder was unchanged, and every import left XP at 1x,
+  GM off and every bot offline.
+
+Not claimed
+These are automated and package checks. Long live bot runs of the newest bot
+changes are not verified here, and not every Darkness Falls boss has been
+cleared by bots yet (see the Known issues discussion).

@@ -62,7 +62,7 @@ namespace DOL.GS.DailyQuest
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
 				{
-					if (npc.CurrentRegionID == 1 && npc.X == 584652 && npc.Y == 477773)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 584652, 477773))
 					{
 						SucciAlb = npc;
 						break;

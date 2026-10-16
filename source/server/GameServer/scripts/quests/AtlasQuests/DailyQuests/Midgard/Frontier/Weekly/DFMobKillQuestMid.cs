@@ -69,7 +69,7 @@ namespace DOL.GS.WeeklyQuest.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 249 && npc.X == 16639 && npc.Y == 18947)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 249, 16639, 18947))
 					{
 						Patrick = npc;
 						break;

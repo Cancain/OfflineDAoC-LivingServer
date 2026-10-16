@@ -123,6 +123,9 @@ namespace DOL.GS.Quests
             /// a player on this step who does not have one receives it, from <see cref="GrantFrom"/>.</summary>
             public List<string> Grant { get; set; }
             public string GrantFrom { get; set; }
+            /// <summary>What this step's NPC says when the player comes to it during the step, before handing anything in
+            /// (Merle the Old: "Did you get me the mud?"); a recorded line of the period walkthrough.</summary>
+            public string Greet { get; set; }
         }
 
         public sealed class QuestInfo
@@ -132,6 +135,9 @@ namespace DOL.GS.Quests
             /// <summary>Races the quest is offered to (empty: any). DataQuest has class limits but no race limits;
             /// Information is the Key (Celt) went to every Hibernian race, Sluaghbinders included (owner check 2026-10-07).</summary>
             public List<string> Races { get; set; } = new();
+            /// <summary>Each step's experience as a share of the player's current level (quest XP scaled with the
+            /// player's level in the period); empty: the quest row's fixed RewardXP. tools/claude-version/fix_quest_xp.py.</summary>
+            public List<double> XpShares { get; set; } = new();
         }
 
         /// <summary>Whether the player's race may take this classic quest.</summary>
@@ -151,6 +157,19 @@ namespace DOL.GS.Quests
             /// <summary>The walkthroughs' NPC conversation: NPC name -> clicked/whispered keyword -> what the NPC answers
             /// (owner 2026-10-07: the quests had only a bare offer; the classic [keyword] chains were missing).</summary>
             public Dictionary<string, Dictionary<string, string>> Chat { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+            /// <summary>Rewards made per class (owner 2026-10-11): reward Id_nb -> class id -> that class's own version
+            /// (Viraniel's belts, Banba's cloaks, Stoneheart weapons, Ley Infused and Trustan's belts).</summary>
+            public Dictionary<string, Dictionary<string, string>> ClassRewards { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+        }
+
+        /// <summary>The version of a quest reward made for the player's class (ClassRewards), or the reward itself.</summary>
+        public static DbItemTemplate RewardFor(GamePlayer player, DbItemTemplate item)
+        {
+            if (player == null || item == null || _config.ClassRewards == null ||
+                !_config.ClassRewards.TryGetValue(item.Id_nb, out Dictionary<string, string> byClass) ||
+                !byClass.TryGetValue(player.CharacterClass.ID.ToString(), out string id))
+                return item;
+            return GameServer.Database.FindObjectByKey<DbItemTemplate>(id) ?? item;
         }
 
         [GameServerStartedEvent]
@@ -236,7 +255,7 @@ namespace DOL.GS.Quests
                 if (custom?.Kind != "choose" || custom.Choices == null || !string.Equals(custom.Target, npc.Name, StringComparison.OrdinalIgnoreCase)) continue;
                 string chosen = custom.Choices.Keys.FirstOrDefault(k => string.Equals(k, key, StringComparison.OrdinalIgnoreCase));
                 if (chosen == null) continue;
-                DbItemTemplate template = GameServer.Database.FindObjectByKey<DbItemTemplate>(custom.Choices[chosen]);
+                DbItemTemplate template = RewardFor(player, GameServer.Database.FindObjectByKey<DbItemTemplate>(custom.Choices[chosen]));
                 if (template == null) continue;
                 if (!player.Inventory.IsSlotsFree(1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
                 {
@@ -429,10 +448,77 @@ namespace DOL.GS.Quests
             }
         }
 
+        /// <summary>
+        /// A classic quest step's experience: its share of the player's current level when the quest has one (owner
+        /// 2026-10-13: quest XP was far below the period's; players recorded about 8-10% of a level for a mid-level quest,
+        /// at whatever level they did it), else the row's fixed value. Never less than the fixed value.
+        /// </summary>
+        public static long ScaleXP(int questId, GamePlayer player, int stepIndex, long fixedXp)
+        {
+            if (player == null || !_config.Quests.TryGetValue(questId, out QuestInfo info) || info.XpShares == null ||
+                stepIndex < 0 || stepIndex >= info.XpShares.Count || info.XpShares[stepIndex] <= 0 || player.Level >= GamePlayer.MAX_LEVEL)
+                return fixedXp;
+            long span = player.ExperienceForNextLevel - player.ExperienceForCurrentLevel;
+            return span <= 0 ? fixedXp : Math.Max(fixedXp, (long) (span * info.XpShares[stepIndex]));
+        }
+
+        /// <summary>Separates the turns of a recorded conversation in a quest text (DataQuest step and finish lines).</summary>
+        public const string NextTurn = "{next}";
+        public const long ConversationMemoryMilliseconds = 15 * 60 * 1000;
+        private static readonly ConcurrentDictionary<(GamePlayer, string), (Queue<string> Turns, long Until)> Conversations = new();
+        private static readonly ConcurrentDictionary<(GamePlayer, string), long> ConversationTicks = new();
+
+        /// <summary>The first turn of a staged quest text; the others wait for the player to talk to the speaker again.</summary>
+        public static string StartConversation(GamePlayer player, GameObject speaker, string text)
+        {
+            string[] turns = text.Split(NextTurn, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            if (turns.Length == 0) return string.Empty;
+            if (player != null && speaker != null && turns.Length > 1)
+            {
+                Conversations[(player, speaker.Name)] = (new Queue<string>(turns.Skip(1)), GameLoop.GameLoopTime + ConversationMemoryMilliseconds);
+                // The turn said now belongs to this interaction; the next one waits for the next.
+                ConversationTicks[(player, speaker.Name)] = GameLoop.GameLoopTime;
+            }
+            return turns[0];
+        }
+
+        /// <summary>
+        /// One interaction with an NPC that has more to say: its next turn, and nothing else happens on this interaction
+        /// (every quest's interact handler asks; only the first one in the same game tick speaks).
+        /// </summary>
+        public static bool ContinueConversation(GamePlayer player, GameObject target)
+        {
+            if (player == null || target is not GameNPC npc) return false;
+            var key = (player, npc.Name);
+            if (ConversationTicks.TryGetValue(key, out long tick) && tick == GameLoop.GameLoopTime) return true;
+            if (!Conversations.TryGetValue(key, out var pending)) return false;
+            if (GameLoop.GameLoopTime > pending.Until)
+            {
+                Conversations.TryRemove(key, out _);
+                return false;
+            }
+            string turn;
+            lock (pending.Turns)
+            {
+                if (pending.Turns.Count == 0) { Conversations.TryRemove(key, out _); return false; }
+                turn = pending.Turns.Dequeue();
+                if (pending.Turns.Count == 0) Conversations.TryRemove(key, out _);
+            }
+            ConversationTicks[key] = GameLoop.GameLoopTime;
+            if (ConversationTicks.Count > 5000)
+                foreach (var old in ConversationTicks.Where(p => GameLoop.GameLoopTime - p.Value > 60_000).Select(p => p.Key).ToArray())
+                    ConversationTicks.TryRemove(old, out _);
+            npc.TurnTo(player);
+            npc.SayTo(player, PacketHandler.eChatLoc.CL_PopupWindow, DOL.GS.Behaviour.BehaviourUtils.GetPersonalizedMessage(turn, player));
+            return true;
+        }
+
         private static void OnInteract(DOLEvent e, object sender, EventArgs args)
         {
             try
             {
+                if (sender is GamePlayer talker && args is InteractWithEventArgs spoken && ContinueConversation(talker, spoken.Target))
+                    return;
                 if (sender is GamePlayer who && args is InteractWithEventArgs touched && touched.Target != null)
                     foreach (DataQuest quest in who.QuestList.Keys.OfType<DataQuest>().ToArray())
                     {
@@ -442,6 +528,8 @@ namespace DOL.GS.Quests
                             quest.AdvanceByScript(touched.Target);
                     }
                 if (sender is not GamePlayer player || args is not InteractWithEventArgs interact || interact.Target is not GameNPC npc) return;
+                GreetOnHandInStep(player, npc);
+                OfferWhisperLinks(player, npc);
                 foreach (DataQuest quest in player.QuestList.Keys.OfType<DataQuest>())
                 {
                     if (!_config.Quests.TryGetValue(quest.ID, out QuestInfo info) || quest.Step <= 0 || quest.Step >= info.Steps.Count) continue;
@@ -458,6 +546,101 @@ namespace DOL.GS.Quests
             {
                 Log.Error("Classic quest item re-issue failed", ex);
             }
+        }
+
+        /// <summary>
+        /// A whisper step completes only on its exact keyword, but in 192 classic quest steps no text the player sees
+        /// showed it as a link: the walkthrough has the player say a phrase ("Alomali sent me", "end the suffering")
+        /// and only the journal named it (quest audit 2026-10-13). Talking to the step's NPC now shows the step with the
+        /// keyword as a link to click, unless the NPC's own line already offers it.
+        /// </summary>
+        /// <summary>The step NPC's recorded arrival line when the player comes to it on a hand-in step.</summary>
+        private static void GreetOnHandInStep(GamePlayer player, GameNPC npc)
+        {
+            foreach (DataQuest quest in player.QuestList.Keys.OfType<DataQuest>())
+            {
+                if (!_config.Quests.TryGetValue(quest.ID, out QuestInfo info) || quest.Step <= 0 || quest.Step >= info.Steps.Count) continue;
+                string greet = info.Steps[quest.Step]?.Greet;
+                if (string.IsNullOrWhiteSpace(greet) || quest.TargetName != npc.Name ||
+                    quest.TargetRegion != 0 && quest.TargetRegion != npc.CurrentRegionID) continue;
+                npc.SayTo(player, PacketHandler.eChatLoc.CL_PopupWindow, DOL.GS.Behaviour.BehaviourUtils.GetPersonalizedMessage(greet, player));
+                return;
+            }
+        }
+
+        private static void OfferWhisperLinks(GamePlayer player, GameNPC npc)
+        {
+            foreach (DataQuest quest in player.QuestList.Keys.OfType<DataQuest>())
+            {
+                if (!_config.Quests.ContainsKey(quest.ID) || quest.Step <= 0 ||
+                    quest.StepType is not (DataQuest.eStepType.Whisper or DataQuest.eStepType.WhisperFinish) ||
+                    quest.TargetName != npc.Name || quest.TargetRegion != 0 && quest.TargetRegion != npc.CurrentRegionID)
+                    continue;
+                string keyword = quest.CurrentAdvanceText;
+                if (string.IsNullOrWhiteSpace(keyword) || (quest.CurrentTargetText ?? string.Empty).Contains("[" + keyword + "]"))
+                    continue;
+                npc.SayTo(player, PacketHandler.eChatLoc.CL_PopupWindow, WhisperPrompt(quest.CurrentStepText, keyword));
+            }
+        }
+
+        /// <summary>The step's journal text with its keyword as the exact link (DataQuest compares the whispered text
+        /// exactly), without the generator's "(whisper: ...)" note; the bare link when the text does not name it.</summary>
+        public static string WhisperPrompt(string stepText, string keyword)
+        {
+            string text = System.Text.RegularExpressions.Regex.Replace(stepText ?? string.Empty, @"\s*\(whisper:[^)]*\)\s*$", "").Trim();
+            string link = "[" + keyword + "]";
+            if (text.Contains(link)) return text;
+            int at = text.IndexOf(keyword, StringComparison.OrdinalIgnoreCase);
+            if (at < 0) return text.Length == 0 ? link : text + " " + link;
+            int start = at > 0 && text[at - 1] == '[' ? at - 1 : at;
+            int end = at + keyword.Length < text.Length && text[at + keyword.Length] == ']' ? at + keyword.Length + 1 : at + keyword.Length;
+            return text[..start] + link + text[end..];
+        }
+
+        /// <summary>
+        /// A delivery step's item is handed over when the step before it ends, so a quest that starts with a delivery
+        /// never gave it (67 classic quests stopped at step 1, quest audit 2026-10-13), and a lost one was gone for
+        /// good. A player on a delivery step without its item receives it (at most once a minute).
+        /// </summary>
+        private static void GiveDeliveryItem(GamePlayer player, DataQuest quest)
+        {
+            if (quest.StepType is not (DataQuest.eStepType.Deliver or DataQuest.eStepType.DeliverFinish)) return;
+            string id = quest.CurrentStepItemTemplate;
+            if (string.IsNullOrEmpty(id) || player.Inventory.GetFirstItemByID(id, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) != null) return;
+            var key = (player, quest.ID, quest.Step * 100 + 99);
+            long now = GameLoop.GameLoopTime;
+            if (GiveCooldown.TryGetValue(key, out long until) && now < until) return;
+            GiveCooldown[key] = now + 60_000;
+            DbItemTemplate template = GameServer.Database.FindObjectByKey<DbItemTemplate>(id);
+            if (template != null && player.Inventory.AddTemplate(GameInventoryItem.Create(template), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                player.Out.SendMessage($"You have the {template.Name} to deliver for {quest.Name}.", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+        }
+
+        private static readonly ConcurrentDictionary<string, (bool Present, long Until)> IssuerCache = new(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>Whether a friendly NPC of that name stands in the world to re-issue a lost item when talked to. A
+        /// monster issuer (Enraged Bwca, Sockburn worm: the item is its drop) or a missing one cannot; checked once in ten minutes.</summary>
+        private static bool IssuerCanHandOut(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            long now = GameLoop.GameLoopTime;
+            if (IssuerCache.TryGetValue(name, out var known) && now < known.Until) return known.Present;
+            bool present = new[] { eRealm.Albion, eRealm.Midgard, eRealm.Hibernia }.Any(realm => WorldMgr.GetNPCsByName(name, realm).Length > 0);
+            IssuerCache[name] = (present, now + 600_000);
+            return present;
+        }
+
+        /// <summary>The step's needed item when nobody can re-issue it on interact (see IssuerCanHandOut).</summary>
+        private static void ReissueWithoutIssuer(GamePlayer player, DataQuest quest, StepInfo step)
+        {
+            if (player.Inventory.GetFirstItemByID(step.NeedsItem, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) != null || IssuerCanHandOut(step.Issuer)) return;
+            var key = (player, quest.ID, quest.Step * 100 + 98);
+            long now = GameLoop.GameLoopTime;
+            if (GiveCooldown.TryGetValue(key, out long until) && now < until) return;
+            GiveCooldown[key] = now + 60_000;
+            DbItemTemplate template = GameServer.Database.FindObjectByKey<DbItemTemplate>(step.NeedsItem);
+            if (template != null && player.Inventory.AddTemplate(GameInventoryItem.Create(template), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                player.Out.SendMessage($"You recover the {template.Name} for {quest.Name}.", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
         }
 
         [GameServerStoppedEvent]
@@ -539,6 +722,8 @@ namespace DOL.GS.Quests
                         ShowMarker(player, quest.ID, quest.Step, step?.Marker);
                         if (step?.Spawn != null) TrySpawnEvent(player, quest.ID, quest.Step, step.Spawn);
                         if (step?.Grant != null) GrantItems(player, quest, step);
+                        if (!string.IsNullOrEmpty(step?.NeedsItem)) ReissueWithoutIssuer(player, quest, step);
+                        GiveDeliveryItem(player, quest);
                         if (step?.Custom != null) CheckCustomStep(player, quest, step.Custom);
                     }
                 }
@@ -640,6 +825,8 @@ namespace DOL.GS.Quests
                     npc.Flags |= GameNPC.eFlags.PEACE;
                     if (npc.Brain is DOL.AI.Brain.StandardMobBrain calm) calm.AggroLevel = 0;
                 }
+                else // a fight: the template of a townsperson the quest turns on (Dark Bishop Burhoff, Gokstad) is peaceful
+                    npc.Flags &= ~(GameNPC.eFlags.PEACE | GameNPC.eFlags.CANTTARGET);
                 if (!npc.AddToWorld()) continue;
                 if (!spawn.Peaceful && npc.Brain is DOL.AI.Brain.StandardMobBrain brain) brain.AddToAggroList(player, 1);
                 spawned.Add(npc);

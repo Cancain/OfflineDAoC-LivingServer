@@ -188,7 +188,16 @@ namespace DOL.GS
                 s.NextAction[bot] = now + 2_000;
             }
             LogStatus(s, owner, now);
-            if (squad.Job == Job.Bodyguard) return false;
+            if (squad.Job == Job.Bodyguard)
+            {
+                // The bodyguard stays with the player, and joins in when the player hits the keep door (0.35 known issue:
+                // they stood at the door while the player attacked it).
+                if (s.Mode == Mode.Assault && !brain.HasAggro && !bot.InCombat &&
+                    owner.TargetObject is GameKeepDoor guarded && guarded.IsAlive && guarded.Realm != bot.Realm &&
+                    owner.IsAttacking && bot.IsWithinRadius(guarded, AssistRadius))
+                    brain.AssistPlayerAttack(guarded);
+                return false;
+            }
             if (TryTakeRelic(s, bot, now)) return true;
 
             AbstractGameKeep keep = s.Keep;
@@ -215,6 +224,10 @@ namespace DOL.GS
                 Job.Defend or Job.Ballista or Job.Catapult when !attacking => Attacker(bot, keep, nearby),
                 _ => Attacker(bot, keep, nearby, 600),
             };
+            // Nobody to fight: everyone but the bodyguard batters the door they are assaulting, as gamebots do (0.35 known
+            // issue: the assault, wall-clearing and idle crew squads stood at the door with no defenders in sight).
+            if (target == null && attacking && door is { IsAlive: true } && bot.IsWithinRadius(door, AssistRadius))
+                target = door;
             if (target != null) brain.AssistPlayerAttack(target);
             return false;
         }
@@ -377,7 +390,7 @@ namespace DOL.GS
         {
             AbstractGameKeep keep = s.Keep;
             GameLiving anchor = door ?? (GameLiving)keep.Doors.Values.Where(d => d.IsAlive)
-                .OrderBy(d => AutonomousWorldBotController.PosternLike(keep, d) ? 1 : 0).ThenBy(d => d.DoorIndex)
+                .OrderBy(d => AutonomousWorldBotController.PosternLike(keep, d) ? 1 : 0).ThenBy(AutonomousWorldBotController.SiegeDoorNumber)
                 .ThenByDescending(d => Vector2.DistanceSquared(new(d.X, d.Y), new(keep.X, keep.Y))).FirstOrDefault();
             lock (s)
             {

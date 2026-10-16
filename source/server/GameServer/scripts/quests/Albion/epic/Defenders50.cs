@@ -98,7 +98,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 466464 && npc.Y == 634554)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 466464, 634554))
 					{
 						Lidmann = npc;
 						break;
@@ -136,7 +136,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 316218 && npc.Y == 664484)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 316218, 664484))
 					{
 						Uragaig = npc as CailleachUragaig;
 						break;
@@ -1319,7 +1319,6 @@ namespace DOL.GS.Quests.Albion
 						case "slay":
 							if (quest.Step == 2)
 							{
-								RemoveItem(player, sealed_pouch);
 								if (player.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack,
 									    eInventorySlot.LastBackpack))
 								{

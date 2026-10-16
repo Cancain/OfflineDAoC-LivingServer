@@ -73,6 +73,8 @@ public static class AutonomousRvrDashboard
     {
         GameBot[] bots = AutonomousBotRegistry.Snapshot();
         var result = new Battleground[BattlegroundBrackets.Count];
+        bool logStatus = GameLoop.GameLoopTime >= _nextBattlegroundKeepLog;
+        if (logStatus) _nextBattlegroundKeepLog = GameLoop.GameLoopTime + 5 * 60_000;
         for (int index = 0; index < result.Length; index++)
         {
             BattlegroundBrackets.Bracket bracket = BattlegroundBrackets.Get(index);
@@ -89,8 +91,49 @@ public static class AutonomousRvrDashboard
                 central == null ? string.Empty : central.Realm == eRealm.None ? "Neutral" : GlobalConstants.RealmToName(central.Realm),
                 Inside(eRealm.Albion), Inside(eRealm.Midgard), Inside(eRealm.Hibernia),
                 Travelling(eRealm.Albion), Travelling(eRealm.Midgard), Travelling(eRealm.Hibernia), monsters);
+            if (central != null && logStatus)
+                LogBattlegroundKeep(bracket, central, bots);
         }
         return result;
+    }
+
+    private static long _nextBattlegroundKeepLog;
+
+    private static string ActivityKind(string activity)
+    {
+        if (string.IsNullOrEmpty(activity)) return "-";
+        int cut = activity.IndexOf(" on ", StringComparison.Ordinal);
+        if (cut < 0) cut = activity.IndexOf(" to ", StringComparison.Ordinal);
+        if (cut < 0 && activity.StartsWith("Fighting ", StringComparison.Ordinal)) cut = "Fighting".Length;
+        return cut > 0 ? activity[..cut] : activity.Length > 28 ? activity[..28] : activity;
+    }
+
+    /// <summary>
+    /// BG_KEEP_STATUS every five minutes per battleground: the central keep's holder, gates, guards and lord, and the
+    /// bots of each realm near it (run 2026-10-13: two hours of battleground fighting and no keep changed hands, with
+    /// nothing in the log to say how far any assault got).
+    /// </summary>
+    private static void LogBattlegroundKeep(BattlegroundBrackets.Bracket bracket, AbstractGameKeep central, GameBot[] bots)
+    {
+        GameKeepDoor[] doors = central.Doors.Values.ToArray();
+        GameKeepGuard[] guards = central.Guards.Values.ToArray();
+        GameKeepGuard lord = guards.FirstOrDefault(guard => guard is GuardLord);
+        var keepPoint = new Point3D(central.X, central.Y, central.Z);
+        GameBot[] inside = bots.Where(bot => bot.IsAlive && bot.CurrentRegionID == bracket.RegionId).ToArray();
+        int Near(eRealm realm) => bots.Count(bot => bot.IsAlive && bot.Realm == realm && bot.CurrentRegionID == bracket.RegionId &&
+            bot.IsWithinRadius(keepPoint, 2500));
+        DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrDashboard)).Info(
+            $"BG_KEEP_STATUS battleground={bracket.Name} keep=\"{central.Name}\" holder={(central.Realm == eRealm.None ? "Neutral" : GlobalConstants.RealmToName(central.Realm))} " +
+            $"doors={doors.Count(door => door.IsAlive)}/{doors.Length} doorHealth={(doors.Length == 0 ? 0 : doors.Min(door => door.HealthPercent))} " +
+            $"guards={guards.Count(guard => guard.IsAlive)}/{guards.Length} lord={(lord == null ? "none" : lord.IsAlive ? lord.HealthPercent + "%" : "dead")} " +
+            $"near={Near(eRealm.Albion)}/{Near(eRealm.Midgard)}/{Near(eRealm.Hibernia)} " +
+            // How many bots stand by the lord and how many have him targeted (gates fell for hours, lord never hit).
+            $"atLord={(lord == null ? 0 : inside.Count(bot => bot.IsWithinRadius(lord, 800)))} " +
+            $"onLord={(lord == null ? 0 : inside.Count(bot => bot.TargetObject == lord))} " +
+            // Live, not the saved roster rows (positions there are saved only every few minutes).
+            $"inside={inside.Length} moving={inside.Count(bot => bot.IsMoving)} inCombat={inside.Count(bot => bot.InCombat)} " +
+            $"medianToKeep={(inside.Length == 0 ? 0 : (int)inside.Select(bot => bot.GetDistanceTo(keepPoint)).OrderBy(d => d).ElementAt(inside.Length / 2))} " +
+            $"activities=\"{string.Join("; ", inside.GroupBy(bot => ActivityKind(bot.PersistentRecord?.Activity)).OrderByDescending(g => g.Count()).Take(5).Select(g => $"{g.Key}:{g.Count()}"))}\"");
     }
 
     private static void Publish(object state)
@@ -184,7 +227,13 @@ public static class AutonomousRvrDashboard
     private static void OnKeepTaken(DOLEvent e, object sender, EventArgs args)
     {
         if (args is KeepEventArgs { Keep: not null } taken)
+        {
+            // Every capture, frontier and battleground alike (battleground keeps had no capture line at all).
+            DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrDashboard)).Info(
+                $"RVR_KEEP_TAKEN keep=\"{taken.Keep.Name}\" id={taken.Keep.KeepID} region={taken.Keep.Region} " +
+                $"realm={GlobalConstants.RealmToName(taken.Keep.Realm)} battleground={BattlegroundBrackets.IsBattlegroundRegion(taken.Keep.Region)}");
             AutonomousRvrEventLayer.EndTarget($"rvr-keep-{taken.Keep.KeepID}", GameLoop.GameLoopTime, taken.Keep.Realm);
+        }
     }
 
     private static void OnRelicChanged(DOLEvent e, object sender, EventArgs args)

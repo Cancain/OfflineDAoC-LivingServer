@@ -63,6 +63,20 @@ namespace DOL.GS
             if (assault)
             {
                 if (TryRunSiegeJob(bot)) return true;
+                // The realm assaults as one wave (AutonomousBattlegroundWave); a bot in a fight finishes it first.
+                if (!bot.InCombat && central != null &&
+                    AutonomousBattlegroundWave.ShouldGather(bot, bracket, central, out Vector3 staging, out string gathered))
+                {
+                    if (Vector3.DistanceSquared(new(bot.X, bot.Y, bot.Z), staging) > 250 * 250)
+                        IssuePath(bot, staging);
+                    else
+                    {
+                        bot.StopMovingOnPath();
+                        bot.StopMoving();
+                    }
+                    SetBattlegroundStatus(bot, bracket, "Gathering for the assault", $"{central.Name}: {gathered}");
+                    return true;
+                }
                 GameLiving target = FindRvrTarget(bot) ?? FindReachableEnemyDoor(bot, central);
                 if (target != null)
                 {

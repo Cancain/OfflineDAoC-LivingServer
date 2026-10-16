@@ -300,6 +300,24 @@ public static class AutonomousPetSupport
     internal static bool IsExpiredSyntheticCharmBinding(long now, long unboundSinceTick) =>
         unboundSinceTick != 0 && now - unboundSinceTick >= 2_000;
 
+    /// <summary>
+    /// Darkness Falls' Prince Ba'alorien kills every controlled pet within 2,000 units each turn and heals by its full
+    /// health (BaalorienBrain). Raids full of pet classes kept him at 100%: Hibernia skipped him untouched in run
+    /// 2026-10-13 with raiders at his side, as Albion had on 2026-10-12. A player leaves the pet behind; so does a bot:
+    /// inside this radius it releases its pets and does not summon (the encounter itself is unchanged).
+    /// </summary>
+    public const int PetEaterKeepOutRadius = 2_600;
+
+    internal static GameNPC PetEaterNear(GameLiving owner)
+    {
+        if (owner?.CurrentRegionID != AutonomousDarknessFallsPolicy.RegionId)
+            return null;
+        foreach (GameNPC npc in owner.GetNPCsInRadius(PetEaterKeepOutRadius))
+            if (npc.IsAlive && npc.Brain is DOL.AI.Brain.BaalorienBrain or DOL.AI.Brain.AsmoienBrain)
+                return npc;
+        return null;
+    }
+
     public static bool Maintain(
         GameLiving owner,
         GameLiving combatTarget,
@@ -307,6 +325,14 @@ public static class AutonomousPetSupport
         out string activity,
         Func<Spell, bool> spellAllowed = null)
     {
+        if (owner is GameBot petOwner && PetEaterNear(petOwner) is { } eater)
+        {
+            if (petOwner.ControlledBrain?.Body != null)
+                petOwner.CommandNpcRelease();
+            ReleaseFieldTurrets(petOwner);
+            activity = $"Keeping pets away from {eater.Name}";
+            return false;
+        }
         if (owner is GameBot animist && BotAnimistPolicy.AppliesTo(animist))
             return BotAnimistPolicy.Maintain(animist, combatTarget, ref nextDeployablePetTick, out activity, spellAllowed);
         activity = string.Empty;
