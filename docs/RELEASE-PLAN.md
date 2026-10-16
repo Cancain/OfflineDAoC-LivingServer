@@ -100,27 +100,30 @@ Each stage ends with a check. Nothing moves on until the check passes.
 4. Start the server as usual and log in.
 5. **Pass when:**
    - the startup line shows `0.36-chris.1` with every feature off;
+   - the launcher has a **Social Expansion** tab, everything in it is off, and it locks while the
+     server runs (also in the new client's launcher, on 0.36c);
    - there are no new errors in the log;
    - the game plays exactly like the baseline.
 6. **On a failure:** run `rollback-server-build.ps1`, then send Claude the log.
 
 ### Stage 4: XP by level range
 
-1. **Set the plan's rates:** with the server closed, run
-   `python tools\claude-version\set_xp_by_level.py --player "1-19:3;20-34:5;35-50:12" --bots "1-19:1.5;20-34:2.5;35-50:6" --apply`.
+1. **Set the plan's rates:** with the server stopped, in the launcher's **Social Expansion** tab set
+   both XP rows to **Suggested** and click **Save settings**. (Script alternative:
+   `python tools\claude-version\set_xp_by_level.py --player "1-19:3;20-34:5;35-50:12" --bots "1-19:1.5;20-34:2.5;35-50:6" --apply`.)
    This is the goal from the roadmap's model v4: keep levels 1–34 worth playing, and compress the
    35–50 grind.
 2. **Check in game:**
    - At about level 10, kill a few blue or yellow monsters: the XP should be about 3× the baseline.
    - On a character in the 20s it should be about 5×.
    - Above 35 (a /level GM character is fine) it should be about 12×.
-3. **Turn it off** with `--off --apply`.
+3. **Turn it off:** both rows back to **Off**, then **Save settings**.
 4. **Pass when** the numbers match.
 
 ### Stage 5: bot guilds
 
-1. **Turn on:** with the server closed, run
-   `python tools\claude-version\set_bot_guilds.py --on --apply`, start, and wait 10 minutes.
+1. **Turn on:** with the server stopped, tick **Bot guilds** in the **Social Expansion** tab, save, start,
+   and wait 10 minutes.
 2. **Work through the checklist** in `docs/BOT-GUILDS.md` §4 in order:
    1. guild names over bots;
    2. "lf guild" → dialog → join;
@@ -131,13 +134,13 @@ Each stage ends with a check. Nothing moves on until the check passes.
    7. alliance chat;
    8. `/ginvite` and `/gc remove` on a bot.
 3. **Watch for:** chat floods, lag, or bots stuck forming groups.
-4. **If one part misbehaves,** switch just that part off (for example `--claims off`) and note it.
+4. **If one part misbehaves,** untick just that part in the tab (for example keep claims) and note it.
 5. **Pass when** the checklist is complete with no blocking problem.
 
 ### Stage 5b: personalities, voices and debates
 
-1. **Turn on:** with the server closed, run
-   `python tools\claude-version\set_bot_social.py --all on --apply`, start, and play for an hour.
+1. **Turn on:** with the server stopped, tick personalities, voices and debates in the **Social
+   Expansion** tab, save, start, and play for an hour.
 2. **Check:**
    1. `/personality` on a few bots: types and writing styles vary.
    2. Towns: about as busy as the baseline; some bots linger, some barely stop.
@@ -145,8 +148,7 @@ Each stage ends with a check. Nothing moves on until the check passes.
    4. A "ding" or death line from a bot near you, now and then.
    5. A debate in /faction within about 10 minutes of starting, then one every 30–45 minutes.
 3. **Watch for:** repeated lines, debates talking over other chat, bots idling in town too long.
-4. **If one part misbehaves,** switch just that part off (`--debates off`, `--voices off`,
-   `--personalities off`) and note it.
+4. **If one part misbehaves,** untick just that part in the tab and note it.
 5. **Pass when** the checks hold with no blocking problem.
 
 ### Stage 6: fix round

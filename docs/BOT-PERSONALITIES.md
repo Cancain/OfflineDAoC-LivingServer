@@ -15,7 +15,8 @@ today's behavior. Every part ships **off**. With all of it off, bots behave exac
 | `bot_voices_enabled` | False | Bots say lines from the bot-voices corpus in their own writing style (section 3). |
 | `bot_voices_debates` | True | When voices are on, bots hold debates and long threads in /faction (section 4). |
 
-To change them, close the server, launcher and game, then run (Python 3):
+To change them, use the launcher's **Social Expansion** tab (with the server stopped; it applies at the next start). The same switches are in a script, for those who prefer it: close the
+server, launcher and game, then run (Python 3):
 
 ```
 python tools\claude-version\set_bot_social.py                       (show the settings)

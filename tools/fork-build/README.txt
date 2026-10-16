@@ -1,8 +1,9 @@
 OFFLINE DAOC - FORK SERVER BUILD (chris4aker/OfflineDAoC)
 =========================================================
 
-This is a server-only build for Offline DAoC 0.36 / 0.36b, the "Social Expansion". It replaces
-GameServer.dll and adds these features, all OFF until you switch them on:
+This is a build for Offline DAoC 0.36 / 0.36b, the "Social Expansion". It replaces the server
+(GameServer.dll) and the launcher (OfflineDAoC.exe, which gets a Social Expansion tab), and adds
+these features, all OFF until you switch them on:
 
   - XP rate by level range ........ docs\XP-BY-LEVEL-RANGE.md
     (the plan's values keep levels 1-34 worth playing and compress the 35-50 grind:
@@ -22,7 +23,8 @@ INSTALL
 2. Put this folder INSIDE your Offline DAoC game folder (the folder with START OFFLINE DAOC.cmd).
 3. Double-click INSTALL.cmd. If Windows warns about an unknown app: More info -> Run anyway.
 
-The installer checks that the game is 0.36 / 0.36b (with or without the 0.36c new client), refuses while anything is running, backs up
+The installer checks that the game is 0.36 / 0.36b (with or without the 0.36c new client; its
+launcher in new-client\runtime is replaced too), refuses while anything is running, backs up
 every file it replaces (runtime\server\deployment-backups\fork-build-<time>) and checks every
 copy. It also puts three settings helpers in tools\claude-version and these docs in
 docs\fork-build-<name>.
@@ -33,10 +35,16 @@ Check: start the game as usual. The server log shows a line like
 UNDO
 ----
 Close everything and double-click ROLLBACK.cmd. It puts back exactly the files the install
-replaced.
+replaced (server and launcher). Turn everything off in the tab first if you want the settings gone;
+the original server ignores them either way.
 
-SWITCHING FEATURES ON (server closed; needs Python 3)
----------------------------------------------------
+SWITCHING FEATURES ON
+---------------------
+Open the launcher as usual (START OFFLINE DAOC.cmd) and go to the Social Expansion tab. With the
+server stopped, tick what you want, pick the XP-by-level rates (Off, Suggested or Custom) and click
+Save settings. They apply the next time you start the server. "Turn everything off" puts it back.
+
+The same switches as scripts, for those who prefer a command line (server closed; Python 3):
   python tools\claude-version\set_xp_by_level.py --player "1-19:3;20-34:5;35-50:12" --bots "1-19:1.5;20-34:2.5;35-50:6" --apply
   python tools\claude-version\set_xp_by_level.py --off --apply
   python tools\claude-version\set_bot_guilds.py --on --apply

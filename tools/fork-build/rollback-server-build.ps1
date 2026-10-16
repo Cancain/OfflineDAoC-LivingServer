@@ -4,7 +4,7 @@
 #   ROLLBACK.cmd -GameFolder "C:\Games\OfflineDAoC\playable-v0.36b"
 #   ROLLBACK.cmd -DryRun
 #
-# Restores the GameServer.dll/.pdb files and helper scripts the last install replaced, from its
+# Restores the GameServer.dll/.pdb files, the launcher files and helper scripts the last install replaced, from its
 # backup, and checks every restored file by SHA-256. It refuses if the installed files changed since
 # (unless -Force). Run it again to undo the install before that one.
 param(
@@ -32,6 +32,18 @@ foreach ($entry in $record.Folders) {
     $saved = Join-Path $record.BackupFolder (Get-BackupName $entry.Folder)
     if ((Get-Sha256 (Join-Path $saved 'GameServer.dll')) -ne $entry.OldDll) { Stop-WithMessage "The backup of $($entry.Folder) is damaged." }
 }
+foreach ($entry in @($record.LauncherFolders)) {
+    if ($null -eq $entry) { continue }
+    $dll = Join-Path $game (Join-Path $entry.Folder 'OfflineDAoC.dll')
+    $current = if (Test-Path -LiteralPath $dll) { Get-Sha256 $dll } else { '' }
+    if ($current -ne $entry.NewDll -and !$Force) {
+        Stop-WithMessage "$($entry.Folder)\OfflineDAoC.dll (the launcher) changed since that install. -Force restores the backup anyway."
+    }
+    $saved = Join-Path $record.BackupFolder ((Get-BackupName $entry.Folder) + '_launcher')
+    foreach ($file in @($entry.Files)) {
+        if ($file.OldHash -and (Get-Sha256 (Join-Path $saved $file.Name)) -ne $file.OldHash) { Stop-WithMessage "The launcher backup of $($entry.Folder) is damaged." }
+    }
+}
 if ($DryRun) {
     Write-Host ''
     Write-Host 'Dry run: every check passed. Nothing was changed.' -ForegroundColor Green
@@ -46,6 +58,20 @@ foreach ($entry in $record.Folders) {
     elseif (Test-Path -LiteralPath (Join-Path $target 'GameServer.pdb')) { Remove-Item -LiteralPath (Join-Path $target 'GameServer.pdb') }
     if ((Get-Sha256 (Join-Path $target 'GameServer.dll')) -ne $entry.OldDll) { Stop-WithMessage "Restoring $($entry.Folder) failed verification." }
 }
+foreach ($entry in @($record.LauncherFolders)) {
+    if ($null -eq $entry) { continue }
+    $saved = Join-Path $record.BackupFolder ((Get-BackupName $entry.Folder) + '_launcher')
+    $target = Join-Path $game $entry.Folder
+    foreach ($file in @($entry.Files)) {
+        $path = Join-Path $target $file.Name
+        if ($file.OldHash) {
+            Copy-Item -LiteralPath (Join-Path $saved $file.Name) -Destination $target -Force
+            if ((Get-Sha256 $path) -ne $file.OldHash) { Stop-WithMessage "Restoring the launcher in $($entry.Folder) failed verification." }
+        } elseif (Test-Path -LiteralPath $path) {
+            Remove-Item -LiteralPath $path
+        }
+    }
+}
 foreach ($helper in @($record.Helpers)) {
     if ($null -eq $helper) { continue }
     $target = Join-Path $game (Join-Path 'tools\claude-version' $helper.Name)
@@ -58,5 +84,6 @@ foreach ($helper in @($record.Helpers)) {
 Set-Content -LiteralPath (Join-Path $record.BackupFolder 'rolled-back.txt') -Value "Rolled back at $(Get-Date -Format o)."
 Write-Host ''
 Write-Host "Rolled back $($record.BuildName). The files it replaced are back." -ForegroundColor Green
-Write-Host 'Settings it may have switched on stay in the database; turn features off with the helper scripts first if you want them gone.'
+Write-Host 'Settings it switched on stay in the database, where the original server ignores them. To clear them, turn'
+Write-Host 'everything off in the Social Expansion tab before you roll back.'
 exit 0

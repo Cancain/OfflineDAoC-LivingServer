@@ -50,7 +50,10 @@ These come from the Living World plan (model v4):
 
 ## Setting them
 
-The helper script is in this fork, not in shadowofze's downloads. Copy
+The easy way is the launcher's **Social Expansion** tab (with the server stopped; it applies at the next start): pick **Off**, the **suggested** rates or **custom** ranges, for
+you and for bots. It checks the ranges by the server's own rules before it saves.
+
+The helper script does the same from a command line. It is in this fork, not in shadowofze's downloads. Copy
 `tools/claude-version/set_xp_by_level.py` into your playable folder's `tools\claude-version\` first,
 along with a server build that has these settings.
 

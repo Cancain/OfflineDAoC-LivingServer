@@ -2,6 +2,9 @@
 # Windows PowerShell 5.1 compatible.
 
 $Script:ServerFolders = @('runtime/server', 'runtime/server/lib', 'runtime/server/win-x64')
+# The launcher (its Social Expansion tab): the game's own copy, and the 0.36c new client's copy when present.
+$Script:LauncherFolders = @('runtime', 'new-client/runtime')
+$Script:LauncherFiles = @('OfflineDAoC.dll', 'OfflineDAoC.exe', 'OfflineDAoC.pdb', 'OfflineDAoC.deps.json', 'OfflineDAoC.runtimeconfig.json')
 # Also the 0.36c new client and its launcher, which share the game's runtime.
 $Script:ProcessNames = @('CoreServer', 'DOLServer', 'OfflineDAoC', 'game', 'camelot', 'connect', 'Godot_v4.7.2-stable_mono_win64')
 
@@ -66,7 +69,11 @@ function Assert-GameClosed {
 
 # 'hash  relative/path' lines of the release's PACKAGE MANIFEST.sha256, keyed by path.
 function Read-PackageManifest([string]$Game) {
-    $path = Join-Path $Game 'PACKAGE MANIFEST.sha256'
+    return Read-ManifestFile (Join-Path $Game 'PACKAGE MANIFEST.sha256')
+}
+
+# The same for any manifest file (0.36c's new client has its own: new-client\PACKAGE MANIFEST.sha256).
+function Read-ManifestFile([string]$path) {
     if (!(Test-Path -LiteralPath $path)) { return $null }
     $manifest = @{}
     foreach ($line in Get-Content -LiteralPath $path) {

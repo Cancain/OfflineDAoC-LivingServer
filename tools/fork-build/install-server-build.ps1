@@ -10,6 +10,8 @@
 #   the game's own PACKAGE MANIFEST.sha256;
 # - replaces only a GameServer.dll that is the original release file or a fork build this script
 #   installed; anything else is refused unless -Force;
+# - the same for the launcher (OfflineDAoC.exe and its files, with the Social Expansion tab) in runtime\
+#   and, on 0.36c, in new-client\runtime\ (checked against new-client\PACKAGE MANIFEST.sha256);
 # - backs up every file it replaces under runtime\server\deployment-backups\fork-build-<time>\ and
 #   verifies every copy by SHA-256. ROLLBACK.cmd restores the backup.
 param(
@@ -35,6 +37,20 @@ foreach ($name in @('GameServer.dll', 'GameServer.pdb')) {
     if (!(Test-Path -LiteralPath $path)) { Stop-WithMessage "$name is missing from this build folder." }
     if ((Get-Sha256 $path) -ne $info[$name].ToLowerInvariant()) {
         Stop-WithMessage "$name doesn't match BUILD-INFO.txt (damaged download?). Download the build again."
+    }
+}
+
+$launcherBuild = Join-Path $buildDir 'launcher'
+$launcherNew = @{}
+if (Test-Path -LiteralPath $launcherBuild) {
+    foreach ($name in $Script:LauncherFiles) {
+        $path = Join-Path $launcherBuild $name
+        $expected = $info["launcher/$name"]
+        if (!$expected -or !(Test-Path -LiteralPath $path)) { Stop-WithMessage "launcher\$name is missing from this build folder or BUILD-INFO.txt." }
+        if ((Get-Sha256 $path) -ne $expected.ToLowerInvariant()) {
+            Stop-WithMessage "launcher\$name doesn't match BUILD-INFO.txt (damaged download?). Download the build again."
+        }
+        $launcherNew[$name] = $expected.ToLowerInvariant()
     }
 }
 
@@ -77,7 +93,37 @@ if (@($plan | Where-Object { $_.State -eq 'unknown' }).Count -gt 0 -and !$Force)
     Stop-WithMessage ("A GameServer.dll above is neither the original $base file nor a fork build this script installed. " +
         'Someone changed it by hand? Restore the original first, or run with -Force to replace it anyway (it is still backed up).')
 }
-if (@($plan | Where-Object { $_.State -ne 'this build' }).Count -eq 0) {
+
+# The launcher, in each folder that has one.
+$knownLauncher = @{}
+foreach ($record in Get-InstallRecords $game) {
+    foreach ($entry in @($record.LauncherFolders)) { if ($entry -and $entry.NewDll) { $knownLauncher[$entry.NewDll] = $record.BuildName } }
+}
+$newClientManifest = Read-ManifestFile (Join-Path $game 'new-client\PACKAGE MANIFEST.sha256')
+$launcherPlan = @()
+if ($launcherNew.Count -gt 0) {
+    foreach ($folder in $Script:LauncherFolders) {
+        $dll = Join-Path $game (Join-Path $folder 'OfflineDAoC.dll')
+        if (!(Test-Path -LiteralPath $dll)) {
+            if ($folder -eq 'runtime') { Stop-WithMessage 'No launcher (runtime\OfflineDAoC.dll) in this game folder. Is the download complete?' }
+            continue
+        }
+        $hash = Get-Sha256 $dll
+        $state = if ($hash -eq $launcherNew['OfflineDAoC.dll']) { 'this build' }
+            elseif ($manifest["$folder/OfflineDAoC.dll"] -and $hash -eq $manifest["$folder/OfflineDAoC.dll"]) { "original $base launcher" }
+            elseif ($newClientManifest -and $newClientManifest["$folder/OfflineDAoC.dll"] -and $hash -eq $newClientManifest["$folder/OfflineDAoC.dll"]) { "original $($base)c launcher" }
+            elseif ($knownLauncher.ContainsKey($hash)) { "fork build $($knownLauncher[$hash]) launcher" }
+            else { 'unknown' }
+        $launcherPlan += [pscustomobject]@{ Folder = $folder; Hash = $hash; State = $state }
+        Write-Host ("  {0,-26} {1}" -f "$folder (launcher)", $state)
+    }
+}
+if (@($launcherPlan | Where-Object { $_.State -eq 'unknown' }).Count -gt 0 -and !$Force) {
+    Stop-WithMessage ("A launcher (OfflineDAoC.dll) above is neither the original $base file nor a fork build this script installed. " +
+        'Restore the original first, or run with -Force to replace it anyway (it is still backed up).')
+}
+if (@($plan | Where-Object { $_.State -ne 'this build' }).Count -eq 0 -and
+    @($launcherPlan | Where-Object { $_.State -ne 'this build' }).Count -eq 0) {
     Write-Host ''
     Write-Host "Already installed: $($info['BuildName']). Nothing to do." -ForegroundColor Green
     exit 0
@@ -107,6 +153,25 @@ foreach ($item in $plan) {
     $entries += [pscustomobject]@{ Folder = $item.Folder; OldDll = $item.Hash; OldPdb = $oldPdb; NewDll = $newDll; NewPdb = $newPdb }
 }
 
+$launcherEntries = @()
+foreach ($item in $launcherPlan) {
+    $source = Join-Path $game $item.Folder
+    $saved = Join-Path $backup ((Get-BackupName $item.Folder) + '_launcher')
+    New-Item -ItemType Directory -Path $saved | Out-Null
+    $files = @()
+    foreach ($name in $Script:LauncherFiles) {
+        $path = Join-Path $source $name
+        $old = $null
+        if (Test-Path -LiteralPath $path) {
+            Copy-Item -LiteralPath $path -Destination $saved
+            $old = Get-Sha256 $path
+            if ((Get-Sha256 (Join-Path $saved $name)) -ne $old) { Stop-WithMessage "Backup of $($item.Folder)\$name failed verification." }
+        }
+        $files += [pscustomobject]@{ Name = $name; OldHash = $old; NewHash = $launcherNew[$name] }
+    }
+    $launcherEntries += [pscustomobject]@{ Folder = $item.Folder; OldDll = $item.Hash; NewDll = $launcherNew['OfflineDAoC.dll']; Files = $files }
+}
+
 # Helper scripts (settings switches) go to tools\claude-version, where they find the database.
 $helpers = @()
 $helperSource = Join-Path $buildDir 'tools\claude-version'
@@ -127,6 +192,7 @@ if (Test-Path -LiteralPath $helperSource) {
 $record = [pscustomobject]@{
     BuildName = $info['BuildName']; BaseRelease = $base; Commit = $info['Commit']
     Installed = (Get-Date).ToString('o'); GameFolder = $game; Folders = $entries; Helpers = $helpers
+    LauncherFolders = $launcherEntries
 }
 $record | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $backup 'install-record.json') -Encoding UTF8
 
@@ -137,6 +203,13 @@ try {
         Copy-Item -LiteralPath (Join-Path $buildDir 'GameServer.pdb') -Destination $target -Force
         if ((Get-Sha256 (Join-Path $target 'GameServer.dll')) -ne $newDll -or (Get-Sha256 (Join-Path $target 'GameServer.pdb')) -ne $newPdb) {
             throw "Copy into $($entry.Folder) failed verification."
+        }
+    }
+    foreach ($entry in $launcherEntries) {
+        $target = Join-Path $game $entry.Folder
+        foreach ($file in $entry.Files) {
+            Copy-Item -LiteralPath (Join-Path $launcherBuild $file.Name) -Destination $target -Force
+            if ((Get-Sha256 (Join-Path $target $file.Name)) -ne $file.NewHash) { throw "Copy of the launcher into $($entry.Folder) failed verification." }
         }
     }
     if ($helpers.Count -gt 0) {
@@ -160,14 +233,22 @@ try {
         if ($entry.OldPdb) { Copy-Item -LiteralPath (Join-Path $saved 'GameServer.pdb') -Destination $target -Force }
         elseif (Test-Path -LiteralPath (Join-Path $target 'GameServer.pdb')) { Remove-Item -LiteralPath (Join-Path $target 'GameServer.pdb') }
     }
+    foreach ($entry in $launcherEntries) {
+        $saved = Join-Path $backup ((Get-BackupName $entry.Folder) + '_launcher')
+        $target = Join-Path $game $entry.Folder
+        foreach ($file in $entry.Files) {
+            if ($file.OldHash) { Copy-Item -LiteralPath (Join-Path $saved $file.Name) -Destination $target -Force }
+            elseif (Test-Path -LiteralPath (Join-Path $target $file.Name)) { Remove-Item -LiteralPath (Join-Path $target $file.Name) }
+        }
+    }
     Set-Content -LiteralPath (Join-Path $backup 'rolled-back.txt') -Value "Install failed and was undone at $(Get-Date -Format o)."
     Write-Host 'The original files are back in place.'
     exit 1
 }
 
 Write-Host ''
-Write-Host "Installed $($info['BuildName']) into $($entries.Count) folder(s)." -ForegroundColor Green
+Write-Host "Installed $($info['BuildName']): the server into $($entries.Count) folder(s), the launcher into $($launcherEntries.Count)." -ForegroundColor Green
 Write-Host "Backup: $backup"
 Write-Host "Start the game as usual. The server log shows: FORK_BUILD name=$($info['BuildName']) commit=$($info['Commit'])"
-Write-Host 'Every new feature is OFF until you switch it on (see the docs folder). To undo: ROLLBACK.cmd'
+Write-Host 'Every new feature is OFF until you switch it on: launcher -> Social Expansion tab (server stopped). To undo: ROLLBACK.cmd'
 exit 0

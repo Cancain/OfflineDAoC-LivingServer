@@ -77,6 +77,16 @@ jobs:
           name: server-test-results
           path: "**/TestResults/*.trx"
 
+      # The launcher ships in the build too (its Social Expansion tab). Its own tests for that tab must pass;
+      # the rest of the launcher tests run in the informational launcher job below.
+      - name: Build launcher and test the Social Expansion tab
+        shell: bash
+        run: |
+          dotnet build source/tools/OfflineDaoc.Launcher/OfflineDaoc.Launcher.csproj -c Release -p:SourceRevisionId=${{ github.sha }}
+          out=$(dotnet test source/tools/OfflineDaoc.Launcher.Tests/OfflineDaoc.Launcher.Tests.csproj -c Release -p:SourceRevisionId=${{ github.sha }} --filter "FullyQualifiedName~SocialExpansionSettingsTests" 2>&1) || { echo "$out"; echo "::error title=Social Expansion tab tests::failed"; exit 1; }
+          summary=$(echo "$out" | grep -E "(Passed|Failed)!" | tail -n 1 || true)
+          echo "::notice title=Social Expansion tab tests::${summary:-no summary line found}"
+
       # Only after every server test passed: the installable server build (docs/RELEASE-PLAN.md).
       - name: Package the server build
         id: package
@@ -94,11 +104,19 @@ jobs:
           Copy-Item tools/fork-build/INSTALL.cmd, tools/fork-build/ROLLBACK.cmd, tools/fork-build/install-server-build.ps1, tools/fork-build/rollback-server-build.ps1, tools/fork-build/fork-build-common.ps1, tools/fork-build/README.txt $dir
           Copy-Item tools/claude-version/set_bot_guilds.py, tools/claude-version/set_bot_social.py, tools/claude-version/set_xp_by_level.py "$dir/tools/claude-version"
           Copy-Item docs/BOT-GUILDS.md, docs/BOT-PERSONALITIES.md, docs/XP-BY-LEVEL-RANGE.md, docs/RELEASE-PLAN.md "$dir/docs"
+          $launcher = "source/tools/OfflineDaoc.Launcher/bin/Release/net10.0-windows"
+          New-Item -ItemType Directory -Path "$dir/launcher" -Force | Out-Null
+          $launcherInfo = @()
+          foreach ($file in 'OfflineDAoC.dll', 'OfflineDAoC.exe', 'OfflineDAoC.pdb', 'OfflineDAoC.deps.json', 'OfflineDAoC.runtimeconfig.json') {
+            if (!(Test-Path "$launcher/$file")) { throw "No $file in $launcher" }
+            Copy-Item "$launcher/$file" "$dir/launcher"
+            $launcherInfo += "launcher/$file=$((Get-FileHash "$dir/launcher/$file" -Algorithm SHA256).Hash.ToLowerInvariant())"
+          }
           $dll = (Get-FileHash "$dir/GameServer.dll" -Algorithm SHA256).Hash.ToLowerInvariant()
           $pdb = (Get-FileHash "$dir/GameServer.pdb" -Algorithm SHA256).Hash.ToLowerInvariant()
-          Set-Content -Path "$dir/BUILD-INFO.txt" -Encoding UTF8 -Value @(
+          Set-Content -Path "$dir/BUILD-INFO.txt" -Encoding UTF8 -Value (@(
             "BuildName=$name", "BaseRelease=$base", "Commit=${{ github.sha }}", "Branch=${{ github.ref_name }}",
-            "Built=$((Get-Date).ToUniversalTime().ToString('o'))", "GameServer.dll=$dll", "GameServer.pdb=$pdb")
+            "Built=$((Get-Date).ToUniversalTime().ToString('o'))", "GameServer.dll=$dll", "GameServer.pdb=$pdb") + $launcherInfo)
           "dir=$dir" >> $env:GITHUB_OUTPUT
           "artifact=OfflineDAoC-server-$name-$short" >> $env:GITHUB_OUTPUT
           Write-Host "::notice title=Server build package::$name commit $short GameServer.dll sha256 $dll"
