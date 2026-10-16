@@ -55,7 +55,7 @@ Social Expansion makes them feel like a community, not just a population.
 1. Install Offline DAoC 0.36b or 0.36 from [shadowofze's releases](https://github.com/shadowofze/OfflineDAoC/releases).
 2. Download the Social Expansion build from this repository's Releases and put its folder in your game folder.
 3. Close the game and server, then double-click `INSTALL.cmd`.
-4. Switch features on with the scripts in `tools\claude-version` (Python 3).
+4. Open the launcher as usual and switch features on in its **Social Expansion** tab (server stopped).
 
 ## Details
 
