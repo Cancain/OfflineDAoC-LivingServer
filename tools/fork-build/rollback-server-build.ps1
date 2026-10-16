@@ -15,6 +15,14 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'fork-build-common.ps1')
 
+# A failure part-way through restoring: some files are already back, so don't say nothing changed.
+function Stop-RestoreFailed([string]$Message) {
+    Write-Host ''
+    Write-Host "ROLLBACK STOPPED PART-WAY: $Message" -ForegroundColor Red
+    Write-Host "The backup is untouched in $($record.BackupFolder). Close everything and run ROLLBACK.cmd -Force, or send Claude this output."
+    exit 1
+}
+
 $game = Find-GameFolder $GameFolder $PSScriptRoot
 Write-Host "Game folder: $game"
 Assert-GameClosed
@@ -56,7 +64,7 @@ foreach ($entry in $record.Folders) {
     Copy-Item -LiteralPath (Join-Path $saved 'GameServer.dll') -Destination $target -Force
     if ($entry.OldPdb) { Copy-Item -LiteralPath (Join-Path $saved 'GameServer.pdb') -Destination $target -Force }
     elseif (Test-Path -LiteralPath (Join-Path $target 'GameServer.pdb')) { Remove-Item -LiteralPath (Join-Path $target 'GameServer.pdb') }
-    if ((Get-Sha256 (Join-Path $target 'GameServer.dll')) -ne $entry.OldDll) { Stop-WithMessage "Restoring $($entry.Folder) failed verification." }
+    if ((Get-Sha256 (Join-Path $target 'GameServer.dll')) -ne $entry.OldDll) { Stop-RestoreFailed "Restoring $($entry.Folder) failed verification." }
 }
 foreach ($entry in @($record.LauncherFolders)) {
     if ($null -eq $entry) { continue }
@@ -66,7 +74,7 @@ foreach ($entry in @($record.LauncherFolders)) {
         $path = Join-Path $target $file.Name
         if ($file.OldHash) {
             Copy-Item -LiteralPath (Join-Path $saved $file.Name) -Destination $target -Force
-            if ((Get-Sha256 $path) -ne $file.OldHash) { Stop-WithMessage "Restoring the launcher in $($entry.Folder) failed verification." }
+            if ((Get-Sha256 $path) -ne $file.OldHash) { Stop-RestoreFailed "Restoring the launcher in $($entry.Folder) failed verification." }
         } elseif (Test-Path -LiteralPath $path) {
             Remove-Item -LiteralPath $path
         }
