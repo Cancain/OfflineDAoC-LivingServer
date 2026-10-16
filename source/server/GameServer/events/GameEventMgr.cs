@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 using System.Threading;
 using DOL.Logging;
 
@@ -43,6 +44,48 @@ namespace DOL.Events
 
                 return numHandlers;
             }
+        }
+
+        /// <summary>
+        /// Memory diagnostics: objects with handlers, those the predicate calls detached (no longer in the world), and
+        /// handlers anywhere whose target (or closure) holds a detached object; a handler left on a live owner keeps
+        /// a released pet alive for good.
+        /// </summary>
+        public static (int Objects, int DetachedObjects, int DetachedTargets, string TargetTypes) Census(Func<object, bool> detached)
+        {
+            var types = new Dictionary<string, int>();
+            int objects, detachedObjects = 0, detachedTargets = 0;
+            List<DOLEventHandler> handlers = new();
+            Lock.EnterReadLock();
+            try
+            {
+                objects = GameObjectEventCollections.Count;
+                foreach (var (owner, collection) in GameObjectEventCollections)
+                {
+                    if (detached(owner)) detachedObjects++;
+                    handlers.AddRange(collection.AllHandlers());
+                }
+            }
+            finally
+            {
+                Lock.ExitReadLock();
+            }
+            handlers.AddRange(GlobalHandlerCollection.AllHandlers());
+            foreach (DOLEventHandler handler in handlers)
+            {
+                object target = handler.Target;
+                if (target == null) continue;
+                object held = detached(target) ? target : null;
+                if (held == null && target.GetType().Name.Contains("DisplayClass", StringComparison.Ordinal))
+                    foreach (FieldInfo field in target.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                        if (field.GetValue(target) is { } value && detached(value)) { held = value; break; }
+                if (held == null) continue;
+                detachedTargets++;
+                string key = $"{handler.Method.DeclaringType?.Name}.{handler.Method.Name}";
+                types[key] = types.GetValueOrDefault(key) + 1;
+            }
+            return (objects, detachedObjects, detachedTargets,
+                string.Join(",", types.OrderByDescending(p => p.Value).Take(6).Select(p => $"{p.Key}:{p.Value}")));
         }
 
         public static void LoadTestDouble(GameEventMgr testDouble)

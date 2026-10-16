@@ -50,7 +50,7 @@ These come from the Living World plan (model v4):
 
 ## Setting them
 
-The helper script is in this fork, not in the 0.35 download. Copy
+The helper script is in this fork, not in shadowofze's downloads. Copy
 `tools/claude-version/set_xp_by_level.py` into your playable folder's `tools\claude-version\` first,
 along with a server build that has these settings.
 
@@ -75,7 +75,7 @@ applies outside your ranges.
 - **The progress transfer tool resets the XP settings.** After a transfer into a new install it sets
   `xp_rate` and `bot_xp_rate` back to 1, and it now also clears both range settings. Set them again
   afterwards.
-- **Public packages always ship with both settings off.** `build_release_035.py` clears them and
+- **Public packages always ship with both settings off.** `build_release_036.py` clears them and
   checks that they are empty.
 
 ## Status

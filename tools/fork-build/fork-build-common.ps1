@@ -2,7 +2,8 @@
 # Windows PowerShell 5.1 compatible.
 
 $Script:ServerFolders = @('runtime/server', 'runtime/server/lib', 'runtime/server/win-x64')
-$Script:ProcessNames = @('CoreServer', 'DOLServer', 'OfflineDAoC', 'game')
+# Also the 0.36c new client and its launcher, which share the game's runtime.
+$Script:ProcessNames = @('CoreServer', 'DOLServer', 'OfflineDAoC', 'game', 'camelot', 'connect', 'Godot_v4.7.2-stable_mono_win64')
 
 function Stop-WithMessage([string]$Message) {
     Write-Host ''
@@ -52,7 +53,7 @@ function Find-GameFolder([string]$Given, [string]$BuildDir) {
         Stop-WithMessage ("More than one game folder found. Run again with -GameFolder and one of:`n  " + ($found -join "`n  "))
     }
     Stop-WithMessage ("Can't find the game. Put this build's folder inside your Offline DAoC folder (the one with " +
-        "START OFFLINE DAOC.cmd), or run INSTALL.cmd -GameFolder ""C:\path\to\playable-v0.35"".")
+        "START OFFLINE DAOC.cmd), or run INSTALL.cmd -GameFolder ""C:\path\to\playable-v0.36b"".")
 }
 
 function Assert-GameClosed {

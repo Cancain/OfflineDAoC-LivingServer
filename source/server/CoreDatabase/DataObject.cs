@@ -77,6 +77,9 @@ namespace DOL.Database
             // Creates a copy of itself to be able to keep track of dirty properties.
             _snapshot = (DataObject) MemberwiseClone();
             _snapshot.Dirty = false;
+            // The clone copied this object's previous snapshot, so every save kept the one before it and each saved
+            // object held all its past versions (6,000 bots: 41,293 bot records 20 minutes in; heap dump 2026-10-15).
+            _snapshot._snapshot = null;
         }
 
         /// <summary>Remember the exact state written by a detached save, without
@@ -87,6 +90,7 @@ namespace DOL.Database
                 throw new ArgumentException("A persistence baseline must describe the same object.", nameof(saved));
             if (!saved.IsPersisted || saved.Dirty || saved.IsDeleted) return;
             _snapshot = saved._snapshot ?? (DataObject)saved.MemberwiseClone();
+            _snapshot._snapshot = null;
         }
 
         public List<ElementBinding> GetDirtyBindings(DataTableHandler tableHandler)
@@ -122,6 +126,7 @@ namespace DOL.Database
         public object Clone()
         {
             var obj = (DataObject) MemberwiseClone();
+            obj._snapshot = null;
             obj.IsPersisted = false;
             obj.ObjectId = IdGenerator.GenerateID();
             return obj;

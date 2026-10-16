@@ -1,0 +1,59 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="MMOEngine"
+run/main_scene="res://game/login_screen.tscn"
+config/features=PackedStringArray("4.7", "C#", "Forward Plus")
+config/icon="res://icon.png"
+config/windows_native_icon="res://icon.ico"
+boot_splash/show_image=false
+boot_splash/bg_color=Color(0, 0, 0, 1)
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=900
+
+[rendering]
+
+lights_and_shadows/directional_shadow/size=2048
+environment/ssao/half_size=false
+environment/ssao/quality=3
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=5
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=5
+
+anti_aliasing/quality/msaa_3d=2
+anti_aliasing/quality/screen_space_aa=1
+scaling_3d/mode=0
+scaling_3d/scale=1.0
+textures/default_filters/anisotropic_filtering_level=4
+driver/threads/thread_model=2
+
+[autoload]
+
+PregameMusic="*res://game/pregame_music.gd"
+BootSettings="*res://game/ui/boot_settings.gd"
+Graphics="*res://game/graphics_settings.gd"
+Keybinds="*res://game/ui/keybinds.gd"
+PlayerData="*res://game/ui/player_data.gd"
+Perf="*res://game/perf_governor.gd"
+WorldLink="*res://game/world_host/world_link.gd"
+Server="*res://game/net/server.gd"
+
+[dotnet]
+
+project/assembly_name="MMOEngine"
+
+[navigation]
+
+3d/merge_rasterizer_cell_scale=0.25
+3d/warnings/navmesh_edge_merge_errors=false

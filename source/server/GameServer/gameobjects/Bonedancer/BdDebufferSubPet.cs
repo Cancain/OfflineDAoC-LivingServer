@@ -6,11 +6,11 @@
 
         public override void InitializeActiveWeaponFromInventory()
         {
-            // Same two-handed bone mace a commander can roll. The template's
-            // one-handed bone sword is removed so only the mace shows.
-            if (Inventory?.GetItem(eInventorySlot.RightHandWeapon) is DOL.Database.DbInventoryItem oneHand)
-                Inventory.RemoveItem(oneHand);
-            MinionGetWeapon(CommanderPet.eWeaponType.TwoHandHammer);
+            // 1.65 look (owner 2026-10-13): a Norse Short Sword (311). No period record shows the debuffers' weapon;
+            // the short sword is the owner's sheet's choice.
+            if (Inventory?.GetItem(eInventorySlot.TwoHandWeapon) is DOL.Database.DbInventoryItem twoHand)
+                Inventory.RemoveItem(twoHand);
+            MinionGetWeapon(CommanderPet.eWeaponType.OneHandSword, 311);
         }
     }
 }

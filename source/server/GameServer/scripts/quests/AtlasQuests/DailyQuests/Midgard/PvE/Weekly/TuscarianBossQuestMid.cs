@@ -70,7 +70,7 @@ namespace DOL.GS.WeeklyQuest.Midgard
 
             if (npcs.Length > 0)
                 foreach (GameNPC npc in npcs)
-                    if (npc.CurrentRegionID == 151 && npc.X == 292291 && npc.Y == 354975)
+                    if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 151, 292291, 354975))
                     {
                         Jarek = npc;
                         break;

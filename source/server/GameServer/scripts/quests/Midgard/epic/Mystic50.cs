@@ -120,7 +120,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 802818 && npc.Y == 727413)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 802818, 727413))
 					{
 						Danica = npc;
 						break;
@@ -155,7 +155,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 621577 && npc.Y == 745848)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 621577, 745848))
 					{
 						Kelic = npc as Kelic;
 						break;

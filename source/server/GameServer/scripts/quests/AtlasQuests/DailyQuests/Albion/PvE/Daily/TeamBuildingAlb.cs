@@ -70,7 +70,7 @@ namespace DOL.GS.DailyQuest.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 583860 && npc.Y == 477619)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 583860, 477619))
 					{
 						Hector = npc;
 						break;

@@ -1840,7 +1840,7 @@ public static partial class AutonomousBotGroupCoordinator
         }
 
         if (session.Phase == "Meeting up" && !(session.ObjectiveKind == eAutonomousObjectiveKind.RvR &&
-            AutonomousRvrEventLayer.IsBattleForce(session.Id, GameLoop.GameLoopTime)))
+            AutonomousRvrEventLayer.IsEventForce(session.Id, GameLoop.GameLoopTime)))
         {
             if (raidView == null) ExpelRendezvousNoShows(session, members);
             members = BotMembers(session.Group);
@@ -1864,8 +1864,9 @@ public static partial class AutonomousBotGroupCoordinator
 
         // An active siege replaces the normal wipe rendezvous: each revived
         // member returns directly to the event while its warband stays locked.
+        // Its muster and march too (run 8: the Dun Dagda army waited 90 minutes in group rendezvous).
         if (session.ObjectiveKind == eAutonomousObjectiveKind.RvR &&
-            AutonomousRvrEventLayer.IsBattleForce(session.Id, GameLoop.GameLoopTime))
+            AutonomousRvrEventLayer.IsEventForce(session.Id, GameLoop.GameLoopTime))
         {
             session.RecoveringBetweenPulls = false;
             session.Phase = "Siege in progress";

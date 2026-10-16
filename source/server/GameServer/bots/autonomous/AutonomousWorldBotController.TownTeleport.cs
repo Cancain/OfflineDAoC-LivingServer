@@ -24,7 +24,24 @@ namespace DOL.GS
         // 152 of 165 failures were bots that respawned, planned, then rested past the deadline).
         private const long TownPortIdleDropMilliseconds = 30_000;
         private readonly Dictionary<GameNPC, long> _failedTownPorters = new();
+        // Five minutes, or twice the planned trip when that is longer, as long as the bot keeps closing on the
+        // teleporter; ninety seconds without getting closer ends it sooner (run 2026-10-13: 343 of 414 failures were
+        // bots still walking in from a porter planned 250-300 seconds away).
         private const long TownPortGiveUpMilliseconds = 5 * 60_000;
+        private const long TownPortNoProgressMilliseconds = 90_000;
+        private Vector2 _townPortLastSpot;
+        private long _townPortProgressTick;
+        // Closest the bot has come to the porter, and when it last got 500 units closer.
+        private float _townPortBestDistance = float.MaxValue;
+        private long _townPortCloserTick;
+        /// <summary>
+        /// The give-up time stretches while the bot keeps closing in (500 units nearer within two minutes), up to
+        /// <see cref="TownPortClosingLimitMilliseconds"/>. 2026-10-15: of 2,240 failures, 1,460 were bots still walking
+        /// toward a porter more than 2,000 units away when the five minutes ran out.
+        /// </summary>
+        public const long TownPortClosingWindowMilliseconds = 2 * 60_000;
+        public const long TownPortClosingLimitMilliseconds = 15 * 60_000;
+        private const int TownPortStandOffTries = 4; // route searches per turn when the bot's own side has no route
         private const long TownPortGatherMilliseconds = 120_000;
         private const int TownPortPartyRadius = 600;
 
@@ -71,6 +88,10 @@ namespace DOL.GS
                 _townPortStartedTick = now;
                 _townPortChannelUntil = 0;
                 _townPortGatherSinceTick = 0;
+                _townPortLastSpot = new(bot.X, bot.Y);
+                _townPortProgressTick = now;
+                _townPortBestDistance = float.MaxValue;
+                _townPortCloserTick = now;
                 Log.Info($"AUTONOMOUS_TOWN_TELEPORT_PLANNED bot={bot.Name} id={bot.DatabaseID} realm={GlobalConstants.RealmToName(bot.Realm)} " +
                          $"group={(assembledParty ? _groupDirective.GroupId : "solo")} porter=\"{plan.Porter.Name}\" " +
                          $"destination=\"{plan.Destination.TeleportID}\" seconds={plan.Seconds:0} walkSeconds={walkSeconds:0}");
@@ -78,16 +99,45 @@ namespace DOL.GS
 
             AutonomousTownTeleporters.Plan port = _townPort;
             _townPortActiveTick = now;
-            if (now - _townPortStartedTick > TownPortGiveUpMilliseconds)
+            // Progress is walking at all: a path may lead away from the teleporter first (out of a building, around a
+            // wall), so distance to it is no measure (run 4: 1,099 walking bots gave up as "no progress").
+            if (Vector2.DistanceSquared(new(bot.X, bot.Y), _townPortLastSpot) >= 64 * 64)
             {
-                FailTownPort(bot, "no teleport within five minutes");
+                _townPortLastSpot = new(bot.X, bot.Y);
+                _townPortProgressTick = now;
+            }
+            long allowed = Math.Max(TownPortGiveUpMilliseconds, (long)(port.Seconds * 2_000));
+            if (bot.CurrentRegion == port.Porter.CurrentRegion)
+            {
+                float distance = (float)bot.GetDistanceTo(port.Porter);
+                if (distance < _townPortBestDistance - 500) { _townPortBestDistance = distance; _townPortCloserTick = now; }
+                if (now - _townPortCloserTick < TownPortClosingWindowMilliseconds)
+                    allowed = Math.Max(allowed, Math.Min(TownPortClosingLimitMilliseconds, now - _townPortStartedTick + 1));
+            }
+            if (now - _townPortStartedTick > allowed)
+            {
+                FailTownPort(bot, $"no teleport within {allowed / 60_000} minutes");
+                return false;
+            }
+            if (_townPortChannelUntil == 0 && _townPortGatherSinceTick == 0 && now - _townPortProgressTick > TownPortNoProgressMilliseconds &&
+                !bot.IsWithinRadius(port.Porter, AutonomousTownTeleporters.ArrivalRadius))
+            {
+                FailTownPort(bot, "no movement toward the teleporter for ninety seconds");
                 return false;
             }
             if (!bot.IsWithinRadius(port.Porter, AutonomousTownTeleporters.ArrivalRadius))
             {
-                // stop a short way out, never on the NPC (players must be able to click the teleporter)
-                Vector3 target = AutonomousTownTeleporters.StandOff(port.Porter, bot);
-                if (!IssuePath(bot, target))
+                // stop a short way out, never on the NPC (players must be able to click the teleporter); when the bot's own
+                // side has no route (a ledge or roof), try other sides before giving the teleporter up
+                bool walking = false;
+                foreach (Vector3 target in AutonomousTownTeleporters.StandOffs(port.Porter, bot).Take(TownPortStandOffTries))
+                    if (IssuePath(bot, target))
+                    {
+                        AutonomousTownTeleporters.RememberStandOff(port.Porter, target);
+                        walking = true;
+                        break;
+                    }
+                if (!walking)
                 {
                     FailTownPort(bot, "no connected route to the teleporter");
                     return false;
@@ -157,6 +207,10 @@ namespace DOL.GS
                      $"tookSeconds={(now - _townPortStartedTick) / 1000}");
             ClearTownPort();
             _nextPlanTick = 0;
+            // A horse chosen before the teleport belongs to the old side of the realm (Yarley's Farm, 2026-10-13: bots
+            // landed and then gave up on Fluvon's horse at Gronyr's Farm, blocking horses for ten minutes): choose again.
+            _pendingStableChoice = null;
+            _nextStableCheckTick = 0;
             ResetRouteOrderState();
             return true;
         }
@@ -178,7 +232,12 @@ namespace DOL.GS
             {
                 _failedTownPorters[_townPort.Porter] = GameLoop.GameLoopTime + 10 * 60_000;
                 Log.Info($"AUTONOMOUS_TOWN_TELEPORT_FAILED bot={bot.Name} id={bot.DatabaseID} porter=\"{_townPort.Porter.Name}\" " +
-                         $"destination=\"{_townPort.Destination.TeleportID}\" reason=\"{reason}\"");
+                         $"destination=\"{_townPort.Destination.TeleportID}\" reason=\"{reason}\" " +
+                         // Where it gave up (2026-10-14: 1,800 failures, most "no teleport within 5 minutes", with nothing
+                         // to say whether the bot was far away, standing at the porter, or busy fighting on the way).
+                         $"region={bot.CurrentRegionID} at={bot.X},{bot.Y},{bot.Z} toPorter={(bot.CurrentRegion == _townPort.Porter.CurrentRegion ? (int)bot.GetDistanceTo(_townPort.Porter) : -1)} " +
+                         $"stillSeconds={(GameLoop.GameLoopTime - _townPortProgressTick) / 1000} " +
+                         $"gathering={_townPortGatherSinceTick > 0} inCombat={bot.InCombat} activity=\"{bot.PersistentRecord?.Activity}\"");
             }
             ClearTownPort();
         }

@@ -12,13 +12,15 @@ namespace DOL.GS;
 /// </summary>
 public static class AutonomousZonePointApproach
 {
+    public const int RoadCandidates = 2;
+
     public static bool TryResolve(IPathfindingMgr nav, Zone zone, Vector3 actor,
         Vector3 portal, int arrivalRadius, out Vector3 approach, Func<Vector3, bool> candidateFilter = null)
     {
         approach = portal;
         if (nav == null || zone == null || !nav.IsAvailable || !nav.HasNavmesh(zone))
             return true;
-        if (!AutonomousNavigationSurface.TryFloor(nav, zone, actor, out Vector3 start))
+        if (!AutonomousNavigationSurface.TryPlanningFloor(nav, zone, actor, out Vector3 start))
             return false;
 
         var candidates = new List<Vector3>();
@@ -53,11 +55,22 @@ public static class AutonomousZonePointApproach
                 portal.Y + MathF.Sin(radians) * radius, portal.Z), 36, 128);
         }
 
-        foreach (Vector3 candidate in candidates.OrderBy(point => Vector3.DistanceSquared(start, point)))
+        Vector3[] ordered = candidates.OrderBy(point => Vector3.DistanceSquared(start, point))
+            .Where(point => candidateFilter == null || candidateFilter(point)).ToArray();
+        foreach (Vector3 candidate in ordered)
         {
-            if (candidateFilter != null && !candidateFilter(candidate))
-                continue;
             if (!AutonomousZoneItinerary.HasCompleteCorridor(nav, zone, start, candidate))
+                continue;
+            approach = candidate;
+            return true;
+        }
+        // A far approach the direct search could not prove (it stops at dead ends on walks that
+        // first lead away: raid rally posts on the Sheeroe plateau, 2026-10-12) may still be joined
+        // by the zone road graph, which the bot mover follows. Two nearest candidates only: one or
+        // two road searches per failed approach, never one per candidate.
+        foreach (Vector3 candidate in nav is LocalPathfindingMgr ? ordered.Take(RoadCandidates) : [])
+        {
+            if (!AutonomousZoneRoads.TryRoute(nav, zone, start, candidate, out _))
                 continue;
             approach = candidate;
             return true;

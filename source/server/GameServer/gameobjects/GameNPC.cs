@@ -698,7 +698,13 @@ namespace DOL.GS
 		/// must not pretend that a client is present for packet/effect visibility.
 		/// </summary>
 		public virtual bool IsVisibleToPlayersOrBots =>
-			IsVisibleToPlayers || GameLoop.GameLoopTime - m_lastVisibleToAutonomousBotTick < VISIBLE_TO_PLAYER_SPAN;
+			IsVisibleToPlayers || GameLoop.GameLoopTime - m_lastVisibleToAutonomousBotTick < VISIBLE_TO_PLAYER_SPAN || IsEncounterController;
+
+		/// <summary>Hidden script controllers of encounters (guild "DO NOT REMOVE!"). They watch a trigger spot that can lie
+		/// outside their own view: Olcasgean's controller stands 4,300 units from its waterfall-bridge trigger, so its brain
+		/// slept while 250 raid bots waited on the bridge (run 13, 2026-10-16). They always think.</summary>
+		public const string EncounterControllerGuild = "DO NOT REMOVE!";
+		public bool IsEncounterController => GuildName == EncounterControllerGuild;
 
 		/// <summary>
 		/// Gets or sets the spawnposition of this npc
@@ -986,6 +992,31 @@ namespace DOL.GS
 				else if (oneHand != null)
 					SwitchWeapon(eActiveWeaponSlot.Standard);
 			}
+		}
+
+		// Heap dump 2026-10-16: 9,111 dead Theurgist earth pets were still held by the aggro lists of mobs that fought them
+		// (an idle mob's list is only cleaned when it fights again). A pet remembers the brains holding it and leaves their
+		// lists when it leaves the world; a brain that drops the pet first also drops the link.
+		private ConcurrentDictionary<StandardMobBrain, byte> _aggroHolders;
+		private bool TracksAggroHolders => this is GameSummonedPet || Brain is IControlledBrain;
+
+		public void NoteAggroHolder(StandardMobBrain brain)
+		{
+			if (brain != null && TracksAggroHolders)
+				LazyInitializer.EnsureInitialized(ref _aggroHolders).TryAdd(brain, 0);
+		}
+
+		public void ForgetAggroHolder(StandardMobBrain brain) => _aggroHolders?.TryRemove(brain, out _);
+
+		public int AggroHolderCount => _aggroHolders?.Count ?? 0;
+
+		private void ForgetFromAggroHolders()
+		{
+			ConcurrentDictionary<StandardMobBrain, byte> holders = _aggroHolders;
+			if (holders == null) return;
+			foreach (StandardMobBrain holder in holders.Keys)
+				holder.RemoveFromAggroList(this);
+			holders.Clear();
 		}
 
 		private bool m_loadedFromScript = true;
@@ -2086,6 +2117,7 @@ namespace DOL.GS
 			if (!base.RemoveFromWorld())
 				return false;
 
+			ForgetFromAggroHolders();
 			Brain.Stop();
 			EffectList.CancelAll();
 
@@ -2559,7 +2591,8 @@ namespace DOL.GS
 			if (!base.Interact(player))
 				return false;
 
-			if (!GameServer.ServerRules.IsSameRealm(this, player, true) && Faction != null && Faction.GetStandingToFaction(player) >= Faction.Standing.HOSTILE)
+			if (!GameServer.ServerRules.IsSameRealm(this, player, true) && Faction != null && Faction.GetStandingToFaction(player) >= Faction.Standing.HOSTILE &&
+				!Quests.QuestTalkTruce.Holds(this, player)) // a quest step's talk target still talks
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.Interact.DirtyLook",
 					GetName(0, true, player.Client.Account.Language, this)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -3172,7 +3205,8 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void StartRespawn()
 		{
-			if (IsAlive || RespawnInterval <= 0)
+			int interval = RespawnInterval;
+			if (IsAlive || interval <= 0)
 				return;
 
 			lock (_respawnTimerLock)
@@ -3183,7 +3217,7 @@ namespace DOL.GS
 					m_respawnTimer.Callback = new ECSGameTimer.ECSTimerCallback(RespawnTimerCallback);
 				}
 
-				m_respawnTimer.Start(RespawnInterval);
+				m_respawnTimer.Start(AutonomousRealmRaid.RaidRespawnInterval(this, interval));
 			}
 		}
 
@@ -4146,6 +4180,7 @@ namespace DOL.GS
 
 		public GameNPC(ABrain defaultBrain) : base()
 		{
+			ServerMemoryDiagnostics.Track(this);
 			castingComponent ??= base.castingComponent as NpcCastingComponent;
 			movementComponent ??= base.movementComponent as NpcMovementComponent;
 

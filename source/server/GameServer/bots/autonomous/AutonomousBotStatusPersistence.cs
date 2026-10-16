@@ -24,6 +24,10 @@ public static class AutonomousBotStatusPersistence
     private static readonly object PendingGate = new();
     private static readonly Dictionary<long, GameBot> Pending = new();
     private static readonly Queue<long> PendingOrder = new();
+    // Ids already waiting in PendingOrder. A bot saved through the inventory or priority queue left its id behind in
+    // PendingOrder and was enqueued again on its next update: 36,545 ids for ~6,000 bots, +3,300 every five minutes
+    // (SERVER_STATIC_CENSUS, 2026-10-15).
+    private static readonly HashSet<long> InPendingOrder = new();
     private static readonly HashSet<long> PendingPriority = new();
     private static readonly Queue<long> PendingPriorityOrder = new();
     private static readonly HashSet<long> PendingInventory = new();
@@ -39,7 +43,7 @@ public static class AutonomousBotStatusPersistence
         {
             lock (PendingGate)
             {
-                if (!Pending.ContainsKey(bot.DatabaseID))
+                if (InPendingOrder.Add(bot.DatabaseID))
                     PendingOrder.Enqueue(bot.DatabaseID);
                 Pending[bot.DatabaseID] = bot;
                 if (includeInventory && PendingInventory.Add(bot.DatabaseID))
@@ -59,7 +63,7 @@ public static class AutonomousBotStatusPersistence
             return;
         lock (PendingGate)
         {
-            if (!Pending.ContainsKey(bot.DatabaseID))
+            if (InPendingOrder.Add(bot.DatabaseID))
                 PendingOrder.Enqueue(bot.DatabaseID);
             Pending[bot.DatabaseID] = bot;
             if (PendingPriority.Add(bot.DatabaseID))
@@ -132,6 +136,7 @@ public static class AutonomousBotStatusPersistence
                 while (drained.Count < WriteBatchSize && PendingOrder.Count > 0)
                 {
                     long botId = PendingOrder.Dequeue();
+                    InPendingOrder.Remove(botId);
                     if (!Pending.Remove(botId, out GameBot bot))
                         continue;
                     drained[botId] = bot;

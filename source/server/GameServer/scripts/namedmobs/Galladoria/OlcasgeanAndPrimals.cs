@@ -65,6 +65,7 @@ namespace DOL.AI.Brain
 
         public static bool startevent = false;
         public static int DeadPrimalsCount = 0;
+        public const int BotTriggerRadius = 1500;
 
         public void BroadcastMessage(String message)
         {
@@ -84,7 +85,9 @@ namespace DOL.AI.Brain
                 {
                     if (!startevent && EpicEncounterActors.CanTrigger(player))
                     {
-                        if (player.IsWithinRadius(point1, 350) && !startevent && DeadPrimalsCount == 0 && !startevent)
+                        // Run 12 (2026-10-15): the bot raid held near the bridge for 40 minutes and none of its 250 raiders
+                        // stood on the 350-unit spot, so the primals never came. A raid bot anywhere on the bridge starts it.
+                        if (player.IsWithinRadius(point1, player is GameBot ? BotTriggerRadius : 350) && !startevent && DeadPrimalsCount == 0 && !startevent)
                         {
                             new ECSGameTimer(Body, new ECSGameTimer.ECSTimerCallback(Message1), 5000);//5s to start
                             startevent = true;
@@ -612,7 +615,7 @@ namespace DOL.AI.Brain
             {
                 Body.Health = Body.MaxHealth;
             }
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 //set state to RETURN TO SPAWN
                 FSM.SetCurrentState(eFSMStateType.RETURN_TO_SPAWN);
@@ -1051,7 +1054,7 @@ namespace DOL.AI.Brain
             {
                 Body.Health = Body.MaxHealth;
             }
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 //set state to RETURN TO SPAWN
                 FSM.SetCurrentState(eFSMStateType.RETURN_TO_SPAWN);
@@ -2278,7 +2281,7 @@ namespace DOL.AI.Brain
         public static bool CanSwitchTarget = false;
         public override void Think()
         {
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 Body.Health = Body.MaxHealth;
                 CanSwitchTarget = false;
@@ -2490,7 +2493,9 @@ namespace DOL.AI.Brain
                 {
                     if (npc != null)
                     {
-                        if (npc.Brain is NaturalEarthmenderBrain || npc.Brain is MagicalEarthmenderBrain || npc.Brain is ShadowyEarthmenderBrain || npc.Brain is EarthPrimalBrain)
+                        // Mechanic change (run 15, 2026-10-16): Earthmenders heal only the Earth primal. Healing each other, the four
+                        // kept every one of them at full health through the bot raid (2,000 every 3 s from each of three).
+                        if (npc.Brain is EarthPrimalBrain)
                         {
                             if (npc.IsAlive && npc.HealthPercent < 100)
                             {
@@ -2684,7 +2689,9 @@ namespace DOL.AI.Brain
                 {
                     if (npc != null)
                     {
-                        if (npc.Brain is GuardianEarthmenderBrain || npc.Brain is NaturalEarthmenderBrain || npc.Brain is ShadowyEarthmenderBrain || npc.Brain is EarthPrimalBrain)
+                        // Mechanic change (run 15, 2026-10-16): Earthmenders heal only the Earth primal. Healing each other, the four
+                        // kept every one of them at full health through the bot raid (2,000 every 3 s from each of three).
+                        if (npc.Brain is EarthPrimalBrain)
                         {
                             if (npc.IsAlive && npc.HealthPercent < 100)
                             {
@@ -2875,7 +2882,9 @@ namespace DOL.AI.Brain
                 {
                     if (npc != null)
                     {
-                        if (npc.Brain is GuardianEarthmenderBrain || npc.Brain is MagicalEarthmenderBrain || npc.Brain is ShadowyEarthmenderBrain || npc.Brain is EarthPrimalBrain)
+                        // Mechanic change (run 15, 2026-10-16): Earthmenders heal only the Earth primal. Healing each other, the four
+                        // kept every one of them at full health through the bot raid (2,000 every 3 s from each of three).
+                        if (npc.Brain is EarthPrimalBrain)
                         {
                             if (npc.IsAlive && npc.HealthPercent < 100)
                             {
@@ -3066,7 +3075,9 @@ namespace DOL.AI.Brain
                 {
                     if (npc != null)
                     {
-                        if (npc.Brain is GuardianEarthmenderBrain || npc.Brain is MagicalEarthmenderBrain || npc.Brain is NaturalEarthmenderBrain || npc.Brain is EarthPrimalBrain)
+                        // Mechanic change (run 15, 2026-10-16): Earthmenders heal only the Earth primal. Healing each other, the four
+                        // kept every one of them at full health through the bot raid (2,000 every 3 s from each of three).
+                        if (npc.Brain is EarthPrimalBrain)
                         {
                             if (npc.IsAlive && npc.HealthPercent < 100)
                             {

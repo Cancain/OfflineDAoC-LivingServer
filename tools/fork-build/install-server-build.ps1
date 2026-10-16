@@ -1,7 +1,7 @@
 # Installs this fork server build into an Offline DAoC game folder (docs/RELEASE-PLAN.md).
 #
 #   INSTALL.cmd                                  (finds the game folder this build sits in)
-#   INSTALL.cmd -GameFolder "C:\Games\OfflineDAoC\playable-v0.35"
+#   INSTALL.cmd -GameFolder "C:\Games\OfflineDAoC\playable-v0.36b"
 #   INSTALL.cmd -DryRun                          (checks everything, changes nothing)
 #
 # Safe by design:

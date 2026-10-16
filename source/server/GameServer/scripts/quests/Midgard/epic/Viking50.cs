@@ -133,7 +133,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 760118 && npc.Y == 758453)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 760118, 758453))
 					{
 						Lynnleigh = npc;
 						break;
@@ -166,7 +166,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 802597 && npc.Y == 727896)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 802597, 727896))
 					{
 						Elizabeth = npc;
 						break;
@@ -202,7 +202,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 665094 && npc.Y == 894559)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 665094, 894559))
 					{
 						Ydenia = npc as Ydenia;
 						break;

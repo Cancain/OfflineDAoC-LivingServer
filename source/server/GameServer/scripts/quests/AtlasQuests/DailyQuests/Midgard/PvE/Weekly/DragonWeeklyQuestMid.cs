@@ -71,7 +71,7 @@ namespace DOL.GS.WeeklyQuest.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 766590 && npc.Y == 670407)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 766590, 670407))
 					{
 						Isaac = npc;
 						break;

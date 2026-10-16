@@ -75,7 +75,8 @@ namespace DOL.GS
             return true;
         }
 
-        private PathfindingStatus CalculatePath(PathBuffer pathBuffer, Zone zone, Vector3 position, Vector3 target, EDtPolyFlags[] filters)
+        private PathfindingStatus CalculatePath(PathBuffer pathBuffer, Zone zone, Vector3 position, Vector3 target, EDtPolyFlags[] filters,
+            bool useRoads = false)
         {
             const int MAX_PATH_NODES = 512;
             WrappedPathfindingNode[] rentedNodeBuffer = ArrayPool<WrappedPathfindingNode>.Shared.Rent(MAX_PATH_NODES);
@@ -83,6 +84,10 @@ namespace DOL.GS
             try
             {
                 PathfindingResult pathfindingResult = PathfindingProvider.Instance.GetPathStraight(zone, position, target, filters, rentedNodeBuffer);
+                if (useRoads && Owner is GameBot &&
+                    TryRoadPath(PathfindingProvider.Instance, zone, position, target, filters, pathfindingResult, rentedNodeBuffer, MAX_PATH_NODES,
+                        out PathfindingResult road))
+                    pathfindingResult = road;
 
                 pathBuffer.Clear();
                 pathBuffer.Origin = position;
@@ -139,13 +144,62 @@ namespace DOL.GS
             }
         }
 
+        /// <summary>
+        /// A bot's partial path that stops far short of its goal (Detour's search reached a dead end on
+        /// a long walk that first leads away from the goal) is replaced by the zone road route: the
+        /// Detour paths of its proven legs, joined, as far as the node buffer holds (then partial, and
+        /// the usual continuation replots from there). Short walks, DF and zones without roads are unchanged.
+        /// </summary>
+        public static bool TryRoadPath(IPathfindingMgr nav, Zone zone, Vector3 position, Vector3 target, EDtPolyFlags[] filters,
+            PathfindingResult direct, WrappedPathfindingNode[] nodes, int capacity, out PathfindingResult result)
+        {
+            result = direct;
+            if (direct.Status != PathfindingStatus.PartialPathFound || direct.NodeCount < 1 || direct.NodeCount > capacity ||
+                zone.ZoneRegion?.ID == AutonomousDarknessFallsPolicy.RegionId ||
+                Vector3.DistanceSquared(nodes[direct.NodeCount - 1].Position, target) <= 256 * 256)
+                return false;
+            if (!AutonomousZoneRoads.TryRoute(nav, zone, position, target, out Vector3[] via))
+                return false;
+            WrappedPathfindingNode[] leg = ArrayPool<WrappedPathfindingNode>.Shared.Rent(capacity);
+            try
+            {
+                int count = 0;
+                Vector3 from = position;
+                for (int i = 0; i <= via.Length; i++)
+                {
+                    Vector3 to = i < via.Length ? via[i] : target;
+                    PathfindingResult part = nav.GetPathStraight(zone, from, to, filters, leg);
+                    if (part.NodeCount < 1 || part.NodeCount > capacity) break;
+                    // Each leg starts where the previous one ended; keep that node once.
+                    int skip = count == 0 ? 0 : 1;
+                    if (count + part.NodeCount - skip > capacity) break;
+                    for (int n = skip; n < part.NodeCount; n++) nodes[count++] = leg[n];
+                    bool complete = part.Status == PathfindingStatus.PathFound ||
+                        Vector3.DistanceSquared(leg[part.NodeCount - 1].Position, to) <= 48 * 48;
+                    if (!complete) break;
+                    if (i == via.Length)
+                    {
+                        result = new(PathfindingStatus.PathFound, count);
+                        return true;
+                    }
+                    from = to;
+                    // Enough for this order; the partial continuation replots from the last node.
+                    if (count >= capacity / 2) break;
+                }
+                if (count <= 1) return false;
+                result = new(PathfindingStatus.PartialPathFound, count);
+                return true;
+            }
+            finally { ArrayPool<WrappedPathfindingNode>.Shared.Return(leg); }
+        }
+
         public bool TryGetNextNode(Zone zone, Vector3 position, Vector3 target, out Vector3? nextNode,
             bool allowPartialContinuation = true)
         {
             // Check if we can reuse our path. We assume that we ourselves never "suddenly" warp to a completely different pos.
             if (ForceReplot || !_lastTarget.IsInRange(target, MIN_TARGET_DIFF_REPLOT_DISTANCE))
             {
-                PathfindingStatus status = CalculatePath(_activePath, zone, position, target, DefaultFilters);
+                PathfindingStatus status = CalculatePath(_activePath, zone, position, target, DefaultFilters, true);
                 UpdatePathState(status, target);
             }
 
@@ -163,7 +217,7 @@ namespace DOL.GS
             if (TryUsePathDoor())
             {
                 position = new(Owner.X, Owner.Y, Owner.Z);
-                UpdatePathState(CalculatePath(_activePath, zone, position, target, DefaultFilters), target);
+                UpdatePathState(CalculatePath(_activePath, zone, position, target, DefaultFilters, true), target);
             }
 
             // Dequeue the next node if we're close to it, and any subsequent node that might be close.
@@ -264,11 +318,23 @@ namespace DOL.GS
             if (!_activePath.Nodes.TryPeek(0, out WrappedPathfindingNode current) || !Owner.IsWithinRadius(current.Position, NODE_REACHED_DISTANCE))
                 return;
 
-            // Glacier and Darkness Falls climb links follow the original
+            // Raid dungeon climb links (Glacier, Darkness Falls, Caer Sidi, Galladoria) follow the original
             // surfaces in 3D.
             // A floor-only LOS shortcut must not skip their intermediate nodes.
             // All ordinary walking, other zones, horses and players retain their
             // existing movement smoothing and cadence.
+            // Run 13 (2026-10-16): bots walking Caer Sidi's lift link (964 up over 45) still stalled half way up and
+            // dropped off the mesh, even node by node, and the raid lost Bane of Hope at 3% while they hung there. A bot
+            // at the foot of a near-vertical link rides it: it is placed on the link's far end, as a lift would carry it.
+            if (Owner is GameBot && _activePath.Nodes.Count > 1 &&
+                _activePath.Nodes.Peek(1) is var far && IsVerticalLink(current.Flags | far.Flags, current.Position, far.Position))
+            {
+                _activePath.Doors.Remove(_activePath.Nodes.Dequeue(), out _);
+                _activePath.Doors.Remove(_activePath.Nodes.Dequeue(), out _);
+                Owner.MoveInRegion(Owner.CurrentRegionID, (int)far.Position.X, (int)far.Position.Y, (int)far.Position.Z, Owner.Heading, true);
+                return;
+            }
+
             bool exactClimb = RequiresExactClimbNode(Owner is GameBot, zone.ID, current.Flags,
                 _activePath.Nodes.Count > 1 ? _activePath.Nodes.Peek(1).Flags : 0);
 
@@ -321,8 +387,18 @@ namespace DOL.GS
             }
         }
 
+        // Run 12 (2026-10-15): Caer Sidi's lift link (39026,31690 up 964 to the floor above) left 30+ raiders and their
+        // pets hanging between the two floors, cut off from the mesh, until they were regrouped; Galladoria too.
+        /// <summary>An off-mesh (jump) link that rises or drops at least 300 units and at least twice as far as it runs.</summary>
+        public static bool IsVerticalLink(EDtPolyFlags flags, Vector3 from, Vector3 to)
+        {
+            float rise = Math.Abs(to.Z - from.Z);
+            float run = Vector2.Distance(new(from.X, from.Y), new(to.X, to.Y));
+            return (flags & EDtPolyFlags.Jump) != 0 && rise >= 300 && rise >= 2 * run;
+        }
+
         public static bool RequiresExactClimbNode(bool bot, ushort zone, EDtPolyFlags current, EDtPolyFlags next) =>
-            bot && (zone is 160 or 249) && ((current | next) & EDtPolyFlags.Jump) != 0;
+            bot && (zone is 160 or 249 or 60 or 191) && ((current | next) & EDtPolyFlags.Jump) != 0;
 
         public bool TryGetClosestReachableNode(Zone zone, Vector3 position, Vector3 target, out Vector3? node)
         {

@@ -116,7 +116,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 200 && npc.X == 421281 && npc.Y == 516273)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 200, 421281, 516273))
 					{
 						Ainrebh = npc;
 						break;
@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 200 && npc.X == 488306 && npc.Y == 521440)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 200, 488306, 521440))
 					{
 						GreenMaw = npc as GreenMaw;
 						break;
@@ -1353,7 +1353,6 @@ namespace DOL.GS.Quests.Hibernia
 						case "fulfill":
 							if (quest.Step == 2)
 							{
-								RemoveItem(player, GreenMaw_key);
 								if (player.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack,
 									    eInventorySlot.LastBackpack))
 								{

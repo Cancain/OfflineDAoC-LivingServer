@@ -7,7 +7,7 @@ don't need the author's permission to fork it.
 
 1. **Fork it:** click **Fork** on this GitHub page, then clone your fork, or use **Code > Download
    ZIP**.
-2. **Get a playable folder:** download the matching playable release (0.35 or 0.35b) as described
+2. **Get a playable folder:** download the matching playable release (0.36, 0.36b or 0.36c) as described
    in [PLAY.md](PLAY.md). The source alone isn't the playable game.
 3. **Keep two folders:** the source checkout, where you edit code, and a separate playable folder,
    where you test builds.
@@ -30,6 +30,7 @@ don't need the author's permission to fork it.
 | Companion bots and class combat AI | `source/server/GameServer/bots` |
 | Commands, combat, spells, pets | `source/server/GameServer` |
 | The launcher | `source/tools/OfflineDaoc.Launcher` |
+| The new client (0.36c): interface, world, controls | `source/new-client/godot/game` (see its [README](../source/new-client/README.md)) |
 | Progress transfer | `source/tools/OfflineDaoc.ProgressImport` |
 | Pet art, weapons, spell effects | `tools/pet-art` (see its README) |
 | World data (spawns, spells, items) | the playable folder's `runtime/data/opendaoc.sqlite3.db`. Write changes as a script with a backup, and never commit a played database |

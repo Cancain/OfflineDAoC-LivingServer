@@ -5,6 +5,22 @@ each piece is in, and the plan to code, test, install and release it.
 
 **New development stops here** until this release is played and fixed.
 
+**Update (2026-10-16): the release moves to 0.36.** shadowofze published 0.36 / 0.36b / 0.36c on
+2026-10-16 (tags `v0.36`, `v0.36b` and `v0.36c` all point at `d88b7b2`). Stage 8 is done ahead of
+the first release:
+
+| Fact | Status |
+|---|---|
+| Branch `release/0.36-chris.1` = `release/0.35-chris.1` merged onto tag `v0.36`. Its build name is `0.36-chris.1`. | done |
+| Merge: 3 files conflicted only because upstream switched their line endings (`BotBrain.cs`, `GameBot.cs`: CRLF → LF; `AutonomousBotGroupCoordinator.cs`: LF → CRLF). Re-merged with matching line endings: no real conflicts. Every Social Expansion hook is still in place. | verified (diff against `v0.36`) |
+| 0.36 replaced the release builder. Our clean-up (bot guilds, their settings, Social Expansion switches, XP by level, alliances) is ported from `build_release_035.py` into `build_release_036.py`. | done; not run on a real 0.36 database here |
+| The installer now only accepts **0.36 / 0.36b** (with or without the 0.36c new client), and also waits for the new client and its launcher to be closed. | done; real Windows install untested |
+| Upstream 0.36 does not touch bot guilds, bot chat or personalities. It does raise **quest XP 3–6× for levels 21–40**, which adds to the XP-by-level plan's pace (stage 4 numbers are for kills). | verified (0.36 changelog and code) |
+| The 0.36c new client runs the same server, so it gets these features too. Not tested with it. | inference |
+
+From here on, read **0.35** in the stages below as **0.36b**, and `0.35-chris.N` as `0.36-chris.N`.
+Stage 8 now applies to 0.37.
+
 **Scope change (Chris, 2026-10-12):** the release waits for bot personalities, voices and debates,
 and ships everything together as the "Social Expansion". Those were built after this audit; see
 the workstream table and stage 5b.
@@ -69,7 +85,7 @@ Each stage ends with a check. Nothing moves on until the check passes.
 
 ### Stage 2: your PC (Chris, about an hour)
 
-1. **Install the game:** download **Offline DAoC 0.35** (or 0.35b) from shadowofze's releases
+1. **Install the game:** download **Offline DAoC 0.36b** (or 0.36) from shadowofze's releases
    with the `DOWNLOAD-AND-PLAY` script.
 2. **Play a baseline:** 30–60 minutes of the stock game, so you know what normal looks like:
    bots in towns and at camps, chat, a group.
@@ -83,7 +99,7 @@ Each stage ends with a check. Nothing moves on until the check passes.
 3. Run `install-server-build.ps1`. It backs up first.
 4. Start the server as usual and log in.
 5. **Pass when:**
-   - the startup line shows `0.35-chris.1` with every feature off;
+   - the startup line shows `0.36-chris.1` with every feature off;
    - there are no new errors in the log;
    - the game plays exactly like the baseline.
 6. **On a failure:** run `rollback-server-build.ps1`, then send Claude the log.
@@ -137,14 +153,14 @@ Each stage ends with a check. Nothing moves on until the check passes.
 
 1. **Fix:** each problem found is fixed on its feature branch, then merged into the release
    branch.
-2. **Build:** CI builds a new zip (`0.35-chris.2`, …).
+2. **Build:** CI builds a new zip (`0.36-chris.2`, …).
 3. **Retest** only the affected checklist items.
 4. **Repeat** until stages 3–5b pass.
 
 ### Stage 7: release
 
-1. **Merge:** pull request `release/0.35-chris.N` → `main`, with your approval.
-2. **Tag:** `v0.35-chris.N` on your fork.
+1. **Merge:** pull request `release/0.36-chris.N` → `main`, with your approval.
+2. **Tag:** `v0.36-chris.N` on your fork.
 3. **Publish:** a GitHub Release with the zip, with your approval.
    - **Choice:** your fork is public, so the release would be too; a draft release keeps it to you.
    - **Contents:** only the server build (built from the GPL source) and the scripts; never a
@@ -153,13 +169,13 @@ Each stage ends with a check. Nothing moves on until the check passes.
 
 ### Stage 8: keeping up with shadowofze
 
-**When 0.36 code is published:**
+**Done for 0.36 on 2026-10-16** (see the update at the top). **When 0.37 code is published:**
 1. Merge it into `main`.
 2. Rebuild the release branch and rerun CI.
-3. Repeat stage 3's smoke test on a 0.36 install, then release `0.36-chris.1`.
+3. Repeat stage 3's smoke test on a 0.37 install, then release `0.37-chris.1`.
 
-**Don't** install our 0.35-based build over a 0.36 install: it would roll back his 0.36 server
-changes.
+**Don't** install a 0.36-based build over a 0.37 install: it would roll back his 0.37 server
+changes. The installer refuses it.
 
 **Optional:** a weekly scheduled check for new shadowofze commits.
 

@@ -77,7 +77,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 505313 && npc.Y == 496252)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 505313, 496252))
 					{
 						Lukas = npc;
 						break;
@@ -111,7 +111,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 10 && npc.X == 30763 && npc.Y == 29908)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 10, 30763, 29908))
 					{
 						SirLukas = npc;
 						break;

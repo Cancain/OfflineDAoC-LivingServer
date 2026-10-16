@@ -1,0 +1,42 @@
+OFFLINE DAOC 0.36c - THE NEW CLIENT
+
+This folder is Offline DAoC 0.36b or 0.36 with a second, brand-new game
+client added (in the new-client folder). Both clients play the SAME game: the same server,
+the same account, the same characters, the same bots and the same world.
+Play a character with one client today and with the other tomorrow.
+
+TWO WAYS TO PLAY
+  START OFFLINE DAOC.cmd               the original DAoC client
+  START OFFLINE DAOC - NEW CLIENT.cmd  the new client (built in Godot 4)
+Each one opens the launcher. Click START SERVER, wait for RUNNING, then click
+ENTER REALM. Use one launcher at a time: both start and stop the same server.
+To switch clients: quit the game, click STOP SERVER, close the launcher, then
+open the other start file.
+
+BEFORE THE FIRST START
+1. The original client needs the Windows feature ".NET Framework 3.5" - see
+   READ ME FIRST.txt. The new client doesn't.
+2. The new client needs a graphics card that supports Vulkan or DirectX 12
+   (most cards from the last ten years) with up-to-date drivers.
+3. Everything else is included. Nothing has to be installed.
+
+YOUR ACCOUNT, CHARACTERS AND BOTS
+They live in runtime\data and are shared by both clients. The new client keeps
+only its own settings, keybinds and quickbars, in new-client\save.
+To bring progress from an older version, run
+IMPORT PROGRESS FROM OLD OFFLINE DAOC.cmd once - both clients then have it.
+
+THE NEW CLIENT IN SHORT
+- A new client for the same game: the original zones, models, spells, sounds
+  and interface, converted from the game's own files, with textures upscaled
+  4x, drawn by a modern engine.
+- WoW-style movement: hold the right mouse button to steer, A/D turn,
+  Q/E strafe.
+- Options, keybinds and graphics settings are in its own menus.
+- On a 0.36 game (classic classes only) it offers the classic classes only,
+  like the original client there.
+- It is new: if something looks or behaves differently from the original
+  client, please report it on the GitHub page (Bug reports).
+
+MORE HELP
+READ ME FIRST.txt, docs\PLAY.md and docs\NEW-CLIENT.md

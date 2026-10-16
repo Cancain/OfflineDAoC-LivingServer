@@ -39,6 +39,10 @@ namespace DOL.AI.Brain
 					continue;
 				if ((npc.Flags & GameNPC.eFlags.FLYING) != 0)
 					continue;
+				// A classic quest's monster is the player's fight (the guards who stole Camelot's battle plans in
+				// List of Denial appear inside the city): the town guards do not take it from them.
+				if (DOL.GS.Quests.ClassicQuests.IsQuestMonster(npc))
+					continue;
 
 				AddToAggroList(npc);
 				// No LoS check, we just attack what's in range

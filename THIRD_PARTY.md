@@ -15,6 +15,15 @@ The project's AI-developed additions do not remove upstream attribution.
   who keep their rights; each guide names its source page and capture date. Monster placement and
   levels also draw on period player references: Allakhazam, CapnBry's DAoC radar sightings and the
   Uthgard bestiary.
+- New client (0.36c): Godot Engine 4.7.2 with GodotSharp (MIT; Copyright (c) 2014-present Godot
+  Engine contributors, (c) 2007-2014 Juan Linietsky, Ariel Manzur). The engine and its bundled
+  components' notices ship in new-client/tools/godot_net/LICENSE.txt.
+- New client content pipeline: nif.xml from the NifTools project (github.com/niftools/nifxml,
+  GPL-3.0), in source/new-client/pipeline/spec. Real-ESRGAN (xinntao/Real-ESRGAN, BSD 3-Clause)
+  was used to upscale the converted textures 4x; it is not included.
+- The new client's converted zones, models, textures, sounds and interface art are derived from the
+  original DAoC client's files, like the original client itself; they are not authored by this
+  project.
 - Additional launcher/portal snapshots and bundled SDK/native/Python packages:
   retain their own licenses and notices; inclusion is not a blanket relicense.
 

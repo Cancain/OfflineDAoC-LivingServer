@@ -71,7 +71,7 @@ namespace DOL.GS.MonthlyQuest.Albion
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
 				{
-					if (npc.CurrentRegionID == 1 && npc.X == 584592 && npc.Y == 476805)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 584592, 476805))
 					{
 						Kelteen = npc;
 						break;

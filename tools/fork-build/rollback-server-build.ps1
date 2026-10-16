@@ -1,7 +1,7 @@
 # Undoes the most recent fork server build install (docs/RELEASE-PLAN.md).
 #
 #   ROLLBACK.cmd
-#   ROLLBACK.cmd -GameFolder "C:\Games\OfflineDAoC\playable-v0.35"
+#   ROLLBACK.cmd -GameFolder "C:\Games\OfflineDAoC\playable-v0.36b"
 #   ROLLBACK.cmd -DryRun
 #
 # Restores the GameServer.dll/.pdb files and helper scripts the last install replaced, from its

@@ -13,6 +13,22 @@ namespace DOL.Events
 
         public int Count => _chains.Count; // Returns the number of events with registered handlers, not the total number of handlers.
 
+        /// <summary>Every registered handler (memory diagnostics).</summary>
+        public List<DOLEventHandler> AllHandlers()
+        {
+            _lock.EnterReadLock();
+            try
+            {
+                var all = new List<DOLEventHandler>();
+                foreach (DOLEventHandlerChain chain in _chains.Values) all.AddRange(chain.Handlers());
+                return all;
+            }
+            finally
+            {
+                _lock.ExitReadLock();
+            }
+        }
+
         public void AddHandler(DOLEvent e, DOLEventHandler handler)
         {
             _lock.EnterWriteLock();

@@ -3,11 +3,263 @@
 The newest version is first. For the full detail of every earlier update, see
 [docs/history/CHANGELOG-0.3-to-0.32b.md](docs/history/CHANGELOG-0.3-to-0.32b.md).
 
-## 0.36 / 0.36b (not released yet)
+## 0.37 / 0.37b (not released yet)
 
-These changes are made and will be in the 0.36 / 0.36b download. Until then, 0.35 / 0.35b is the latest release.
+Changes made after 0.36 are listed here as they are made, and will be in the 0.37 / 0.37b download. Until then,
+0.36 / 0.36b / 0.36c is the latest release. Nothing has been added yet.
+
+## 0.36 / 0.36b / 0.36c — 2026-10-16
+
+Everything added since 0.35, in one complete download, and a new game client. The overview is in
+[docs/RELEASE-0.36.md](docs/RELEASE-0.36.md); every change is listed below.
+
+**Download and setup**
+- Three editions of the same game on the same server:
+  - **0.36b** includes the Sluaghbinder.
+  - **0.36** has the classic class list only.
+  - **0.36c** is 0.36b or 0.36 with a second, new client added (see below).
+- One small downloader zip per edition: unzip it and double-click the `.cmd` inside. It fetches the game in
+  checked parts, as in 0.35, and continues where it stopped if you run it again.
+- Every install gets its own account on the first ENTER REALM, an empty world for its own bots, default launcher
+  settings and a client settings profile that is new for 0.36. Every keep, relic and battleground keep starts with
+  its original owner and level, and every keep door whole.
+- The progress transfer tool now also imports **0.35 and 0.35b** saves, as well as every earlier version.
+  See [docs/TRANSFER-PROGRESS.md](docs/TRANSFER-PROGRESS.md).
+- Every database and client change listed below is already in the download.
+
+**The new client (0.36c)**
+- A second game client for the same game, built in Godot 4. The zones, buildings, characters, monsters, spell
+  effects, sounds, music and interface are converted from the original client's own files, with textures upscaled
+  4x. It has the 1.65-era interface (quickbars, map and war map, quest journal, group and raid windows, pet window,
+  trainer, merchants, the Realm Exchange), WoW-style movement, rebindable keys and graphics presets.
+- It shares everything with the original client: the same server, account, characters, bots and world. A 0.36c
+  folder has both: **START OFFLINE DAOC.cmd** plays with the original client, **START OFFLINE DAOC - NEW
+  CLIENT.cmd** with the new one. Use one launcher at a time.
+- **DOWNLOAD-AND-PLAY-v0.36c.cmd** asks for 0.36b or 0.36, installs that complete game and then the new client in
+  one go. **ADD-NEW-CLIENT-TO-0.36-OR-0.36b.cmd** adds the new client to an existing 0.36b or 0.36 folder without
+  changing its saves.
+- On a 0.36 game (classic classes only) the new client's character creation offers the classic classes only: the
+  launcher tells it the game's class setting (`--custom-class=off`).
+- The new client's download comes in independent, checked parts: each is unpacked and deleted before the next, so
+  the install never needs twice its size on disk.
+- It needs a graphics card that supports Vulkan or DirectX 12. It does not need the .NET Framework 3.5 feature.
+- Emotes show their effects as in the original client: /bind shows your realm's bindstone rings and plays its sound,
+  and every emote with an effect in the original client's emote table (pray, level up and the rest) shows it.
+- Below 35% health you move slower, as in the original client: your speed is scaled by your health / 35%, never
+  below 10%.
+- Ghostly NPCs (spirit pets and similar) show their skin tone and armour colours under the see-through look.
+- Its source code is in [source/new-client](source/new-client); see [docs/NEW-CLIENT.md](docs/NEW-CLIENT.md).
+
+**Bots and raids**
+- Forced Darkness Falls raids start again for all three realms. A quest monster added to Darkness Falls with the
+  classic quests (Archivist Borath) made the bots' Darkness Falls route check fail, so every entrance was refused.
+  Quest monsters no longer count in that check. If a forced dungeon raid cannot find a route, it now says which
+  entrance failed and why, before any bots are reserved.
+- /raid companions attack the enemy keep door when no defenders are around, instead of standing at it. Before, only
+  the ram crew's leader worked the door; now the other squads join in, and the bodyguard squad helps when you hit
+  the door yourself.
+- Bots find their way to hunting spots that can only be reached the long way around. The server's path search gave
+  up when the way to a far point first leads away from it, so bots dropped the camp ("no safe connected zone seam")
+  or stopped at a dead end. Over 1,600 Hibernian trips failed in one night, most of them around Sheeroe Hills, whose
+  main ground joins the rest of Hibernia only through Bog of Cullen. The server now keeps a map of short, checked
+  paths through each outdoor zone (navmesh\roads.json) and uses it when the direct search fails, and it plans
+  zone-to-zone trips over ground that actually connects.
+- Raids no longer stall at a cramped encounter. When only a spot or two near the target passed the checks
+  (Tuscaran Glacier's griffon ledge had room for 1 of 38 parties), the other parties stayed where they were, the
+  target was skipped untouched, and the raid then waited for "formed parties" at that spot forever: a Tuscaran
+  Glacier raid sat there for eight hours. Parties now share a checked spot when there is no free one, and when no
+  raider reaches the raid's front for three minutes the front moves to where the raid actually stands.
+- Bots reach raid, dragon and keep-siege rally points they used to give up on: points that can only be reached
+  the long way around (now found through the new path map), and rally points checked while the bot was swimming
+  (the check looked for ground at the water's surface and found none). This stopped attackers of relic and keep
+  sieges from ever arriving.
+- The Hibernian dragon raid takes a much shorter way to Cuuldurach (about a third less walking). It no longer
+  marches south through Bog of Cullen and turns back: it crosses into Sheeroe Hills at the only place the Bog's main
+  ground joins it. In Sheeroe Hills it follows the southern valley to the lair instead of cutting through the middle
+  of the zone. The bots' map of short paths through each zone now knows how far each piece really is to walk (two
+  points across a ravine looked close but are a long walk apart), so long walks in other zones are shorter too.
+  Every path still follows the walking map; no shortcuts over ground it does not allow.
+- Darkness Falls raids can fight Princess Nahemah. She stood on a dais that the bots' walking map does not join
+  to the rest of the floor, so raids could neither reach nor see her and skipped her untouched. She now stands
+  on the floor in front of her dais.
+- High Lord Saeor and High Lord Oro in Darkness Falls also stood on daises the walking map does not join to the
+  floor, just out of melee reach from it. Raids skipped Oro untouched and took 40 minutes on Saeor. Both now stand
+  on the floor in front of their daises.
+- Raids gather before the last boss. A Darkness Falls raid reached Legion with only eight raiders at hand and the
+  rest were pulled in a few at a time as they arrived, so it wiped and Legion healed back to full. The raid now
+  waits out of Legion's reach (and an epic dungeon's last boss's) until half of its living raiders are there, then
+  goes in together; after a wipe it gathers again.
+- Keep and relic sieges start when the army arrives together. The army's leader reached the keep alone and the
+  siege began with one attacker there while the rest were still far down the road, and the siege was soon given up
+  as defended. The leader now waits at the siege camp, at most five minutes, until most of the army has caught up.
+- Bots stuck on a small loose piece of the walking map beside the real floor (by the Aegir's Landing teleporter)
+  step onto the floor instead of failing every route; this also happens when they log in there.
+- Bots use town teleporters more reliably. When the side of the teleporter a bot comes from cannot be walked to,
+  it tries the other sides, and remembers the spot that worked. A bot planning a long walk to a teleporter no longer
+  gives up after five minutes while still on its way. After teleporting, a bot no longer heads for the horse it
+  picked before the jump on the other side of the realm.
+- Sieges no longer start with one attacker at the keep. A bot that walked in on its own could open the siege while
+  the army was still far down the road, and the siege was soon given up as defended. A siege now opens when the
+  army's leader arrives with most of the army, or when most of the army that marched stands at the keep.
+- An army no longer waits forever behind a leader that is busy elsewhere (the Castle Excalibur relic army waited
+  45 minutes at Hadrian's Wall while its leader's group sat at a meeting point). If the leader stops leading for
+  30 seconds, the next marcher takes over.
+- Level 50 casters and pet classes that kill from one spot are no longer sent back to their capital as "stuck"
+  every fifteen minutes. A kill counted as progress only when it gave experience, which level 50s no longer get.
+- Bots leave their pets behind at Prince Ba'alorien in Darkness Falls. He kills every pet near him and heals by its
+  health, so raids full of pet classes could never wound him. Pet classes now release their pets and do not summon
+  near him; he is unchanged.
+- A boss left outside its leash range with nobody fighting it now walks home and resets, as it should. Aidon the
+  Archwizard in Hall of the Corrupt stayed out there, immune, for over an hour because raiders stood near him, and
+  the raid to Summoner's Hall could not get past.
+- Bots that log in inside Summoner's Hall (after a raid ended there) walk out through the hall's exit. They found no
+  way out and stood still until they were sent back to their capital fifteen minutes later.
+- Relic sieges give the army two hours to reach the relic keep. The march into the enemy realm took longer than the
+  one hour it had, and the rally failed while the army was still on the road.
+- Battleground armies attack the central keep together. Each realm gathers on its side of the keep and goes in once
+  most of its bots are there; when the attack is spent it gathers again. Before, half of the bots fought in the open
+  field and only a few ever reached the keep at the same time, so gates fell and were repaired for hours and no
+  keep lord was ever attacked.
+- Bot raids pull the last boss of Summoner's Hall, Darkness Falls and the epic dungeons together (see above); this
+  took the Midgard raid through Grand Summoner Govannon on the first try.
+- Bots no longer give up on a town teleporter while walking to it along a winding path, and the server no longer
+  freezes for several seconds to take a memory snapshot (it now does so only when asked).
+- Fewer server-wide slowdowns during raids: when no free spot near a boss could be found for a party, the search ran
+  again on every turn; it now waits half a minute.
+- A boss that stays outside its leash range for a minute and a half walks home and resets even while raiders are
+  fighting it. Princess Nahemah in Darkness Falls fought raiders at the edge of her leash for over twenty minutes,
+  immune the whole time, while the raid tried to draw her back.
+- An army's march leader who is fighting on the way keeps leading. Armies that had to fight their way to a keep
+  lost their leader every minute and stopped to pick a new one.
+- The bosses of the epic dungeons, Summoner's Hall and Darkness Falls no longer heal to full in the middle of a fight.
+  They reset whenever their list of attackers was empty for a moment, which happens in a large raid while the boss is
+  still being hit: Hurionthex in Galladoria went from 31% back to full again and again. They now reset once nobody
+  has fought them for a few seconds, as when a raid wipes or leaves.
+- Soul Reckoner in Caer Sidi can be killed. He takes no damage while any of his souls lives, and the first souls of
+  every spawn were placed outside the world, where they never appeared and could never be killed, so he stayed immune
+  for good. This affected players too.
+- Darkness Falls raids no longer give up on a prince they are still walking to. A prince reached along the long
+  waypoint route inherited the previous prince's waiting time, and Prince Ba'alorien was skipped at full health just
+  as the raid arrived. A raid that is still closing in on its target is never counted as stalled.
+- A siege started by hand (or a relic siege) takes over its realm's army when the realm is still gathering for an
+  automatic siege. A forced relic siege of Dun Dagda got no attackers at all because Midgard's army was mustering for
+  Dun Crauchon.
+- Battleground armies no longer wait to gather for an assault while the central keep's gates are already down. The
+  gates of Dun Abermenai stood broken for an hour at a time while each realm kept gathering, and its lord was never
+  attacked. Bots took a battleground keep (Dun Abermenai, Albion) for the first time on the next run.
+- While a bot raid is inside Darkness Falls, Summoner's Hall, Caer Sidi or Galladoria, the ordinary monsters there
+  take ten minutes to come back. Darkness Falls monsters returned every two to three minutes, so the raid fought the
+  same corridors for forty minutes and never reached Prince Ba'alorien. Bosses keep their own timers, and nothing
+  changes when no raid is inside.
+- A realm's army marching to a siege no longer waits for its groups to meet up first. The army for a relic siege of
+  Dun Dagda spent ninety minutes with its groups gathering at their own meeting points, some still at home.
+- Relic sieges gather their army longer before marching (25 minutes, extended up to twice while the army is short).
+  The Dun Dagda army set out with a third of its strength, arrived with a dozen and was destroyed.
+- Darkness Falls raids gather in front of Legion instead of at a spot on the other side of the dungeon. The meeting
+  point for a far-away final boss was placed wherever the route search gave up, and no raider ever reached it.
+- Raiders who cannot find their way inside the raid's dungeon rejoin the raid instead of being sent home. Raiders
+  arriving at the Darkness Falls entrance were sent back to their capital, rode back, and failed again, for hours.
+- Prince Ba'alorien and Prince Asmoien in Darkness Falls devour one pet every five seconds, the nearest, instead of
+  every pet near them at once, and bots keep their pets away from Asmoien too. Each pet still heals them as before.
+- Soul Reckoner in Caer Sidi takes a quarter of the damage while his souls live, instead of none, and heals less
+  when he kills someone. His souls return every minute during the fight, so a raid could clear them and still never
+  hurt him.
+- With these changes bot raids finished Darkness Falls (Legion defeated by Midgard) and killed Prince Ba'alorien
+  and Soul Reckoner for the first time.
+- Bot status saves no longer pile up duplicate entries in their save queue (it grew by about 40,000 an hour).
+- Hurionthex in Galladoria no longer heals to full each time he changes form. Every form change restored all his
+  health, so raids that had him at 13% saw him at 96% moments later. This affected players too.
+- Epic dungeon raids go for the named encounters and the final boss after their first hour, fighting other monsters
+  only when attacked, and do not chase a boss they already killed when it returns. Caer Sidi's raid kept clearing
+  returning monsters for hours and never reached Apocalypse.
+- Armies marching on a keep or relic keep go around the enemy keeps and towers on the way, and keep well away from
+  the keep where the defenders gather. The leader also waits longer at the target for the rest of the army before
+  the attack begins. The army for Dun Dagda lost 146 bots on the march and arrived with 11.
+- Bots walking a long way to a town teleporter no longer give up while they are still getting closer.
+- Fewer server-wide hitches during Darkness Falls raids. Every raider whose post was not in direct reach re-ran the
+  same large route search on every AI turn (about a second each); the answer is now shared and remembered.
+- A marching army that has not moved for four minutes pushes on for two: the leader stops fighting and walks, and the
+  others only fight back when attacked. Marchers also stop joining fights against enemies they cannot reach. Midgard's
+  army for Dun Dagda fought for over 40 minutes on one ridge in Emain Macha, mostly against Hibernians far below it.
+- Bot rams and trebuchets attack a keep's doors in the right order at keeps with ten or more doors. Doors 10 and 11 of
+  a relic keep were read as doors 0 and 1, so the rams went for an inner door beside the keep while the gate stood and
+  never found a place to set up.
+- A raid started from the launcher ends that realm's automatic raids that have not started yet, so they no longer
+  take the bots it needs. An automatic Summoner's Hall rally held 141 of the 200 bots a forced Caer Sidi raid needed.
+- Raiders who die inside an epic dungeon release at the raid's rally town (for example Fort Gwyntell for Caer Sidi)
+  instead of their capital, and come straight back. Caer Sidi's raid was down to 67 of 300 by the time it reached
+  Bane of Hope.
+- Bots take Caer Sidi's lift between floors in one step. They used to stop halfway up and hang between the floors,
+  cut off from the raid.
+- Epic dungeon raids fight the helpers a boss fight spawns (healers, summoned adds) before the boss itself.
+- Olcasgean's fight in Galladoria now starts when the bot raid reaches the waterfall bridge. The hidden script that
+  starts it (and other hidden encounter scripts like it) only ran while someone stood close to it, and it sits far
+  from the bridge, so the raid waited there for an hour and the fight never began. A bot raid anywhere on the bridge
+  starts it; players still start it from the usual spot.
+- Galladoria's Earthmenders heal only the Corrupt Primal of Earth, not each other. Healing each other, none of the
+  four could ever be brought down.
+- Soul Reckoner in Caer Sidi can be hurt anywhere in his hall and just outside it. Pulled a short way out of the room,
+  he took no damage at all.
+- With these changes bot raids killed Hurionthex in Galladoria for the first time (three times since), started the
+  Olcasgean fight for the first time, finished Tuscaran Glacier twice more, and Midgard's relic army reached Dun Dagda
+  and brought its gate down to 3%.
+- Relic sieges gather their army for longer (up to 85 minutes) while it is short of 120. An army of 98 reached Dun
+  Dagda with about 60, and the relic guards and defenders killed them in four minutes; an army of 135 had brought the
+  gate down to 3%.
+- Caer Sidi's horsemen (Fames, Morbus, Funus) no longer heal to full the moment they are pulled past the edge of
+  their area. They give up the fight and walk back, keeping the damage they have taken. This affected players too.
+- Apocalypse fights a bot raid properly after his flights to the ceiling. He only picked up players again afterwards,
+  so against bots he found nobody to fight and reset to full health.
+- Bot raids shoot down flying monsters within reach of their spells and bows. Galladoria's Corrupt Primal of Air
+  circles high above the floor and never fights back, so bots left it alone, and Olcasgean only wakes when all four
+  primals are dead.
+
+**Server**
+- Fixed a slow memory leak that made long sessions stutter. Every time the server saved something (a bot, an item, a
+  character) it kept the previous save as well, and the one before that, without end. With 6,000 bots the memory in
+  use grew by 250-500 MB an hour, and after many hours the server froze for 2-3 seconds at a time.
+- Dead pets no longer stay in memory. A monster that had fought a pet kept it on its list of enemies until it fought
+  again, so idle monsters held thousands of dead pets (9,111 Theurgist earth pets in one test). A pet now leaves those
+  lists when it is gone.
+- NPCs no longer stay invisible after a teleport. Sometimes, after teleporting with companions, every NPC in a
+  large area around you was invisible until you walked away and came back. The server sends each NPC to the game
+  once, and the game could miss them while it was still loading after the jump. The server now sends everything
+  around you again shortly after each teleport, as the GM command /jump refresh does.
+- The server logs now record its memory use every five minutes and every garbage-collection pause of a quarter
+  second or more, and save a heap snapshot when the memory actually in use grows large, to track down the long
+  freezes in long sessions. (The snapshot used to trigger on the total heap, which is mostly freed memory waiting to
+  be reclaimed; taking it froze the server for about nine seconds for nothing.)
+  Create an empty file named gc-diagnostics.off in runtime\server to turn the detailed sampling and snapshots off.
+
+**Classes**
+- Necromancer bots have their servant use its area debuffs (Shroud of Affliction, Vortex of Anguish and their ranks)
+  on a single enemy too; they were almost never cast. Billowing Death and its ranks, which burst around the servant,
+  are only commanded once the servant stands by the target, instead of from far away where they hit nothing.
+- Necromancer and Bonedancer pets look as they did in 1.65, using models from the original 2003 game client instead
+  of later ones. Necromancer servants: zombies, a Briton undead, a Roman legionnaire and a blue wight, with nothing
+  in their hands; only the abomination (a glowing demon knight) carries a weapon, its red-glowing two-handed sword.
+  Bonedancer commanders: the classic bone dancer commander with one plain Norse weapon and no shield or helm.
+  Minions: grey skeletons with Norse weapons (hammers for guardians, axes for the fighters, a bow and short sword
+  for archers, a staff for casters), no bucklers. Only the look changes; pets fight as before, apart from the melee
+  minions now swinging axes and the debuffers a short sword.
+- The Sluaghbinder's dullahan and zombie defender now swim when they are in water, instead of standing still (0.36b).
+- The Sluaghbinder has realm abilities (0.36b): the usual list of a hybrid melee and pet class (stat increases,
+  Toughness, Purge, Serenity, Wild Arcana, Determination, First Aid, Ignore Pain, Hail of Blows, the Masteries of
+  Arms, Pain and Blocking, the three Rains and Wild Minion), and its own: Crippling Plague. It is instant, with a
+  one-minute reuse: the plague slows an enemy a little at first and more every second until, after 10 seconds, it
+  can hardly move; then it bursts and poisons everyone close by. Curing it in time stops the burst. Its look is
+  borrowed from the Sluaghbinder's plague spells for now.
 
 **Quests**
+- Tainted Magic (Albion) can be finished: its first step, getting the ales, never completed. A search of a
+  player's whole inventory always came back empty, so the server never saw the ale it had just handed over. The
+  same fault made some quests hand the same letter or quest item over again every minute.
+- Commencement (Master Torr) is offered to every class once you have finished his Immediate Resolution. Only three
+  classes could get it before.
+- Named monsters that quests send you to kill come back within five minutes (some took up to 100 minutes, such as
+  Throatripper, Sir Gerenth, Fallen One, Stripe and Zrit-Zrit).
+- You can take an enemy relic with your companion bots: they count toward the attackers needed on the relic pad,
+  and eight are needed now (was sixteen), so you and seven companions are enough.
 - Classic quests now give their item rewards. 940 reward items that were missing are in, so every one of the
   classic quests (1.65 and classic Shrouded Isles) hands out the items it names, including the "choose your
   reward" endings. Stats come from the item pages as they were in 2002-2004 (573 items), a 1.65-era server
@@ -18,16 +270,74 @@ These changes are made and will be in the 0.36 / 0.36b download. Until then, 0.3
   short description.
 - Rewards made for each class now go to each class: Viraniel's belts, Banba's cloaks, the Stoneheart weapons, and
   the Ley Infused and Trustan's belts give you the version made for your class.
+- 13 classic quests can be finished again. Their "bring N items to an NPC" steps were set up as fights against that
+  NPC, and nothing dropped the items, so they stopped there: Fortune of Few, Academy Research, Traveler's Way --
+  Church Aid, Lost Townfolk of Bran Llyr, In the Interest of Plants, Silver Run, Sylvan Shadows, Secret of Nuada's
+  Silver A, Traveler's Way (Midgard), Feathers, Hill Cat Hunt, Hill Cat Hunt -- Savage Version and New Crest. You
+  now hunt the monster the walkthrough names (it drops the item while you are on that step), and the map marker
+  points to its camp, then hand the items in.
+- Fortune of Few: buy the five bronze war mattocks from a weapon merchant (Dougal Heathis in Camelot, or Alburn
+  Hale beside Master Graent) and Master Graent pays you their cost, as in the original quest.
+- Quests with search steps no longer lose their search areas at random when the server starts.
+- Quests give much more experience, especially between levels 20 and 40. Quest experience is now a share of your
+  current level, as it was on the live servers in 2002-2004, set at the high end of what players recorded then: a
+  typical quest pays close to a bubble (about 8-10% of a level), wherever you are within its level range. Quests
+  between 21 and 40 used to pay only 1-3% of their lowest level; they now pay 3 to 6 times more, and more again if
+  you do them above their lowest level. Low-level quests were already close and change little. No quest pays less.
+- Quest NPCs hold a conversation instead of saying everything at once. In 55 classic quests an NPC said every stage
+  of its recorded conversation in one box; Merle the Old in Information is the Key said all four mud hand-ins, the
+  choice of topics and the answer at once. Each NPC now says its lines in the order the period walkthroughs recorded
+  them: a [keyword]'s answer when you click it, the hand-in lines when you hand in, "Did you get me the mud?" when you
+  come back, and a longer speech one part each time you talk to the NPC again. No line was added or removed.
+- The epic quests answer whispers and give their rewards again (many 0.35 reports). The quest scripts looked for
+  their NPC at one exact spot; the classic quest NPCs added in 0.35 stand a few steps away (Brigit in Tir na Nog,
+  Danica and Elizabeth in Mularn), so each script made an invisible-to-you twin, and only the twin listened. The
+  scripts now use the NPC that is there. This also covers the Shrouded Isles, Atlas and battleground quests.
+- Handing in an epic quest item with a full backpack no longer loses the item. Nine epics took it before checking
+  for room for the rewards.
+- Quest steps that ask you to whisper a word now show it as a clickable [word] when you talk to the NPC.
+- If you lose an item a quest step needs, or never got the one a step starts with, the quest gives it to you again.
+- You can now talk to quest NPCs that are monsters of a hostile faction while you are on their step or can take
+  their quest (Tiomoid in Lough Gur, Trefor and Curmie, Shiake, the Shrouded Isles tribe turn-in NPCs; 67 in all).
+  They used to attack you or give you a dirty look. To everyone else they are the same monsters as before.
+- Every classic quest can now be finished from start to finish. Quest monsters that were missing are placed where
+  period sources put them, at their period levels: curmudgeon puggards in Cruachan Gorge (Lost Townfolk of Bran
+  Llyr), and for collection items pictish warriors, shadowhunter she-wolves and Tylwyth Teg huntresses (Pennine
+  Mountains, Hadrian's Wall), frost giants and the ghostly and ghastly invaders (Midgard and Breifine), forest
+  stalkers, lesser zephyrs, white boars, speghouls and billious goo. The turn-in NPCs Asdis and Aserod Ilonus are
+  in, and eight collection items now drop from the monsters their quests name.
+- 28 quest steps whose target only existed as a friendly NPC now give you the fight: the target appears and comes
+  for you at the place the walkthrough gives (for example Gokstad, Fressen, Borwyr the Cursed, Aricoer at the broken
+  tower in Cornwall, the Guardian by the Deamhan Creigs, the two guards in List of Denial). Town guards leave these
+  fights to you. Six targets were misspelled or in the wrong place: Klippa, Broch, Nimh, Arica, Ulfgar and Eibhlin.
+- Quest NPCs have the race and gender their quests describe: Erdola in Connla is a firbolg woman (she was a Celt
+  man), the missing man in Howth is a man, and Cailbyn, Odlran, Tomos, Mystemas, Edmond, Raiaya, Carylina, Norma
+  and Meriach are corrected the same way.
 
 **World**
+- Dying to the guards of a battleground's central keep while it is still unclaimed no longer costs experience or
+  leaves a gravestone. Those guards have no realm, so the death counted as a PvE death; any keep guard's kill now
+  counts as an RvR death, as it already did for a keep held by an enemy realm.
 - Removed the hostile copies of friendly NPCs that 0.35's classic bestiary spawns added: the level 49
   "commander" outside Camelot (on the way to Humberton) that attacked players and bots, and six "innocents"
   in Dodens Gruva. The friendly Commander and the Midgard innocents are unchanged.
+- NPCs no longer show quest notes under their names (such as "<Part of Against the Grain Quest>"). Ten NPCs did:
+  Laridia the Minstrel, Yetta Fletcher and Eowyln Astos in Cotswold, and the Master Visur teleporters. Yetta, Eowyln
+  and Master Visur show their trades again (Arrows Merchant, Dye Merchant, Teleporter).
+- Laridia the Minstrel in Cotswold now stands inside the house next to where she was, instead of outside against
+  its wall.
+
+**Launcher**
+- The note beside "Make Me a GM" on the Options tab now also says that monsters will not attack you while
+  /gmstealth is on.
+- The launcher has a new-client mode for 0.36c: the copy in new-clientuntime starts the new client and runs the
+  game's own server (named in server_root.txt), so both clients use one account, one bot roster and one world. It
+  shows VERSION 0.36c.
 
 ## 0.35 / 0.35b — 2026-10-08
 
 Everything added since 0.34, in one complete download. The overview is in
-[docs/RELEASE-0.35.md](docs/RELEASE-0.35.md); every change is listed below.
+[docs/history/RELEASE-0.35.md](docs/history/RELEASE-0.35.md); every change is listed below.
 
 **Download and setup**
 - One complete download in checked parts, with two editions, as in 0.34:

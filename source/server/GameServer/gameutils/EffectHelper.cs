@@ -142,6 +142,7 @@ namespace DOL.GS
                 case eSpellType.SpeedDecrease:
                 case eSpellType.UnbreakableSpeedDecrease:
                 case eSpellType.PreventFlight:
+                case eSpellType.SluaghbinderCripplingPlague:
                     return eEffect.MovementSpeedDebuff;
                 case eSpellType.MeleeDamageDebuff:
                     return eEffect.MeleeDamageDebuff;
@@ -277,6 +278,7 @@ namespace DOL.GS
                     return eEffect.StunImmunity;
                 case eSpellType.SpeedDecrease:
                 case eSpellType.UnbreakableSpeedDecrease:
+                case eSpellType.SluaghbinderCripplingPlague:
                     return eEffect.SnareImmunity;
                 case eSpellType.Nearsight:
                     return eEffect.NearsightImmunity;

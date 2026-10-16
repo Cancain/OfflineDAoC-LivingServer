@@ -5,7 +5,7 @@ go looking for trouble, and each one writes in its own style. These are the "Soc
 features, alongside [BOT-GUILDS.md](BOT-GUILDS.md).
 
 They affect only **autonomous gamebots**. Companion bots (`/spawn`, `/raid`) and real players keep
-today's behavior. Every part ships **off**. With all of it off, bots behave exactly as in 0.35.
+today's behavior. Every part ships **off**. With all of it off, bots behave exactly as in stock 0.36.
 
 ## 1. Switches
 
@@ -21,7 +21,7 @@ To change them, close the server, launcher and game, then run (Python 3):
 python tools\claude-version\set_bot_social.py                       (show the settings)
 python tools\claude-version\set_bot_social.py --all on --apply      (all three on)
 python tools\claude-version\set_bot_social.py --debates off --apply (one part off)
-python tools\claude-version\set_bot_social.py --all off --apply     (back to 0.35 behavior)
+python tools\claude-version\set_bot_social.py --all off --apply     (back to stock behavior)
 ```
 
 Without `--apply` the script only shows what it would change. With `--apply` it backs up the
@@ -126,7 +126,7 @@ While a scene runs, bots don't start other /faction chatter in that realm.
 
 **Not yet checked in game.** The tests don't show how the realm feels after a few hours of play,
 or how often lines repeat in practice. Things to watch when testing:
-- towns busier or emptier than in 0.35
+- towns busier or emptier than in stock 0.36
 - bots stuck re-drawing goals
 - debates that talk over each other
 - lines that don't fit the moment

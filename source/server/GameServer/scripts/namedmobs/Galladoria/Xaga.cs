@@ -204,7 +204,7 @@ namespace DOL.AI.Brain
         private bool RemoveAdds = false;
         public override void Think()
         {
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 //set state to RETURN TO SPAWN
                 FSM.SetCurrentState(eFSMStateType.RETURN_TO_SPAWN);
@@ -410,7 +410,7 @@ namespace DOL.AI.Brain
                     }
                 }
             }
-            if(!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 Body.Health = Body.MaxHealth;
             }
@@ -618,7 +618,7 @@ namespace DOL.AI.Brain
                     }
                 }
             }
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 Body.Health = Body.MaxHealth;
             }

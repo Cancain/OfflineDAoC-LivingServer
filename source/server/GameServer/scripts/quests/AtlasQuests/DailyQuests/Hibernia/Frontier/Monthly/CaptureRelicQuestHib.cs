@@ -71,7 +71,7 @@ namespace DOL.GS.MonthlyQuest.Hibernia
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
 				{
-					if (npc.CurrentRegionID == 200 && npc.X == 334215 && npc.Y == 421276)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 200, 334215, 421276))
 					{
 						Kelteen = npc;
 						break;

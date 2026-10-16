@@ -50,7 +50,7 @@ namespace DOL.UnitTests
 
         [TestCase(204)]
         [TestCase(206)]
-        public void OpeningOwnerPetWindowCompletesCosmeticEquipmentHandshake(int template)
+        public void OpeningOwnerPetWindowSendsNoEquipmentForAnEmptyHandedServant(int template)
         {
             using var language = new PetTestLanguageScope();
             var owner = (Owner)RuntimeHelpers.GetUninitializedObject(typeof(Owner));
@@ -63,7 +63,8 @@ namespace DOL.UnitTests
             characterClass.Init(owner);
             characterClass.SetControlledBrain(brain);
             var calls = ((PacketRecorder)owner.Packets).Calls;
-            Assert.That(calls, Is.EqualTo(new[] { "SendPetWindow", "SendNPCCreate", "SendLivingEquipmentUpdate" }));
+            // 1.65 (owner 2026-10-13): no private presentation weapons; a servant with nothing shows nothing.
+            Assert.That(calls, Is.EqualTo(new[] { "SendPetWindow", "SendNPCCreate" }));
             Assert.That(pet.Inventory, Is.Null, "Appearance must not add combat equipment");
         }
 
@@ -121,41 +122,23 @@ namespace DOL.UnitTests
         }
 
         [Test]
-        public void HeroFlamesArePresentationOnly()
+        public void AbominationKeepsItsFireProcWithoutAPresentationSword()
         {
             var pet = Pet(206);
-            Assert.That(NecromancerPetAppearance.Equipment(pet).Single().Effect, Is.EqualTo(22));
+            Assert.That(NecromancerPetAppearance.Equipment(pet), Is.Null, "only its own inventory (abomination_old) shows");
             Assert.That(NecromancerPet.HeroFireProcDamage, Is.EqualTo(95));
-            Assert.That(pet.Inventory, Is.Null);
         }
 
-        [TestCase(204, 4822, 0x10)]
-        [TestCase(206, 4808, 0x22)]
-        public void VisualWeaponsDoNotBecomeCombatEquipment(int template, int model, int slots)
+        [TestCase(204)]
+        [TestCase(206)]
+        public void PetsShowOnlyTheirOwnInventory(int template)
         {
             var pet = Pet(template);
-            var before = pet.Inventory;
-            var items = NecromancerPetAppearance.Equipment(pet);
-            Assert.That(items.Any(item => item.Model == model), Is.True);
-            Assert.That(NecromancerPetAppearance.WeaponSlots(pet), Is.EqualTo(slots));
-            ushort weapon = 0, defense = 0;
-            NecromancerPetAppearance.CombatModels(pet, null, 10, ref weapon, ref defense);
-            Assert.That(weapon, Is.EqualTo(model));
-            Assert.That(defense, Is.Zero);
-            Assert.That(pet.Inventory, Is.SameAs(before));
-            Assert.That(pet.ActiveWeapon, Is.Null);
-        }
-
-        [Test]
-        public void ShieldAppearanceOnlyDecoratesAnExistingBlockResult()
-        {
-            var pet = Pet(204);
-            ushort weapon = 7, defense = 0;
-            NecromancerPetAppearance.CombatModels(null, pet, 10, ref weapon, ref defense);
-            Assert.That(defense, Is.Zero);
-            NecromancerPetAppearance.CombatModels(null, pet, 2, ref weapon, ref defense);
-            Assert.That(defense, Is.EqualTo(4823));
-            Assert.That(weapon, Is.EqualTo(7));
+            Assert.That(NecromancerPetAppearance.HasEquipment(pet), Is.False);
+            Assert.That(NecromancerPetAppearance.WeaponSlots(pet), Is.EqualTo(pet.VisibleActiveWeaponSlots));
+            ushort weapon = 7, defense = 8;
+            NecromancerPetAppearance.CombatModels(pet, pet, 2, ref weapon, ref defense);
+            Assert.That((weapon, defense), Is.EqualTo(((ushort)7, (ushort)8)));
         }
 
         [Test]

@@ -74,7 +74,7 @@ namespace DOL.GS.MonthlyQuest.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 181 && npc.X == 422864 && npc.Y == 444362)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 181, 422864, 444362))
 					{
 						Anthony = npc;
 						break;

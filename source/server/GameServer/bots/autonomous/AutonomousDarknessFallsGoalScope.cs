@@ -62,12 +62,17 @@ public static class AutonomousDarknessFallsGoalScope
         Spawn = (int[])row.Spawn.Clone(), Reasons = (string[])row.Reasons.Clone()
     }).ToArray() ?? [];
 
+    public const string ClassicQuestPackage = "ClassicQuest";
+
     public static bool TryGetOrdinaryCombatRows(IEnumerable<DbMob> databaseRows, out DbMob[] ordinary)
     {
         ordinary = [];
         if (databaseRows == null || Data.Value == null) return false;
+        // Classic quest spawns are not grind targets (gamebots leave them alone): the quest world's Archivist Borath
+        // (2026-10-07) made the snapshot count fail, which shut every Darkness Falls route and raid (0.35 known issue).
         DbMob[] combat = databaseRows.Where(mob => mob != null &&
-            mob.Region == AutonomousDarknessFallsPolicy.RegionId && mob.Realm == 0 && mob.Level > 0).ToArray();
+            mob.Region == AutonomousDarknessFallsPolicy.RegionId && mob.Realm == 0 && mob.Level > 0 &&
+            !string.Equals(mob.PackageID, ClassicQuestPackage, StringComparison.Ordinal)).ToArray();
         if (combat.Length != TotalCombatRows ||
             combat.Any(mob => string.IsNullOrWhiteSpace(mob.ObjectId)) ||
             combat.Select(mob => mob.ObjectId).Distinct(StringComparer.Ordinal).Count() != TotalCombatRows ||

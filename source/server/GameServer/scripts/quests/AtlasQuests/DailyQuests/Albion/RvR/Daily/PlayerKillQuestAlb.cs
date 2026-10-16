@@ -71,7 +71,7 @@ namespace DOL.GS.DailyQuest.Albion
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
 				{
-					if (npc.CurrentRegionID == 1 && npc.X == 583867 && npc.Y == 477355)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 583867, 477355))
 					{
 						ReyAlb = npc;
 						break;

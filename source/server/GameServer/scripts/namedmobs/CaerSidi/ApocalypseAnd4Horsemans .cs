@@ -523,7 +523,7 @@ namespace DOL.AI.Brain
         {
             if (Body is Fames challenge)
                 challenge.TryAcceptBotChallenge();
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 //set state to RETURN TO SPAWN
                 FSM.SetCurrentState(eFSMStateType.RETURN_TO_SPAWN);
@@ -532,8 +532,10 @@ namespace DOL.AI.Brain
                 StartedFames = false;
             }
             if (Body.IsOutOfTetherRange)
-            {
-                Body.Health = Body.MaxHealth;
+            {
+                // Mechanic change (2026-10-16): out of its tether the horseman drops its fight and walks home but keeps its
+                // health; it heals only when the fight is really over. Every excursion past the tether used to restore
+                // it to full at once, so a raid that dragged it a step too far started over.
                 ClearAggroList();
             }
             else if (Body.InCombatInLast(30 * 1000) == false && this.Body.InCombatInLast(35 * 1000))
@@ -739,7 +741,7 @@ namespace DOL.AI.Brain
         private bool RemoveAdds = false;
         public override void Think()
         {
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 //set state to RETURN TO SPAWN
                 FSM.SetCurrentState(eFSMStateType.RETURN_TO_SPAWN);
@@ -1535,7 +1537,7 @@ namespace DOL.AI.Brain
         }
         public override void Think()
         {
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 //set state to RETURN TO SPAWN
                 FSM.SetCurrentState(eFSMStateType.RETURN_TO_SPAWN);
@@ -1563,8 +1565,10 @@ namespace DOL.AI.Brain
                 }
             }
             if (Body.IsOutOfTetherRange)
-            {
-                Body.Health = Body.MaxHealth;
+            {
+                // Mechanic change (2026-10-16): out of its tether the horseman drops its fight and walks home but keeps its
+                // health; it heals only when the fight is really over. Every excursion past the tether used to restore
+                // it to full at once, so a raid that dragged it a step too far started over.
                 ClearAggroList();
                 BafMobs3 = false;
             }
@@ -2004,7 +2008,7 @@ namespace DOL.AI.Brain
         public static bool StartedFunus = false;
         public override void Think()
         {
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 //set state to RETURN TO SPAWN
                 FSM.SetCurrentState(eFSMStateType.RETURN_TO_SPAWN);
@@ -2013,8 +2017,10 @@ namespace DOL.AI.Brain
                 BafMobs4 = false;
             }
             if (Body.IsOutOfTetherRange)
-            {
-                Body.Health = Body.MaxHealth;
+            {
+                // Mechanic change (2026-10-16): out of its tether the horseman drops its fight and walks home but keeps its
+                // health; it heals only when the fight is really over. Every excursion past the tether used to restore
+                // it to full at once, so a raid that dragged it a step too far started over.
                 ClearAggroList();
             }
             else if (Body.InCombatInLast(30 * 1000) == false && this.Body.InCombatInLast(35 * 1000))
@@ -2327,10 +2333,12 @@ namespace DOL.AI.Brain
                 }
                 if (apoc_fly_phase == true)//here cast rain of fire from celling for 30s
                 {
-                    foreach(GamePlayer player in Body.GetPlayersInRadius(1800))
+                    // Bot raids too (2026-10-16): the fly phase clears his aggro list and refilled it from players only, so a
+                    // bot raid left him with nobody to fight after it and his 60-second reset healed him to full.
+                    foreach (GameLiving actor in DOL.GS.EpicEncounterActors.Nearby(Body, 1800))
                     {
-                        if (player != null && player.IsAlive && player.Client.Account.PrivLevel == 1)
-                            AggroList.TryAdd(player, new(200));
+                        if (actor != null && actor.IsAlive)
+                            AggroList.TryAdd(actor, new(200));
                     }
                     Body.SetGroundTarget(Body.X, Body.Y, Body.Z - 750);
                     if (!Body.IsCasting)

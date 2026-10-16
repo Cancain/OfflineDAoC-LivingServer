@@ -72,7 +72,7 @@ namespace DOL.GS.Quests.Hibernia
 
             if (npcs.Length > 0)
                 foreach (GameNPC npc in npcs)
-                    if (npc.CurrentRegionID == 201 && npc.X == 31401 && npc.Y == 30076)
+                    if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 201, 31401, 30076))
                     {
                         Theresa = npc;
                         break;
@@ -104,7 +104,7 @@ namespace DOL.GS.Quests.Hibernia
 
             if (npcs.Length > 0)
                 foreach (GameNPC npc in npcs)
-                    if (npc.CurrentRegionID == 200 && npc.X == 328521 && npc.Y == 518534)
+                    if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 200, 328521, 518534))
                     {
                         Karl = npc;
                         break;

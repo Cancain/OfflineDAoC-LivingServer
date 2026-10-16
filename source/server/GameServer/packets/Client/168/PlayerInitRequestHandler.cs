@@ -44,7 +44,11 @@ namespace DOL.GS.PacketHandler.Client.v168
                 checkInstanceLogin = true;
             }
             else
+            {
                 player.Notify(GamePlayerEvent.RegionChanged, player);
+                // Companions arrive with the player here; NPCs the loading client misses are resent (GamePlayer).
+                player.ScheduleWorldRefreshAfterTeleport();
+            }
 
             if (player.TempProperties.GetProperty<bool>(GamePlayer.RELEASING_PROPERTY))
             {

@@ -5972,7 +5972,10 @@ namespace DOL.GS
                     xpLossPercent = MAX_LEVEL - 40;
                 }
 
-                if (killingBlowByEnemyRealm || InCombatPvP || killer?.Realm == Realm)
+                // A keep guard's kill is an RvR death even when the keep has no realm yet: a battleground's central keep
+                // starts unclaimed with realm-less guards, and dying to them cost experience and left a gravestone
+                // (0.35 known issue, fixed 2026-10-11).
+                if (killingBlowByEnemyRealm || InCombatPvP || killer?.Realm == Realm || killer is GameKeepGuard)
                 {
                     LastDeathPvP = true;
                     int conPenalty = 0;
@@ -7955,6 +7958,7 @@ namespace DOL.GS
             }
 
             CurrentSpeed = 0;
+            bool farJump = !changingRegion && Math.Abs(X - x) + Math.Abs(Y - y) > WorldRefreshJumpDistance;
             X = x;
             Y = y;
             Z = z;
@@ -7975,6 +7979,8 @@ namespace DOL.GS
 
             Out.SendPlayerJump(false);
             UpdateEquipmentAppearance();
+            if (farJump)
+                ScheduleWorldRefreshAfterTeleport();
 
             if (IsUnderwater)
                 IsDiving = true;
@@ -8003,6 +8009,37 @@ namespace DOL.GS
 
             pet.MoveInRegion(CurrentRegionID, point.X, point.Y, Z + 10, (ushort) ((Heading + 2048) % 4096), false);
             return true;
+        }
+
+        /// <summary>A same-region MoveTo farther than this (x + y distance) refreshes the world view afterwards.</summary>
+        public const int WorldRefreshJumpDistance = 1000;
+        /// <summary>When the refreshes run after a teleport or region change (ms): once the client has usually finished
+        /// loading, and once more for a slow load.</summary>
+        public static readonly int[] WorldRefreshDelays = [1500, 5000];
+        private ECSGameTimer _worldRefreshTimer;
+
+        /// <summary>
+        /// Resends every NPC, object, door and house around the player shortly after a teleport, as /jump refresh does.
+        /// The server sends each nearby NPC once and then only updates it; an NPC create the client drops while it is
+        /// still loading the jump (same-region teleports keep the client "playing", so updates keep flowing) is never
+        /// sent again, and every NPC in sight stays invisible until the player walks out of range and back. Owner
+        /// 2026-10-13: after teleporting with companions (whose own moves add a burst of packets at that moment), all
+        /// NPCs in a large radius sometimes went invisible.
+        /// </summary>
+        public void ScheduleWorldRefreshAfterTeleport()
+        {
+            _worldRefreshTimer?.Stop();
+            int step = 0;
+            _worldRefreshTimer = new ECSGameTimer(this, timer =>
+            {
+                if (ObjectState == eObjectState.Active && Client?.ClientState is GameClient.eClientState.Playing)
+                    PlayerObjectCache.ClearLocked();
+                step++;
+                if (step < WorldRefreshDelays.Length)
+                    return WorldRefreshDelays[step] - WorldRefreshDelays[step - 1];
+                _worldRefreshTimer = null;
+                return 0;
+            }, WorldRefreshDelays[0]);
         }
 
         public virtual bool MoveToBind()
@@ -13615,6 +13652,15 @@ namespace DOL.GS
         public readonly Lock ItemUpdateCacheLock = new();
         public readonly Lock DoorUpdateCacheLock = new();
         public readonly Lock HouseUpdateCacheLock = new();
+
+        /// <summary><see cref="Clear"/> under the cache locks, for a refresh while the world update may be running.</summary>
+        public void ClearLocked()
+        {
+            lock (NpcUpdateCacheLock) { NpcUpdateCache.Clear(); NpcInRangeCache.Clear(); }
+            lock (ItemUpdateCacheLock) { ItemUpdateCache.Clear(); ItemInRangeCache.Clear(); }
+            lock (DoorUpdateCacheLock) { DoorUpdateCache.Clear(); DoorInRangeCache.Clear(); }
+            lock (HouseUpdateCacheLock) { HouseUpdateCache.Clear(); HouseInRangeCache.Clear(); }
+        }
 
         public void Clear()
         {

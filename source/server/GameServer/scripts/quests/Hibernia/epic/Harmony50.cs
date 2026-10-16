@@ -116,7 +116,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 200 && npc.X == 343442 && npc.Y == 706235)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 200, 343442, 706235))
 					{
 						Revelin = npc;
 						break;
@@ -151,7 +151,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 200 && npc.X == 479042 && npc.Y == 508134)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 200, 479042, 508134))
 					{
 						Cailean = npc as Cailean;
 						break;
@@ -2139,7 +2139,6 @@ namespace DOL.GS.Quests.Hibernia
 						case "fulfill":
 							if (quest.Step == 2)
 							{
-								RemoveItem(player, Horn);
 								if (player.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack,
 									    eInventorySlot.LastBackpack))
 								{
