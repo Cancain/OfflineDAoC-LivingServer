@@ -48,7 +48,7 @@ Social Expansion makes them feel like a community, not just a population.
   bots earning their armor and the other owner rules are untouched.
 - **Install and undo in one click.** The installer checks that your game is the right version,
   backs up every file it replaces, and verifies each copy. `ROLLBACK.cmd` puts the originals back.
-- **It's tested.** 2,849 automated server tests pass on the 0.36 build. In-game testing is underway.
+- **It's tested.** 2,849 automated server tests pass on the 0.36 build. In-game testing comes next.
 
 ## How to get it (once released)
 
