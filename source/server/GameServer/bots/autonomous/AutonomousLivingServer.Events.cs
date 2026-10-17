@@ -325,7 +325,7 @@ public static partial class AutonomousLivingServer
     private static void RecordKill(GameBot bot, GameLiving killer)
     {
         string place = FrontierPlaceOf(bot);
-        // Each bot keeps at most 8 killers: a new one replaces its oldest one-kill row (review 2026-10-16).
+        // Each bot keeps at most 8 killers: a new one replaces the row with the fewest kills, oldest first (review 2026-10-16).
         if (!Nemeses.TryGet((bot.DatabaseID, killer.Name), out _))
         {
             OfflineBotNemesisRecord[] mine = Nemeses.Where(row => row.BotId == bot.DatabaseID);

@@ -344,7 +344,6 @@ public static class AutonomousBotChatCoordinator
         }
     }
 
-    /// <summary>A corpus reply for the line's intent in the responder's voice, else the old reply.</summary>
     /// <summary>A reply by name from a bot that remembers the player (Living Server memory), else the fallback.</summary>
     private static string KnownOr(GameBot responder, GamePlayer player, string incoming, Func<string> fallback) =>
         AutonomousLivingServer.MemoryOn && Random.Shared.NextDouble() < 0.6 && AutonomousLivingServer.TryKnownReply(responder, player,
@@ -352,6 +351,7 @@ public static class AutonomousBotChatCoordinator
             ? known
             : fallback();
 
+    /// <summary>A corpus reply for the line's intent in the responder's voice (by name when it remembers the player), else the old reply.</summary>
     private static string VoicedReply(GameBot responder, string incoming, Func<string> fallback, GamePlayer player = null)
     {
         if (!AutonomousBotVoices.Enabled && !AutonomousLivingServer.MemoryOn)

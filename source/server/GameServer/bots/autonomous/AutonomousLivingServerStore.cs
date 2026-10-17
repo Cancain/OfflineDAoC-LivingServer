@@ -9,10 +9,18 @@ using DOL.Logging;
 
 namespace DOL.GS;
 
+/// <summary>A row that can be copied for a detached save (the copy is written; the live row keeps changing).</summary>
+public interface ILivingServerRow
+{
+    DataObject CopyForSave();
+}
+
 /// <summary>What an autonomous gamebot remembers about one character it met (Living Server, docs/LIVING-SERVER.md).</summary>
 [DataTable(TableName = "offline_bot_memory")]
-public sealed class OfflineBotMemoryRecord : DataObject
+public sealed class OfflineBotMemoryRecord : DataObject, ILivingServerRow
 {
+    public DataObject CopyForSave() => (OfflineBotMemoryRecord)MemberwiseClone();
+
     [DataElement(AllowDbNull = false, Index = true)] public long BotId { get; set; }
     [DataElement(AllowDbNull = false, Varchar = 64)] public string PlayerName { get; set; } = string.Empty;
     [DataElement(AllowDbNull = false, Varchar = 32)] public string PlayerClass { get; set; } = string.Empty;
@@ -28,8 +36,10 @@ public sealed class OfflineBotMemoryRecord : DataObject
 
 /// <summary>An enemy who killed an autonomous gamebot, and how often (Living Server nemesis; the Herald's Most Wanted).</summary>
 [DataTable(TableName = "offline_bot_nemesis")]
-public sealed class OfflineBotNemesisRecord : DataObject
+public sealed class OfflineBotNemesisRecord : DataObject, ILivingServerRow
 {
+    public DataObject CopyForSave() => (OfflineBotNemesisRecord)MemberwiseClone();
+
     [DataElement(AllowDbNull = false, Index = true)] public long BotId { get; set; }
     [DataElement(AllowDbNull = false, Varchar = 64)] public string KillerName { get; set; } = string.Empty;
     [DataElement(AllowDbNull = false)] public int KillerRealm { get; set; }
@@ -44,8 +54,10 @@ public sealed class OfflineBotNemesisRecord : DataObject
 
 /// <summary>A server first (first to level 50, first of a class to 50, first to a realm rank).</summary>
 [DataTable(TableName = "offline_server_firsts")]
-public sealed class OfflineServerFirstRecord : DataObject
+public sealed class OfflineServerFirstRecord : DataObject, ILivingServerRow
 {
+    public DataObject CopyForSave() => (OfflineServerFirstRecord)MemberwiseClone();
+
     [DataElement(AllowDbNull = false, Unique = true, Varchar = 64)] public string Title { get; set; } = string.Empty;
     [DataElement(AllowDbNull = false)] public int Realm { get; set; }
     [DataElement(AllowDbNull = false, Varchar = 64)] public string Name { get; set; } = string.Empty;
@@ -60,7 +72,7 @@ public sealed class OfflineServerFirstRecord : DataObject
 /// under the shared database write lock (the pattern of the bot guild memberships). A failed batch
 /// stays queued and is tried again; nothing here writes on the game loop.
 /// </summary>
-public sealed class LivingServerTable<TKey, TRow> where TRow : DataObject
+public sealed class LivingServerTable<TKey, TRow> where TRow : DataObject, ILivingServerRow
 {
     private static readonly Logger Log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
     private const int WriteBatch = 16;
@@ -166,33 +178,31 @@ public sealed class LivingServerTable<TKey, TRow> where TRow : DataObject
         }
         try
         {
-            KeyValuePair<TKey, TRow>[] writes;
+            // Copies are written, not the live rows, so a change made while a save runs is never marked as
+            // saved: the live row only takes the copy's state as its baseline (review 2026-10-16).
+            (TKey Key, TRow Live, TRow Copy)[] writes;
             TRow[] deletes;
             lock (_sync)
             {
                 if (_pending.Count == 0 && _deletes.Count == 0)
                     return;
-                writes = _pending.ToArray();
+                writes = _pending.Select(pair => (pair.Key, pair.Value, (TRow)pair.Value.CopyForSave())).ToArray();
+                foreach (var write in writes)
+                    write.Copy.Dirty = true;
                 deletes = _deletes.ToArray();
                 _pending.Clear();
                 _deletes.Clear();
             }
             var failedDeletes = new List<TRow>();
-            var failed = new List<KeyValuePair<TKey, TRow>>();
+            var failed = new List<(TKey Key, TRow Live, TRow Copy)>();
             lock (AutonomousBotStatusPersistence.DatabaseWriteLock)
             {
-                foreach (var chunk in writes.Where(pair => !pair.Value.IsPersisted).Chunk(WriteBatch))
-                    if (!TryWrite(() => _database().AddObject(chunk.Select(pair => (DataObject)pair.Value))))
-                        failed.AddRange(chunk.Where(pair => !pair.Value.IsPersisted));
-                foreach (var chunk in writes.Where(pair => pair.Value.IsPersisted).Chunk(WriteBatch))
-                {
-                    // SaveObject skips clean rows, and a save running while a row changes marks it clean
-                    // afterwards: every queued row is written as changed (review 2026-10-16).
-                    foreach (var pair in chunk)
-                        pair.Value.Dirty = true;
-                    if (!TryWrite(() => _database().SaveObject(chunk.Select(pair => (DataObject)pair.Value))))
-                        failed.AddRange(chunk);
-                }
+                foreach (var chunk in writes.Where(write => !write.Copy.IsPersisted).Chunk(WriteBatch))
+                    if (!TryWrite(() => _database().AddObject(chunk.Select(write => (DataObject)write.Copy))))
+                        failed.AddRange(chunk.Where(write => !write.Copy.IsPersisted));
+                foreach (var chunk in writes.Where(write => write.Copy.IsPersisted).Chunk(WriteBatch))
+                    if (!TryWrite(() => _database().SaveObject(chunk.Select(write => (DataObject)write.Copy))))
+                        failed.AddRange(chunk.Where(write => write.Copy.Dirty));
                 foreach (var chunk in deletes.Where(row => row.IsPersisted).Chunk(WriteBatch))
                 {
                     foreach (TRow row in chunk)
@@ -200,20 +210,25 @@ public sealed class LivingServerTable<TKey, TRow> where TRow : DataObject
                     if (!TryWrite(() => _database().DeleteObject(chunk.Cast<DataObject>())))
                         failedDeletes.AddRange(chunk.Where(row => row.IsPersisted));
                 }
-                // A row removed while its first insert was being written is deleted on the next flush.
-                failedDeletes.AddRange(deletes.Where(row => !row.IsPersisted && writes.Any(pair => ReferenceEquals(pair.Value, row))));
             }
-            if (failedDeletes.Count > 0)
-                lock (_sync)
-                    _deletes.AddRange(failedDeletes);
-            if (failed.Count > 0)
+            lock (_sync)
             {
-                lock (_sync)
-                    foreach (var pair in failed)
-                        if (_rows.TryGetValue(pair.Key, out TRow current) && ReferenceEquals(current, pair.Value))
-                            _pending.TryAdd(pair.Key, pair.Value);
-                Log.Warn($"Living Server: {failed.Count} {_name} write(s) failed; retrying");
+                foreach (var write in writes)
+                {
+                    if (!write.Copy.IsPersisted || write.Copy.Dirty)
+                        continue;
+                    write.Live.IsPersisted = true;
+                    write.Live.AcceptPersistenceBaseline(write.Copy);
+                }
+                // (A row removed while its first insert runs is queued in _deletes by RemoveWhere and is
+                // persisted above, so the next flush deletes it.)
+                _deletes.AddRange(failedDeletes);
+                foreach (var write in failed)
+                    if (_rows.TryGetValue(write.Key, out TRow current) && ReferenceEquals(current, write.Live))
+                        _pending.TryAdd(write.Key, write.Live);
             }
+            if (failed.Count > 0 || failedDeletes.Count > 0)
+                Log.Warn($"Living Server: {failed.Count} {_name} write(s) and {failedDeletes.Count} delete(s) to retry");
         }
         finally
         {

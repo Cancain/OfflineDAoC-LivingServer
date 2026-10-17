@@ -171,6 +171,9 @@ public static class AutonomousBotSchedule
         {
             if (!BreakUntil.IsEmpty)
                 BreakUntil.Clear();
+            if (!OverstaySince.IsEmpty)
+                OverstaySince.Clear();
+            RecentOverstays = 0;
             if (!Frozen.IsEmpty)
                 foreach (long id in Frozen.Keys.ToArray())
                     Unfreeze(id, false);
@@ -192,16 +195,32 @@ public static class AutonomousBotSchedule
             return;
         _nextLogoutScan = now + 5_000;
         int leaving = 0;
+        int recentOverstays = 0;
+        var overstaying = new HashSet<long>();
         foreach (GameBot bot in AutonomousBotRegistry.Snapshot())
         {
-            if (leaving >= MaxLogoutsPerScan)
-                break;
-            if (LeavingNow.ContainsKey(bot.DatabaseID) || WantsOnline(bot.PersistentRecord, nowUtc) || !CanLogOut(bot))
+            if (WantsOnline(bot.PersistentRecord, nowUtc))
+                continue;
+            overstaying.Add(bot.DatabaseID);
+            DateTime since = OverstaySince.GetOrAdd(bot.DatabaseID, nowUtc);
+            if (nowUtc - since < OverstayGrace)
+                recentOverstays++;
+            if (leaving >= MaxLogoutsPerScan || LeavingNow.ContainsKey(bot.DatabaseID) || !CanLogOut(bot))
                 continue;
             leaving++;
             LogOut(bot, OnBreak(bot.DatabaseID, nowUtc) ? "brb" : "logoff");
         }
+        foreach (long gone in OverstaySince.Keys.Where(id => !overstaying.Contains(id)).ToArray())
+            OverstaySince.TryRemove(gone, out _);
+        RecentOverstays = recentOverstays;
     }
+
+    // Scheduled-off bots still online because they're busy (often in a bot group). For 15 minutes they
+    // count against the scheduled number, so the total doesn't run far past it; after that they no longer
+    // hold back the bots whose turn it is (review 2026-10-16).
+    private static readonly ConcurrentDictionary<long, DateTime> OverstaySince = new();
+    public static readonly TimeSpan OverstayGrace = TimeSpan.FromMinutes(15);
+    public static volatile int RecentOverstays;
 
     private static void LogOut(GameBot bot, string topic)
     {
@@ -339,8 +358,8 @@ public static class AutonomousBotSchedule
             if (bot.ObjectState != GameObject.eObjectState.Active || !bot.IsAlive)
                 Unfreeze(entry.Key, false);
             // A fight anywhere in its group, or the group breaking up, "reconnects" it at once (review 2026-10-16).
-            else if (entry.Value.Until <= now || bot.InCombat || bot.Group == null ||
-                     bot.Group.GetMembersInTheGroup().Any(member => member.IsAlive && member.InCombat))
+            else if (entry.Value.Until <= now || bot.InCombat || bot.Group is not { } group ||
+                     group.GetMembersInTheGroup().Any(member => member.IsAlive && member.InCombat))
                 Unfreeze(entry.Key, true);
         }
     }

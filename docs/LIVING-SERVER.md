@@ -92,11 +92,12 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
 - **Bots rez you:**
   - An autonomous gamebot that can rez, and isn't in your group, rezzes you when you lie dead
     within 1,500 units of it.
-  - You get the normal accept/decline box. If you decline, no bot offers again for 90 seconds.
+  - You get the normal accept/decline box. Once a box from a bot closes, no bot offers again for
+    about 90 seconds.
   - It never rezzes during a fight (its own or its group's), or with hostile monsters within about
     700 units of you. Only one bot works on a corpse at a time.
   - A bot on a siege job, holding a siege position, carrying a relic or in an RvR event force
-    doesn't come. A bot that can't reach you within 20 seconds gives up.
+    doesn't come. A bot that can't reach you within 20 seconds gives up on you for 2 minutes.
   - Groupmates already rezzed you before; that is unchanged.
 
 ### Frontier alarms (`bot_living_alarms`)
@@ -120,7 +121,7 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
 - **Revenge:** when the bot later kills that enemy, it may gloat in `/faction`.
 - **Herald:** the Camelot Herald's **Most Wanted** lists the enemies with the most recorded kills.
 - **Size:** each bot remembers at most 8 killers (a new one replaces its least-deadly one), and
-  one-kill rows older than a week are forgotten at server start.
+  with this switch on, one-kill rows older than a week are forgotten at server start.
 
 ### Bot schedule (`bot_schedule_mode`)
 - `off` (default): every bot stays online, as before.
@@ -142,8 +143,10 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
   near you.
 - Scheduled-off bots aren't logged back in until their schedule says so. When they return, some
   say hello. Nobody greets during the first 10 minutes after the server starts.
-- Busy scheduled-off bots still count: the total online stays within 10% of the schedule's number
-  while they finish.
+- Busy scheduled-off bots (often in a bot group) stay online until they're free. For their first
+  15 minutes they count against the schedule, so logins wait for them (with 10% slack); after that
+  they no longer hold back the bots whose turn it is, so the total can run above the schedule's
+  number for a while.
 
 ### Breaks and linkdeads (`bot_living_breaks`)
 - **Breaks:** an idle bot (the same rules as logging out) now and then says "brb" and logs off for

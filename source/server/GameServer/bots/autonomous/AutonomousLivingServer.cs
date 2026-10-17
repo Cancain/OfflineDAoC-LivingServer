@@ -66,7 +66,8 @@ public static partial class AutonomousLivingServer
         if (FirstsOn)
             Load("server firsts reached before records began", SeedFirsts);
         // One-kill nemesis rows older than a week are forgotten, so the table stays small (review 2026-10-16).
-        Load("old nemesis rows", () => Nemeses.RemoveWhere(row => row.Kills <= 1 && IsOlderThan(row.LastUtc, TimeSpan.FromDays(7))));
+        if (NemesisOn)
+            Load("old nemesis rows", () => Nemeses.RemoveWhere(row => row.Kills <= 1 && IsOlderThan(row.LastUtc, TimeSpan.FromDays(7))));
         GameEventMgr.AddHandler(GamePlayerEvent.LevelUp, new DOLEventHandler(OnPlayerLevelUp));
         GameEventMgr.AddHandler(GamePlayerEvent.RRLevelUp, new DOLEventHandler(OnPlayerRealmRankUp));
         _flushTimer = new Timer(_ => FlushAll(), null, FlushIntervalMs, FlushIntervalMs);
@@ -93,9 +94,10 @@ public static partial class AutonomousLivingServer
         Firsts.Flush(wait);
     }
 
+    /// <summary>True only for a readable time older than the age (an unreadable time is kept).</summary>
     internal static bool IsOlderThan(string utc, TimeSpan age) =>
-        !DateTime.TryParse(utc, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind,
-            out DateTime when) || DateTime.UtcNow - when.ToUniversalTime() > age;
+        DateTime.TryParse(utc, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind,
+            out DateTime when) && DateTime.UtcNow - when.ToUniversalTime() > age;
 
     private static void Load(string what, Action load)
     {

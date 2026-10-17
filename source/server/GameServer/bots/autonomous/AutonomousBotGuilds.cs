@@ -29,6 +29,9 @@ public sealed class OfflineBotGuildRecord : DataObject
 [DataTable(TableName = "offline_bot_guild_members")]
 public sealed class OfflineBotGuildMemberRecord : DataObject
 {
+    /// <summary>A copy for a detached save: the copy is written while the live row may keep changing.</summary>
+    public OfflineBotGuildMemberRecord CopyForSave() => (OfflineBotGuildMemberRecord)MemberwiseClone();
+
     [PrimaryKey] public long BotId { get; set; }
     [DataElement(AllowDbNull = false, Index = true, Varchar = 64)] public string GuildId { get; set; } = string.Empty;
     [DataElement(AllowDbNull = false)] public int RankLevel { get; set; } = AutonomousBotGuildPlanner.LowestRank;
@@ -131,11 +134,15 @@ public static class AutonomousBotGuilds
         }
         try
         {
-            OfflineBotGuildMemberRecord[] writes;
+            // Copies are written, not the live rows, so a rank change made while a save runs is never marked
+            // as saved: the live row only takes the copy's state as its baseline (review 2026-10-16).
+            (OfflineBotGuildMemberRecord Live, OfflineBotGuildMemberRecord Copy)[] writes;
             OfflineBotGuildMemberRecord[] deletes;
             lock (Sync)
             {
-                writes = PendingWrites.Values.ToArray();
+                writes = PendingWrites.Values.Select(row => (row, row.CopyForSave())).ToArray();
+                foreach (var write in writes)
+                    write.Item2.Dirty = true;
                 deletes = PendingDeletes.ToArray();
                 PendingWrites.Clear();
                 PendingDeletes.Clear();
@@ -146,35 +153,33 @@ public static class AutonomousBotGuilds
             var failedDeletes = new List<OfflineBotGuildMemberRecord>();
             lock (AutonomousBotStatusPersistence.DatabaseWriteLock)
             {
-                foreach (OfflineBotGuildMemberRecord[] chunk in writes.Where(row => !row.IsPersisted).Chunk(WriteBatch))
-                    if (!TryWrite(() => GameServer.Database.AddObject(chunk.Cast<DataObject>())))
-                        failedWrites.AddRange(chunk.Where(row => !row.IsPersisted));
-                foreach (OfflineBotGuildMemberRecord[] chunk in writes.Where(row => row.IsPersisted).Chunk(WriteBatch))
-                {
-                    // SaveObject skips clean rows; a change made while an earlier save ran must still be written.
-                    foreach (OfflineBotGuildMemberRecord row in chunk)
-                        row.Dirty = true;
-                    if (!TryWrite(() => GameServer.Database.SaveObject(chunk.Cast<DataObject>())))
-                        failedWrites.AddRange(chunk);
-                }
+                foreach (var chunk in writes.Where(write => !write.Copy.IsPersisted).Chunk(WriteBatch))
+                    if (!TryWrite(() => GameServer.Database.AddObject(chunk.Select(write => (DataObject)write.Copy))))
+                        failedWrites.AddRange(chunk.Where(write => !write.Copy.IsPersisted).Select(write => write.Live));
+                foreach (var chunk in writes.Where(write => write.Copy.IsPersisted).Chunk(WriteBatch))
+                    if (!TryWrite(() => GameServer.Database.SaveObject(chunk.Select(write => (DataObject)write.Copy))))
+                        failedWrites.AddRange(chunk.Where(write => write.Copy.Dirty).Select(write => write.Live));
                 foreach (OfflineBotGuildMemberRecord[] chunk in deletes.Where(row => row.IsPersisted).Chunk(WriteBatch))
                     if (!TryWrite(() => GameServer.Database.DeleteObject(chunk.Cast<DataObject>())))
                         failedDeletes.AddRange(chunk.Where(row => row.IsPersisted));
-                // A row deleted before its insert ran is retried until the insert lands (or it never existed).
-                failedDeletes.AddRange(deletes.Where(row => !row.IsPersisted && writes.Contains(row)));
+            }
+            lock (Sync)
+            {
+                foreach (var write in writes)
+                {
+                    if (!write.Copy.IsPersisted || write.Copy.Dirty)
+                        continue;
+                    write.Live.IsPersisted = true;
+                    write.Live.AcceptPersistenceBaseline(write.Copy);
+                }
+                // A row changed again since the snapshot is already queued in its newer state.
+                foreach (OfflineBotGuildMemberRecord row in failedWrites)
+                    if (MemberRows.TryGetValue(row.BotId, out var current) && ReferenceEquals(current, row))
+                        PendingWrites.TryAdd(row.BotId, row);
+                PendingDeletes.AddRange(failedDeletes);
             }
             if (failedWrites.Count > 0 || failedDeletes.Count > 0)
-            {
-                lock (Sync)
-                {
-                    // A row changed again since the snapshot is already queued in its newer state.
-                    foreach (OfflineBotGuildMemberRecord row in failedWrites)
-                        if (MemberRows.TryGetValue(row.BotId, out var current) && ReferenceEquals(current, row))
-                            PendingWrites.TryAdd(row.BotId, row);
-                    PendingDeletes.AddRange(failedDeletes);
-                }
                 Log.Warn($"Bot guilds: {failedWrites.Count} membership write(s) and {failedDeletes.Count} delete(s) failed; retrying");
-            }
         }
         finally
         {

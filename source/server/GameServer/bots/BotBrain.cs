@@ -4743,14 +4743,14 @@ namespace DOL.AI.Brain
         private GamePlayer _rezTarget;
         private long _rezTargetSince;
         private long _nextRezWalk;
-        private GamePlayer _rezSkipped;
-        private long _rezSkippedUntil;
+        private readonly Dictionary<GamePlayer, long> _rezSkipped = new();
+        public const long PlayerRezCastHoldMs = 30_000;
 
         private bool IsRezzableCorpse(GameBot bot, GamePlayer player, long now) =>
             player != null && !player.IsAlive && player.Realm == bot.Realm && player.ObjectState == GameObject.eObjectState.Active &&
             player.CurrentRegion == bot.CurrentRegion && (bot.Group == null || player.Group != bot.Group) &&
             bot.IsWithinRadius(player, PlayerRezSearchRadius) && player.TempProperties.GetProperty<GameLiving>("RESURRECT_CASTER") == null &&
-            !(player == _rezSkipped && now < _rezSkippedUntil) &&
+            !(_rezSkipped.TryGetValue(player, out long skipped) && now < skipped) &&
             !(PlayerRezOffered.TryGetValue(player, out long offered) && now < offered) &&
             (!PlayerRezClaims.TryGetValue(player, out var claim) || claim.BotId == bot.DatabaseID || claim.Until < now);
 
@@ -4768,8 +4768,10 @@ namespace DOL.AI.Brain
         {
             if (skip && _rezTarget != null)
             {
-                _rezSkipped = _rezTarget;
-                _rezSkippedUntil = now + 120_000;
+                if (_rezSkipped.Count > 8)
+                    foreach (GamePlayer stale in _rezSkipped.Where(pair => pair.Value < now).Select(pair => pair.Key).ToArray())
+                        _rezSkipped.Remove(stale);
+                _rezSkipped[_rezTarget] = now + 120_000;
             }
             if (_rezTarget != null && PlayerRezClaims.TryGetValue(_rezTarget, out var claim) && claim.BotId == BotBody?.DatabaseID)
                 PlayerRezClaims.TryRemove(_rezTarget, out _);
@@ -4814,7 +4816,13 @@ namespace DOL.AI.Brain
                 if (PlayerRezOffered.Count > 8)
                     foreach (var stale in PlayerRezOffered.Where(pair => pair.Value < now).Select(pair => pair.Key).ToArray())
                         PlayerRezOffered.TryRemove(stale, out _);
-                corpse = ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion)
+                List<GamePlayer> players = ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion);
+                // A rez box from a gamebot is open: once it closes (accepted or declined), no bot offers
+                // again for 90 seconds.
+                foreach (GamePlayer player in players)
+                    if (!player.IsAlive && player.TempProperties.GetProperty<GameLiving>("RESURRECT_CASTER") is GameBot)
+                        PlayerRezOffered[player] = now + PlayerRezOfferCooldownMs;
+                corpse = players
                     .Where(player => IsRezzableCorpse(bot, player, now) && !HostilesNear(bot, player))
                     .OrderBy(Body.GetDistanceTo).FirstOrDefault();
                 if (corpse == null)
@@ -4865,7 +4873,8 @@ namespace DOL.AI.Brain
                 DropRezTarget(now, true);
                 return false;
             }
-            PlayerRezOffered[corpse] = now + PlayerRezOfferCooldownMs;
+            // Held briefly while the cast runs; the 90-second hold starts when the box actually opens (above).
+            PlayerRezOffered[corpse] = now + PlayerRezCastHoldMs;
             DropRezTarget(now, false);
             AutonomousLivingServer.OnOfferingRez(bot, corpse);
             return true;
