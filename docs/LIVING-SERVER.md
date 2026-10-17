@@ -335,12 +335,15 @@ rather than my own reaction times.
   - **Guild gossip.** "we should get Claudecheck into a guild" was said while I was in a bot
     guild. It is now said only about a player with no guild; a starting guild counts as none.
     (Unit test only: gossip comes about once every 30–60 minutes.)
-- **Found, not fixed (stock 0.36 code, not Living Server):**
-  - **A group can die on its way to a meetup.** A Midgard group of five bots, levels 1 to 3, spent
+- **Found in stock 0.36 code (not Living Server), fixed in 0.36-chris.11, not yet seen in game:**
+  - **A group could die on its way to a meetup.** A Midgard group of five bots, levels 1 to 3, spent
     the full 15-minute meetup wait dying near its meetup point: about 70 deaths in all. Then it was
-    dropped as no-shows. `AutonomousRendezvousAttendance` waits 15 minutes and has no limit on
-    deaths along the way.
-  - **"lfg" gets answers like "we have room for 3"**, but bots never invite players.
+    dropped as no-shows. Now a member that dies 3 times during one meetup wait counts as a no-show
+    at once, and the usual no-show rules shrink or end the group. The log has
+    `AUTONOMOUS_GROUP_MEETUP_DEATHS`. Tests: `DyingThreeTimesOnTheWayToAMeetupIsANoShow`,
+    `MeetupDeathsCarryOverASmallerPartyButNotANewMeetup`.
+  - **"lfg" got answers like "we have room for 3"**, but bots never invite players. The two lines
+    that promised a bot's group now offer to join yours ("cleric here, where are you? invite me").
 
 Suggested checks that remain:
 1. Turn on **Grats**, group with bots and level: groupmates say grats in `/group`.

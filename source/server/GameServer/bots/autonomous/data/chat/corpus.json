@@ -4605,8 +4605,8 @@
    "intent": "grouping",
    "mood": "",
    "weight": 1.0,
-   "text": "our group could use a {class} like you, where are you?",
-   "id": "2b31ceac2b11"
+   "text": "{class} here, where are you? invite me",
+   "id": "97fe6e63702f"
   },
   {
    "kind": "reply",
@@ -4622,8 +4622,8 @@
    "intent": "grouping",
    "mood": "",
    "weight": 1.0,
-   "text": "how many are you? we have room for {count}",
-   "id": "badc7412f4f6"
+   "text": "how many are you? i can fill a spot if you inv",
+   "id": "bb11b1e0ccc8"
   },
   {
    "kind": "reply",

@@ -230,8 +230,9 @@ linkdeads, nemesis) plus bot memory of you, and fixes from the Social Expansion 
     and the new client's target buttons and server target changes work. These were checked in
     game, as was a fix to the stick and follow toggle. A misplaced gossip line is fixed too, but
     not yet seen in game.
-  - Found, not fixed (stock code): a low-level group can die for 15 minutes on its way to a
-    meetup. "lfg" answers promise invites that bots never send.
+  - Found in stock code and fixed in chris.11 (not yet seen in game): a low-level group could die
+    for 15 minutes on its way to a meetup (now 3 deaths make a member a no-show), and two "lfg"
+    replies promised invites that bots never send.
 - **Before the stage 7 merge into `main`:** decide whether the unchecked parts (keep claims, bot
   XP rates, linkdeads, nemesis chat lines, you rezzing a bot) must be seen first or can ship
   marked as unchecked.
