@@ -164,13 +164,17 @@ public class SocialExpansionSettingsTests
         var voices = Field<CheckBox>("_voices");
         var debates = Field<CheckBox>("_debates");
         var save = Field<Button>("_save");
-        Assert.That(claims.Enabled, Is.False, "guild parts wait for bot guilds");
-        Assert.That(debates.Enabled, Is.False, "debates wait for voices");
+        Color muted = Color.FromArgb(166, 154, 128), parchment = Color.FromArgb(215, 199, 157);
+        Assert.That(claims.ForeColor, Is.EqualTo(muted), "guild parts are dimmed until bot guilds are on");
+        Assert.That(debates.ForeColor, Is.EqualTo(muted), "debates are dimmed until voices are on");
         Assert.That(save.Enabled, Is.False, "nothing to save yet");
 
         guilds.Checked = true;
         voices.Checked = true;
-        Assert.That(claims.Enabled && debates.Enabled && save.Enabled, Is.True);
+        Assert.That(claims.ForeColor, Is.EqualTo(parchment));
+        Assert.That(debates.ForeColor, Is.EqualTo(parchment));
+        Assert.That(save.Enabled, Is.True);
+        Assert.That(new[] { guilds, claims, voices, debates }.All(box => box.Enabled), Is.True, "switches are never disabled (unreadable on the dark theme)");
 
         var playerXp = type.GetField("_playerXp", Hidden)!.GetValue(panel)!;
         var mode = (ComboBox)playerXp.GetType().GetField("_mode", Hidden)!.GetValue(playerXp)!;
@@ -183,7 +187,8 @@ public class SocialExpansionSettingsTests
 
         _stopped = false;
         Call("UpdateState");
-        Assert.That(save.Enabled || guilds.Enabled || mode.Enabled, Is.False, "locked while the server runs");
+        Assert.That(save.Enabled, Is.False, "nothing is saved while the server runs");
+        Assert.That(Field<Label>("_status").Text, Does.StartWith("SERVER RUNNING"));
         Call("SaveSettings");
         Assert.That(Rows().ContainsKey("bot_guilds_enabled"), Is.False);
 

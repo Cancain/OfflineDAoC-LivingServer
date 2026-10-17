@@ -20,7 +20,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
 
     private readonly string _database;
     private readonly Func<bool> _serverStopped;
-    private readonly CheckBox _guilds = Switch("BOT GUILDS");
+    private readonly CheckBox _guilds = Switch("Bot guilds");
     private readonly NumericUpDown _share = Number(0, 100, "Share of bots in guilds");
     private readonly NumericUpDown _minLevel = Number(1, 50, "Lowest guild level");
     private readonly CheckBox _guildSocial = Switch("Guild chat", part: true);
@@ -28,8 +28,8 @@ internal sealed class SocialExpansionSettingsControl : UserControl
     private readonly CheckBox _guildClaims = Switch("Keep claims", part: true);
     private readonly CheckBox _guildEconomy = Switch("Dues and merit", part: true);
     private readonly CheckBox _guildAlliances = Switch("Alliances", part: true);
-    private readonly CheckBox _personalities = Switch("BOT PERSONALITIES");
-    private readonly CheckBox _voices = Switch("BOT VOICES");
+    private readonly CheckBox _personalities = Switch("Bot personalities");
+    private readonly CheckBox _voices = Switch("Bot voices");
     private readonly CheckBox _debates = Switch("/faction debates", part: true);
     private readonly XpRow _playerXp = new("YOUR CHARACTERS", SocialExpansionSettings.SuggestedPlayerXp, "Suggested  3× · 5× · 12×");
     private readonly XpRow _botXp = new("AUTONOMOUS BOTS", SocialExpansionSettings.SuggestedBotXp, "Suggested  1.5× · 2.5× · 6×");
@@ -46,6 +46,8 @@ internal sealed class SocialExpansionSettingsControl : UserControl
     private bool _loading, _rewriteAll;   // _rewriteAll: the saved values couldn't all be read; Save writes every setting
     private string _notice = "";
     private bool _noticeIsError;
+    // Rows that only work while their feature is on; shown dimmed (not disabled) while it is off.
+    private readonly List<(Control Switch, Label Description, Func<SocialExpansionSettings, bool> Active)> _dependent = [];
 
     public bool HasUnsavedChanges => _rewriteAll || ReadValues() != _saved;
 
@@ -56,22 +58,24 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         Dock = DockStyle.Fill;
         BackColor = DaocTheme.Panel;
         ForeColor = DaocTheme.Text;
-        AutoScroll = true;
 
         var guilds = Card("BOT GUILDS", DaocTheme.Gold, 8);
         Add(guilds, _guilds, null, "Bots form realm guilds, wear guild names, group with guildmates, recruit you, and accept your /ginvite.");
-        Add(guilds, Caption("BOTS IN GUILDS"), WithUnit(_share, "%"), "Share of eligible autonomous bots placed in a guild.");
-        Add(guilds, Caption("LOWEST LEVEL"), _minLevel, "Bots below this level stay unguilded.");
-        Add(guilds, _guildSocial, null, "Greetings and congratulations in guild chat, answers to your /gu, recruiting in /faction.");
-        Add(guilds, _guildRecruit, null, "Bot officers invite you with a yes/no box when you ask for a guild or are nearby. Needs guild chat.");
-        Add(guilds, _guildClaims, null, "Bot guilds claim the keeps their realm takes and defend them first. Never while you are inside.");
-        Add(guilds, _guildEconomy, null, "Dues from real loot, merit points from level-ups, and 24-hour guild buffs.");
-        Add(guilds, _guildAlliances, null, "Each realm's RvR and raiding bot guilds form one alliance. Your own guild's alliances are never touched.");
+        Func<SocialExpansionSettings, bool> guildsOn = v => v.BotGuilds;
+        Dependent(Caption("BOTS IN GUILDS"), Add(guilds, null, WithUnit(_share, "%"), "Share of eligible autonomous bots placed in a guild."), guildsOn);
+        Dependent(Caption("LOWEST LEVEL"), Add(guilds, null, _minLevel, "Bots below this level stay unguilded."), guildsOn);
+        Dependent(_guildSocial, Add(guilds, _guildSocial, null, "Greetings and congratulations in guild chat, answers to your /gu, recruiting in /faction."), guildsOn);
+        Dependent(_guildRecruit, Add(guilds, _guildRecruit, null, "Bot officers invite you with a yes/no box when you ask for a guild or are nearby. Needs guild chat."),
+            v => v.BotGuilds && v.GuildSocial);
+        Dependent(_guildClaims, Add(guilds, _guildClaims, null, "Bot guilds claim the keeps their realm takes and defend them first. Never while you are inside."), guildsOn);
+        Dependent(_guildEconomy, Add(guilds, _guildEconomy, null, "Dues from real loot, merit points from level-ups, and 24-hour guild buffs."), guildsOn);
+        Dependent(_guildAlliances, Add(guilds, _guildAlliances, null, "Each realm's RvR and raiding bot guilds form one alliance. Your own guild's alliances are never touched."), guildsOn);
 
         var voices = Card("PERSONALITIES AND VOICES", DaocTheme.Gold, 3);
         Add(voices, _personalities, null, "Leveler, Socialite, Daredevil, Explorer, Crafter or No-lifer, tilting how each bot spends its time. Target a bot and type /personality.");
         Add(voices, _voices, null, "Period chat lines from 2002–2003, chosen by realm, class, level and moment, each bot in its own writing style.");
-        Add(voices, _debates, null, "Spec arguments, relic alerts and long threads in /faction, every 30–45 minutes while you play. Needs bot voices.");
+        Dependent(_debates, Add(voices, _debates, null, "Spec arguments, relic alerts and long threads in /faction, every 30–45 minutes while you play. Needs bot voices."),
+            v => v.Voices);
 
         var xp = Card("XP BY LEVEL RANGE", DaocTheme.Gold, 5);
         xp = xp with { Height = TitleRow + 2 * (XpRow.Height + XpRow.ErrorHeight) + Row + CardPadding };
@@ -86,7 +90,8 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         xp.Grid.Controls.Add(note, 0, xp.Grid.RowCount - 1);
         xp.Grid.SetColumnSpan(note, 3);
 
-        var footer = new InsetPanel { Dock = DockStyle.Fill, Accent = DaocTheme.Gold, Padding = new Padding(CardPadding, 10, CardPadding, 10), Margin = new Padding(18, 0, 18, 18) };
+        // The footer (status and buttons) stays at the bottom of the tab while the cards scroll above it.
+        var footer = new InsetPanel { Dock = DockStyle.Bottom, Height = 64, Accent = DaocTheme.Gold, Padding = new Padding(CardPadding, 8, CardPadding, 8) };
         var footerGrid = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, BackColor = Color.Transparent };
         footerGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
         footerGrid.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
@@ -96,16 +101,15 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         footerGrid.Controls.Add(buttons, 1, 0);
         footer.Controls.Add(footerGrid);
 
-        // Header, the three cards and the footer, top to bottom, at fixed 96-DPI heights like the Options card.
+        // The intro line and the three cards, top to bottom, at fixed 96-DPI heights like the Options card.
         var page = new TableLayoutPanel { Dock = DockStyle.Top, ColumnCount = 1, BackColor = Color.Transparent };
         page.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
         (Control Control, int Height)[] parts =
         [
-            (Header(), 70),
+            (Intro(), 40),
             (guilds.Panel, guilds.Height),
             (voices.Panel, voices.Height),
             (xp.Panel, xp.Height),
-            (footer, 72),
         ];
         page.RowCount = parts.Length;
         int total = 0;
@@ -117,7 +121,11 @@ internal sealed class SocialExpansionSettingsControl : UserControl
             total += rowHeight;
         }
         page.Height = total;
-        Controls.Add(page);
+        var scroller = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = DaocTheme.Panel };
+        scroller.Controls.Add(page);
+        Controls.Add(footer);
+        Controls.Add(scroller);
+        scroller.BringToFront();   // docked last, so it fills what the footer leaves
 
         foreach (var box in new[] { _guilds, _guildSocial, _guildRecruit, _guildClaims, _guildEconomy, _guildAlliances, _personalities, _voices, _debates })
             box.CheckedChanged += (_, _) => Edited();
@@ -232,22 +240,22 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         bool stopped = _serverStopped();
         var values = ReadValues();
         string? invalid = values.Validate();
-        _guilds.Enabled = _share.Enabled = _minLevel.Enabled = stopped;
-        _guildSocial.Enabled = _guildClaims.Enabled = _guildEconomy.Enabled = _guildAlliances.Enabled = stopped && values.BotGuilds;
-        _share.Enabled = _minLevel.Enabled = stopped && values.BotGuilds;
-        _guildRecruit.Enabled = stopped && values.BotGuilds && values.GuildSocial;
-        _personalities.Enabled = _voices.Enabled = stopped;
-        _debates.Enabled = stopped && values.Voices;
-        _playerXp.SetEnabled(stopped);
-        _botXp.SetEnabled(stopped);
+        // Nothing is disabled (disabled WinForms text is drawn embossed and unreadable on this dark theme):
+        // inactive parts are dimmed, and saving waits for a stopped server.
+        foreach (var (control, description, active) in _dependent)
+        {
+            Color color = active(values) ? DaocTheme.Parchment : DaocTheme.Muted;
+            control.ForeColor = color;
+            description.ForeColor = color;
+        }
         _playerXp.ShowError(SocialExpansionSettings.XpError("NOT VALID", values.PlayerXpByLevel));
         _botXp.ShowError(SocialExpansionSettings.XpError("NOT VALID", values.BotXpByLevel));
         bool changed = HasUnsavedChanges;
         _save.Enabled = stopped && invalid is null && changed;
-        _undo.Enabled = stopped && changed;
-        _allOff.Enabled = stopped && values != SocialExpansionSettings.Defaults;
+        _undo.Enabled = changed;
+        _allOff.Enabled = values != SocialExpansionSettings.Defaults;
         if (!stopped)
-            Status("SERVER RUNNING. Stop the server to change these settings." + (_notice == "" ? "" : "  " + _notice), DaocTheme.Muted);
+            Status("SERVER RUNNING. You can make edits, but stop the server to save them." + (_notice == "" ? "" : "  " + _notice), DaocTheme.Muted);
         else if (invalid is not null)
             Status(invalid, DaocTheme.Danger);
         else if (_notice != "")
@@ -305,33 +313,39 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         return new CardParts(panel, grid, TitleRow + rows * Row + CardPadding);
     }
 
-    /// <summary>One row: a switch spanning the label and control columns, or a caption and a control, then a description.</summary>
-    private static void Add(CardParts card, Control first, Control? control, string description)
+    /// <summary>
+    /// One row: a switch spanning the label and control columns, or (first = null) a control whose caption the
+    /// caller adds with <see cref="Dependent"/> or <see cref="Captioned"/>, then a description. Returns the description.
+    /// </summary>
+    private static Label Add(CardParts card, Control? first, Control? control, string description)
     {
-        int row = card.Grid.Controls.Count == 0 ? 1 : card.Grid.GetRow(card.Grid.Controls[^1]) + 1;
-        card.Grid.Controls.Add(first, 0, row);
-        if (control is null) card.Grid.SetColumnSpan(first, 2);
-        else card.Grid.Controls.Add(control, 1, row);
-        card.Grid.Controls.Add(Description(description), 2, row);
+        int row = card.Grid.GetRow(card.Grid.Controls[^1]) + 1;
+        if (first is not null)
+        {
+            card.Grid.Controls.Add(first, 0, row);
+            if (control is null) card.Grid.SetColumnSpan(first, 2);
+        }
+        if (control is not null) card.Grid.Controls.Add(control, 1, row);
+        var label = Description(description);
+        card.Grid.Controls.Add(label, 2, row);
+        return label;
     }
 
-    private static Control Header()
+    /// <summary>Registers a row that only works while its feature is on. A caption not yet placed goes in its row's first column.</summary>
+    private void Dependent(Control switchOrCaption, Label description, Func<SocialExpansionSettings, bool> active)
     {
-        var header = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2, BackColor = Color.Transparent, Margin = new Padding(18, 12, 18, 6) };
-        header.RowStyles.Add(new RowStyle(SizeType.Absolute, 30));
-        header.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-        header.Controls.Add(new Label
-        {
-            AutoSize = true, Text = "SOCIAL EXPANSION", Font = TitleFont, ForeColor = DaocTheme.GoldLight, Margin = new Padding(0, 4, 0, 0),
-        }, 0, 0);
-        header.Controls.Add(new Label
-        {
-            Dock = DockStyle.Fill, TextAlign = ContentAlignment.TopLeft, Font = StatusFont, ForeColor = DaocTheme.Muted,
-            Text = "Bots that feel like 2003 players. Everything here starts off, and with it all off the game plays exactly like the normal " +
-                   "release. Only autonomous bots change; your /spawn companions do not. Change settings with the server stopped.",
-        }, 0, 1);
-        return header;
+        if (switchOrCaption.Parent is null && description.Parent is TableLayoutPanel grid)
+            grid.Controls.Add(switchOrCaption, 0, grid.GetRow(description));
+        _dependent.Add((switchOrCaption, description, active));
     }
+
+    private static Control Intro() => new Label
+    {
+        Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Font = StatusFont, ForeColor = DaocTheme.Muted,
+        Margin = new Padding(20, 6, 18, 0),
+        Text = "Bots that feel like 2003 players. Everything here starts off; with it all off the game plays exactly like the normal " +
+               "release. Only autonomous bots change, never your /spawn companions. Saved settings are used on the next server startup.",
+    };
 
     private static CheckBox Switch(string text, bool part = false) => new()
     {
@@ -453,6 +467,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         private void Refresh()
         {
             _text.ReadOnly = _mode.SelectedIndex != Custom;
+            _text.Visible = _mode.SelectedIndex != Off;
             _hint.Text = _mode.SelectedIndex switch
             {
                 Off => "Your flat rate from the Options tab, at every level.",
@@ -461,12 +476,6 @@ internal sealed class SocialExpansionSettingsControl : UserControl
             };
         }
 
-        public void SetEnabled(bool enabled)
-        {
-            _mode.Enabled = enabled;
-            _text.Enabled = enabled && _mode.SelectedIndex != Off;
-            _text.Visible = _mode.SelectedIndex != Off;
-        }
 
         public void ShowError(string? error) => _error.Text = error ?? "";
 
