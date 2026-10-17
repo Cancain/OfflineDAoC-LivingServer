@@ -63,7 +63,11 @@ namespace DOL.AI
             // GameObject.MoveTo temporarily makes an autonomous GameBot inactive
             // while changing regions. Returning it to spawn from inside that
             // transfer creates a nested MoveTo and must not happen.
-            if (Body is not GameBot { IsIntentionalWorldMove: true } && !Body.IsNearSpawn && !IsActive)
+            // A dead bot stays where it died: its brain stops on death, and sending the corpse "home" moved every
+            // dead gamebot to its spawn point within milliseconds, so no player or bot could ever rez it (in-game
+            // check 2026-10-17, LIVING_SERVER_DEAD_MOVE by=ABrain.Stop deadMs=34). The release moves it later.
+            if (Body is not GameBot { IsIntentionalWorldMove: true } && Body is not GameBot { IsAlive: false } &&
+                !Body.IsNearSpawn && !IsActive)
                 Body.MoveTo(Body.CurrentRegionID, Body.SpawnPoint.X, Body.SpawnPoint.Y, Body.SpawnPoint.Z, Body.SpawnHeading);
 
             Body.ClearObjectsInRadiusCache();
