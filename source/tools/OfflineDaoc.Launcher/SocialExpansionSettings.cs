@@ -71,35 +71,58 @@ public sealed record SocialExpansionSettings
     private static string Bool(bool value) => value ? "True" : "False";
 
     /// <summary>
-    /// Settings from stored values (missing keys keep the server default). A stored value the server
-    /// couldn't read is reported in <paramref name="problems"/> and replaced by the default.
+    /// Settings from stored values (missing keys keep the server default). A stored value the server can't read
+    /// shows what the server then uses (its fields stay at zero: False, 0), and a share above 1 shows as 100%;
+    /// each is reported in <paramref name="problems"/> and its key added to <paramref name="problemKeys"/>, so a
+    /// save can repair exactly those rows.
     /// </summary>
-    public static SocialExpansionSettings FromStoredValues(IReadOnlyDictionary<string, string?> stored, List<string> problems)
+    public static SocialExpansionSettings FromStoredValues(IReadOnlyDictionary<string, string?> stored, List<string> problems,
+        ISet<string>? problemKeys = null)
     {
         var d = Defaults;
+        void Problem(string key, string message)
+        {
+            problems.Add(message);
+            problemKeys?.Add(key);
+        }
         bool ReadBool(string key, bool fallback)
         {
             if (!stored.TryGetValue(key, out string? text) || string.IsNullOrWhiteSpace(text)) return fallback;
             if (bool.TryParse(text.Trim(), out bool value)) return value;
-            problems.Add($"{key} = \"{text}\" is not True or False; showing the default.");
-            return fallback;
+            Problem(key, $"{key} = \"{text}\" is not True or False, so the server reads it as False.");
+            return false;
         }
         int share = d.GuildSharePercent;
         if (stored.TryGetValue("bot_guild_share", out string? shareText) && !string.IsNullOrWhiteSpace(shareText))
         {
-            if (double.TryParse(shareText.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double fraction) &&
-                fraction >= 0 && fraction <= 1)
-                share = (int)Math.Round(fraction * 100, MidpointRounding.AwayFromZero);
+            if (!double.TryParse(shareText.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double fraction))
+            {
+                Problem("bot_guild_share", $"bot_guild_share = \"{shareText}\" is not a number, so the server reads it as 0.");
+                share = 0;
+            }
+            else if (fraction < 0 || fraction > 1)
+            {
+                Problem("bot_guild_share", $"bot_guild_share = \"{shareText}\" is outside 0 to 1.");
+                share = fraction < 0 ? 0 : 100;
+            }
             else
-                problems.Add($"bot_guild_share = \"{shareText}\" is not a share from 0 to 1; showing the default.");
+                share = (int)Math.Round(fraction * 100, MidpointRounding.AwayFromZero);
         }
         int minLevel = d.GuildMinLevel;
         if (stored.TryGetValue("bot_guild_min_level", out string? levelText) && !string.IsNullOrWhiteSpace(levelText))
         {
-            if (int.TryParse(levelText.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int level) && level >= 1 && level <= 50)
-                minLevel = level;
+            if (!int.TryParse(levelText.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int level))
+            {
+                Problem("bot_guild_min_level", $"bot_guild_min_level = \"{levelText}\" is not a whole number, so the server reads it as 0.");
+                minLevel = 0;
+            }
+            else if (level < 0 || level > 50)
+            {
+                Problem("bot_guild_min_level", $"bot_guild_min_level = \"{levelText}\" is outside 0 to 50.");
+                minLevel = Math.Clamp(level, 0, 50);
+            }
             else
-                problems.Add($"bot_guild_min_level = \"{levelText}\" is not a level from 1 to 50; showing the default.");
+                minLevel = level;
         }
         return new SocialExpansionSettings
         {
@@ -120,11 +143,23 @@ public sealed record SocialExpansionSettings
         };
     }
 
+    /// <summary>
+    /// "All off": the three features and both XP ranges off. The share, lowest level and each part keep their
+    /// values, so turning a feature back on later restores the player's own choices.
+    /// </summary>
+    public SocialExpansionSettings AllOff() => this with
+    {
+        BotGuilds = false, Personalities = false, Voices = false, PlayerXpByLevel = "", BotXpByLevel = "",
+    };
+
+    /// <summary>True when every feature and both XP ranges are off.</summary>
+    public bool IsAllOff => !BotGuilds && !Personalities && !Voices && PlayerXpByLevel.Trim() == "" && BotXpByLevel.Trim() == "";
+
     /// <summary>Why these settings can't be saved, or null when they can.</summary>
     public string? Validate()
     {
         if (GuildSharePercent is < 0 or > 100) return "The share of bots in guilds must be 0 to 100%.";
-        if (GuildMinLevel is < 1 or > 50) return "The lowest guild level must be 1 to 50.";
+        if (GuildMinLevel is < 0 or > 50) return "The lowest guild level must be 0 to 50.";
         return XpError("Your XP by level", PlayerXpByLevel) ?? XpError("Bot XP by level", BotXpByLevel);
     }
 
@@ -135,25 +170,28 @@ public sealed record SocialExpansionSettings
         return LevelRangeXpRates.TryParse(spec, out _, out string error) ? null : $"{label}: {error}.";
     }
 
-    public static SocialExpansionSettings Load(string database, List<string> problems)
+    public static SocialExpansionSettings Load(string database, List<string> problems, ISet<string>? problemKeys = null)
     {
         if (!File.Exists(database)) throw new InvalidOperationException("The world database is missing: " + database);
         using var connection = Open(database, readOnly: true);
-        return FromStoredValues(ReadStored(connection, null), problems);
+        return FromStoredValues(ReadStored(connection, null), problems, problemKeys);
     }
 
     /// <summary>
-    /// Writes the settings that differ from <paramref name="previous"/> (all of them when it is null), in one
-    /// transaction, then reads them back. Only while the server is stopped.
+    /// Writes the settings that differ from <paramref name="previous"/> (all of them when it is null) and the keys in
+    /// <paramref name="alsoWrite"/> (rows being repaired), in one transaction, then reads them back. Only while the
+    /// server is stopped.
     /// </summary>
-    public void Save(string database, SocialExpansionSettings? previous, Func<bool> serverStopped)
+    public void Save(string database, SocialExpansionSettings? previous, Func<bool> serverStopped, IEnumerable<string>? alsoWrite = null)
     {
         if (Validate() is { } invalid) throw new InvalidOperationException(invalid);
         if (!serverStopped()) throw new InvalidOperationException("Stop the server first. Settings can only change while it is stopped.");
         if (!File.Exists(database)) throw new InvalidOperationException("The world database is missing: " + database);
         var values = ToStoredValues();
         var old = previous?.ToStoredValues();
-        var changed = values.Where(pair => old is null || old[pair.Key] != pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+        var repair = new HashSet<string>(alsoWrite ?? Array.Empty<string>(), StringComparer.Ordinal);
+        var changed = values.Where(pair => old is null || old[pair.Key] != pair.Value || repair.Contains(pair.Key))
+            .ToDictionary(pair => pair.Key, pair => pair.Value);
         if (changed.Count == 0) return;
 
         using var connection = Open(database, readOnly: false);

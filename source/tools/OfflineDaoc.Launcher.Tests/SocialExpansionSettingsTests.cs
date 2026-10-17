@@ -105,10 +105,12 @@ public class SocialExpansionSettingsTests
             INSERT INTO ServerProperty VALUES ('rates', 'bot_xp_rate_by_level', 'd', '', '50-1:2', '', 'bot_xp_rate_by_level');
             """);
         var problems = new List<string>();
-        var loaded = SocialExpansionSettings.Load(_database, problems);
-        Assert.That(loaded.BotGuilds, Is.False);
-        Assert.That(loaded.GuildSharePercent, Is.EqualTo(70));
+        var keys = new HashSet<string>();
+        var loaded = SocialExpansionSettings.Load(_database, problems, keys);
+        Assert.That(loaded.BotGuilds, Is.False, "the server reads an unreadable bool as False");
+        Assert.That(loaded.GuildSharePercent, Is.EqualTo(100), "a share above 1 shows as 100%");
         Assert.That(problems, Has.Count.EqualTo(2));
+        Assert.That(keys, Is.EquivalentTo(new[] { "bot_guilds_enabled", "bot_guild_share" }));
         Assert.That(loaded.BotXpByLevel, Is.EqualTo("50-1:2"), "an invalid range setting is kept so its error can be shown");
         Assert.That(loaded.Validate(), Does.Contain("ends before it starts"));
     }
@@ -121,6 +123,47 @@ public class SocialExpansionSettingsTests
         Assert.Throws<InvalidOperationException>(() => (AllOn with { PlayerXpByLevel = "1-19:3;10-20:2" }).Save(_database, null, () => _stopped));
         Assert.Throws<InvalidOperationException>(() => (AllOn with { BotXpByLevel = "1-50:0" }).Save(_database, null, () => _stopped));
         Assert.That(Rows().Keys, Is.EquivalentTo(new[] { "xp_rate" }));
+    }
+
+    [Test] public void RepairRewritesOnlyTheBadRowsAndAllOffKeepsTheChoices()
+    {
+        Exec("""
+            INSERT INTO ServerProperty VALUES ('guild', 'bot_guilds_enabled', 'd', '', 'maybe', '', 'bot_guilds_enabled');
+            INSERT INTO ServerProperty VALUES ('guild', 'bot_guild_share', 'd', '', '0.655', '', 'bot_guild_share');
+            """);
+        var keys = new HashSet<string>();
+        var loaded = SocialExpansionSettings.Load(_database, new List<string>(), keys);
+        loaded.Save(_database, loaded, () => _stopped, keys);
+        var rows = Rows();
+        Assert.That(rows["bot_guilds_enabled"], Is.EqualTo("False"), "the unreadable row is repaired");
+        Assert.That(rows["bot_guild_share"], Is.EqualTo("0.655"), "a readable row is not rewritten by a repair");
+        Assert.That(rows.ContainsKey("bot_personalities_enabled"), Is.False);
+
+        var custom = AllOn with { GuildSharePercent = 40, GuildMinLevel = 20, GuildClaims = false };
+        var off = custom.AllOff();
+        Assert.That(off.IsAllOff, Is.True);
+        Assert.That((off.GuildSharePercent, off.GuildMinLevel, off.GuildClaims, off.Debates), Is.EqualTo((40, 20, false, true)),
+            "ALL OFF switches the features off but keeps the player's share, level and parts");
+    }
+
+    [Test] public void AFailedLoadNeverSavesOverTheRealSettings()
+    {
+        Exec("DROP TABLE ServerProperty");
+        var type = Assembly.Load("OfflineDAoC").GetType("OfflineDaoc.Launcher.SocialExpansionSettingsControl")!;
+        using var panel = (Control)Activator.CreateInstance(type, _database, (Func<bool>)(() => _stopped))!;
+        var save = (Button)type.GetField("_save", Hidden)!.GetValue(panel)!;
+        ((CheckBox)type.GetField("_guilds", Hidden)!.GetValue(panel)!).Checked = true;
+        Assert.That(save.Enabled, Is.False, "nothing can be saved over settings that couldn't be read");
+        Assert.That(type.GetProperty("HasUnsavedChanges")!.GetValue(panel), Is.False, "the start guard isn't blocked by a failed read");
+        Exec("""
+            CREATE TABLE ServerProperty (Category TEXT NOT NULL, `Key` TEXT NOT NULL PRIMARY KEY, Description TEXT NOT NULL,
+                DefaultValue TEXT NOT NULL, Value TEXT NOT NULL, LastTimeRowUpdated TEXT, ServerProperty_ID TEXT NOT NULL UNIQUE);
+            INSERT INTO ServerProperty VALUES ('guild', 'bot_personalities_enabled', 'd', '', 'True', '', 'bot_personalities_enabled');
+            """);
+        type.GetMethod("SaveSettings", Hidden)!.Invoke(panel, null);
+        Assert.That(Rows().Keys, Is.EquivalentTo(new[] { "bot_personalities_enabled" }), "SaveSettings refuses after a failed read");
+        ((Button)type.GetField("_undo", Hidden)!.GetValue(panel)!).PerformClick();
+        Assert.That(((CheckBox)type.GetField("_personalities", Hidden)!.GetValue(panel)!).Checked, Is.True, "UNDO EDITS reads them again");
     }
 
     /// <summary>The keys and defaults here must be the server's (ServerProperties.cs), or the tab would show the wrong state.</summary>

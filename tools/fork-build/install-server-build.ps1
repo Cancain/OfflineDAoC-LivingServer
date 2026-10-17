@@ -109,7 +109,14 @@ if ($launcherNew.Count -gt 0) {
             continue
         }
         $hash = Get-Sha256 $dll
-        $state = if ($hash -eq $launcherNew['OfflineDAoC.dll']) { 'this build' }
+        # 'this build' only when all five launcher files match; a half-copied launcher is installed again.
+        $allNew = $true
+        foreach ($name in $Script:LauncherFiles) {
+            $path = Join-Path $game (Join-Path $folder $name)
+            if (!(Test-Path -LiteralPath $path) -or (Get-Sha256 $path) -ne $launcherNew[$name]) { $allNew = $false }
+        }
+        $state = if ($hash -eq $launcherNew['OfflineDAoC.dll'] -and $allNew) { 'this build' }
+            elseif ($hash -eq $launcherNew['OfflineDAoC.dll']) { 'this build, other files differ' }
             elseif ($manifest["$folder/OfflineDAoC.dll"] -and $hash -eq $manifest["$folder/OfflineDAoC.dll"]) { "original $base launcher" }
             elseif ($newClientManifest -and $newClientManifest["$folder/OfflineDAoC.dll"] -and $hash -eq $newClientManifest["$folder/OfflineDAoC.dll"]) { "original $($base)c launcher" }
             elseif ($knownLauncher.ContainsKey($hash)) { "fork build $($knownLauncher[$hash]) launcher" }

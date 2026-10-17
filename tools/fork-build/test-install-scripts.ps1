@@ -76,6 +76,13 @@ Check (Test-Path (Join-Path $game 'tools\claude-version\set_bot_social.py')) 'so
 Check (@(Get-ChildItem (Join-Path $game 'runtime\server\deployment-backups') -Directory).Count -eq 1) 'one backup folder'
 $again = Run 'install-server-build.ps1' @('-GameFolder', $game)
 Check ($again.Code -eq 0 -and $again.Output -match 'Already installed') 'reinstall is a no-op'
+Start-Sleep -Seconds 2   # backup folders are named to the second
+[IO.File]::WriteAllText((Join-Path $game 'runtime\OfflineDAoC.exe'), 'half-copied launcher')
+$halfway = Run 'install-server-build.ps1' @('-GameFolder', $game)
+Check ($halfway.Code -eq 0 -and $halfway.Output -notmatch 'Already installed' -and
+       (Sha (Join-Path $game 'runtime\OfflineDAoC.exe')) -eq $info['launcher/OfflineDAoC.exe']) "a half-copied launcher is installed again`n$($halfway.Output)"
+$rollbackHalf = Run 'rollback-server-build.ps1' @('-GameFolder', $game)
+Check ($rollbackHalf.Code -eq 0) "rollback of the repair install`n$($rollbackHalf.Output)"
 $rollback = Run 'rollback-server-build.ps1' @('-GameFolder', $game)
 Check ($rollback.Code -eq 0) "rollback succeeds`n$($rollback.Output)"
 Check ((Sha (Join-Path $game 'runtime\server\lib\GameServer.dll')) -eq $original) 'rollback restores the original dll'

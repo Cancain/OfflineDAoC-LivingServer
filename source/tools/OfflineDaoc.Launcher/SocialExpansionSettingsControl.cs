@@ -22,7 +22,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
     private readonly Func<bool> _serverStopped;
     private readonly CheckBox _guilds = Switch("Bot guilds");
     private readonly NumericUpDown _share = Number(0, 100, "Share of bots in guilds");
-    private readonly NumericUpDown _minLevel = Number(1, 50, "Lowest guild level");
+    private readonly NumericUpDown _minLevel = Number(0, 50, "Lowest guild level");
     private readonly CheckBox _guildSocial = Switch("Guild chat", part: true);
     private readonly CheckBox _guildRecruit = Switch("Invites to you", part: true);
     private readonly CheckBox _guildClaims = Switch("Keep claims", part: true);
@@ -43,13 +43,22 @@ internal sealed class SocialExpansionSettingsControl : UserControl
     private readonly RuneButton _allOff = Action("ALL OFF", DaocTheme.Albion);
     private readonly System.Windows.Forms.Timer _poll = new() { Interval = 2000 };
     private SocialExpansionSettings _saved = SocialExpansionSettings.Defaults;
-    private bool _loading, _rewriteAll;   // _rewriteAll: the saved values couldn't all be read; Save writes every setting
+    private bool _loading;
+    // The saved settings couldn't be read at all: nothing may be saved over them (that would overwrite the
+    // player's real values with what the tab happens to show) until a reload succeeds.
+    private bool _loadFailed;
+    // Rows the server can't read as stored; a save rewrites exactly these, plus whatever the player changed.
+    private readonly HashSet<string> _repairKeys = new(StringComparer.Ordinal);
+    private bool _lastStopped = true;   // the first UpdateState reads the state; a later stop triggers a reload
     private string _notice = "";
     private bool _noticeIsError;
     // Rows that only work while their feature is on; shown dimmed (not disabled) while it is off.
     private readonly List<(Control Switch, Label Description, Func<SocialExpansionSettings, bool> Active)> _dependent = [];
 
-    public bool HasUnsavedChanges => _rewriteAll || ReadValues() != _saved;
+    /// <summary>The player changed something and hasn't saved it (what MainForm's start guard asks about).</summary>
+    public bool HasUnsavedChanges => !_loadFailed && ReadValues() != _saved;
+
+    private bool NeedsSave => !_loadFailed && (ReadValues() != _saved || _repairKeys.Count > 0);
 
     public SocialExpansionSettingsControl(string database, Func<bool> serverStopped)
     {
@@ -85,7 +94,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         {
             Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Font = StatusFont, ForeColor = DaocTheme.Muted,
             Text = "Suggested rates are for levels 1–19 · 20–34 · 35–50: they keep levels 1–34 worth playing and shorten the 35–50 grind. " +
-                   "Inside a range its rate replaces the flat XP on the Options tab; other levels keep it.",
+                   "Inside a range its rate replaces the flat XP on the Options tab; other levels keep it. RvR zones still use the RvR XP rate.",
         };
         xp.Grid.Controls.Add(note, 0, xp.Grid.RowCount - 1);
         xp.Grid.SetColumnSpan(note, 3);
@@ -137,8 +146,8 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         _undo.Click += (_, _) => LoadSettings();
         _allOff.Click += (_, _) =>
         {
-            SetValues(SocialExpansionSettings.Defaults);
-            SetNotice("EVERYTHING SWITCHED OFF HERE. Click SAVE SETTINGS to apply it.", error: false);
+            SetValues(ReadValues().AllOff());
+            SetNotice("ALL FEATURES SWITCHED OFF HERE. Click SAVE SETTINGS to apply it.", error: false);
             UpdateState();
         };
         LoadSettings();
@@ -187,7 +196,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         _loading = true;
         _guilds.Checked = settings.BotGuilds;
         _share.Value = Math.Clamp(settings.GuildSharePercent, 0, 100);
-        _minLevel.Value = Math.Clamp(settings.GuildMinLevel, 1, 50);
+        _minLevel.Value = Math.Clamp(settings.GuildMinLevel, 0, 50);
         _guildSocial.Checked = settings.GuildSocial;
         _guildRecruit.Checked = settings.GuildRecruitPlayer;
         _guildClaims.Checked = settings.GuildClaims;
@@ -204,19 +213,24 @@ internal sealed class SocialExpansionSettingsControl : UserControl
     private void LoadSettings()
     {
         var problems = new List<string>();
+        var keys = new HashSet<string>(StringComparer.Ordinal);
         try
         {
-            _saved = SocialExpansionSettings.Load(_database, problems);
-            _rewriteAll = problems.Count > 0;
-            SetNotice(problems.Count == 0 ? "" : string.Join(" ", problems) + " Click SAVE SETTINGS to repair.", error: problems.Count > 0);
+            _saved = SocialExpansionSettings.Load(_database, problems, keys);
+            _loadFailed = false;
+            _repairKeys.Clear();
+            _repairKeys.UnionWith(keys);
+            SetNotice(problems.Count == 0 ? "" : string.Join(" ", problems) + " SAVE SETTINGS repairs these rows.", error: problems.Count > 0);
             SetValues(_saved);
         }
         catch (Exception ex)
         {
-            _rewriteAll = true;
+            _loadFailed = true;
+            _repairKeys.Clear();
             _saved = SocialExpansionSettings.Defaults;
             SetValues(_saved);
-            SetNotice("CANNOT READ THE SAVED SETTINGS: " + ex.Message, error: true);
+            SetNotice("CANNOT READ THE SAVED SETTINGS, so nothing can be saved here: " + ex.Message +
+                " Close other programs using the game's database, then click UNDO EDITS to read them again.", error: true);
         }
         UpdateState();
     }
@@ -226,9 +240,10 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         try
         {
             var values = ReadValues();
-            values.Save(_database, _rewriteAll ? null : _saved, _serverStopped);
+            if (_loadFailed) throw new InvalidOperationException("the saved settings couldn't be read, so saving could overwrite them.");
+            values.Save(_database, _saved, _serverStopped, _repairKeys);
             _saved = values;
-            _rewriteAll = false;
+            _repairKeys.Clear();
             SetNotice("SAVED. These settings will be used on the next server startup.", error: false);
         }
         catch (Exception ex) { SetNotice("NOT SAVED: " + ex.Message, error: true); }
@@ -238,6 +253,15 @@ internal sealed class SocialExpansionSettingsControl : UserControl
     public void UpdateState()
     {
         bool stopped = _serverStopped();
+        // When the server stops, settings may have been changed elsewhere (a helper script, the other 0.36c
+        // launcher): read them again, unless the player has edits here.
+        if (stopped && !_lastStopped && !_loading && !HasUnsavedChanges && !_loadFailed)
+        {
+            _lastStopped = true;
+            LoadSettings();
+            return;
+        }
+        _lastStopped = stopped;
         var values = ReadValues();
         string? invalid = values.Validate();
         // Nothing is disabled (disabled WinForms text is drawn embossed and unreadable on this dark theme):
@@ -250,10 +274,10 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         }
         _playerXp.ShowError(SocialExpansionSettings.XpError("NOT VALID", values.PlayerXpByLevel));
         _botXp.ShowError(SocialExpansionSettings.XpError("NOT VALID", values.BotXpByLevel));
-        bool changed = HasUnsavedChanges;
+        bool changed = NeedsSave;
         _save.Enabled = stopped && invalid is null && changed;
-        _undo.Enabled = changed;
-        _allOff.Enabled = values != SocialExpansionSettings.Defaults;
+        _undo.Enabled = changed || _loadFailed;
+        _allOff.Enabled = !_loadFailed && !values.IsAllOff;
         if (!stopped)
             Status("SERVER RUNNING. You can make edits, but stop the server to save them." + (_notice == "" ? "" : "  " + _notice), DaocTheme.Muted);
         else if (invalid is not null)
@@ -344,7 +368,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Font = StatusFont, ForeColor = DaocTheme.Muted,
         Margin = new Padding(20, 6, 18, 0),
         Text = "Bots that feel like 2003 players. Everything here starts off; with it all off the game plays exactly like the normal " +
-               "release. Only autonomous bots change, never your /spawn companions. Saved settings are used on the next server startup.",
+               "release. Your /spawn companions never change. Saved settings are used on the next server startup.",
     };
 
     private static CheckBox Switch(string text, bool part = false) => new()
