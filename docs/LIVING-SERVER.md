@@ -83,7 +83,9 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
     player for a rez by name, after a few seconds: in `/group` if you're grouped, in `/say` if
     you're close, otherwise as a `/send`.
   - "Can rez" means a Cleric, Friar, Healer, Shaman, Druid, Warden or Bard who has learned a
-    resurrection spell.
+    resurrection spell (from the spells it lists, or a resurrection spell in its spell lines at
+    or below the line's level).
+  - The bot's corpse stays where it died until it releases, so it can be rezzed there.
   - With nobody who can rez near, a bot sometimes asks generally ("rez pls?", "anyone able to
     rez, dead by the spirit hound") in `/group`, or in `/say` when you're close.
   - The bot then waits the long release timer (90 s) instead of 20 s, even if you aren't in its
@@ -254,23 +256,51 @@ on, schedule `session`, 50 bots made with the launcher. About two hours, an Albi
   with the launcher took "first to level 50" and all the class titles. Seeding now happens once
   (test `FirstsAreSeededOnceSoBotsMadeAtFiftyLaterDontTakeThem`).
 
-**Not seen in game:**
+**Not seen in the first check** (both fixed and then seen in the second check, below):
 - A bot rezzing me. Four tries near a level 50 Friar or Cleric: one bot was logged out by the
-  schedule, one stayed in a fight, and two walked on while travelling. The cause of the last two
-  isn't known, so the server now logs every rez decision (see "Server log" above).
+  schedule, one stayed in a fight, and two walked on while travelling.
 - A bot asking me for a rez by name. With my level 50 Cleric (Revive learned) beside a bot that
-  died, no ask came. The cause isn't known; the ask is now logged.
+  died, no ask came.
 - Frontier alarms, the nemesis complaint and revenge lines, the "brb" line and linkdeads: not
   seen in two hours. They need a frontier fight, repeated kills or an hour or more in one group.
 
-**Godot client gaps seen** (the client's, not this build's): the FOLLOW and FACE buttons send
-`/follow` and `/face`, which the server doesn't have.
+**Second check, builds 0.36-chris.5 to chris.8** (same PC, Godot client, schedule `off` so the
+level 50 healers stayed online). The new log lines found two causes:
+- **"Can rez" was false for a Cleric 50 with Revive.** It only looked at the spells the client
+  lists, and those didn't include Revive. It now also checks the character's spell lines for a
+  resurrection spell at or below the line's level (chris.5). The log then showed `can_rez=True`.
+- **A dead gamebot's corpse moved to its spawn point within milliseconds.** When a bot dies its
+  brain stops, and stopping a brain sent the body "home". `LIVING_SERVER_DEAD_MOVE` showed
+  `by=ABrain.Stop deadMs=33`. So the bot asked for a rez from a corpse that was no longer beside
+  you, and no player or bot could reach it. This probably also broke bot-to-bot rezzes in bot
+  groups before this branch. A dead gamebot now stays where it died. Its release still moves it
+  to its bind, at 20 s (or 90 s when someone near can rez), and a rezzed bot's brain starts again
+  (chris.8).
+
+Seen in game with chris.8:
+- **A bot asks me by name:** a level 4 Friar that died 655 units from my Cleric sent "Claudecheck
+  rez pls?". The log has `LIVING_SERVER_REZ_ASK ... rezzer="Claudecheck" died_at=... now_at=...`
+  with the same position twice. The corpse stayed there for the full 90 s, then released.
+- **Every other bot death** in that session also kept its corpse in place until the release at
+  21 s. No `by=ABrain.Stop` moves were logged.
+- **A bot rezzes me:** I died beside a level 50 Cleric bot that wasn't in my group. It said "rez
+  incoming", the log has `LIVING_SERVER_REZ bot="Seraorith" corpse="Claudecheck" distance=6`, and
+  the accept box appeared. My first accept came after the stock 15-second offer had expired.
+  About 90 s later it offered again ("got you Claudecheck, one sec lol"); I accepted and was
+  rezzed.
+
+Not checked: a player rezzing a dead bot, and its thank-you line. The Godot client clears your
+target when the bot dies and doesn't show the corpse, so Revive had no target ("You must select
+a target for this spell!"). The original client wasn't tried.
+
+**Godot client gaps seen** (the client's, not this build's):
+- The FOLLOW and FACE buttons send `/follow` and `/face`, which the server doesn't have.
+- A dead NPC's corpse isn't shown and can't be targeted, so you can't rez a bot from it.
 
 Suggested checks that remain:
 1. Turn on **Grats**, group with bots and level: groupmates say grats in `/group`.
-2. Turn on **Rezzes and corpse runs** on a rez class: a bot that dies near you asks you by name
-   and thanks you after you rez it. Die near a bot healer that isn't in your group: it offers a
-   rez and you get the accept box.
+2. Turn on **Rezzes and corpse runs** on a rez class, in the original client: rez a bot that
+   asked you by name, and it thanks you. (The ask and a bot rezzing you were seen with chris.8.)
 3. Turn on **Bots remember you**: group with a bot for a while, leave, and walk past it later. It
    greets you by name.
 4. Turn on **Frontier alarms** and go to the frontier: `/faction` calls enemy groups, at most one
