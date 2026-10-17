@@ -151,8 +151,23 @@ While a scene runs, bots don't start other /faction chatter in that realm.
 - line choice, writing styles and the no-repeat window
 - debate casting, scene choice and pacing
 
-**Not yet checked in game.** The tests don't show how the realm feels after a few hours of play,
-or how often lines repeat in practice. Things to watch when testing:
+**Partly checked in game** (2026-10-17, build 0.36-chris.8, Godot client, about 20 minutes):
+- **`/personality`** on Maraenisette (id 6) gave "Socialite (curiosity 4, risk 3, sociability
+  7, patience 5, chattiness 9); writes chatty".
+  - A Python copy of `AutonomousBotPersonality.For` gives exactly that for id 6.
+  - Over the 50-bot roster it gives every type: Leveler 18, Daredevil 9, Explorer 9,
+    Socialite 7, Crafter 6, NoLifer 1. The variety comes from that calculation; only one bot
+    was read in game.
+- **Debate:** `BOT_DEBATE_START scene=camp_etiquette speakers=3` 5½ minutes after start. It
+  showed in `/faction` ("someone just walked into our camp and started pulling haha", "first
+  come first served, that is the rule", "just invite them more ppl more xp", "and if the group is
+  full?"). It ended after 24 s with "fewer than two speakers left", so it was cut short.
+- **Lines:** about 25 voice lines in `/faction`, `/say` and `/gu` fit the moment, in period
+  style, with no `{` or `}`.
+- **Not checked:** how busy towns are compared with stock, how often lines repeat over hours,
+  the 30–45 minute debate repeat, and ding or death lines from voices.
+
+Things to watch in a longer session:
 - towns busier or emptier than in stock 0.36
 - bots stuck re-drawing goals
 - debates that talk over each other

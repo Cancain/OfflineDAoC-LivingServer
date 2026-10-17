@@ -202,8 +202,20 @@ linkdeads, nemesis) plus bot memory of you, and fixes from the Social Expansion 
   Server code; release builds `0.36-chris.4` to `chris.8` were cut from it. `main` has only
   README, changelog and new-client updates, plus the same stuck-bot server fix that our branch
   already has from 0.36. It doesn't have this code yet.
-- **Before the stage 7 merge into `main`:** stages 4, 5 and 5b still need their in-game checks.
-  XP by level range, bot guilds and personalities/voices have only been tested automatically.
+- **Stages 4, 5 and 5b, first in-game pass (2026-10-17, chris.8):**
+  - **XP by level range:** passes for players. Measured 3.0×, 5.0× and 12.0× in PvE zones, and
+    the RvR rate in frontier zones. Bot rates weren't measured.
+  - **Bot guilds:** items 1–5 work; merit wasn't seen yet. **Bug:** the realm's starting guild
+    (Clan Cotswold) blocks recruiting, so "lf guild" gets no answer until you `/gc quit`. Keep
+    claims, alliances and `/ginvite` on bots weren't checked. With 8 bots, Midgard and
+    Hibernia formed no guild.
+  - **Personalities and voices:** `/personality` works; all six types are on the roster. A
+    debate started 5½ minutes in but was cut short after 24 s. Lines fit with no template
+    leaks. Towns and long-term repetition weren't measured.
+  - Details are in each feature's doc.
+- **Before the stage 7 merge into `main`:** fix the starting-guild bug and recheck "lf guild".
+  Then decide whether the unchecked parts (keep claims, alliances, bot XP rates, long sessions)
+  must be seen first or can ship marked as unchecked.
 - Docs: [LIVING-SERVER.md](LIVING-SERVER.md). Planning record:
   [LIVING-SERVER-BACKLOG.md](LIVING-SERVER-BACKLOG.md).
 

@@ -292,4 +292,25 @@ alliances) only runs in a real server.
 
 - **Phases 1–6** are on `feature/bot-guilds`.
 - **Automated tests:** green in CI (the full server suite plus the guild tests); see the latest run.
-- **Nothing has been checked in game yet.**
+- **Partly checked in game** (2026-10-17, build 0.36-chris.8, Godot client, about 20 minutes,
+  50 bots: 34 Albion, 8 Midgard, 8 Hibernia).
+  - **Seen working** (section 4 items):
+    1. One guild formed 90 s after start: the RvR guild "Order of the Oaken Shield" in Albion.
+       Its name shows over its members ("Seraorith <Order of the Oaken Shield>").
+    2. "lf guild" in `/faction` got "inviting you now Claudecheck" from an officer, then the
+       yes/no box. On joining: "hey Claudecheck, welcome. ask if you need anything" and
+       "welcome Claudecheck!".
+    3. "hi all" in `/gu` was answered ("o/ Claudecheck"). A ding to 41 got "nice, 41 already?"
+       and "grats Claudecheck!". Logging back in got "yo Claudecheck". No flooding.
+    4. Idle guild chat ("guild warband forming, frontier bound", "who is geared for rvr right
+       now"). Watched for about 15 minutes, not 30.
+    5. `/gc info`: dues 5%, and the bank held 8 silver 56 copper after about 15 minutes. Merit
+       was still 0, since no guild bot levelled in that time.
+  - **Bug found: the starting guild blocks recruiting.** New characters join their realm's
+    starting guild (Clan Cotswold in Albion). `TryAnswerGuildRequest` and recruiting skip any
+    player with `Guild != null`, so out of the box "lf guild" gets no bot guild answer. It
+    worked only after `/gc quit`. Not fixed yet.
+  - **Not checked:** keep claims (6); alliances (7), which can't form with one guild per realm;
+    and `/ginvite` and `/gc remove` on a bot (8).
+  - **Only one guild formed.** Midgard and Hibernia, with 8 bots each, got none. With a small
+    roster, this feature shows little outside the biggest realm.

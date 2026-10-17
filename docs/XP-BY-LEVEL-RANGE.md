@@ -89,7 +89,22 @@ applies outside your ranges.
   - on GitHub's Windows build (2026-10-11): 47 of 47 of these pass on their own, and the full
     server suite passes (2,674 of 2,674, without the 47 test classes that need installed game
     files).
-- **In-game check:** not done yet. Check it by killing a few monsters at a level inside and outside
-  a range and comparing the XP messages with the flat rate.
+- **In-game check (2026-10-17, build 0.36-chris.8, Godot client):** the suggested rates were set
+  in the launcher, with both flat rates at 1×. Each kill was measured with `/xpstats verbose` as
+  (XP received − camp, guild and outpost bonuses) ÷ base XP:
+
+  | Character level | Zone | Base XP | Received | Bonuses | Rate | Expected |
+  |---|---|---|---|---|---|---|
+  | 4 | Avalon Marsh | 20 | 72 | 12 | 3.0× | 3× |
+  | 25 | Cornwall | 650,200 | 3,641,120 | 390,120 | 5.0× | 5× |
+  | 40 | Lyonesse | 12,044,975 | 151,766,684 | 7,226,984 | 12.0× | 12× |
+  | 25 | Snowdonia (frontier) | 650,200 | 1,105,340 | 455,140 | 1.0× | `rvr_zones_xp_rate` (1) |
+
+  - Snowdonia, Pennine Mountains, Forest Sauvage and Hadrian's Wall are RvR zones in region 1, so
+    they keep the RvR rate as designed. Test in a PvE zone.
+  - The first kill after a GM `/player level` change is topped up to the new level's floor, so
+    it doesn't show the rate. Use the second kill.
+  - **Bot rates were not measured in game.** The log's `AUTONOMOUS_XP_PROGRESS` lines show
+    level-ups but not the base XP.
 - **Code:** `source/server/GameServer/gameutils/LevelRangeXpRates.cs`, used by `GamePlayer` and
   `GameBot`.
