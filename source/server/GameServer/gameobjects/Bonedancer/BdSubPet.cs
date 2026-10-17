@@ -28,7 +28,7 @@ namespace DOL.GS
         /// <summary>
         /// Changes the commander's weapon to the specified weapon template
         /// </summary>
-        public void MinionGetWeapon(CommanderPet.eWeaponType weaponType)
+        public void MinionGetWeapon(CommanderPet.eWeaponType weaponType, ushort model = 0)
         {
             DbItemTemplate itemTemp = CommanderPet.GetWeaponTemplate(weaponType);
 
@@ -39,6 +39,10 @@ namespace DOL.GS
 
             if (weapon != null)
             {
+                // 1.65 look: a plain Norse weapon (CommanderPet.PeriodModel), not the later bone items.
+                ushort shown = model > 0 ? model : CommanderPet.PeriodModel(weaponType);
+                if (shown > 0)
+                    weapon.Model = shown;
                 if (Inventory == null)
                     Inventory = new GameNPCInventory(new GameNpcInventoryTemplate());
                 else

@@ -1324,7 +1324,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// How many players are required on the relic pad to trigger the pillar?
 		/// </summary>
-		[ServerProperty("pvp", "relic_players_required_on_pad", "How many players are required on the relic pad to trigger the pillar?", 16)]
+		// 8 for the offline game (was 16; owner 2026-10-15). Players, gamebots and a player's companion bots count.
+		[ServerProperty("pvp", "relic_players_required_on_pad", "How many players are required on the relic pad to trigger the pillar?", 8)]
 		public static int RELIC_PLAYERS_REQUIRED_ON_PAD;
 
 		/// <summary>

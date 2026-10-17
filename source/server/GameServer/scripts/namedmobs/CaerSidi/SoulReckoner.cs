@@ -62,26 +62,36 @@ namespace DOL.GS
             ReckonedSoul.SoulCount = 0;
             SoulReckonerBrain adds = new SoulReckonerBrain();
             SetOwnBrain(adds);
-            if (CurrentRegionID == 60)
-            {
-                if (spawn_souls == false)
-                {
-                    SpawnSouls();
-                    spawn_souls = true;
-                }
-            }
-            else
-            {
-                if (spawn_souls == false)
-                {
-                    SpawnSouls();
-                    spawn_souls = true;
-                }
-            }
             SaveIntoDatabase();
             LoadedFromScript = false;
-            base.AddToWorld();
+            if (!base.AddToWorld()) return false;
+            // The souls are placed around him, so only once he is in the world: spawned before, they were placed at
+            // 0,0 (no zone), never appeared, and their count kept him immune forever (2026-10-14).
+            if (spawn_souls == false)
+            {
+                SpawnSouls();
+                spawn_souls = true;
+            }
             return true;
+        }
+
+        private long _soulsCheckedTick;
+        private bool _soulsAlive;
+
+        /// <summary>A reckoned soul is alive in his hall (looked up at most once a second).</summary>
+        private bool SoulsAlive()
+        {
+            long now = GameLoop.GameLoopTime;
+            if (now - _soulsCheckedTick >= 1000)
+            {
+                _soulsCheckedTick = now;
+                _soulsAlive = false;
+                foreach (GameNPC npc in GetNPCsInRadius(4000))
+                {
+                    if (npc is ReckonedSoul && npc.IsAlive) { _soulsAlive = true; break; }
+                }
+            }
+            return _soulsAlive;
         }
 
         public static bool spawn_souls = false;
@@ -126,7 +136,17 @@ namespace DOL.GS
         {
             if (EpicEncounterActors.IsCombatant(source))
             {
-                if (ReckonedSoul.SoulCount > 0 || SoulReckonerBrain.InRoom == false) //take no damage
+                // Mechanic change (owner 2026-10-14/15): while a soul lives he takes a quarter of the damage instead of none.
+                // His souls return every minute during the fight, so a 200-bot raid that cleared them was still held at
+                // full immunity and he climbed from 87% to 95% (run 9, 2026-10-15).
+                if (SoulsAlive() && SoulReckonerBrain.InRoom)
+                {
+                    GamePlayer shielded = source as GamePlayer ?? (source as GameSummonedPet)?.Owner as GamePlayer;
+                    shielded?.Out.SendMessage(Name + "'s souls absorb most of your attack!", eChatType.CT_System, eChatLoc.CL_ChatWindow);
+                    base.TakeDamage(source, damageType, damageAmount / 4, criticalAmount / 4);
+                    return;
+                }
+                if (SoulReckonerBrain.InRoom == false) //take no damage
                 {
                     GamePlayer truc;
                     if (source is GamePlayer)
@@ -161,7 +181,7 @@ namespace DOL.GS
         }
         public override void EnemyKilled(GameLiving enemy)
         {
-            Health += MaxHealth / 5; //heals if boss kill enemy
+            Health += MaxHealth / 20; //heals if boss kill enemy (a fifth before 2026-10-15; raids of 200 lose members constantly)
             base.EnemyKilled(enemy);
         }
     }
@@ -182,6 +202,7 @@ namespace DOL.AI.Brain
         }
 
         public static bool InRoom = false;
+        public const int RoomRadius = 1500;
 
         public void AwayFromRoom()
         {
@@ -192,7 +213,9 @@ namespace DOL.AI.Brain
 
             if (Body.CurrentRegionID == 60)
             {
-                if (Body.IsWithinRadius(room_radius, 900)) //if is in room
+                // Mechanic change (run 15, 2026-10-16): the raid pulled him 1,129 from the room's middle, where he took no
+                // damage for five minutes with 206 raiders on him and was skipped. The room now counts out to RoomRadius.
+                if (Body.IsWithinRadius(room_radius, RoomRadius)) //if is in room
                 {
                     InRoom = true;
                 }
@@ -221,7 +244,7 @@ namespace DOL.AI.Brain
 
         public override void Think()
         {
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 //set state to RETURN TO SPAWN
                 FSM.SetCurrentState(eFSMStateType.RETURN_TO_SPAWN);
@@ -376,12 +399,12 @@ namespace DOL.GS
             Faction = FactionMgr.GetFactionByID(64);
             BodyType = 6;
             Realm = eRealm.None;
-            ++SoulCount;
 
             ReckonedSoulBrain adds = new ReckonedSoulBrain();
             SetOwnBrain(adds);
             LoadedFromScript = true;
-            base.AddToWorld();
+            if (!base.AddToWorld()) return false;
+            ++SoulCount;
             return true;
         }
     }

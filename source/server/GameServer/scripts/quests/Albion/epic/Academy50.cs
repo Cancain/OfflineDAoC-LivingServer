@@ -111,7 +111,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 559690 && npc.Y == 510258)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 559690, 510258))
 					{
 						Ferowl = npc;
 						break;
@@ -144,7 +144,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 306093 && npc.Y == 670120)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 306093, 670120))
 					{
 						Morgana = npc as Morgana;
 						break;
@@ -190,7 +190,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 306025 && npc.Y == 670473)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 306025, 670473))
 					{
 						Bechard = npc as Bechard;
 						break;
@@ -223,7 +223,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 306252 && npc.Y == 670274)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 1, 306252, 670274))
 					{
 						Silcharde = npc as Silcharde;
 						break;
@@ -1225,7 +1225,6 @@ namespace DOL.GS.Quests.Albion
 						case "give it to me":
 							if (quest.Step == 2)
 							{
-								RemoveItem(player, sealed_pouch);
 								if (player.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack,
 									    eInventorySlot.LastBackpack))
 								{

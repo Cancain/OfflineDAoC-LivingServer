@@ -1,0 +1,14 @@
+antlr4-python3-runtime==4.13.2
+capstone==5.0.9
+imageio-ffmpeg==0.6.0
+luaparser==4.2.0
+lupa==2.8
+mpyq==0.2.5
+multimethod==2.0.2
+numpy==2.2.6
+opencv-python-headless==5.0.0.93
+pefile==2024.8.26
+pillow==12.3.0
+PyFFI==2.2.3
+scipy==1.15.3
+yt-dlp==2026.7.4

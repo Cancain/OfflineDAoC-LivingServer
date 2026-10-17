@@ -95,6 +95,51 @@ namespace DOL.UnitTests
         public void UndamagedRouteTargetIsSetAside(bool finalBoss, long sinceProgress, bool skip) =>
             Assert.That(RealmRaidDungeonRoute.ShouldSkipTarget(finalBoss, sinceProgress), Is.EqualTo(skip));
 
+        // A final encounter waits for half the living raid (8-150), a third after 20 minutes of mustering.
+        [TestCase(300, 0, 150)]
+        [TestCase(200, 0, 100)]
+        [TestCase(10, 0, 8)]
+        [TestCase(200, 20 * 60_000, 66)]
+        [TestCase(600, 25 * 60_000, 150)]
+        public void FinalEncounterWaitsForTheRaid(int living, long mustering, int needed) =>
+            Assert.That(RealmRaidDungeonRoute.FinalMusterNeeded(living, mustering), Is.EqualTo(needed));
+
+        // A marched siege opens from its posts only with 60% of the army that marched there (at least 8).
+        [TestCase(21, 12)]
+        [TestCase(5, 8)]
+        [TestCase(170, 102)]
+        public void MarchedSiegeOpensWithMostOfTheArmy(int marched, int quorum) =>
+            Assert.That(AutonomousRvrEventLayer.ArrivalQuorum(marched), Is.EqualTo(quorum));
+
+        // A battleground assault wave goes in with 60% of the realm's bots inside, at least eight.
+        // The march goes around the first enemy keep ahead, on the far side from it, and ignores keeps off the line.
+        [Test]
+        public void ArmyDetourGoesAroundTheFirstKeepAhead()
+        {
+            var from = new Vector2(0, 0);
+            var to = new Vector2(100_000, 0);
+            var keeps = new[]
+            {
+                new AutonomousArmyDetour.Hazard(new Vector2(60_000, 2_000), 6_000),   // second on the line
+                new AutonomousArmyDetour.Hazard(new Vector2(30_000, 1_000), 6_000),   // first on the line, just above it
+                new AutonomousArmyDetour.Hazard(new Vector2(50_000, 20_000), 6_000),  // well off the line
+                new AutonomousArmyDetour.Hazard(new Vector2(-10_000, 0), 6_000),      // behind the start
+            };
+            Vector2? detour = AutonomousArmyDetour.FirstDetour(from, to, keeps);
+            Assert.That(detour.HasValue, Is.True);
+            Assert.That(detour.Value.X, Is.EqualTo(30_000).Within(1));
+            Assert.That(detour.Value.Y, Is.EqualTo(1_000 - 10_000).Within(1)); // below the line, radius + margin away
+            Assert.That(AutonomousArmyDetour.FirstDetour(from, to, keeps[2..]), Is.Null);
+            // A hazard around the target itself is not walked around.
+            Assert.That(AutonomousArmyDetour.FirstDetour(from, to, [new(new Vector2(98_000, 0), 6_000)]), Is.Null);
+        }
+
+        [TestCase(30, 18)]
+        [TestCase(10, 8)]
+        [TestCase(0, 8)]
+        public void BattlegroundWaveSize(int inside, int wave) =>
+            Assert.That(AutonomousBattlegroundWave.WaveSize(inside), Is.EqualTo(wave));
+
         // 4. Resurrection outranks chant and song upkeep only when it can happen.
         [TestCase(true, true, true, true, true)]
         [TestCase(true, true, false, true, false)]   // no power: keep chanting

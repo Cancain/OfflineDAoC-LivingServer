@@ -80,7 +80,7 @@ namespace DOL.GS.Quests.Hibernia
 
         if (npcs.Length > 0)
             foreach (var npc in npcs)
-                if (npc.CurrentRegionID == 151 && npc.X == 291615 && npc.Y == 354310)
+                if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 151, 291615, 354310))
                 {
 	                OtaYrling = npc;
                     break;
@@ -111,7 +111,7 @@ namespace DOL.GS.Quests.Hibernia
 
         if (npcs.Length > 0)
             foreach (var npc in npcs)
-                if (npc.CurrentRegionID == 151 && npc.X == 289376 && npc.Y == 304521)
+                if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 151, 289376, 304521))
                 {
 	                Jaklyr = npc;
                     break;
@@ -142,7 +142,7 @@ namespace DOL.GS.Quests.Hibernia
         npcs = WorldMgr.GetNPCsByName("Longbeard", eRealm.Midgard);
         if (npcs.Length > 0)
             foreach (var npc in npcs)
-                if (npc.CurrentRegionID == 151 && npc.X == 290742 && npc.Y == 355471)
+                if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 151, 290742, 355471))
                 {
 	                Longbeard = npc;
                     break;
@@ -175,7 +175,7 @@ namespace DOL.GS.Quests.Hibernia
         npcs = WorldMgr.GetNPCsByName("Styr", eRealm.Midgard);
         if (npcs.Length > 0)
 	        foreach (var npc in npcs)
-		        if (npc.CurrentRegionID == 151 && npc.X == 290643 && npc.Y == 355275)
+		        if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 151, 290643, 355275))
 		        {
 			        Styr = npc;
 			        break;

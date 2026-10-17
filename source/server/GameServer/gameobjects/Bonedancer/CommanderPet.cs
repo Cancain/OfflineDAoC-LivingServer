@@ -98,14 +98,13 @@ namespace DOL.GS
 					CommanderSwitchWeapon(eWeaponType.Staff, false);
 					break;
 				default:
-					bool oneHand = CanUseWeaponSlot(eActiveWeaponSlot.Standard);
-					bool twoHand = CanUseWeaponSlot(eActiveWeaponSlot.TwoHanded);
-					if (oneHand && twoHand)
-						CommanderSwitchWeapon((eWeaponType)Util.Random((int)eWeaponType.OneHandAxe, (int)eWeaponType.TwoHandSword));
-					else if (oneHand)
-						CommanderSwitchWeapon((eWeaponType)Util.Random((int)eWeaponType.OneHandAxe, (int)eWeaponType.OneHandSword));
-					else if (twoHand)
-						CommanderSwitchWeapon((eWeaponType)Util.Random((int)eWeaponType.TwoHandAxe, (int)eWeaponType.TwoHandSword));
+					var choices = CommanderWeapons.Where(w => CanUseWeaponSlot(w.Type is eWeaponType.TwoHandSword or eWeaponType.TwoHandHammer
+						? eActiveWeaponSlot.TwoHanded : eActiveWeaponSlot.Standard)).ToArray();
+					if (choices.Length > 0)
+					{
+						var (type, model) = choices[Util.Random(choices.Length - 1)];
+						CommanderSwitchWeapon(type, true, model);
+					}
 					break;
 			}
 
@@ -513,6 +512,33 @@ namespace DOL.GS
 		private static readonly List<DbItemTemplate> WEAPON_TEMPLATES = new List<DbItemTemplate>((int)eWeaponType.MAX);
 
 		/// <summary>
+		/// 1.65 Bonedancer pet weapons (owner 2026-10-13): plain Norse weapons from the 1.64 retail client, not the
+		/// later bone items 3462-3469. A commander picks one of these nine at summon and carries no shield or helm.
+		/// </summary>
+		public static readonly (eWeaponType Type, ushort Model)[] CommanderWeapons =
+		{
+			(eWeaponType.TwoHandSword, 572), (eWeaponType.TwoHandHammer, 576),
+			(eWeaponType.OneHandSword, 313), (eWeaponType.OneHandSword, 310), (eWeaponType.OneHandHammer, 322),
+			(eWeaponType.OneHandAxe, 319), (eWeaponType.OneHandHammer, 320), (eWeaponType.OneHandAxe, 316),
+			(eWeaponType.OneHandAxe, 578)
+		};
+
+		/// <summary>The model a pet's weapon of this type shows when no particular one was chosen (the minions').</summary>
+		public static ushort PeriodModel(eWeaponType type) => type switch
+		{
+			eWeaponType.Bow => 564,           // Norse Composite bow (archers)
+			eWeaponType.OneHandAxe => 578,    // Norse Hand Axe
+			eWeaponType.OneHandHammer => 321, // norse hammer 1H (guardians)
+			eWeaponType.OneHandSword => 311,  // Norse Short Sword (debuffers)
+			eWeaponType.TwoHandAxe => 577,    // Norse 2h battleaxe
+			eWeaponType.TwoHandHammer => 576, // norse 2h greathammer
+			eWeaponType.TwoHandSword => 572,  // Norse Great Sword
+			eWeaponType.Staff => 327,         // Norse staff (casters)
+			eWeaponType.Dagger => 311,        // Norse Short Sword (archers' melee weapon)
+			_ => 0
+		};
+
+		/// <summary>
 		/// Get the item template for a BD pet
 		/// </summary>
 		public static DbItemTemplate GetWeaponTemplate(eWeaponType type)
@@ -751,7 +777,7 @@ namespace DOL.GS
 		/// Switch the commander to the specified weapon type
 		/// </summary>
 		/// <param name="checkCanUse">Make sure the commander can use this weapon type?</param>
-		public void CommanderSwitchWeapon(eWeaponType weaponType, bool checkCanUse = true)
+		public void CommanderSwitchWeapon(eWeaponType weaponType, bool checkCanUse = true, ushort model = 0)
 		{
 			DbItemTemplate itemTemp = GetWeaponTemplate(weaponType);
 
@@ -763,6 +789,9 @@ namespace DOL.GS
 			weapon = GameInventoryItem.Create(itemTemp);
 			if (weapon != null)
 			{
+				ushort shown = model > 0 ? model : PeriodModel(weaponType);
+				if (shown > 0)
+					weapon.Model = shown;
 				if (Inventory == null)
 					Inventory = new GameNPCInventory(new GameNpcInventoryTemplate());
 				else
@@ -787,7 +816,7 @@ namespace DOL.GS
 				Inventory.AddItem((eInventorySlot)weapon.Item_Type, weapon);
 
 				if (weaponType is eWeaponType.OneHandAxe or eWeaponType.OneHandHammer or eWeaponType.OneHandSword or eWeaponType.Dagger)
-					CommanderEquipOffhand(eWeaponType.CommanderShield);
+					ClearCommanderOffhand(); // 1.65: a commander carries no shield
 				else if (weaponType is eWeaponType.TwoHandAxe or eWeaponType.TwoHandHammer or eWeaponType.TwoHandSword or eWeaponType.Staff)
 					ClearCommanderOffhand();
 
@@ -829,10 +858,8 @@ namespace DOL.GS
 			if (CommanderType == eCommanderType.Unknown || Inventory == null)
 				return;
 
-			if (Inventory.GetItem(eInventorySlot.RightHandWeapon) != null)
-				CommanderEquipOffhand(eWeaponType.CommanderShield);
-			else if (Inventory.GetItem(eInventorySlot.TwoHandWeapon) != null)
-				ClearCommanderOffhand();
+			// 1.65: no shield with either weapon (and no helm: the commander templates carry none).
+			ClearCommanderOffhand();
 		}
 		#endregion
 

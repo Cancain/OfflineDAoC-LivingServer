@@ -103,7 +103,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 749099 && npc.Y == 813104)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 749099, 813104))
 					{
 						Masrim = npc;
 						break;
@@ -137,7 +137,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 607233 && npc.Y == 786850)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 607233, 786850))
 					{
 						Oona = npc as Oona;
 						break;
@@ -172,7 +172,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 101 && npc.X == 33400 && npc.Y == 33620)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 101, 33400, 33620))
 					{
 						MorlinCaan = npc;
 						break;
@@ -934,7 +934,6 @@ namespace DOL.GS.Quests.Midgard
 						case "fulfill":
 							if (quest.Step == 3)
 							{
-								RemoveItem(player, sealed_pouch);
 								if (player.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack,
 									    eInventorySlot.LastBackpack))
 								{

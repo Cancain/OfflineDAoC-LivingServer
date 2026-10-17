@@ -63,6 +63,47 @@ public static class AutonomousTownTeleporters
         return nav.GetClosestPoint(zone, spot, 160, 160, 256, nav.DefaultFilters) ?? spot;
     }
 
+    private static readonly ConcurrentDictionary<GameNPC, Vector3> ReachedStandOffs = new();
+
+    /// <summary>A stand-off point a bot actually reached a route to; later bots try it first.</summary>
+    public static void RememberStandOff(GameNPC porter, Vector3 point) => ReachedStandOffs[porter] = point;
+
+    /// <summary>
+    /// Stand-off points to try in order: one a bot already reached, then the bot's own side (<see cref="StandOff"/>),
+    /// then the rest of the circle. The side a bot comes from can snap onto a ledge or roof that no route reaches
+    /// (Master Visur in Caer Diogel, 2026-10-13: "no connected route to the teleporter", and the bot took a horse).
+    /// </summary>
+    public static IEnumerable<Vector3> StandOffs(GameNPC porter, GameLiving bot)
+    {
+        var seen = new List<Vector3>();
+        bool Fresh(Vector3 p)
+        {
+            if (seen.Any(s => Vector2.DistanceSquared(new(s.X, s.Y), new(p.X, p.Y)) < 40 * 40)) return false;
+            seen.Add(p);
+            return true;
+        }
+        if (ReachedStandOffs.TryGetValue(porter, out Vector3 known) && Fresh(known))
+            yield return known;
+        Vector3 own = StandOff(porter, bot);
+        if (Fresh(own))
+            yield return own;
+        Zone zone = porter.CurrentZone;
+        IPathfindingMgr nav = PathfindingProvider.Instance;
+        if (zone == null || !nav.IsAvailable || !nav.HasNavmesh(zone))
+            yield break;
+        double start = Math.Atan2(bot.Y - porter.Y, bot.X - porter.X);
+        foreach (float radius in new[] { (float)StandOffDistance, 120f })
+            for (int step = 1; step <= 8; step++)
+            {
+                double angle = start + (step % 2 == 1 ? 1 : -1) * ((step + 1) / 2) * Math.PI / 4;
+                var point = new Vector3(porter.X + (float)(Math.Cos(angle) * radius), porter.Y + (float)(Math.Sin(angle) * radius), porter.Z);
+                Vector3? ground = nav.GetClosestPoint(zone, point, 60, 60, 256, nav.DefaultFilters);
+                if (ground.HasValue && Vector2.Distance(new(ground.Value.X, ground.Value.Y), new(porter.X, porter.Y)) >= 90 &&
+                    Fresh(ground.Value))
+                    yield return ground.Value;
+            }
+    }
+
     private static readonly HashSet<ushort> NeverPlannedRegions = [2, 102, 202, 73, 130, 60, 160, 191, 249];
 
     private sealed record PorterCache(long Until, GameNPC[] Porters);

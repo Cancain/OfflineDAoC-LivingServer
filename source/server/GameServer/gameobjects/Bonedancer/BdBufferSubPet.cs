@@ -6,7 +6,7 @@
 
         public override void InitializeActiveWeaponFromInventory()
         {
-            MinionGetShield(CommanderPet.eWeaponType.GuardianBuckler);
+            // 1.65: a plain Norse one-handed hammer (321) and no buckler.
             MinionGetWeapon(CommanderPet.eWeaponType.OneHandHammer);
         }
 

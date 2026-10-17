@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using DOL.Logging;
@@ -23,6 +24,13 @@ namespace DOL.Events
             ArgumentNullException.ThrowIfNull(handler);
             _handler = handler;
             _next = next;
+        }
+
+        /// <summary>The handlers in this chain (memory diagnostics).</summary>
+        public IEnumerable<DOLEventHandler> Handlers()
+        {
+            for (DOLEventHandlerChain current = this; current != null; current = current._next)
+                yield return current._handler;
         }
 
         public static DOLEventHandlerChain Subscribe(DOLEventHandlerChain chain, DOLEventHandler handler)

@@ -9,13 +9,18 @@ namespace OfflineDaoc.Launcher;
 
 internal sealed partial class MainForm : Form
 {
-    internal const string DisplayVersion = "0.35";
+    internal const string DisplayVersion = "0.36";
     internal const int AutoRefreshMilliseconds = 5 * 60 * 1000;
     internal const int RvrSnapshotRefreshMilliseconds = 30 * 1000;
     internal const int LiveBotSnapshotMaxAgeMilliseconds = 20_000;
     internal const int LiveBotSnapshotWaitMilliseconds = 3_000;
     internal const int ServerReadinessPollMilliseconds = 500;
-    private readonly string _root = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
+    // The launcher's own folder. In the 0.36c install the new client's launcher lives in new-client\runtime and
+    // runs the SAME server as the original client's launcher (named in server_root.txt), so both clients share one
+    // account, one bot roster and one world.
+    private readonly string _launcherRoot = AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar);
+    private readonly string _root = ServerRoot();
+    private readonly bool _newClient = IsNewClientLauncher();
     private readonly string _database;
     private readonly string _serverDirectory;
     private readonly string _serverExecutable;
@@ -150,14 +155,23 @@ internal sealed partial class MainForm : Form
         _database = Path.Combine(_root, "data", "opendaoc.sqlite3.db");
         _serverDirectory = Path.Combine(_root, "server");
         _serverExecutable = Path.Combine(_serverDirectory, "CoreServer.exe");
-        string officialClientDirectory = Path.Combine(_root, "client-opendaoc", "app");
-        _clientDirectory = File.Exists(Path.Combine(officialClientDirectory, "game.dll"))
-            ? officialClientDirectory
-            : Path.Combine(_root, "client");
-        _clientConnector = Path.Combine(_clientDirectory, "connect.exe");
+        if (_newClient)
+        {
+            // 0.36c: the new client (new-client\godot, run by new-client\tools\godot_net) instead of game.dll
+            _clientDirectory = Path.GetFullPath(Path.Combine(_launcherRoot, "..", "godot"));
+            _clientConnector = Path.GetFullPath(Path.Combine(_launcherRoot, "..", "tools", "godot_net", NewClientExecutable));
+        }
+        else
+        {
+            string officialClientDirectory = Path.Combine(_root, "client-opendaoc", "app");
+            _clientDirectory = File.Exists(Path.Combine(officialClientDirectory, "game.dll"))
+                ? officialClientDirectory
+                : Path.Combine(_root, "client");
+            _clientConnector = Path.Combine(_clientDirectory, "connect.exe");
+        }
         _logsDirectory = Path.Combine(_root, "logs");
 
-        Text = "Offline DAoC — Classic + Shrouded Isles";
+        Text = _newClient ? "Offline DAoC 0.36c — New client" : "Offline DAoC — Classic + Shrouded Isles";
         MinimumSize = new Size(960, 620);
         Size = new Size(1100, 700);
         StartPosition = FormStartPosition.CenterScreen;
@@ -354,7 +368,7 @@ internal sealed partial class MainForm : Form
         titlePanel.Controls.Add(new Label
         {
             AutoSize = true,
-            Text = VersionLabel(InstalledEditionHasCustomClass(_database)),
+            Text = _newClient ? $"VERSION {DisplayVersion}c" : VersionLabel(InstalledEditionHasCustomClass(_database)),
             Font = new Font("Georgia", 12f, FontStyle.Bold),
             ForeColor = DaocTheme.GoldLight,
             Location = new Point(97, 79),
@@ -569,7 +583,7 @@ internal sealed partial class MainForm : Form
         _xpSettingsStatus.Font = new Font("Georgia", 9f, FontStyle.Bold | FontStyle.Italic);
         layout.Controls.Add(_makeMeGm, 0, 3);
         layout.SetColumnSpan(_makeMeGm, 2);
-        layout.Controls.Add(XpRateDescription("Applies to your account at the next server startup."), 2, 3);
+        layout.Controls.Add(XpRateDescription("Applies to your account at the next server startup. (Mobs will not attack you with /gmstealth on.)"), 2, 3);
         _makeMeGm.CheckedChanged += async (_, _) => await SaveGmSettingAsync();
         layout.Controls.Add(_rvrAnnouncements, 0, 4);
         layout.SetColumnSpan(_rvrAnnouncements, 2);
@@ -2798,6 +2812,11 @@ internal sealed partial class MainForm : Form
             MessageBox.Show(this, "Start the local server first.", "Server stopped", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
+        if (_newClient)
+        {
+            LaunchNewClient();
+            return;
+        }
         if (!File.Exists(_clientConnector) || !File.Exists(Path.Combine(_clientDirectory, "game.dll")))
         {
             MessageBox.Show(this, "The isolated client or connection utility is missing.", "Client not ready", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2815,6 +2834,72 @@ internal sealed partial class MainForm : Form
         });
         if (client != null)
             ClientSessionDiagnostics.Start(client, _clientDirectory, _logsDirectory);
+    }
+
+    internal const string NewClientExecutable = "Godot_v4.7.2-stable_mono_win64.exe";
+
+    // A launcher is the new client's when the new client (..\godot\project.godot) sits beside its folder.
+    private static bool IsNewClientLauncher() => IsNewClientFolder(AppContext.BaseDirectory);
+
+    internal static bool IsNewClientFolder(string launcherFolder) =>
+        File.Exists(Path.Combine(launcherFolder.TrimEnd(Path.DirectorySeparatorChar), "..", "godot", "project.godot"));
+
+    // The server's runtime folder: server_root.txt beside the launcher (a path relative to it, or absolute), else the
+    // launcher's own folder. The new client's launcher ships with "..\..\runtime": the original game's runtime.
+    private static string ServerRoot() => ServerRootFor(AppContext.BaseDirectory);
+
+    internal static string ServerRootFor(string launcherFolder)
+    {
+        string here = Path.GetFullPath(launcherFolder).TrimEnd(Path.DirectorySeparatorChar);
+        string file = Path.Combine(here, "server_root.txt");
+        if (File.Exists(file))
+        {
+            string line = File.ReadLines(file).Select(l => l.Trim()).FirstOrDefault(l => l.Length > 0 && !l.StartsWith('#')) ?? "";
+            if (line.Length > 0)
+            {
+                string full = Path.GetFullPath(Path.IsPathRooted(line) ? line : Path.Combine(here, line));
+                if (Directory.Exists(full))
+                    return full.TrimEnd(Path.DirectorySeparatorChar);
+            }
+        }
+        return here;
+    }
+
+    // The new client logs in to the shared server with the same local account as the original client.
+    private void LaunchNewClient()
+    {
+        if (!File.Exists(_clientConnector) || !File.Exists(Path.Combine(_clientDirectory, "project.godot")))
+        {
+            MessageBox.Show(this, "The new client is missing (the new-client\\godot and new-client\\tools folders).", "Client not ready",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+        var credentials = ReadCredentials();
+        string top = Path.GetFullPath(Path.Combine(_launcherRoot, ".."));
+        var start = new ProcessStartInfo(_clientConnector)
+        {
+            WorkingDirectory = top,
+            UseShellExecute = false,
+            ArgumentList = { "--path", _clientDirectory, "--", "--server=127.0.0.1", $"--account={credentials.Account}", $"--password={credentials.Password}" },
+        };
+        // On a 0.36 game (classes / enable_sluaghbinder = False) the new client offers the classic classes only.
+        if (!InstalledEditionHasCustomClass(_database))
+            start.ArgumentList.Add("--custom-class=off");
+        // The new client's settings, keybinds, quickbars and logs stay in new-client\save.
+        start.Environment["APPDATA"] = Path.Combine(top, "save");
+        // The .NET it runs on: the game's bundled runtime (tools\dotnet beside new-client), else new-client\tools\dotnet.
+        foreach (string candidate in new[] { Path.Combine(top, "..", "tools", "dotnet"), Path.Combine(top, "tools", "dotnet") })
+        {
+            string dotnet = Path.GetFullPath(candidate);
+            if (!File.Exists(Path.Combine(dotnet, "dotnet.exe")))
+                continue;
+            start.Environment["DOTNET_ROOT"] = dotnet;
+            start.Environment["DOTNET_ROOT_X64"] = dotnet;
+            start.Environment["DOTNET_MULTILEVEL_LOOKUP"] = "0";
+            start.Environment["PATH"] = dotnet + ";" + Environment.GetEnvironmentVariable("PATH");
+            break;
+        }
+        Process.Start(start);
     }
 
     private (string Account, string Password) ReadCredentials()
@@ -2857,7 +2942,7 @@ internal sealed partial class MainForm : Form
     private void EnsureBorderlessFullscreen()
     {
         // Use this installation's own client profile (paths.dat settings=), never another copy's preferences.
-        string profile = "OfflineDAoC035";
+        string profile = "OfflineDAoC036";
         string pathsFile = Path.Combine(_clientDirectory, "paths.dat");
         if (File.Exists(pathsFile))
         {

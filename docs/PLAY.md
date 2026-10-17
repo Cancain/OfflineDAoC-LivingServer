@@ -7,10 +7,11 @@ You don't need Git, programming knowledge or an AI tool to play.
 **What you need:**
 - A 64-bit Windows 10 or 11 PC whose CPU supports **AVX2**. Most CPUs from 2014 onward do.
 - 16 GB RAM is recommended; 8 GB may work but is untested.
-- About **20 GB of free disk space**: 5 GB of downloads, 5 GB while they are unpacked, 8 GB for the game, and room for saves. The downloads can be deleted afterwards (the `.downloads` folder next to the helper).
+- About **20 GB of free disk space** for 0.36b or 0.36 (5 GB of downloads, 5 GB while they are unpacked, 8 GB for the game, and room for saves), and about **60 GB** while 0.36c installs. The downloads can be deleted afterwards (the `.downloads` folder next to the helper).
+- For the new client (0.36c): a graphics card that supports **Vulkan or DirectX 12**, with up-to-date drivers.
 
-**Turn on the Windows .NET Framework 3.5 feature.** The old game's connector needs it, even
-though the game bundles its own modern .NET.
+**Turn on the Windows .NET Framework 3.5 feature.** The original game client's connector needs it,
+even though the game bundles its own modern .NET. (The new client of 0.36c doesn't need it.)
 1. Open the Start menu and type **Turn Windows features on or off**, then open it.
 2. Tick **.NET Framework 3.5 (includes .NET 2.0 and 3.0)**.
 3. Click **OK** and let Windows download and install it.
@@ -22,33 +23,41 @@ If the game window never appears after ENTER REALM, this feature is the usual ca
 
 | Edition | Choose it if… |
 |---|---|
-| **0.35b** | You want the custom Hibernian **Sluaghbinder** class, for you and the bots. |
-| **0.35** | You want only the original Classic + Shrouded Isles classes. |
+| **0.36b** | You want the custom Hibernian **Sluaghbinder** class, for you and the bots. |
+| **0.36** | You want only the original Classic + Shrouded Isles classes. |
+| **0.36c** | You want **both** game clients: the original one and the [new client](NEW-CLIENT.md). They play the same account, characters and bots. The installer asks whether you want it with 0.36b (with the Sluaghbinder) or 0.36 (classic classes only). |
 
-Both are the same game otherwise. If you're unsure, pick 0.35b. The Sluaghbinder is just one more
-Hibernian choice, and you don't have to play it.
+0.36b and 0.36 are the same game otherwise. If you're unsure, pick 0.36b. The Sluaghbinder is just one more
+Hibernian choice, and you don't have to play it. 0.36c is 0.36b or 0.36 plus the new client; you can still play with the
+original client there.
 
 ## 2. Download
 
-1. Make a new, empty folder, for example `C:\Games\OfflineDAoC`.
-2. From your edition's release page, download both of these files into that folder:
-   - [v0.35b](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.35b):
-     `DOWNLOAD-AND-PLAY-v0.35b.cmd` and `Get-OfflineDAoC.ps1`
-   - [v0.35](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.35):
-     `DOWNLOAD-AND-PLAY-v0.35.cmd` and `Get-OfflineDAoC.ps1`
-3. Double-click the `.cmd` file. If Windows asks whether to run it, choose **Run anyway**.
+1. Make a new, empty folder with a short path, for example `C:\Games\OfflineDAoC`.
+2. From your edition's release page, download the one downloader zip into that folder:
+   - [v0.36b](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36b): `Download-OfflineDAoC-v0.36b.zip`
+   - [v0.36](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36): `Download-OfflineDAoC-v0.36.zip`
+   - [v0.36c](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36c): `Download-OfflineDAoC-v0.36c.zip`
+3. Right-click the zip and choose **Extract All…**, then open the extracted folder.
+4. Double-click the `DOWNLOAD-AND-PLAY-….cmd` file. If Windows asks whether to run it, choose **Run** (or
+   **More info → Run anyway**).
 
 The helper:
-1. downloads the game in parts, about 5 GB in total
+1. downloads the game in parts (0.36b and 0.36: about 5 GB; 0.36c: about 5 GB plus about 30 GB for the new client)
 2. checks each part against its published fingerprint (SHA-256)
-3. unpacks the game into a new folder next to the helper (`playable-v0.35b` or `playable-v0.35`)
+3. unpacks the game into a new folder next to the helper (`playable-v0.36b`, `playable-v0.36`, or for 0.36c
+   `playable-v0.36c` / `playable-v0.36c-classic`)
 
 It never overwrites an existing game and never starts anything by itself. If a download is
 interrupted, run the helper again: finished parts are kept and only the missing ones are fetched.
 
+**Already have 0.36b or 0.36 and want the new client?** In the 0.36c downloader zip, double-click
+`ADD-NEW-CLIENT-TO-0.36-OR-0.36b.cmd` and choose your game folder. See [NEW-CLIENT.md](NEW-CLIENT.md).
+
 ## 3. Play
 
-1. Open the new `playable-…` folder and double-click **START OFFLINE DAOC.cmd**.
+1. Open the new `playable-…` folder and double-click **START OFFLINE DAOC.cmd** (in 0.36c, or
+   **START OFFLINE DAOC - NEW CLIENT.cmd** to play with the new client).
 2. In the launcher, click **START SERVER** and wait until it shows **RUNNING**. The first start
    takes longer.
 3. Click **ENTER REALM**. The first time, your own local account is created automatically.
@@ -100,7 +109,7 @@ in `ALL SERVER COMMANDS.txt`.
 ## Moving from an older version
 
 Your old game keeps working and isn't changed. To bring your progress (account, characters, items,
-money, houses and bots) into 0.35, follow [TRANSFER-PROGRESS.md](TRANSFER-PROGRESS.md).
+money, houses and bots) into 0.36, follow [TRANSFER-PROGRESS.md](TRANSFER-PROGRESS.md).
 In short:
 1. Stop both games.
 2. Run **IMPORT PROGRESS FROM OLD OFFLINE DAOC.cmd** in the new folder.
@@ -116,9 +125,12 @@ In short:
 | The game window doesn't appear | Turn on the .NET Framework 3.5 feature (see above), then try again. |
 | "Port 10300 is in use" or the server won't start | Another Offline DAoC server is running. Stop it first; only one can run at a time. |
 | Windows SmartScreen blocks a file | Choose **More info → Run anyway**. The files are unsigned community builds. |
+| The new client says the folder path is too long | Move the game to a shorter path, for example `C:\Games\OfflineDAoC`, and run the helper again. |
+| The new client's window stays black or closes at once | Update your graphics driver; the new client needs Vulkan or DirectX 12. |
+| Two launchers are open | Use one at a time: both start and stop the same server. Close one before you start the server. |
 
 ## Older versions
 
-v0.3, v0.31, v0.31b, v0.32 and v0.32b are still on the
+Every earlier release (v0.3 to v0.35b) is still on the
 [Releases page](https://github.com/shadowofze/OfflineDAoC/releases). Their helpers are in the
 repository's [older-versions](../older-versions/) folder.

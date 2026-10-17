@@ -71,7 +71,7 @@ namespace DOL.GS.WeeklyQuest.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 249 && npc.X == 46083 && npc.Y == 39681)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 249, 46083, 39681))
 					{
 						Stefano = npc;
 						break;

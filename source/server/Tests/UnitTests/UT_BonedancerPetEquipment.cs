@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using DOL.Database;
@@ -50,80 +51,58 @@ public sealed class UT_BonedancerPetEquipment
         GameServer.LoadTestDouble(_oldServer);
     }
 
+    // 1.65 looks (owner 2026-10-13): plain Norse weapons from the 1.64 retail client, no commander shield or helm,
+    // no guardian buckler.
     [Test]
-    public void OneHandCommanderAlwaysHasSkullShieldAndTwoHandClearsIt()
+    public void CommanderShowsANorseWeaponAndNeverAShield()
     {
         CommanderPet commander = new CommanderPet(Template(50, "skeletal commander"));
-
-        commander.CommanderSwitchWeapon(CommanderPet.eWeaponType.OneHandHammer, false);
-        Assert.That(commander.Inventory.GetItem(eInventorySlot.RightHandWeapon)?.Model, Is.EqualTo(3466));
-        Assert.That(commander.Inventory.GetItem(eInventorySlot.LeftHandWeapon)?.Model, Is.EqualTo(3554));
-
-        commander.CommanderSwitchWeapon(CommanderPet.eWeaponType.TwoHandHammer, false);
-        Assert.That(commander.Inventory.GetItem(eInventorySlot.TwoHandWeapon)?.Model, Is.EqualTo(3465));
+        DbInventoryItem held = commander.Inventory.GetItem(eInventorySlot.RightHandWeapon) ?? commander.Inventory.GetItem(eInventorySlot.TwoHandWeapon);
+        Assert.That(CommanderPet.CommanderWeapons.Select(w => (int)w.Model), Does.Contain(held?.Model), "one of the nine at summon");
         Assert.That(commander.Inventory.GetItem(eInventorySlot.LeftHandWeapon), Is.Null);
 
-        commander.CommanderSwitchWeapon(CommanderPet.eWeaponType.OneHandSword, false);
-        Assert.That(commander.Inventory.GetItem(eInventorySlot.RightHandWeapon)?.Model, Is.EqualTo(3463));
-        Assert.That(commander.Inventory.GetItem(eInventorySlot.LeftHandWeapon)?.Model, Is.EqualTo(3554));
+        commander.CommanderSwitchWeapon(CommanderPet.eWeaponType.OneHandHammer, false, 322);
+        Assert.That(commander.Inventory.GetItem(eInventorySlot.RightHandWeapon)?.Model, Is.EqualTo(322));
+        Assert.That(commander.Inventory.GetItem(eInventorySlot.LeftHandWeapon), Is.Null);
+
+        commander.CommanderSwitchWeapon(CommanderPet.eWeaponType.TwoHandSword, false);
+        Assert.That(commander.Inventory.GetItem(eInventorySlot.TwoHandWeapon)?.Model, Is.EqualTo(572));
+        Assert.That(commander.Inventory.GetItem(eInventorySlot.LeftHandWeapon), Is.Null);
     }
 
     [Test]
-    public void BonePatrollerAlwaysHasMaceAndRoundBuckler()
+    public void BonePatrollerHasANorseHammerAndNoBuckler()
     {
-        BdBufferSubPet patroller = new BdBufferSubPet(Template(60, "bone patroller"));
+        BdBufferSubPet patroller = new BdBufferSubPet(Template(65, "bone patroller"));
         patroller.InitializeActiveWeaponFromInventory();
 
-        Assert.That(patroller.Inventory.GetItem(eInventorySlot.RightHandWeapon)?.Model, Is.EqualTo(3466));
-        Assert.That(patroller.Inventory.GetItem(eInventorySlot.LeftHandWeapon)?.Model, Is.EqualTo(1045));
+        Assert.That(patroller.Inventory.GetItem(eInventorySlot.RightHandWeapon)?.Model, Is.EqualTo(321));
+        Assert.That(patroller.Inventory.GetItem(eInventorySlot.LeftHandWeapon), Is.Null);
         Assert.That(patroller.ActiveWeaponSlot, Is.EqualTo(eActiveWeaponSlot.Standard));
     }
 
     [Test]
-    public void BoneDebufferWieldsTheCommandersTwoHandedMaceOnly()
+    public void BoneDebufferCarriesANorseShortSword()
     {
         BdDebufferSubPet debuffer = new BdDebufferSubPet(Template(61, "bonecurser"));
-        debuffer.Inventory = new GameNPCInventory(new GameNpcInventoryTemplate());
-        debuffer.Inventory.AddItem(eInventorySlot.RightHandWeapon,
-            GameInventoryItem.Create(CommanderPet.GetWeaponTemplate(CommanderPet.eWeaponType.OneHandSword)));
         debuffer.InitializeActiveWeaponFromInventory();
 
-        Assert.That(debuffer.Inventory.GetItem(eInventorySlot.TwoHandWeapon)?.Model, Is.EqualTo(3465));
-        Assert.That(debuffer.Inventory.GetItem(eInventorySlot.RightHandWeapon), Is.Null, "template bone sword removed");
-        Assert.That(debuffer.ActiveWeaponSlot, Is.EqualTo(eActiveWeaponSlot.TwoHanded));
+        Assert.That(debuffer.Inventory.GetItem(eInventorySlot.RightHandWeapon)?.Model, Is.EqualTo(311));
+        Assert.That(debuffer.Inventory.GetItem(eInventorySlot.TwoHandWeapon), Is.Null);
+        Assert.That(debuffer.ActiveWeaponSlot, Is.EqualTo(eActiveWeaponSlot.Standard));
     }
 
     [Test]
-    public void BoneDebufferMaceHitsHarderButSlowerWithTheSameDamagePerSecond()
+    public void MeleeMinionCarriesOneOfTheFourNorseAxes()
     {
-        BdDebufferSubPet debuffer = new BdDebufferSubPet(Template(61, "bonecurser"));
-        debuffer.InitializeActiveWeaponFromInventory();
-        BdMeleeSubPet melee = new BdMeleeSubPet(Template(85, "bonecracker"));
-        melee.Inventory = new GameNPCInventory(new GameNpcInventoryTemplate());
-        melee.Inventory.AddItem(eInventorySlot.RightHandWeapon,
-            GameInventoryItem.Create(CommanderPet.GetWeaponTemplate(CommanderPet.eWeaponType.OneHandHammer)));
-        melee.SwitchWeapon(eActiveWeaponSlot.Standard);
-
-        MethodInfo npcDamage = typeof(AttackComponent).GetMethod("CalculateNpcDamage", BindingFlags.Instance | BindingFlags.NonPublic);
-        (double f1, double f2) = (GS.ServerProperties.Properties.PVE_MOB_DAMAGE_F1, GS.ServerProperties.Properties.PVE_MOB_DAMAGE_F2);
-        double twoHandHit, oneHandHit;
-        try
+        for (int i = 0; i < 20; i++)
         {
-            GS.ServerProperties.Properties.PVE_MOB_DAMAGE_F1 = 150;
-            GS.ServerProperties.Properties.PVE_MOB_DAMAGE_F2 = 300;
-            twoHandHit = (double)npcDamage.Invoke(debuffer.attackComponent, new object[] { debuffer.ActiveWeapon });
-            oneHandHit = (double)npcDamage.Invoke(melee.attackComponent, new object[] { melee.ActiveWeapon });
+            BdMeleeSubPet melee = new BdMeleeSubPet(Template(85, "bonecracker"));
+            melee.InitializeActiveWeaponFromInventory();
+            DbInventoryItem held = melee.Inventory.GetItem(eInventorySlot.RightHandWeapon) ?? melee.Inventory.GetItem(eInventorySlot.TwoHandWeapon);
+            Assert.That(new[] { 578, 319, 317, 577 }, Does.Contain(held?.Model));
+            Assert.That(melee.Inventory.GetItem(eInventorySlot.LeftHandWeapon), Is.Null);
         }
-        finally
-        {
-            (GS.ServerProperties.Properties.PVE_MOB_DAMAGE_F1, GS.ServerProperties.Properties.PVE_MOB_DAMAGE_F2) = (f1, f2);
-        }
-        int twoHandSpeed = AttackComponent.NpcWeaponSpeed(debuffer.ActiveWeapon);
-        int oneHandSpeed = AttackComponent.NpcWeaponSpeed(melee.ActiveWeapon);
-
-        Assert.That(twoHandSpeed, Is.GreaterThan(oneHandSpeed), "slower swing");
-        Assert.That(twoHandHit, Is.GreaterThan(oneHandHit), "harder hit");
-        Assert.That(twoHandHit / twoHandSpeed, Is.EqualTo(oneHandHit / oneHandSpeed).Within(1e-9), "same damage per second");
     }
 
     private static NpcTemplate Template(int id, string name) => new(new DbNpcTemplate

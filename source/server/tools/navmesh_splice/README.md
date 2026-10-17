@@ -24,3 +24,24 @@ an OpenDAoC-BuildNav build of the current client, spliced into the installed mes
 Builder note: zone 200 rebuilds byte-identical to the installed mesh, zones 000/100 do not
 (their installed meshes have raised "New Towns" plazas around the portals that this client
 does not have).
+
+# Zone road graph (navmesh/roads.json)
+
+Detour's search stops at a dead end when the only way to a far point first leads away from it.
+The server then falls back to a graph of short legs proven with its own corridor check
+(`AutonomousZoneRoads`): the corridor check, the zone itinerary and the bot mover all use it.
+Area ids match `seams.json` (both come from `navcomp`), so the same meshes must produce both.
+Regenerate after rebuilding any mesh (server stopped, about a minute in all):
+
+```
+python roadgraph.py ..\..\..\..\runtime\data\opendaoc.sqlite3.db ..\..\..\..\runtime\server\navmesh roads.candidates.json
+set OFFLINE_DAOC_NAV_ROOT=<runtime\server>
+set OFFLINE_DAOC_ROADS_IN=<this folder>\roads.candidates.json
+set OFFLINE_DAOC_ROADS_OUT=<this folder>\roads.generated.json
+dotnet test Tests/Tests.csproj -c Release --filter "FullyQualifiedName~UT_ZoneRoadBuild"
+copy roads.generated.json <runtime\server>\navmesh\roads.json
+```
+
+Check routes with `UT_ZoneStepProbe` (its result line now ends with the navmesh query profile,
+including `Road=calls/ms`). Without `roads.json` everything behaves as before it existed.
+First built 2026-10-13: 63 zones of regions 1, 100, 200, 51, 151, 181; 99.6% of candidate legs proven.

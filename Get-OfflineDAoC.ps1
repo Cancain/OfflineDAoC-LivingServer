@@ -1,8 +1,13 @@
 param(
     [string]$Destination = (Join-Path $PSScriptRoot 'playable'),
-    [ValidatePattern('^\d+\.\d+(b)?$')]
-    [string]$ReleaseVersion = '0.35b',
-    # Testing only: read release assets from <folder><version>\ instead of GitHub.
+    [ValidatePattern('^\d+\.\d+(b|c)?$')]
+    [string]$ReleaseVersion = '0.36b',
+    # 0.36c only: add the new client to an existing 0.36b or 0.36 game folder instead of installing a new game.
+    # 'pick' opens a folder picker.
+    [string]$AddTo = '',
+    # 0.36c only: a new install gets the 0.36 game (classic classes only) instead of 0.36b (with the Sluaghbinder).
+    [switch]$Classic,
+    # Testing only: read release assets from <folder>/v<version>/ instead of GitHub.
     [string]$LocalAssets = ''
 )
 $ErrorActionPreference = 'Stop'
@@ -60,7 +65,8 @@ function Get-ReleaseAsset([string]$Name, [string]$OutFile) {
 $rootFolder = "OfflineDAoC-v$ReleaseVersion"
 $partPattern = '^' + [regex]::Escape($rootFolder) + '\.zip\.\d{3}$'
 $target = [IO.Path]::GetFullPath($Destination)
-if (Test-ExistsLong $target) { throw 'Destination already exists. Choose a NEW folder; existing games and saves are never overwritten.' }
+# 0.36c can finish an interrupted install in the same folder, or add the client to an existing 0.36b game.
+if ((Test-ExistsLong $target) -and !($ReleaseVersion -like '*c')) { throw 'Destination already exists. Choose a NEW folder; existing games and saves are never overwritten.' }
 $cache = Join-Path $PSScriptRoot (Join-Path '.downloads' "v$ReleaseVersion")
 New-Item -ItemType Directory -Path $cache -Force | Out-Null
 $manifestPath = Join-Path $cache 'download-manifest.json'
@@ -322,11 +328,169 @@ if ($manifest.Mode -eq 'delta') {
     exit 0
 }
 
-# 0.33, 0.34 and 0.35 "no custom class" are the same complete 0.33b / 0.34b / 0.35b game plus two
+# 0.36c is the new client, added to a 0.36b or 0.36 game: new-client\ plus its start file, beside START OFFLINE DAOC.cmd.
+# Both clients then share the game's server, account, characters and bots. A new install first downloads the complete
+# 0.36b game (-Classic: the 0.36 game), as its own DOWNLOAD-AND-PLAY cmd would, then the client; -AddTo adds the client
+# to an existing 0.36b or 0.36 folder.
+# The client comes in independent, separately verified parts: each one is downloaded, checked, unpacked and deleted
+# before the next, so the large download never needs twice its size on disk, and an interrupted install continues
+# where it stopped when the helper runs again.
+if ($manifest.Mode -eq 'newclient') {
+    if ($ReleaseVersion -ne '0.36c' -or $manifest.BaseVersion -ne '0.36b' -or $manifest.ClassicBaseVersion -ne '0.36' -or
+        $manifest.RootFolder -ne $rootFolder -or !$manifest.Parts -or !$manifest.RootFiles) { throw "Unexpected v$ReleaseVersion manifest." }
+    $newClientPartPattern = '^' + [regex]::Escape($rootFolder) + '-part\d{2}\.zip$'
+
+    function Test-GameFolder([string]$game) {
+        # A 0.36b game (with the Sluaghbinder) or a 0.36 game (classic classes only, marked by EDITION.txt): both carry
+        # the 0.36 launcher, and each has its own verified game client. The new client plays either.
+        $dll = Join-Path $game 'runtime\OfflineDAoC.dll'
+        if (!(Test-Path -LiteralPath (Join-Path $game 'runtime\OfflineDAoC.exe') -PathType Leaf) -or
+            !(Test-Path -LiteralPath $dll -PathType Leaf)) {
+            throw "No Offline DAoC game was found in $game. Choose the folder that holds START OFFLINE DAOC.cmd."
+        }
+        $text = [Text.Encoding]::Unicode.GetString([IO.File]::ReadAllBytes($dll))
+        if (!$text.Contains('VERSION 0.36b')) {
+            throw "The game in $game is not Offline DAoC 0.36 or 0.36b. The new client needs a 0.36 or 0.36b game (same server version). Use DOWNLOAD-AND-PLAY-v0.36c.cmd for a complete new install."
+        }
+        $gameDll = Join-Path $game 'runtime\client-opendaoc\app\game.dll'
+        $clientHash = if (Test-Path -LiteralPath $gameDll -PathType Leaf) { (Get-FileHash -LiteralPath $gameDll -Algorithm SHA256).Hash } else { '' }
+        $classicGame = Test-Path -LiteralPath (Join-Path $game 'EDITION.txt')
+        $expected = if ($classicGame) { $manifest.ClassicClientSHA256 } else { $manifest.BaseClientSHA256 }
+        if ($clientHash -ne $expected) {
+            throw "The game client in $game is not the one Offline DAoC 0.36 / 0.36b installs. Use DOWNLOAD-AND-PLAY-v0.36c.cmd for a complete new install."
+        }
+        if ($classicGame) { Write-Host 'Found Offline DAoC 0.36 (classic classes only). The new client will offer the classic classes only.' }
+        else { Write-Host 'Found Offline DAoC 0.36b (with the Sluaghbinder).' }
+    }
+
+    if ($AddTo) {
+        if ($AddTo -eq 'pick') {
+            Add-Type -AssemblyName System.Windows.Forms
+            $dialog = New-Object System.Windows.Forms.FolderBrowserDialog
+            $dialog.Description = 'Choose your Offline DAoC 0.36b or 0.36 folder (the one with START OFFLINE DAOC.cmd in it).'
+            $dialog.ShowNewFolderButton = $false
+            if ($dialog.ShowDialog() -ne [System.Windows.Forms.DialogResult]::OK) { throw 'No folder was chosen. Nothing was changed.' }
+            $AddTo = $dialog.SelectedPath
+        }
+        $game = [IO.Path]::GetFullPath($AddTo)
+        Test-GameFolder $game
+    } else {
+        $game = $target
+    }
+
+    # The client's files sit about 150 characters below the game folder; the engine reads them with normal Windows paths.
+    if ($game.Length -gt 100) { throw "The folder path is too long for the new client ($($game.Length) characters, 100 at most). Move the game to a shorter path, for example C:\Games\OfflineDAoC, and run this again." }
+    $client = Join-Path $game 'new-client'
+    $installing = Join-Path $client 'INSTALLING.txt'
+    $done = Join-Path $client '.install'
+    $clientBytes = [int64](($manifest.Parts | Measure-Object -Property UnpackedBytes -Sum).Sum)
+
+    if (!$AddTo) {
+        # A new install: the 0.36b game first, marked done so a rerun knows the folder is a complete game.
+        $baseDone = Join-Path $done 'base.done'
+        if (!(Test-ExistsLong $game)) {
+            $drive = New-Object IO.DriveInfo ([IO.Path]::GetPathRoot($game))
+            $need = $clientBytes + 25GB
+            if ($drive.AvailableFreeSpace -lt $need) {
+                throw ("Offline DAoC 0.36c needs about {0:N0} GB of free disk space on {1} while it installs ({2:N0} GB free). Free up space and run this again." -f ($need / 1GB), $drive.Name, ($drive.AvailableFreeSpace / 1GB))
+            }
+            $baseVersion = if ($Classic) { $manifest.ClassicBaseVersion } else { $manifest.BaseVersion }
+            Write-Host "Step 1 of 2: the complete $baseVersion game."
+            & $PSCommandPath -ReleaseVersion $baseVersion -Destination $game -LocalAssets $LocalAssets
+            if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) { throw "The $baseVersion game download failed. Run this file again to retry." }
+            [IO.Directory]::CreateDirectory((Get-ExtendedPath $done)) | Out-Null
+            Set-Content -LiteralPath $baseDone -Value $baseVersion -Encoding ASCII
+        } elseif (!(Test-Path -LiteralPath $baseDone) -and !(Test-Path -LiteralPath (Join-Path $client 'VERSION.txt'))) {
+            throw "The folder $game exists, but the game in it did not finish installing. Rename or delete that folder and run this file again (the downloaded parts are kept and not downloaded again)."
+        } else {
+            Write-Host "Continuing the install in $game ..."
+        }
+        Test-GameFolder $game
+    }
+    if ((Test-Path -LiteralPath (Join-Path $client 'VERSION.txt')) -and !(Test-Path -LiteralPath $installing)) {
+        Write-Host "The new client is already installed in $game. Open START OFFLINE DAOC - NEW CLIENT.cmd there."
+        exit 0
+    }
+    $remaining = @($manifest.Parts | Where-Object { !(Test-Path -LiteralPath (Join-Path $done ($_.Name + '.done'))) })
+    $need = [int64]0
+    foreach ($part in $remaining) { $need += [int64]$part.UnpackedBytes }
+    $need += [int64](($manifest.Parts | Measure-Object -Property Bytes -Maximum).Maximum) + 1GB
+    $drive = New-Object IO.DriveInfo ([IO.Path]::GetPathRoot($game))
+    if ($drive.AvailableFreeSpace -lt $need) {
+        throw ("The new client needs about {0:N0} GB of free disk space on {1} ({2:N0} GB free). Free up space and run this again." -f ($need / 1GB), $drive.Name, ($drive.AvailableFreeSpace / 1GB))
+    }
+    [IO.Directory]::CreateDirectory((Get-ExtendedPath $done)) | Out-Null
+    Set-Content -LiteralPath $installing -Value 'The new client is being installed. If this file is still here, run DOWNLOAD-AND-PLAY-v0.36c.cmd or ADD-NEW-CLIENT-TO-0.36-OR-0.36b.cmd (the one you used) again to finish.' -Encoding ASCII
+
+    $allowedRoot = @($manifest.RootFiles)
+    $gamePrefix = $game.TrimEnd('\') + '\'
+    $index = 0
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    foreach ($part in $manifest.Parts) {
+        $index++
+        if ($part.Name -notmatch $newClientPartPattern -or $part.SHA256 -notmatch '^[a-f0-9]{64}$') { throw 'Invalid part metadata.' }
+        $marker = Join-Path $done ($part.Name + '.done')
+        if (Test-Path -LiteralPath $marker) { continue }
+        $path = Join-Path $cache $part.Name
+        $valid = (Test-Path -LiteralPath $path) -and (Get-Item -LiteralPath $path).Length -eq $part.Bytes
+        if ($valid) { $valid = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -eq $part.SHA256 }
+        if (!$valid) {
+            Write-Host ("Step 2 of 2: new client part {0} of {1} ({2:N1} GB)..." -f $index, $manifest.Parts.Count, ($part.Bytes / 1GB))
+            Get-ReleaseAsset $part.Name $path
+            if ((Get-Item -LiteralPath $path).Length -ne $part.Bytes -or (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -ne $part.SHA256) {
+                throw 'Download verification failed. Run this file again to retry; finished parts are kept.'
+            }
+        }
+        Write-Host ("Unpacking part {0} of {1}..." -f $index, $manifest.Parts.Count)
+        $zip = [IO.Compression.ZipFile]::OpenRead($path)
+        try {
+            # Validate EVERY entry first: each stays inside the game folder, in new-client\ or as one of the start files.
+            $prefix = $manifest.RootFolder + '/'
+            foreach ($entry in $zip.Entries) {
+                $name = $entry.FullName.Replace('\','/')
+                if (!$name.StartsWith($prefix,[StringComparison]::Ordinal) -or $name.Contains(':') -or
+                    $name.Contains('/../') -or $name.EndsWith('/..')) { throw 'Unexpected new client archive layout.' }
+                $relative = $name.Substring($prefix.Length)
+                if (!$relative) { continue }
+                if (!$relative.StartsWith('new-client/',[StringComparison]::Ordinal) -and ($allowedRoot -notcontains $relative)) {
+                    throw "Unexpected file in the new client archive: $relative"
+                }
+                $resolved = [IO.Path]::GetFullPath((Join-Path $game $relative))
+                if (!$resolved.StartsWith($gamePrefix,[StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe new client archive entry.' }
+            }
+            foreach ($entry in $zip.Entries) {
+                $relative = $entry.FullName.Replace('\','/').Substring($prefix.Length)
+                if (!$relative) { continue }
+                $resolved = Join-Path $game $relative
+                if ($entry.FullName.EndsWith('/')) { [IO.Directory]::CreateDirectory((Get-ExtendedPath $resolved)) | Out-Null; continue }
+                [IO.Directory]::CreateDirectory((Get-ExtendedPath (Split-Path -Parent $resolved))) | Out-Null
+                [IO.Compression.ZipFileExtensions]::ExtractToFile($entry,(Get-ExtendedPath $resolved),$true)
+            }
+        } finally { $zip.Dispose() }
+        Set-Content -LiteralPath $marker -Value $part.SHA256 -Encoding ASCII
+        Remove-Item -LiteralPath $path -Force
+    }
+    foreach ($required in @('new-client\godot\project.godot','new-client\runtime\OfflineDAoC.exe','new-client\runtime\server_root.txt',
+            'new-client\tools\godot_net\Godot_v4.7.2-stable_mono_win64.exe','new-client\VERSION.txt')) {
+        if (!(Test-Path -LiteralPath (Join-Path $game $required) -PathType Leaf)) { throw "The new client is missing $required. Run this file again." }
+    }
+    foreach ($file in $allowedRoot) {
+        if (!(Test-Path -LiteralPath (Join-Path $game $file) -PathType Leaf)) { throw "The new client is missing $file. Run this file again." }
+    }
+    Remove-Item -LiteralPath $done -Recurse -Force
+    Remove-Item -LiteralPath $installing -Force
+    Write-Host ''
+    Write-Host "Verified and installed the new client in $game"
+    Write-Host 'Open START OFFLINE DAOC - NEW CLIENT.cmd there (START OFFLINE DAOC.cmd still starts the original client).'
+    Write-Host 'Both clients share the same account, characters and bots. Nothing has been started automatically.'
+    exit 0
+}
+
+# 0.33, 0.34, 0.35 and 0.36 "no custom class" are the same complete 0.33b / 0.34b / 0.35b / 0.36b game plus two
 # verified swap-in files (world database with the Sluaghbinder switched off, and a game.dll without
 # the Sluaghbinder class). One download serves both editions; the edition files ship inside the "b" package.
 if ($manifest.Mode -eq 'edition') {
-    if ($ReleaseVersion -notin @('0.33','0.34','0.35') -or $manifest.BaseVersion -ne ($ReleaseVersion + 'b') -or
+    if ($ReleaseVersion -notin @('0.33','0.34','0.35','0.36') -or $manifest.BaseVersion -ne ($ReleaseVersion + 'b') -or
         $manifest.EditionFolder -ne ($ReleaseVersion + '-no-custom-class') -or !$manifest.EditionFiles) {
         throw "Unexpected v$ReleaseVersion edition manifest."
     }
@@ -395,6 +559,8 @@ try {
         [IO.Compression.ZipFileExtensions]::ExtractToFile($entry,(Get-ExtendedPath $resolved),$false)
     }
 } finally { $zip.Dispose() }
+# The joined archive was only needed for extracting; the verified parts stay in .downloads for a reinstall.
+Remove-Item -LiteralPath $archive -Force -ErrorAction SilentlyContinue
 Write-Host "Verified and extracted to $target"
 Write-Host 'Read READ ME FIRST.txt, then open START OFFLINE DAOC.cmd. Nothing has been started automatically.'
-Write-Host 'Downloads are retained in .downloads so interrupted downloads can be retried.'
+Write-Host 'The verified download parts are kept in .downloads; delete that folder to free the space.'

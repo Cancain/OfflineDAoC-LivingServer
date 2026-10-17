@@ -104,7 +104,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 805929 && npc.Y == 702449)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 805929, 702449))
 					{
 						Inaksha = npc;
 						break;
@@ -138,7 +138,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 636784 && npc.Y == 762433)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 636784, 762433))
 					{
 						Loken = npc as Loken;
 						break;
@@ -172,7 +172,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 101 && npc.X == 30641 && npc.Y == 32093)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 101, 30641, 32093))
 					{
 						Miri = npc;
 						break;
@@ -949,7 +949,6 @@ namespace DOL.GS.Quests.Midgard
 						case "fulfill":
 							if (quest.Step == 4)
 							{
-								RemoveItem(player, sealed_pouch);
 								if (player.Inventory.IsSlotsFree(6, eInventorySlot.FirstBackpack,
 									    eInventorySlot.LastBackpack))
 								{

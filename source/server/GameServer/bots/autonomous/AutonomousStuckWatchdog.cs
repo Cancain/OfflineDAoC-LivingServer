@@ -114,6 +114,19 @@ public static class AutonomousStuckWatchdog
             var nav = PathfindingProvider.Instance;
             if (zone == null || !nav.IsAvailable || !nav.HasNavmesh(zone)) return false;
             Vector3 position = new(bot.X, bot.Y, bot.Z);
+            // Saved just off the walkable floor (a ledge or prop edge by a faste or a teleporter): start on the floor.
+            if (AutonomousNavigationSurface.TryNearestWalkableFloor(nav, zone, position, 300, out Vector3 step))
+            {
+                bot.X = (int)Math.Round(step.X);
+                bot.Y = (int)Math.Round(step.Y);
+                bot.Z = (int)Math.Round(step.Z);
+                if (bot.PersistentRecord != null)
+                {
+                    bot.PersistentRecord.ObjectiveProgress = "Saved just off the walkable floor; starting on the nearest floor";
+                    bot.MarkAutonomousStateDirty();
+                }
+                return true;
+            }
             AutonomousNavigationSurface.TryFloor(nav, zone, position, out position);
             if (AutonomousZonePockets.Contains(zone.ID, position.X, position.Y, position.Z))
                 reason = "saved position is in a walled-off pocket with no walkable way to real ground";

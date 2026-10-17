@@ -91,9 +91,11 @@ namespace DOL.AI.Brain
             AggroLevel = 100;
             AggroRange = 850;
         }
+        private long _nextDevourTick;
+
         public override void Think()
         {
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 //set state to RETURN TO SPAWN
                 FSM.SetCurrentState(eFSMStateType.RETURN_TO_SPAWN);
@@ -101,13 +103,20 @@ namespace DOL.AI.Brain
             }
             else
             {
-                foreach (GameNPC pet in Body.GetNPCsInRadius(2000))
+                if (GameLoop.GameLoopTime >= _nextDevourTick)
                 {
-                    if (pet.Brain is not IControlledBrain) continue;
-                    Body.Health += pet.MaxHealth;
-                    foreach (GamePlayer player in pet.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                        player.Out.SendSpellEffectAnimation(Body, pet, 368, 0, false, 1);
-                    pet.Die(Body);
+                    GameNPC pet = null;
+                    foreach (GameNPC candidate in Body.GetNPCsInRadius(2000))
+                        if (candidate.Brain is IControlledBrain && candidate.IsAlive && (pet == null || Body.GetDistanceTo(candidate) < Body.GetDistanceTo(pet)))
+                            pet = candidate;
+                    if (pet != null)
+                    {
+                        _nextDevourTick = GameLoop.GameLoopTime + DOL.GS.EpicEncounterMechanics.PetDevourIntervalMilliseconds;
+                        Body.Health += pet.MaxHealth;
+                        foreach (GamePlayer player in pet.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                            player.Out.SendSpellEffectAnimation(Body, pet, 368, 0, false, 1);
+                        pet.Die(Body);
+                    }
                 }
             }
             base.Think();

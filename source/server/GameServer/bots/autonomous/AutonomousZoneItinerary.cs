@@ -111,6 +111,47 @@ namespace DOL.GS
             return Array.Empty<Zone>();
         }
 
+        /// <summary>
+        /// Shortest zone chain from the start's ground to the goal's ground over the seam file's
+        /// (zone, area) graph; empty when either ground is unknown or they do not connect.
+        /// </summary>
+        private static Zone[] FindAreaRoute(Topology topology, Zone from, Zone to, Vector3 start, Vector3 goal, Func<Zone, bool> allowed)
+        {
+            if (!topology.Seams) return Array.Empty<Zone>();
+            int? startArea = AutonomousZoneRoads.AreaAt(from, start);
+            int? goalArea = AutonomousZoneRoads.AreaAt(to, goal) ?? AutonomousZoneSeams.MainArea(topology.RegionId, to.ID);
+            if (startArea == null || goalArea == null) return Array.Empty<Zone>();
+            var graph = AutonomousZoneSeams.AreaGraph(topology.RegionId);
+            var zones = topology.Zones.ToDictionary(zone => zone.ID);
+            var origin = (from.ID, startArea.Value);
+            var target = (to.ID, goalArea.Value);
+            var previous = new Dictionary<(ushort, int), (ushort, int)> { [origin] = origin };
+            var queue = new Queue<(ushort Zone, int Area)>();
+            queue.Enqueue(origin);
+            while (queue.TryDequeue(out var current))
+            {
+                if (current == target)
+                {
+                    var result = new List<Zone>();
+                    for (var cursor = current; ; cursor = previous[cursor])
+                    {
+                        result.Add(zones[cursor.Item1]);
+                        if (cursor == origin) break;
+                    }
+                    result.Reverse();
+                    return result.ToArray();
+                }
+                if (!graph.TryGetValue(current, out var links)) continue;
+                foreach (var next in links)
+                {
+                    if (previous.ContainsKey(next) || !zones.TryGetValue(next.Zone, out Zone zone) || allowed?.Invoke(zone) == false) continue;
+                    previous[next] = current;
+                    queue.Enqueue(next);
+                }
+            }
+            return Array.Empty<Zone>();
+        }
+
         public static bool TryNextStep(Region region, Zone from, Zone to, Vector3 start, Vector3 goal,
             IPathfindingMgr nav, out AutonomousZoneBoundaryRouting.Step step, Func<Zone, bool> allowed = null)
         {
@@ -146,6 +187,8 @@ namespace DOL.GS
             finally { NavQueryProfile.Stop(NavQueryProfile.Kind.ZoneStep, profiled); }
         }
 
+        public static long RememberedSteps => SolvedSteps.Count + FailedSteps.Count;
+
         public const long FailedStepMemoryMilliseconds = 90_000;
         // Solved steps are shared the same way: a muster or raid sends dozens of bots from one town
         // toward one place, and each re-ran the same corridor proofs (zone steps were the main cost of
@@ -161,17 +204,6 @@ namespace DOL.GS
         {
             step = default;
             if (region == null || from == null || to == null || from == to || !nav.HasNavmesh(from)) return false;
-            // Lough Gur's direct eastern seam reaches a Sheeroe cliff pocket.
-            // The real connected road goes south through Bog of Cullen before
-            // turning north. Apply the same proven approach to ordinary hunting
-            // travel as to the dragon convoy; no relocation or goal change.
-            if (region.ID == 200 && from.ID == 204 && to.ID == 216)
-            {
-                Vector3 road = new(361354, 750434, 4944);
-                Zone via = region.GetZone((int)road.X, (int)road.Y);
-                if (via != null && via != from && via != to && allowed?.Invoke(via) != false &&
-                    TryNextStep(region, from, via, start, road, nav, out step, allowed)) return true;
-            }
             // The direct Shannon/Silvermine -> Koalinth topology chooses a
             // high Lough Derg/Connacht seam near (319584,483264,11299).
             // Although each individual border is walkable, that Connacht
@@ -188,9 +220,23 @@ namespace DOL.GS
             }
             // Same-XY altitude correction for planning only. The mover repairs
             // the actor on a failed raw path; never substitute another XY island.
+            Vector3 raw = start;
             AutonomousNavigationSurface.TryFloor(nav, from, start, out start);
             Topology topology = Topologies.GetValue(region, key => new Topology(key.Zones));
-            return TryNextStep(topology, from, to, start, goal, nav, out step, allowed);
+            if (TryNextStep(topology, from, to, start, goal, nav, out step, allowed)) return true;
+            // Lough Gur's direct eastern seam reaches a Sheeroe cliff pocket; the main ground joins through the west end
+            // of Bog of Cullen's northern border. The seam-area route above finds that crossing and goes straight there.
+            // It used to be forced through a road point far south in Bog of Cullen first: the Cuuldurach raid walked
+            // 30,000 units south and turned back (owner 2026-10-13; 36 Lough Gur > Sheeroe trips 5-40% shorter, none
+            // longer). That staging stays as the fallback for a trip the route above cannot plan.
+            if (region.ID == 200 && from.ID == 204 && to.ID == 216)
+            {
+                Vector3 road = new(361354, 750434, 4944);
+                Zone via = region.GetZone((int)road.X, (int)road.Y);
+                if (via != null && via != from && via != to && allowed?.Invoke(via) != false &&
+                    TryNextStep(region, from, via, raw, road, nav, out step, allowed)) return true;
+            }
+            return false;
         }
 
         [ThreadStatic] private static List<string> _probeTrace;
@@ -227,6 +273,22 @@ namespace DOL.GS
             Func<Zone, bool> allowed, bool seamsOnly, HashSet<string> failed, out AutonomousZoneBoundaryRouting.Step step)
         {
             step = default;
+            // First the zone chain over connected ground (seam file area ids; the bot's and the goal's
+            // ground from the zone road anchors). The zone-only search below excludes a failed first
+            // border for good, so a chain whose first border is shared with a dead-end chain was never
+            // tried: Shannon Estuary reaches the main Sheeroe Hills ground only through Lough Gur and
+            // Bog of Cullen, but Shannon>Lough Gur was spent on the Lough Gur>Sheeroe ridge (2026-10-13).
+            if (seamsOnly)
+            {
+                Zone[] grounded = FindAreaRoute(topology, from, to, start, goal, allowed);
+                _probeTrace?.Add($"route areas [{string.Join(">", grounded.Select(z => z.ID))}]");
+                if (grounded.Length >= 2 && grounded.Length <= 32 && TryGetSharedEdge(from, grounded[1], out Edge first))
+                {
+                    string chain = string.Join(">", grounded.Select(z => z.ID));
+                    if (nav.HasNavmesh(first.To) && TryEdgeStep(topology, first, grounded, start, goal, nav, out step)) return true;
+                    failed.Add(chain);
+                }
+            }
             var excluded = new HashSet<Edge>();
             int maximumAlternatives = Math.Min(8,
                 topology.Edges.TryGetValue(from, out Edge[] firstEdges) ? firstEdges.Length : 0);
@@ -329,7 +391,8 @@ namespace DOL.GS
                     _probeTrace?.Add($"  {edge.From.ID}>{edge.To.ID} sample {candidate.Outside} not on continuing ground");
                     continue;
                 }
-                if (!HasCompleteCorridor(nav, edge.From, start, candidate.Inside))
+                // Only crossings the seam file lists (proven real ground) may use the zone road graph.
+                if (!HasCompleteCorridor(nav, edge.From, start, candidate.Inside, listed))
                 {
                     _probeTrace?.Add($"  {edge.From.ID}>{edge.To.ID} {(listed ? "seam" : "sample")} {candidate.Inside} no corridor from start");
                     continue;
@@ -340,7 +403,7 @@ namespace DOL.GS
                 // otherwise drop a bot onto an isolated hill/ledge and make the
                 // final leg retry forever (the Branelaedan Lough Derg case).
                 if (Contains(edge.To, goal) &&
-                    !HasCompleteCorridor(nav, edge.To, candidate.Outside, goal))
+                    !HasCompleteCorridor(nav, edge.To, candidate.Outside, goal, listed))
                 {
                     _probeTrace?.Add($"  {edge.From.ID}>{edge.To.ID} {(listed ? "seam" : "sample")} {candidate.Outside} no corridor to goal");
                     continue;
@@ -512,7 +575,15 @@ namespace DOL.GS
             return false;
         }
 
-        public static bool HasCompleteCorridor(IPathfindingMgr nav, Zone zone, Vector3 start, Vector3 end)
+        public static bool HasCompleteCorridor(IPathfindingMgr nav, Zone zone, Vector3 start, Vector3 end) =>
+            HasCompleteCorridor(nav, zone, start, end, false);
+
+        /// <param name="roads">True: when Detour alone fails, also try the zone road graph. Only the zone itinerary's
+        /// listed seam crossings ask for it. Everywhere else (service NPCs, camps, unlisted border samples) a failed
+        /// direct check is usually a truly unreachable point, the most expensive query there is, and a road search
+        /// after it doubled the cost of those AI turns in the 2026-10-13 smoke run. The bot mover uses the roads
+        /// on its own when a path stops far short (Pathfinder).</param>
+        public static bool HasCompleteCorridor(IPathfindingMgr nav, Zone zone, Vector3 start, Vector3 end, bool roads)
         {
             // DF's stacked floors can yield DT_PARTIAL_RESULT with a fake
             // numerical endpoint after a multi-thousand-unit Z leap.  Its
@@ -524,6 +595,17 @@ namespace DOL.GS
             // caller and the ordinary PvE corridor cache retain their behavior.
             if (nav is RvrPlanningNavigation work)
                 return work.CompleteCorridor(zone, start, end, () => CalculateCompleteCorridor(nav, zone, start, end));
+            if (nav is not LocalPathfindingMgr || zone == null)
+                return CalculateCompleteCorridor(nav, zone, start, end);
+            // Detour's search can stop at a dead end on a long walk that first leads away from the
+            // goal; the zone road graph (proven short legs) then still finds the real route, and the
+            // bot mover follows the same roads (Pathfinder).
+            return HasDirectCorridor(nav, zone, start, end) || roads && AutonomousZoneRoads.TryRoute(nav, zone, start, end, out _);
+        }
+
+        /// <summary>The corridor check through Detour alone (no zone roads); the road graph's own legs use it.</summary>
+        public static bool HasDirectCorridor(IPathfindingMgr nav, Zone zone, Vector3 start, Vector3 end)
+        {
             // Only the installed provider supplies door/mesh revision tracking.
             // No quantization: even a one-unit position change gets a real query.
             if (nav is not LocalPathfindingMgr || zone == null)
@@ -540,12 +622,20 @@ namespace DOL.GS
         private static bool CalculateCompleteCorridor(IPathfindingMgr nav, Zone zone, Vector3 start, Vector3 end)
         {
             long profiled = NavQueryProfile.Start();
-            try { return CalculateCompleteCorridorCore(nav, zone, start, end); }
+            try { return CalculateCompleteCorridorCore(nav, zone, start, end, out _); }
             finally { NavQueryProfile.Stop(NavQueryProfile.Kind.Corridor, profiled); }
         }
 
-        private static bool CalculateCompleteCorridorCore(IPathfindingMgr nav, Zone zone, Vector3 start, Vector3 end)
+        /// <summary>
+        /// Tool (zone road weights): how far a bot walks along the corridor <see cref="HasDirectCorridor"/> proves,
+        /// segment by segment as that check walks it; NaN when there is no corridor. Not cached.
+        /// </summary>
+        public static float CorridorLength(IPathfindingMgr nav, Zone zone, Vector3 start, Vector3 end) =>
+            CalculateCompleteCorridorCore(nav, zone, start, end, out float length) ? length : float.NaN;
+
+        private static bool CalculateCompleteCorridorCore(IPathfindingMgr nav, Zone zone, Vector3 start, Vector3 end, out float length)
         {
+            length = 0;
             WrappedPathfindingNode[] nodes = ArrayPool<WrappedPathfindingNode>.Shared.Rent(512);
             try
             {
@@ -557,6 +647,12 @@ namespace DOL.GS
                     PathfindingResult result = nav.GetPathStraight(zone, start, end, nav.DefaultFilters, nodes);
                     if (result.NodeCount < 1 || result.NodeCount > nodes.Length) return false;
                     Vector3 last = nodes[result.NodeCount - 1].Position;
+                    Vector3 walked = start;
+                    for (int i = 0; i < result.NodeCount; i++)
+                    {
+                        length += Vector3.Distance(walked, nodes[i].Position);
+                        walked = nodes[i].Position;
+                    }
                     // Detour can report a partial path when the endpoint is on
                     // the final polygon edge.  A near-end partial is already a
                     // complete usable corridor; requiring 240 units of travel

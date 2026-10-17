@@ -71,7 +71,7 @@ namespace DOL.GS.DailyQuest.Midgard
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
 				{
-					if (npc.CurrentRegionID == 250 && npc.X == 54259 && npc.Y == 25234)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 250, 54259, 25234))
 					{
 						PazzMid = npc;
 						break;

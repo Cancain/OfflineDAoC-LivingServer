@@ -232,18 +232,24 @@ namespace DOL.GS
 
             foreach (GamePlayer player in players)
             {
-                if (player.Realm == Realm || !player.IsAlive || player.IsStealthed)
-                    continue;
-
-                enemyNearby++;
+                if (CountsOnPad(Realm, player.Realm, player.IsAlive, player.IsStealthed, true))
+                    enemyNearby++;
             }
 
-            enemyNearby += GetNPCsInRadius(500).OfType<GameBot>().Count(bot =>
-                bot.IsAutonomousWorldBot && bot.IsAlive && !bot.IsStealthed && bot.Realm != Realm &&
-                bot.Realm != eRealm.None && bot.ObjectState == eObjectState.Active);
+            enemyNearby += GetNPCsInRadius(500).OfType<GameBot>().Count(bot => bot.ObjectState == eObjectState.Active &&
+                CountsOnPad(Realm, bot.Realm, bot.IsAlive, bot.IsStealthed, bot.IsAutonomousWorldBot || bot.Owner != null));
 
             return enemyNearby;
         }
+
+        /// <summary>
+        /// Whether one player or bot near the pad counts toward relic_players_required_on_pad: alive, not stealthed, of
+        /// another realm than the pad's, and a player, a gamebot or a player's own companion bot (2026-10-15: a player
+        /// with a full group of companions counted as one and could never take a relic; the owner wants a player and
+        /// seven companions, and nobody else, to be enough).
+        /// </summary>
+        public static bool CountsOnPad(eRealm padRealm, eRealm realm, bool alive, bool stealthed, bool eligible) =>
+            eligible && alive && !stealthed && realm != padRealm && realm != eRealm.None;
 
         public void RemoveRelics()
         {

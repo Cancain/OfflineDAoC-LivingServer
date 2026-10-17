@@ -50,7 +50,8 @@ namespace DOL.UnitTests
                     for (int i = 1; i < points.Length; i++) length += Vector3.Distance(points[i - 1], points[i]);
                     // The server's bounded corridor proof (16 partial segments) for the same pair.
                     bool corridor = AutonomousZoneItinerary.HasCompleteCorridor(nav, zone, ends[0], ends[1]);
-                    lines.Add($"{result.Status} {length:0} corridor={corridor} " + string.Join(" ", points.Select(p => $"{p.X:0},{p.Y:0},{p.Z:0}")));
+                    lines.Add($"{result.Status} {length:0} corridor={corridor} " + string.Join(" ", nodes.Take(result.NodeCount).Select(n =>
+                        $"{n.Position.X:0},{n.Position.Y:0},{n.Position.Z:0}{((n.Flags & DOL.GS.EDtPolyFlags.Jump) != 0 ? "J" : "")}")));
                 }
             }
             finally

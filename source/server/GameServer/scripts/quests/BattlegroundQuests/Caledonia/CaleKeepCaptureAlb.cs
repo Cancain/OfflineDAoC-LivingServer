@@ -70,7 +70,7 @@ namespace DOL.GS.DailyQuest.Albion
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
 				{
-					if (npc.CurrentRegionID == 250 && npc.X == 37283 && npc.Y == 51881)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 250, 37283, 51881))
 					{
 						PazzAlb = npc;
 						break;

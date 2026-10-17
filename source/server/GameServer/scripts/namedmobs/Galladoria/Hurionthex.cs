@@ -196,6 +196,18 @@ namespace DOL.AI.Brain
         /// <summary>
         /// Defines the attributes to revert to each time Hurionthex reverts to his base form.
         /// </summary>
+        /// <summary>
+        /// GameNPC.Constitution's setter restores full health, so every form change healed Hurionthex to 100%: raids took
+        /// him from 41% or 13% and saw him at 96% a few seconds later, every twenty seconds (2026-10-15, REALM_EXPEDITION_
+        /// TARGET_HEALED). The form's constitution is still applied; his current health is kept.
+        /// </summary>
+        private void SetConstitutionKeepingHealth(short value)
+        {
+            int health = Body.Health;
+            Body.Constitution = value;
+            Body.Health = health;
+        }
+
         public void FormBase()
         {
             Body.Model = 889;
@@ -230,7 +242,7 @@ namespace DOL.AI.Brain
             Body.BodyType = 10; // Plant
 
             Body.Strength = 400;
-            Body.Constitution = 100;
+            SetConstitutionKeepingHealth(100);
             Body.Dexterity = 200;
             Body.Quickness = 100;
             Body.Intelligence = 200;
@@ -257,7 +269,7 @@ namespace DOL.AI.Brain
             Body.BodyType = 1; // Animal
 
             Body.Strength = 350;
-            Body.Constitution = 100;
+            SetConstitutionKeepingHealth(100);
             Body.Dexterity = 200;
             Body.Quickness = 205;
             Body.Intelligence = 200;
@@ -283,7 +295,7 @@ namespace DOL.AI.Brain
             Body.MeleeDamageType = eDamageType.Spirit;
 
             Body.Strength = 300;
-            Body.Constitution = 100;
+            SetConstitutionKeepingHealth(100);
             Body.Dexterity = 200;
             Body.Quickness = 80;
             Body.Intelligence = 200;
@@ -493,7 +505,7 @@ namespace DOL.AI.Brain
         public override void Think()
         {
             // Reset boss encounter in the event of a party wipe or people running away
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 FSM.SetCurrentState(eFSMStateType.RETURN_TO_SPAWN);
                 Body.Health = Body.MaxHealth;

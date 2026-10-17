@@ -1,0 +1,2096 @@
+{
+ "Door": {
+  "00149043-d3b7-41b1-bb22-941b31ff7cec": {
+   "Health": 180000,
+   "State": 1
+  },
+  "003552ed-5a25-46d9-a25f-82fbf8104f34": {
+   "Health": 180000,
+   "State": 1
+  },
+  "0098cc14-1ad7-4e41-ae38-f3c506b57df1": {
+   "Health": 2545,
+   "State": 1
+  },
+  "01aa9478-6fbe-4e13-bbc1-29a849dc3039": {
+   "Health": 2545,
+   "State": 0
+  },
+  "01bf3d34-9099-40b1-8008-4af67e5a2b18": {
+   "Health": 51000,
+   "State": 1
+  },
+  "02748aee-39c4-42aa-8617-20fa5a372c37": {
+   "Health": 2545,
+   "State": 0
+  },
+  "03a6926e-dd71-4112-baeb-8d7f14efcb1c": {
+   "Health": 2545,
+   "State": 0
+  },
+  "03bacd59-635b-413b-ae93-f80f5634a5ef": {
+   "Health": 2545,
+   "State": 0
+  },
+  "0415c3e5-4b15-4310-aa3d-219097ec4a8f": {
+   "Health": 2545,
+   "State": 0
+  },
+  "0446cf4e-39f3-4749-8928-2a298b39e95e": {
+   "Health": 2545,
+   "State": 0
+  },
+  "04fd946f-edff-4dcd-8b7f-2e95aa9c9a45": {
+   "Health": 2545,
+   "State": 0
+  },
+  "0559507c-ee4c-4bca-9572-b1f5a049ffbc": {
+   "Health": 2545,
+   "State": 0
+  },
+  "064c769c-3417-4fcc-8ed3-356b3b5be46d": {
+   "Health": 51000,
+   "State": 1
+  },
+  "0678f11d-f1c8-4644-a992-8e3c0dfb083b": {
+   "Health": 2545,
+   "State": 0
+  },
+  "06d7a79b-617a-4a5b-a7f2-23ba3f83668d": {
+   "Health": 50000,
+   "State": 1
+  },
+  "07094f42-32b5-46f3-bd8b-88c8d1a2df98": {
+   "Health": 2545,
+   "State": 0
+  },
+  "074a8bec-ceaf-480e-988a-c898240b3ba0": {
+   "Health": 50000,
+   "State": 1
+  },
+  "074aca46-d41c-4d2a-93f4-2ddf2239ac1e": {
+   "Health": 51000,
+   "State": 1
+  },
+  "0824d3c1-ba0e-492f-b766-9864c1df4840": {
+   "Health": 2545,
+   "State": 0
+  },
+  "091e5812-cf1f-4992-8ce3-4f72c13b0dec": {
+   "Health": 2545,
+   "State": 0
+  },
+  "0946ce6f-0b25-4ff9-8d58-bfc80bbe14b3": {
+   "Health": 2545,
+   "State": 0
+  },
+  "09f83462-7dd1-4e5b-b3d1-396219891805": {
+   "Health": 2545,
+   "State": 0
+  },
+  "0a15426b-62e3-4d08-a7c5-f3b678190c0b": {
+   "Health": 50000,
+   "State": 1
+  },
+  "0a95eb1b-e368-4ec9-9be9-120bfa62475e": {
+   "Health": 2545,
+   "State": 0
+  },
+  "0ac79b51-ab0d-4200-ba0e-7d532d39da0a": {
+   "Health": 2545,
+   "State": 0
+  },
+  "0b7a317b-e729-4195-958a-f7a24bee6fe7": {
+   "Health": 2545,
+   "State": 0
+  },
+  "0be395d2-9481-4abd-bdc1-8d58ed0d2f62": {
+   "Health": 2545,
+   "State": 0
+  },
+  "0d8361c7-d10e-4e53-8236-8d2f03181801": {
+   "Health": 2545,
+   "State": 0
+  },
+  "0e2c3cd1-8ce7-4f6b-9675-b2a23279bed1": {
+   "Health": 180000,
+   "State": 1
+  },
+  "0e9e578c-7a59-44d3-ab40-a9a47bb74d66": {
+   "Health": 2545,
+   "State": 0
+  },
+  "0eac9607-a5d0-4a60-a843-2dc656555640": {
+   "Health": 2545,
+   "State": 0
+  },
+  "106bb113-81f7-4a9a-8a47-6a2abe4e6f09": {
+   "Health": 2545,
+   "State": 0
+  },
+  "109be292-e9f9-4e26-8c6b-9c98f3b14343": {
+   "Health": 50000,
+   "State": 1
+  },
+  "10aa69b7-0f81-46fa-a2ce-1a5767f2f4bb": {
+   "Health": 2545,
+   "State": 0
+  },
+  "10b733e9-acd0-420e-8c81-66afb55e4230": {
+   "Health": 2545,
+   "State": 0
+  },
+  "10bf28cc-5ac1-4e9f-b5e9-9bbc675cacc0": {
+   "Health": 2545,
+   "State": 0
+  },
+  "10c28146-4c5f-48ee-95f2-74eb2f9e015f": {
+   "Health": 180000,
+   "State": 1
+  },
+  "116224d1-deb0-4e72-a9d5-72e50ac9a3c3": {
+   "Health": 2545,
+   "State": 0
+  },
+  "1196557c-234f-4979-83b6-d42bd5b93ba1": {
+   "Health": 2545,
+   "State": 0
+  },
+  "13879c0e-a5e1-4836-ae62-d3dac9120fda": {
+   "Health": 50000,
+   "State": 1
+  },
+  "139e2939-fef9-466b-8b66-008c51224020": {
+   "Health": 2545,
+   "State": 0
+  },
+  "149e4914-8f29-483b-baa7-4d804d4f3a35": {
+   "Health": 2545,
+   "State": 0
+  },
+  "155a8d85-a582-43e8-b493-de2d2381d051": {
+   "Health": 2545,
+   "State": 0
+  },
+  "1564dec4-82df-481b-b8a3-4c897ac8aaaf": {
+   "Health": 50000,
+   "State": 1
+  },
+  "160a5b7b-5436-4c2d-8369-e390fb458728": {
+   "Health": 2545,
+   "State": 0
+  },
+  "167c505a-2da3-4abc-807e-64943266aff4": {
+   "Health": 2545,
+   "State": 0
+  },
+  "178c68fa-4329-40e0-bdb6-10c896208111": {
+   "Health": 2545,
+   "State": 0
+  },
+  "17c92d54-54a6-497d-8cb3-20102da0b3f1": {
+   "Health": 2545,
+   "State": 0
+  },
+  "182d509a-9ecb-4046-bc9a-292f634e1d0das": {
+   "Health": 2545,
+   "State": 0
+  },
+  "187461f5-8669-4072-b5a7-017e76485389": {
+   "Health": 2545,
+   "State": 0
+  },
+  "18d0982a-4917-40d3-8f3d-5bc627dc1d43": {
+   "Health": 2545,
+   "State": 0
+  },
+  "19013bb4-e1b7-4464-98cf-904bdb82e5f5": {
+   "Health": 2545,
+   "State": 0
+  },
+  "19746144-1f1a-4216-a994-d0e2ce8ebfc3": {
+   "Health": 2545,
+   "State": 0
+  },
+  "199beb31-99d0-493c-981d-a813d5134cc4": {
+   "Health": 2545,
+   "State": 0
+  },
+  "19d529ff-5303-42c6-a3a2-cb8875154ef6": {
+   "Health": 2545,
+   "State": 0
+  },
+  "1a18962f-53ec-4ea8-8703-093e8beadd1f": {
+   "Health": 2545,
+   "State": 0
+  },
+  "1a6acf79-6f42-4a6f-bc2c-effc81ceee89": {
+   "Health": 2545,
+   "State": 0
+  },
+  "1a766666-b7ac-4b8d-acf2-06a5d4b8d6aa": {
+   "Health": 180000,
+   "State": 1
+  },
+  "1c5ebb2f-06b6-460c-b450-e68911ff84a0": {
+   "Health": 0,
+   "State": 1
+  },
+  "1c6a7449-c41b-4a2f-9afe-58953d92c03c": {
+   "Health": 2545,
+   "State": 0
+  },
+  "1c6f81ef-762f-4e41-844e-37bbf7a3c822": {
+   "Health": 2545,
+   "State": 0
+  },
+  "1d367b13-7d72-4f30-8def-9348433077e0": {
+   "Health": 50000,
+   "State": 1
+  },
+  "1e1b14f2-880a-492a-a4b8-c868e3dc5de7": {
+   "Health": 2545,
+   "State": 0
+  },
+  "1e5b645b-420f-4652-ae2a-37007c77cf1e": {
+   "Health": 51000,
+   "State": 1
+  },
+  "1f6e5a25-9340-4757-99cc-4f2f1e53fe8d": {
+   "Health": 0,
+   "State": 1
+  },
+  "1fd5d4f3-2fc7-47e2-84ad-b3ce78f9a7fa": {
+   "Health": 51000,
+   "State": 1
+  },
+  "202d88bf-0542-4127-b42b-a6363c291de3": {
+   "Health": 2545,
+   "State": 0
+  },
+  "20d46441-7baa-4e20-9600-0ee33b44911d": {
+   "Health": 2545,
+   "State": 0
+  },
+  "2249787b-f78f-4aa9-ae28-7c8967e1120b": {
+   "Health": 0,
+   "State": 1
+  },
+  "22dd4f3b-a877-4005-a56c-a4f3afadaac7": {
+   "Health": 180000,
+   "State": 1
+  },
+  "26f40b47-3913-4b62-972b-d6d5ad69ac74": {
+   "Health": 2545,
+   "State": 0
+  },
+  "2846f04e-c570-4733-94b9-182f44971b4a": {
+   "Health": 51000,
+   "State": 1
+  },
+  "286a8a3d-ccad-4961-ba7b-c6cb17d1debb": {
+   "Health": 51000,
+   "State": 1
+  },
+  "2912f9c9-a143-4cc7-9ff6-3b430e28c107": {
+   "Health": 2545,
+   "State": 0
+  },
+  "29e87406-9eb6-42a2-b39c-e24eaffa40d2": {
+   "Health": 51000,
+   "State": 1
+  },
+  "2a902bcf-34ef-40ea-b4cb-f522b44c5789": {
+   "Health": 2545,
+   "State": 0
+  },
+  "2a9bf062-6578-435c-87b6-e051f96ac644": {
+   "Health": 2545,
+   "State": 0
+  },
+  "2abf8a52-de9f-4815-922d-d1eb698d6a94": {
+   "Health": 50000,
+   "State": 1
+  },
+  "2ad8d1fd-2ca0-4367-8175-697d2b98141a": {
+   "Health": 51000,
+   "State": 1
+  },
+  "2b72240a-5a34-4346-ab7f-4831eb12707e": {
+   "Health": 0,
+   "State": 1
+  },
+  "2b83b920-edd1-4c17-b67c-ba858332cf59": {
+   "Health": 2545,
+   "State": 0
+  },
+  "2b95f0c0-f9a8-493d-ac4f-11d89d0809e7": {
+   "Health": 5200,
+   "State": 1
+  },
+  "2bbde393-76ae-4225-9530-b5bb6b94ec2d": {
+   "Health": 2545,
+   "State": 0
+  },
+  "2c1d54a9-662a-42ee-bb74-df89457476c5": {
+   "Health": 2545,
+   "State": 0
+  },
+  "2c561720-9396-4fc3-9c47-c72d4dac7d92": {
+   "Health": 2545,
+   "State": 0
+  },
+  "2db32aeb-125d-4c7e-9a00-9de4619cd7cf": {
+   "Health": 2545,
+   "State": 0
+  },
+  "2ec32c60-cd37-4d78-b1cb-e052ee8284e4": {
+   "Health": 2545,
+   "State": 1
+  },
+  "2f4af9ac-997a-4a18-95ab-e678428b84ea": {
+   "Health": 51000,
+   "State": 1
+  },
+  "2fe3f53c-1275-46cf-a5d1-ffe3cc4a3f7e": {
+   "Health": 2545,
+   "State": 0
+  },
+  "303224f6-9f4b-45d2-89f6-f2b7ad1f5044": {
+   "Health": 2545,
+   "State": 0
+  },
+  "30ea4a5d-f62d-4c1f-bc5f-48a7e72e8e9b": {
+   "Health": 2545,
+   "State": 0
+  },
+  "31470e2e-f85a-4858-be08-fd82ef9e7911": {
+   "Health": 0,
+   "State": 1
+  },
+  "31b7df39-e340-4d53-919c-58a8384954a3": {
+   "Health": 2545,
+   "State": 0
+  },
+  "32e18d06-d949-4c51-a28f-ddd880ceb143": {
+   "Health": 2545,
+   "State": 0
+  },
+  "3321d029-e30d-40b8-994f-d95b4c5c491e": {
+   "Health": 51000,
+   "State": 1
+  },
+  "340e86e3-22b3-46ca-94da-5207f398acc7": {
+   "Health": 2545,
+   "State": 0
+  },
+  "35204e82-2754-4692-806a-3e8046c4f80f": {
+   "Health": 2545,
+   "State": 0
+  },
+  "352d196c-bec5-4914-b746-2057fb20b218": {
+   "Health": 2545,
+   "State": 0
+  },
+  "3548571b-9bbf-43ca-87bf-655498055578": {
+   "Health": 2545,
+   "State": 0
+  },
+  "35b35502-aa97-4b73-9b7c-25b529fccf48": {
+   "Health": 51000,
+   "State": 1
+  },
+  "3725bce4-bd53-4ae2-87d1-d7fbb3473800": {
+   "Health": 2545,
+   "State": 0
+  },
+  "37c28fe3-77e3-49cc-bfd0-0ec721619e5f": {
+   "Health": 51000,
+   "State": 1
+  },
+  "3812bde2-1a41-4349-ac7e-36aa97cc0426": {
+   "Health": 50000,
+   "State": 1
+  },
+  "39ad8f56-86b8-4c66-b3af-72da0b1d1189": {
+   "Health": 2545,
+   "State": 0
+  },
+  "3bd2c1ed-7d14-4e13-9fd0-15a54f039617": {
+   "Health": 50000,
+   "State": 1
+  },
+  "3c0df73d-aea2-430f-9faa-eeb4a729ecad": {
+   "Health": 10000,
+   "State": 1
+  },
+  "3d21257f-c429-4ac8-8c0f-b3d39f31bf61": {
+   "Health": 0,
+   "State": 1
+  },
+  "3d4fd5b2-8f90-4f2a-b1a2-3b03b3b7c500": {
+   "Health": 10000,
+   "State": 1
+  },
+  "3db0a4d0-5466-49a3-9bc1-26416efbdd75": {
+   "Health": 2545,
+   "State": 0
+  },
+  "3e025fe9-f808-4228-844f-2962cec05829": {
+   "Health": 51000,
+   "State": 1
+  },
+  "3e9e43db-de15-451d-873b-b54ad6353acd": {
+   "Health": 2545,
+   "State": 0
+  },
+  "3f749297-e053-47f1-a133-13872df98fd5": {
+   "Health": 50000,
+   "State": 1
+  },
+  "3fff784e-32bc-475c-84ff-a3ecad75a2e9": {
+   "Health": 51000,
+   "State": 1
+  },
+  "400390ee-0cc1-4d21-8403-ab02e0eae44d": {
+   "Health": 2545,
+   "State": 0
+  },
+  "4045a84e-3579-4caa-842c-339799a1cc4c": {
+   "Health": 2545,
+   "State": 0
+  },
+  "40d62b7e-2f12-410d-8a30-a64bb8ad2e73": {
+   "Health": 2545,
+   "State": 0
+  },
+  "4195f2e1-bdb3-4d02-83b4-5f06f860ab00": {
+   "Health": 180000,
+   "State": 1
+  },
+  "4385a73b-2c46-475b-90b8-bbcfdbf6307c": {
+   "Health": 0,
+   "State": 1
+  },
+  "43d61b73-ceb8-4121-b197-e6c42e71d1e9": {
+   "Health": 2545,
+   "State": 0
+  },
+  "43d67662-bccd-4ca2-b3bb-9facb40d1a78": {
+   "Health": 2545,
+   "State": 0
+  },
+  "44433cfb-2f85-419d-b211-4c93e6180f55": {
+   "Health": 51000,
+   "State": 1
+  },
+  "45684e20-1930-4354-89dc-52b92582eb07": {
+   "Health": 2545,
+   "State": 0
+  },
+  "45bd3f5a-9a1d-4c42-b7a1-9bad0868cbc4": {
+   "Health": 2545,
+   "State": 0
+  },
+  "45d1b8c3-4b8e-499f-9ed0-e5e6eadecccf": {
+   "Health": 2545,
+   "State": 0
+  },
+  "4613ae6e-5373-4182-9a5b-19bfa04ab79a": {
+   "Health": 2545,
+   "State": 0
+  },
+  "462b5126-e5ad-4963-a812-7658d415024e": {
+   "Health": 10000,
+   "State": 1
+  },
+  "464a04c7-7245-42fb-b46b-10e89c97e6cc": {
+   "Health": 50000,
+   "State": 1
+  },
+  "47933401-1414-468a-8571-81650671bcf0": {
+   "Health": 0,
+   "State": 1
+  },
+  "47e8d2f9-921f-4b24-852c-112c7950e848": {
+   "Health": 2545,
+   "State": 0
+  },
+  "494f9d7f-ac84-4bbc-8983-5f25ad930811": {
+   "Health": 0,
+   "State": 1
+  },
+  "4a0e9716-53be-4df6-b1b0-71d67531c887": {
+   "Health": 0,
+   "State": 1
+  },
+  "4ab4ee0a-a076-4451-a48c-9bb4d3e88137": {
+   "Health": 2545,
+   "State": 0
+  },
+  "4af0c4be-6c62-4793-bba7-c6a93879c002": {
+   "Health": 0,
+   "State": 1
+  },
+  "4c501e9f-9811-4fd7-a9b8-6ec35139739d": {
+   "Health": 2545,
+   "State": 0
+  },
+  "4c5f5876-ae2d-4def-a1a0-cd691fd6d3b6": {
+   "Health": 10000,
+   "State": 1
+  },
+  "4ca89e14-2100-469b-bd89-c049b2dda618": {
+   "Health": 2545,
+   "State": 0
+  },
+  "4cc3cc4b-4b1f-4f0c-94a7-8ef5b994c887": {
+   "Health": 2545,
+   "State": 0
+  },
+  "4dc9779e-9c48-4519-9d70-4d691a3b26a9": {
+   "Health": 50000,
+   "State": 1
+  },
+  "4e2f0986-331b-45d3-b864-55d8b1ca3177": {
+   "Health": 2545,
+   "State": 0
+  },
+  "4ee47195-c575-45ef-9b51-02bada768338": {
+   "Health": 50000,
+   "State": 1
+  },
+  "4fc4d31a-0f37-47b2-91e1-d8811fada317": {
+   "Health": 51000,
+   "State": 1
+  },
+  "4ff7ea09-2271-4abc-ac06-2f98d6f65ff0": {
+   "Health": 2545,
+   "State": 1
+  },
+  "50e8dd02-85e0-40ee-b54c-569d557bd8b3": {
+   "Health": 2545,
+   "State": 0
+  },
+  "516bd61e-756e-489c-b357-3d2d9074daf1": {
+   "Health": 180000,
+   "State": 1
+  },
+  "51cb5f27-01d4-4890-ad50-1ffdcdafaed9": {
+   "Health": 2545,
+   "State": 0
+  },
+  "52a5d9b8-6b4d-41b8-b4b1-4bc2081654f0": {
+   "Health": 2545,
+   "State": 0
+  },
+  "535dfcb3-d11a-48a7-a102-325290771176": {
+   "Health": 2545,
+   "State": 0
+  },
+  "53f1470e-f406-42ff-9e80-f1e1dae3fac5": {
+   "Health": 0,
+   "State": 1
+  },
+  "54964dad-bb8b-4c2a-8d59-dff92de9e9ac": {
+   "Health": 2545,
+   "State": 0
+  },
+  "54af86c6-8a68-47bb-ba04-af97d8ef8b9c": {
+   "Health": 2545,
+   "State": 0
+  },
+  "54f86fed-ef2c-4424-8772-a0b74135e077": {
+   "Health": 2545,
+   "State": 0
+  },
+  "5533dacb-8a02-4341-94d9-8aaab457813d": {
+   "Health": 2545,
+   "State": 0
+  },
+  "5584f890-0323-4860-bd52-af271a7217b4": {
+   "Health": 2545,
+   "State": 0
+  },
+  "55c128b4-5410-49a3-b7de-cf288dd244ec": {
+   "Health": 9200,
+   "State": 1
+  },
+  "5617ffc2-02d8-41c0-b0d5-7a82e63661a1": {
+   "Health": 180000,
+   "State": 1
+  },
+  "564fdbea-3226-4c49-ae79-5d7b5878a2ef": {
+   "Health": 50000,
+   "State": 1
+  },
+  "5798d5ea-9763-4eb0-90c7-fc16f708dede": {
+   "Health": 2545,
+   "State": 0
+  },
+  "57fa323b-024a-43be-81a7-d6d6519ca0c9": {
+   "Health": 2545,
+   "State": 0
+  },
+  "585265b1-7af9-4365-ace3-5dbc41cafb9c": {
+   "Health": 2545,
+   "State": 0
+  },
+  "587023ec-a759-46d9-b9c0-2824fe4680e8": {
+   "Health": 50000,
+   "State": 1
+  },
+  "5906fc08-cd30-408d-894e-42a188457567": {
+   "Health": 51000,
+   "State": 1
+  },
+  "598bf01d-7f42-4d84-8ba6-0e91aaec88ce": {
+   "Health": 0,
+   "State": 1
+  },
+  "59d6a634-ce5f-4988-b17d-2a1d9b4dbbfa": {
+   "Health": 2545,
+   "State": 0
+  },
+  "5a7b4d02-980a-4c0d-831c-6bee2ba53985": {
+   "Health": 2545,
+   "State": 0
+  },
+  "5ab5d4e9-5f5d-4d76-9346-8916da482a65": {
+   "Health": 180000,
+   "State": 1
+  },
+  "5b46ea74-78fd-4c74-b969-4ba635c6ceca": {
+   "Health": 2545,
+   "State": 0
+  },
+  "5d71598f-13c6-4ffe-8fae-819975acc8bb": {
+   "Health": 2545,
+   "State": 0
+  },
+  "5dd297ca-ab4e-4f9a-85bc-f0755882b115": {
+   "Health": 50000,
+   "State": 1
+  },
+  "5e6579b2-f497-4049-9831-5d302cb31803": {
+   "Health": 2545,
+   "State": 0
+  },
+  "5f7784f3-a976-4876-8e40-f9255967ee6f": {
+   "Health": 180000,
+   "State": 1
+  },
+  "5f7fbceb-037a-4b76-ae97-5a4e67e2984f": {
+   "Health": 2545,
+   "State": 0
+  },
+  "5fd75f37-8aff-4643-9de5-7dccd1e26779": {
+   "Health": 180000,
+   "State": 1
+  },
+  "6005e01b-3ff8-4f8f-810a-63068d0ffdf7": {
+   "Health": 50000,
+   "State": 1
+  },
+  "60f27600-2057-4528-aa43-e32b1e14dbff": {
+   "Health": 51000,
+   "State": 1
+  },
+  "611b6a1b-8cf9-42e3-bc96-b460bacabfc3": {
+   "Health": 51000,
+   "State": 1
+  },
+  "617ee6a0-f55f-43d4-bfd7-be32c05d8f83": {
+   "Health": 2545,
+   "State": 0
+  },
+  "61cb62f9-8593-4d8c-bdaf-fd23d170c4a1": {
+   "Health": 2545,
+   "State": 0
+  },
+  "61d9dc42-4991-44dc-96d1-0fec16adcaf3": {
+   "Health": 2545,
+   "State": 1
+  },
+  "626819bf-59bb-42d6-bbe5-8685cbd32ebe": {
+   "Health": 180000,
+   "State": 1
+  },
+  "6285c4bd-727f-43eb-8cea-37d536e9fbe7": {
+   "Health": 2545,
+   "State": 0
+  },
+  "629e1c32-ae12-4b17-843b-89c19eb987ee": {
+   "Health": 51000,
+   "State": 1
+  },
+  "631b2e30-a2d1-4c22-b42b-e11ddaa03209": {
+   "Health": 2545,
+   "State": 0
+  },
+  "637cd82e-55cd-4cff-bc12-ebed8ee884ad": {
+   "Health": 180000,
+   "State": 1
+  },
+  "6646ed4a-3975-4443-b702-e13c76ae74fc": {
+   "Health": 2545,
+   "State": 0
+  },
+  "67140be0-13a7-4bae-bfc9-b69e7e50c891": {
+   "Health": 2545,
+   "State": 0
+  },
+  "680cd976-d0cf-4e4f-b667-ca6658a8af9f": {
+   "Health": 2545,
+   "State": 0
+  },
+  "697a83d5-2087-4cb2-b4f9-aedc715b5066": {
+   "Health": 2545,
+   "State": 0
+  },
+  "69ae2321-704a-40fa-8cd3-9e6499806c32": {
+   "Health": 2545,
+   "State": 0
+  },
+  "6a202d03-566d-4df7-b8c9-00120cb6547f": {
+   "Health": 2545,
+   "State": 0
+  },
+  "6b6c39ea-019a-41b6-a204-2a6ce9a5652c": {
+   "Health": 2545,
+   "State": 0
+  },
+  "6c0d8db2-d52a-45a2-b710-e9532471dc71": {
+   "Health": 0,
+   "State": 1
+  },
+  "6d9273e6-d3bb-4637-a63d-373cdcabaede": {
+   "Health": 2545,
+   "State": 0
+  },
+  "6da9a956-1e8c-4d1f-a4e9-913872c179ec": {
+   "Health": 2545,
+   "State": 0
+  },
+  "6e7852fb-82c4-412c-b697-d9d16f048d0b": {
+   "Health": 2545,
+   "State": 0
+  },
+  "6e841362-5a73-4a2a-b674-252ffd264677": {
+   "Health": 2545,
+   "State": 0
+  },
+  "6e8f3297-1f0f-47f9-886f-6a67d037f9b3": {
+   "Health": 50000,
+   "State": 1
+  },
+  "7110e311-a9f4-4c34-9f68-454be4ef779d": {
+   "Health": 50000,
+   "State": 1
+  },
+  "71578a96-b74d-4252-873b-9f7cca653c1f": {
+   "Health": 2545,
+   "State": 0
+  },
+  "73d93f1e-683d-4bf5-8c3f-64aeeda1d47d": {
+   "Health": 2545,
+   "State": 0
+  },
+  "747d6cd1-1a71-4eeb-99d7-aac0fd6b27e6": {
+   "Health": 51000,
+   "State": 1
+  },
+  "779977ba-fca8-4898-b797-936bd3f9627d": {
+   "Health": 2545,
+   "State": 0
+  },
+  "7870eab8-51d8-486b-8cc6-5c0dfe6ca1ba": {
+   "Health": 2545,
+   "State": 0
+  },
+  "78d47916-350b-4bb0-a3ba-0a38f63309d1": {
+   "Health": 50000,
+   "State": 1
+  },
+  "79d7b61e-46e5-42e3-8884-dc7a0517fb51": {
+   "Health": 2545,
+   "State": 0
+  },
+  "7a2ac464-b073-495d-9aad-dd9e9c5655e4": {
+   "Health": 2545,
+   "State": 0
+  },
+  "7a3c7782-a1ea-46c1-8188-e311585ba476": {
+   "Health": 50000,
+   "State": 1
+  },
+  "7af66bd5-ac16-461d-8f2d-3ae943d68f07": {
+   "Health": 2545,
+   "State": 0
+  },
+  "7bf4516c-ae96-42ed-9e5c-8576db909e7e": {
+   "Health": 51000,
+   "State": 1
+  },
+  "7c1cd7e0-0c68-4d14-bce5-c17c58e0da2d": {
+   "Health": 50000,
+   "State": 1
+  },
+  "7ce96800-e1c6-4263-bf1e-618c7e94fddf": {
+   "Health": 50000,
+   "State": 1
+  },
+  "7da8841d-1f2c-400e-867f-0a6df54bcf9b": {
+   "Health": 2545,
+   "State": 0
+  },
+  "7e6bdefd-7ca9-40e4-87fa-450788a7ad92": {
+   "Health": 51000,
+   "State": 1
+  },
+  "80a2f806-bab0-4772-8a6a-700e304f6592": {
+   "Health": 2545,
+   "State": 0
+  },
+  "80c95ca6-deac-4053-b85a-7db34530ee93": {
+   "Health": 50000,
+   "State": 1
+  },
+  "819cbbfa-c470-4a91-93ae-0d3055b0032d": {
+   "Health": 51000,
+   "State": 1
+  },
+  "825c013d-efdb-42e7-949b-2312f9642541": {
+   "Health": 2545,
+   "State": 0
+  },
+  "82ed78b6-deae-49e6-86f3-0d32a2b02ae0": {
+   "Health": 2545,
+   "State": 0
+  },
+  "83b49ec0-9d73-4195-90be-d2bd2a7b47ad": {
+   "Health": 2545,
+   "State": 0
+  },
+  "84343f11-03f0-4730-99ba-20fdc9a27b23": {
+   "Health": 2545,
+   "State": 0
+  },
+  "844b6684-0d09-4ff9-9add-67a123abd738": {
+   "Health": 2545,
+   "State": 0
+  },
+  "8477521b-0b32-4e6c-b8d3-c78bb7355946": {
+   "Health": 2545,
+   "State": 1
+  },
+  "84f683e0-009a-436c-b48f-b7cb5fc44b35": {
+   "Health": 2545,
+   "State": 0
+  },
+  "857d889a-6652-4a54-aa7d-9bfffbfdf687": {
+   "Health": 180000,
+   "State": 1
+  },
+  "85b3151d-9838-41a7-a921-2220fdb65265": {
+   "Health": 2545,
+   "State": 0
+  },
+  "85e25718-3f90-4f37-82e6-735cc7c5a87d": {
+   "Health": 2545,
+   "State": 0
+  },
+  "867d306f-4ad8-4088-90aa-13e1173faf9b": {
+   "Health": 2545,
+   "State": 0
+  },
+  "8691194e-ee13-48d6-a9cb-de6a6f7899ab": {
+   "Health": 2545,
+   "State": 0
+  },
+  "875ba5aa-9dd6-4114-8842-97296e75444d": {
+   "Health": 51000,
+   "State": 1
+  },
+  "87746144-6bea-4e9e-b93a-2f10369f6794": {
+   "Health": 2545,
+   "State": 0
+  },
+  "8788acb4-f48f-4b02-8dca-ef4ff7bd127d": {
+   "Health": 2545,
+   "State": 0
+  },
+  "8b774c5b-cd87-4139-94f5-1df79c18aa31": {
+   "Health": 2545,
+   "State": 0
+  },
+  "8c080275-27d3-43db-8826-8f5fe4c4eecd": {
+   "Health": 2545,
+   "State": 1
+  },
+  "8d5833a5-5cc2-492a-907d-8c37efc99df6": {
+   "Health": 2545,
+   "State": 0
+  },
+  "8d63ed2d-afd2-4db7-9ff7-e7a0cd5afe15": {
+   "Health": 10000,
+   "State": 1
+  },
+  "8fc2af31-a6a1-49d5-b9c3-f1ae87bbaff3": {
+   "Health": 0,
+   "State": 1
+  },
+  "8fe02a3a-e2f3-47a6-afa4-154b10bac59d": {
+   "Health": 180000,
+   "State": 1
+  },
+  "8ff0584d-b17f-4bc4-849e-57bf3005d4f6": {
+   "Health": 2545,
+   "State": 0
+  },
+  "907ea7d8-5503-43b7-a31e-8d1457a9bf9f": {
+   "Health": 2545,
+   "State": 1
+  },
+  "90b8e5ec-141e-421a-8937-25c2f846af9c": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9106a89c-4145-44a0-a337-1d3381ea6cdc": {
+   "Health": 2545,
+   "State": 0
+  },
+  "91226cdd-36e1-4bca-88af-697d5a15a265": {
+   "Health": 2545,
+   "State": 0
+  },
+  "91ce710c-043d-4c17-aaad-26b5046df3d0": {
+   "Health": 5200,
+   "State": 1
+  },
+  "9239be3e-a852-4446-ae5b-45f7eabd0da1": {
+   "Health": 51000,
+   "State": 1
+  },
+  "928c7d6f-a633-4631-ad7d-0fab046b209e": {
+   "Health": 50000,
+   "State": 1
+  },
+  "930ed23b-5c2e-4bdc-a9c3-9b46c7f4e05e": {
+   "Health": 10000,
+   "State": 1
+  },
+  "93a5e4f9-f0d9-4a89-993f-de8d8f77c8eb": {
+   "Health": 2545,
+   "State": 0
+  },
+  "93c8ce4f-923f-4cdb-b2dd-d2f0da9b7678": {
+   "Health": 51000,
+   "State": 1
+  },
+  "93e18393-61bf-4a6c-81c3-2318f0d19db9": {
+   "Health": 50000,
+   "State": 1
+  },
+  "95e55299-7011-415c-b381-41030e184cc5": {
+   "Health": 180000,
+   "State": 1
+  },
+  "964bec6f-d196-49f6-83de-02932ef40f62": {
+   "Health": 51000,
+   "State": 1
+  },
+  "96df9269-25a9-4884-ba24-119548a19d97": {
+   "Health": 0,
+   "State": 1
+  },
+  "96f4c422-55a7-4287-ae76-121980f1a492": {
+   "Health": 0,
+   "State": 1
+  },
+  "9747a63e-ac67-4dc0-8e46-3ae9584dbfa8": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9751f5c5-5b4a-4713-b8a9-7f905163e5df": {
+   "Health": 2545,
+   "State": 0
+  },
+  "98a8ee99-11d5-45ce-a2d2-00bafb73ba3d": {
+   "Health": 51000,
+   "State": 1
+  },
+  "98e37287-a568-4d4a-8aed-8beb7d21e631": {
+   "Health": 180000,
+   "State": 1
+  },
+  "995f2c0a-bbc9-49c0-929a-15286dae2a99": {
+   "Health": 0,
+   "State": 1
+  },
+  "997f772b-454c-4d01-9aa3-a042fa7c2973": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9a95679c-52e8-45b9-9048-01369389a940": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9afeaa3a-160f-4b3a-8c62-538e936057f5": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9b0c8f5d-005b-4872-b474-79bd9ad78ac7": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9d13cd1b-4adb-4f04-adc7-acb643c8ea7c": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9d62a59b-2c8f-44a0-9693-64d4b7b49d4d": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9d62a59b-2c8f-44a0-9693-64d4b7b49d9b": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9d62a59b-2c8f-44a0-9693-64d4b7b49d9d": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9dba7794-9dde-49e4-83fe-3c72d5356653": {
+   "Health": 180000,
+   "State": 1
+  },
+  "9e3cc9c0-07cd-4aab-ab58-b6421262f58d": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9e8db191-4112-43c4-b66b-64f2f02fe7e3": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9ec23857-ceb0-4b28-b22c-5b7b1a3bd15a": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9ed8c43f-fb42-4484-a50d-13945ad6d874": {
+   "Health": 2545,
+   "State": 0
+  },
+  "9fe2218b-a754-45e2-99a7-492619742d30": {
+   "Health": 10000,
+   "State": 1
+  },
+  "a0112b93-d497-4b06-af05-8ba747341f21": {
+   "Health": 2545,
+   "State": 0
+  },
+  "a163f57e-d6cc-4c80-ba05-3b0cce6ec6d4": {
+   "Health": 2545,
+   "State": 0
+  },
+  "a1d19b3b-6906-4508-abc0-1a9a190633e7": {
+   "Health": 51000,
+   "State": 1
+  },
+  "a47f81f5-6b6a-4bb7-97e2-57f01e9ec045": {
+   "Health": 2545,
+   "State": 0
+  },
+  "a4bc47f4-b765-4187-a9af-a0ed73f5af09": {
+   "Health": 2545,
+   "State": 0
+  },
+  "a4c238a9-6c14-4332-8305-aa9f8c6ba27a": {
+   "Health": 2545,
+   "State": 0
+  },
+  "a5118812-2c05-4d73-a95e-aeea99da696b": {
+   "Health": 0,
+   "State": 1
+  },
+  "a55cd0ff-c69c-4627-bb4b-f2b554075ae8": {
+   "Health": 2545,
+   "State": 0
+  },
+  "a59a11b4-7aae-4c6d-b1e9-16d8328d9d2c": {
+   "Health": 2545,
+   "State": 0
+  },
+  "a6fc4844-b499-43c6-a713-d69dfefebed7": {
+   "Health": 2545,
+   "State": 0
+  },
+  "a7143e8d-7564-40c5-8076-4e189a69640b": {
+   "Health": 2545,
+   "State": 0
+  },
+  "a760f949-7556-422a-87ae-020f34febb2f": {
+   "Health": 2545,
+   "State": 0
+  },
+  "a7c0e3b1-cbf1-4491-ac63-972d9132575f": {
+   "Health": 2545,
+   "State": 0
+  },
+  "a8b35997-e6ce-44be-960f-7a30b7b97800": {
+   "Health": 40000,
+   "State": 1
+  },
+  "a91a4128-6d5c-4105-96c0-575b56ed4b36": {
+   "Health": 180000,
+   "State": 1
+  },
+  "a9d77a9d-e99e-46fa-9178-463b1e2b10da": {
+   "Health": 0,
+   "State": 1
+  },
+  "ac3b2d13-c228-4e7c-89de-85c32f6cc4fa": {
+   "Health": 2545,
+   "State": 0
+  },
+  "ac8e42e9-b637-4fe7-8999-81ab7db01dd6": {
+   "Health": 50000,
+   "State": 1
+  },
+  "ad8eedf7-791c-446a-956e-8794b9b6d4ba": {
+   "Health": 2545,
+   "State": 0
+  },
+  "aeec312e-4a3e-481a-ae63-cce96675eab4": {
+   "Health": 2545,
+   "State": 0
+  },
+  "aefdcd4e-e133-4a58-97dc-f70a4578b952": {
+   "Health": 2545,
+   "State": 0
+  },
+  "b0872f88-bbbd-43c4-8daf-fe20eb6c2c95": {
+   "Health": 2545,
+   "State": 0
+  },
+  "b0c94067-cae6-40f3-a21f-1a1a38819fe7": {
+   "Health": 2545,
+   "State": 0
+  },
+  "b134be69-6203-4253-89ae-e105e5f77043": {
+   "Health": 180000,
+   "State": 1
+  },
+  "b1b9cfb7-6d7a-4ec3-a140-0352d97e4cdc": {
+   "Health": 50000,
+   "State": 1
+  },
+  "b1ddf431-56a7-47cb-ba2d-112b968e8a89": {
+   "Health": 2545,
+   "State": 0
+  },
+  "b308c7d7-7046-47ee-ac80-bd5e4db65473": {
+   "Health": 2545,
+   "State": 0
+  },
+  "b366b72a-2f20-4cdb-a36a-b6b4c90bdd45": {
+   "Health": 2545,
+   "State": 0
+  },
+  "b427d75d-fa89-4897-98bd-f68fb598a9b0": {
+   "Health": 0,
+   "State": 1
+  },
+  "b54abd14-eccd-4c12-9668-d14e238d37bd": {
+   "Health": 2545,
+   "State": 0
+  },
+  "b666c678-8357-4c96-a355-3b22ce73eca8": {
+   "Health": 2545,
+   "State": 0
+  },
+  "b76c6884-f9cb-44d1-8d19-55609de299a7": {
+   "Health": 2545,
+   "State": 0
+  },
+  "b7790857-42ed-407c-b5e8-b4edfdfc58af": {
+   "Health": 2545,
+   "State": 0
+  },
+  "b79178d3-c011-474d-a871-08ef300ba7bc": {
+   "Health": 50000,
+   "State": 1
+  },
+  "b902b009-0df2-4221-9167-79f7b7ecbf25": {
+   "Health": 2545,
+   "State": 0
+  },
+  "b9f957e8-2f4d-4bdb-8d39-8b615f25b84e": {
+   "Health": 2545,
+   "State": 0
+  },
+  "ba04e6c3-e1e9-4b66-bfb4-ff3732170f87": {
+   "Health": 2545,
+   "State": 0
+  },
+  "bad829ad-37a9-471b-904c-04562c35b09d": {
+   "Health": 180000,
+   "State": 1
+  },
+  "bb6a90cf-661a-4c88-a73b-2ef053b70a1a": {
+   "Health": 2545,
+   "State": 0
+  },
+  "bc02307e-fe9f-4a2d-8603-80bcbd4cfd80": {
+   "Health": 2545,
+   "State": 0
+  },
+  "bcde7e7b-3aeb-4b50-9b57-41085421de4d": {
+   "Health": 2545,
+   "State": 1
+  },
+  "bd4f428a-b531-4631-86d2-2924747041db": {
+   "Health": 2545,
+   "State": 0
+  },
+  "bd6d7efe-cb80-4130-94d4-23aec7b89ff3": {
+   "Health": 180000,
+   "State": 1
+  },
+  "bd6f6ae9-ee06-4c50-8d18-1a78912aa971": {
+   "Health": 0,
+   "State": 1
+  },
+  "bf451852-0c8b-479d-93a9-69ab29ac3cf3": {
+   "Health": 2545,
+   "State": 0
+  },
+  "bfe29488-1ea0-4149-985e-89ff0a4f0c85": {
+   "Health": 2545,
+   "State": 0
+  },
+  "c01008ac-a7e4-48ea-878c-49356166387f": {
+   "Health": 2545,
+   "State": 0
+  },
+  "c02e00d9-89d2-4039-bc34-61520e10e05a": {
+   "Health": 2545,
+   "State": 0
+  },
+  "c060b5a0-13c7-40e4-8818-e7588e07f39d": {
+   "Health": 180000,
+   "State": 1
+  },
+  "c25a830b-e300-49b5-8508-ef5df58d0228": {
+   "Health": 2545,
+   "State": 0
+  },
+  "c271dfa2-2b2b-40d3-a413-3fa9e82eeb23": {
+   "Health": 2545,
+   "State": 0
+  },
+  "c2946ca8-3ce6-4ee3-905b-dfb096eb01b3": {
+   "Health": 180000,
+   "State": 1
+  },
+  "c2e0efb0-e817-4bef-aa9a-5ad15eec38db": {
+   "Health": 0,
+   "State": 1
+  },
+  "c30dff73-e264-468f-8afd-4fbc50b9a8d7": {
+   "Health": 50000,
+   "State": 1
+  },
+  "c35ad7f8-cac8-456c-ab35-3b4212f6d5e6": {
+   "Health": 50000,
+   "State": 1
+  },
+  "c3b1a542-d7b2-4fd7-a6d5-68f1c60deed5": {
+   "Health": 51000,
+   "State": 1
+  },
+  "c44c8c1f-f245-4828-a214-a564dae08e79": {
+   "Health": 2545,
+   "State": 0
+  },
+  "c5a2147a-95d4-4d37-95f7-794011233dc3": {
+   "Health": 2545,
+   "State": 0
+  },
+  "c6dbd240-94b6-4832-acef-0ed0379f121f": {
+   "Health": 50000,
+   "State": 1
+  },
+  "c84586b8-63d7-4939-8d1d-715f3a808abd": {
+   "Health": 50000,
+   "State": 1
+  },
+  "c84b4b6a-9108-47f2-83cb-ea64d4d4173b": {
+   "Health": 180000,
+   "State": 1
+  },
+  "c9684ba9-38f6-485a-9a67-42f51716358a": {
+   "Health": 2545,
+   "State": 0
+  },
+  "cb36d60f-d020-44ac-84bd-f1e7780d5422": {
+   "Health": 2545,
+   "State": 0
+  },
+  "cb9f6698-e000-4cfe-ac1b-c060d38b1953": {
+   "Health": 2545,
+   "State": 0
+  },
+  "cbad55f4-2e57-4533-b083-a92357043c6a": {
+   "Health": 9200,
+   "State": 1
+  },
+  "cbc1cf2e-ca26-4ea6-9683-7f30413433ca": {
+   "Health": 2545,
+   "State": 0
+  },
+  "cbd620e6-aab7-4ebe-8697-c62f6b363cad": {
+   "Health": 2545,
+   "State": 0
+  },
+  "cc2fe1d9-c253-4b13-9547-1e6d59bc95c0": {
+   "Health": 50000,
+   "State": 1
+  },
+  "cc57d097-9692-41ae-833d-935774c357c4": {
+   "Health": 2545,
+   "State": 0
+  },
+  "cce4e298-1651-40f0-8538-c5fd639cdf75": {
+   "Health": 2545,
+   "State": 0
+  },
+  "cd1d4cd1-bcd9-4fa8-b4e6-21334cb35277": {
+   "Health": 2545,
+   "State": 0
+  },
+  "cd2f9eea-f689-44f0-9179-cc3f7cf413c5": {
+   "Health": 2545,
+   "State": 0
+  },
+  "ce79b85a-9e0e-4b90-8e8c-8358ec106ff5": {
+   "Health": 2545,
+   "State": 0
+  },
+  "ceade3f7-6ff4-4681-8d67-8e99fed998c8": {
+   "Health": 2545,
+   "State": 0
+  },
+  "cee18f6a-e83e-4013-932b-ecc2e32cb35d": {
+   "Health": 50000,
+   "State": 1
+  },
+  "cf0fb7d7-451f-48aa-95c2-18937fbf28ec": {
+   "Health": 0,
+   "State": 1
+  },
+  "cf278d2c-6ee0-4928-9bb4-ee41e38d5847": {
+   "Health": 2545,
+   "State": 0
+  },
+  "d091ae3e-f23a-4f5f-b96c-7e50f811942a": {
+   "Health": 2545,
+   "State": 0
+  },
+  "d0ea7a9c-0837-4f47-954c-fab565f0b01c": {
+   "Health": 2545,
+   "State": 0
+  },
+  "d2b897fd-b331-4fed-85c5-49074e3b9821": {
+   "Health": 2545,
+   "State": 0
+  },
+  "d44497bf-418f-4fa5-b24d-79cbafca3464": {
+   "Health": 2545,
+   "State": 0
+  },
+  "d4a749c2-3a4f-4fe1-9be6-469f5b7a2a41": {
+   "Health": 10000,
+   "State": 1
+  },
+  "d4fb5a2e-2295-4bf2-be69-e0272c1ef721": {
+   "Health": 2545,
+   "State": 0
+  },
+  "d500fded-79f8-4d24-ac6a-125a131c76b9": {
+   "Health": 2545,
+   "State": 0
+  },
+  "d55d508f-ddad-4398-8900-2f28dae95b41": {
+   "Health": 2545,
+   "State": 1
+  },
+  "d578c091-f199-47d7-9dfa-52c9fdc51d5d": {
+   "Health": 0,
+   "State": 1
+  },
+  "d5bcb66e-b5b0-43d4-8313-1d81763cd4db": {
+   "Health": 2545,
+   "State": 0
+  },
+  "d5c3cc15-043a-4d43-8cf7-be895c41bb2c": {
+   "Health": 51000,
+   "State": 1
+  },
+  "d60e75d4-d2d5-4ced-89cd-9ef681ad78de": {
+   "Health": 2545,
+   "State": 1
+  },
+  "d6e303ef-ab7e-4df5-81be-10d775c2a661": {
+   "Health": 2545,
+   "State": 0
+  },
+  "d7cd10c5-d366-436a-b69e-d02339bab1c0": {
+   "Health": 2545,
+   "State": 0
+  },
+  "d8ab7334-4acc-4567-9a2d-52cce0d60900": {
+   "Health": 2545,
+   "State": 1
+  },
+  "d985dc27-6b09-4386-a8dd-f25d92eef0d7": {
+   "Health": 2545,
+   "State": 0
+  },
+  "d99d2bd7-242b-4b37-a502-5df429e88662": {
+   "Health": 40000,
+   "State": 1
+  },
+  "d9c1fd03-ecf8-4cf9-a5ee-4dc3a2b63ad5": {
+   "Health": 2545,
+   "State": 0
+  },
+  "d9dc5efe-6708-4944-a990-c58dd4d59170": {
+   "Health": 2545,
+   "State": 0
+  },
+  "db472a9a-8a41-4bbb-940c-d00f1fd16562": {
+   "Health": 50000,
+   "State": 1
+  },
+  "db66540e-34ac-489d-bc0b-cf06b8e7800c": {
+   "Health": 51000,
+   "State": 1
+  },
+  "db7c871d-d5d6-4c11-804f-017aae23ecf7": {
+   "Health": 2545,
+   "State": 0
+  },
+  "dc7b0b14-79ec-48bb-966b-55e7fcd9719c": {
+   "Health": 0,
+   "State": 1
+  },
+  "dd33cf34-b786-4784-b684-94960ca73440": {
+   "Health": 2545,
+   "State": 0
+  },
+  "dd433d2a-175f-4095-b897-2d0d77deff87": {
+   "Health": 180000,
+   "State": 1
+  },
+  "dee6ee2f-2180-48a5-96c4-b7829a5c543b": {
+   "Health": 2545,
+   "State": 0
+  },
+  "def848c5-b118-430c-9abb-01784ba0f621": {
+   "Health": 2545,
+   "State": 0
+  },
+  "df83859a-4b2e-4e67-87e8-c572f1e00c7a": {
+   "Health": 51000,
+   "State": 1
+  },
+  "dfb7005b-7752-4c55-9217-6ba4b112e084": {
+   "Health": 2545,
+   "State": 0
+  },
+  "dff05ec5-ca96-4891-bae9-c0df6be07909": {
+   "Health": 2545,
+   "State": 0
+  },
+  "dunlamfhota-keepdoor": {
+   "Health": 180000,
+   "State": 1
+  },
+  "e0c1523b-0a9c-41a3-96cc-9547a5fe1cc3": {
+   "Health": 2545,
+   "State": 0
+  },
+  "e0f69602-b9c8-4c0b-a4cf-b523612d857c": {
+   "Health": 2545,
+   "State": 0
+  },
+  "e0f83874-e562-4aae-9b72-e6c19d84fab2": {
+   "Health": 2545,
+   "State": 0
+  },
+  "e1286810-9312-43c4-9525-7f231f1e723e": {
+   "Health": 0,
+   "State": 1
+  },
+  "e1fda5f2-4eac-4818-8f56-e2e64a29a7c2": {
+   "Health": 51000,
+   "State": 1
+  },
+  "e20086fa-e600-46b1-9e1a-ccec182c34f3": {
+   "Health": 2545,
+   "State": 0
+  },
+  "e26e6f4e-44da-4463-8274-2e1f084b2acd": {
+   "Health": 50000,
+   "State": 1
+  },
+  "e28a652b-1aa0-4b0a-9f14-092a1bbc51d1": {
+   "Health": 0,
+   "State": 1
+  },
+  "e3597f78-2201-4ee7-9fb4-8c74a36d4127": {
+   "Health": 2545,
+   "State": 0
+  },
+  "e4d4820d-1dcb-4172-8114-0943a4212d39": {
+   "Health": 180000,
+   "State": 1
+  },
+  "e5f18649-f0a3-41bc-807a-647d0de4273f": {
+   "Health": 2545,
+   "State": 0
+  },
+  "e7813a31-5e90-49f7-9a89-5445306dd52f": {
+   "Health": 2545,
+   "State": 0
+  },
+  "e7aeb741-fac3-4588-8611-69f4db7eb156": {
+   "Health": 0,
+   "State": 1
+  },
+  "e7c9b21b-e5f9-44e5-8435-08b60489054b": {
+   "Health": 50000,
+   "State": 1
+  },
+  "e8340995-7871-4307-8a79-7d856ed9e330": {
+   "Health": 2545,
+   "State": 0
+  },
+  "ea614f71-4834-40c3-b72a-b2a6810ff1b4": {
+   "Health": 2545,
+   "State": 0
+  },
+  "eaae95c8-3baa-4514-8341-f13073922305": {
+   "Health": 180000,
+   "State": 1
+  },
+  "ebe4ec5e-324a-4ebf-b247-2d58425515ea": {
+   "Health": 2545,
+   "State": 0
+  },
+  "ebfd50d1-bde7-46be-83eb-4f29463707ce": {
+   "Health": 2545,
+   "State": 0
+  },
+  "ed4b307f-178d-4ff0-9333-8fc1d672978b": {
+   "Health": 2545,
+   "State": 0
+  },
+  "edc14e90-1ade-44de-b945-09de383b8eaa": {
+   "Health": 50000,
+   "State": 1
+  },
+  "ef1733f2-a83b-4b01-b2fe-33424fd63425": {
+   "Health": 2545,
+   "State": 0
+  },
+  "ef61da7f-71a7-4da4-baee-12cb90088f4f": {
+   "Health": 180000,
+   "State": 1
+  },
+  "efe2a1ae-103b-4d16-8116-dec2f05712ac": {
+   "Health": 2545,
+   "State": 0
+  },
+  "f034451d-5182-463c-8859-97e41bbf79e4": {
+   "Health": 2545,
+   "State": 0
+  },
+  "f08cd354-8987-4d87-a23f-349f394cf18b": {
+   "Health": 2545,
+   "State": 0
+  },
+  "f21c3a1b-38a1-4312-8828-d96cb11216d6": {
+   "Health": 2545,
+   "State": 0
+  },
+  "f24c711f-3569-4053-b96d-fc6eb8769abb": {
+   "Health": 2545,
+   "State": 0
+  },
+  "f252c784-a14f-4db6-aaef-b4bb547f8fb8": {
+   "Health": 2545,
+   "State": 0
+  },
+  "f383e925-cb49-46de-94b5-fc9cbb4171ca": {
+   "Health": 180000,
+   "State": 1
+  },
+  "f3e1dd5d-ee62-4ad8-9bc6-dca7b0223808": {
+   "Health": 180000,
+   "State": 1
+  },
+  "f3e75028-a3c0-4295-b5b3-5dc318962dbc": {
+   "Health": 50000,
+   "State": 1
+  },
+  "f3f95f04-3859-4953-9a11-56aaf0d3b0c4": {
+   "Health": 180000,
+   "State": 1
+  },
+  "f4656f6b-015a-45cc-9ae8-56b7892ee8cc": {
+   "Health": 50000,
+   "State": 1
+  },
+  "f9a69088-747b-4e46-aa05-85a57a516d07": {
+   "Health": 180000,
+   "State": 1
+  },
+  "f9f37b92-e7d7-4786-bf7e-669e34838e56": {
+   "Health": 0,
+   "State": 1
+  },
+  "fa9a8bb6-7c0a-4ff5-bf61-6d95ddcb9649": {
+   "Health": 50000,
+   "State": 1
+  },
+  "fca3f77a-edf9-4715-b941-4c26bca795b6": {
+   "Health": 2545,
+   "State": 0
+  },
+  "fddaad5b-a33f-41ee-910b-0d4b7392fcfd": {
+   "Health": 180000,
+   "State": 1
+  },
+  "fe0b0d0c-004c-4f65-bcf1-87659dac9ec3": {
+   "Health": 2545,
+   "State": 0
+  },
+  "fe8fcb20-9449-47f0-87b2-fe3c39c0db18": {
+   "Health": 2545,
+   "State": 1
+  },
+  "ffb0e45b-efeb-4af5-91b0-67b534d8489c": {
+   "Health": 2545,
+   "State": 0
+  }
+ },
+ "Keep": {
+  "1": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "10": {
+   "Level": 1,
+   "Name": "Braemar Middle Camp",
+   "Realm": 0
+  },
+  "100": {
+   "Level": 4,
+   "Name": "Dun Crauchon",
+   "Realm": 3
+  },
+  "101": {
+   "Level": 5,
+   "Name": "Dun Crimthain",
+   "Realm": 3
+  },
+  "102": {
+   "Level": 5,
+   "Name": "Dun Bolg",
+   "Realm": 3
+  },
+  "103": {
+   "Level": 1,
+   "Name": "Dun nGed",
+   "Realm": 3
+  },
+  "104": {
+   "Level": 1,
+   "Name": "Dun Da Behnn",
+   "Realm": 3
+  },
+  "105": {
+   "Level": 5,
+   "Name": "Dun Scathaig",
+   "Realm": 3
+  },
+  "106": {
+   "Level": 1,
+   "Name": "Dun Ailinne",
+   "Realm": 3
+  },
+  "11": {
+   "Level": 1,
+   "Name": "Thidranki Faste",
+   "Realm": 0
+  },
+  "110": {
+   "Level": 10,
+   "Name": "Dun Dagda",
+   "Realm": 3
+  },
+  "111": {
+   "Level": 10,
+   "Name": "Dun Lamfhota",
+   "Realm": 3
+  },
+  "12": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "13": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "132": {
+   "Level": 1,
+   "Name": "Molvik Faste",
+   "Realm": 0
+  },
+  "134": {
+   "Level": 1,
+   "Name": "Leirvik Castle",
+   "Realm": 0
+  },
+  "138": {
+   "Level": 1,
+   "Name": "Dun Killaloe",
+   "Realm": 0
+  },
+  "14": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "198": {
+   "Level": 10,
+   "Name": "Mjollner Faste",
+   "Realm": 2
+  },
+  "2": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "20": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "201": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "202": {
+   "Level": 1,
+   "Name": "Midgard Portal keep",
+   "Realm": 2
+  },
+  "203": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "21": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "22": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "23": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "24": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "25": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "3": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "31": {
+   "Level": 1,
+   "Name": "Caer Caledon",
+   "Realm": 0
+  },
+  "32": {
+   "Level": 1,
+   "Name": "Dun Murdaigean",
+   "Realm": 0
+  },
+  "33": {
+   "Level": 1,
+   "Name": "Dun Abermenai",
+   "Realm": 0
+  },
+  "35": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "36": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "37": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "38": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "381": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "382": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "383": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "385": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "387": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "388": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "39": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "390": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "40": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "41": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "42": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "43": {
+   "Level": 1,
+   "Name": "Albion Portal Keep",
+   "Realm": 1
+  },
+  "5": {
+   "Level": 1,
+   "Name": "Dun Orseo",
+   "Realm": 0
+  },
+  "50": {
+   "Level": 5,
+   "Name": "Caer Benowyc",
+   "Realm": 1
+  },
+  "51": {
+   "Level": 5,
+   "Name": "Caer Berkstead",
+   "Realm": 1
+  },
+  "52": {
+   "Level": 5,
+   "Name": "Caer Erasleigh",
+   "Realm": 1
+  },
+  "53": {
+   "Level": 5,
+   "Name": "Caer Boldiam",
+   "Realm": 1
+  },
+  "54": {
+   "Level": 5,
+   "Name": "Caer Sursbrooke",
+   "Realm": 1
+  },
+  "55": {
+   "Level": 5,
+   "Name": "Caer Hurbury",
+   "Realm": 1
+  },
+  "56": {
+   "Level": 5,
+   "Name": "Caer Renaris",
+   "Realm": 1
+  },
+  "57": {
+   "Level": 10,
+   "Name": "Castle Excalibur",
+   "Realm": 1
+  },
+  "58": {
+   "Level": 10,
+   "Name": "Castle Myrddin",
+   "Realm": 1
+  },
+  "637": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "638": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "639": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "641": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "643": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "644": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "646": {
+   "Level": 1,
+   "Name": "Midgard Portal Keep",
+   "Realm": 2
+  },
+  "75": {
+   "Level": 5,
+   "Name": "Bledmeer Faste",
+   "Realm": 2
+  },
+  "76": {
+   "Level": 5,
+   "Name": "Nottmoor Faste",
+   "Realm": 2
+  },
+  "77": {
+   "Level": 5,
+   "Name": "Hlidskialf Faste",
+   "Realm": 2
+  },
+  "78": {
+   "Level": 5,
+   "Name": "Blendrake Faste",
+   "Realm": 2
+  },
+  "79": {
+   "Level": 5,
+   "Name": "Glenlock Faste",
+   "Realm": 2
+  },
+  "80": {
+   "Level": 5,
+   "Name": "Fensalir Faste",
+   "Realm": 2
+  },
+  "81": {
+   "Level": 5,
+   "Name": "Arvakr Faste",
+   "Realm": 2
+  },
+  "82": {
+   "Level": 10,
+   "Name": "Grallarhorn Faste",
+   "Realm": 2
+  },
+  "893": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "894": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "895": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "897": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "899": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "900": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  },
+  "902": {
+   "Level": 1,
+   "Name": "Hibernia Portal Keep",
+   "Realm": 3
+  }
+ },
+ "_source": "The default world: keep owners and levels and keep door health/state as in the original v0.32 world (the last release built before any test runs changed them); the two battleground keeps added later (Dun Abermenai, Dun Murdaigean) as shipped in 0.35. build_release_036.py resets the release world to these and verifies it."
+}

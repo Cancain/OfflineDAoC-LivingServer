@@ -70,7 +70,7 @@ namespace DOL.GS.DailyQuest.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 200 && npc.X == 334793 && npc.Y == 420805)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 200, 334793, 420805))
 					{
 						Cola = npc;
 						break;

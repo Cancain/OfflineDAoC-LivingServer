@@ -3,63 +3,23 @@ using DOL.Database;
 
 namespace DOL.GS
 {
-    // Client presentation only. These items never enter an actor's combat inventory.
+    /// <summary>
+    /// What the client is shown of an NPC's equipment. Necromancer pets used to show private client weapons here (a
+    /// blackened mace and shield on the necroservant, a flaming sword on the abomination); in 1.65 only the abomination
+    /// carries a weapon (its template's two-handed sword), the other servants nothing (owner 2026-10-13). Every NPC now
+    /// shows its own inventory; the hooks stay so the packet code has one place to ask.
+    /// </summary>
     public static class NecromancerPetAppearance
     {
-        public const ushort HeroSwordModel = 4808; // Private client asset; never assigned to ordinary items.
-        public const ushort ServantMaceModel = 4822; // Private blackened copy of the Bone Patroller hammer (stock 3466).
-        public const ushort ServantShieldModel = 4823; // Private rotten-wood copy of the grave shield (stock 1128).
-        private static readonly ICollection<DbInventoryItem> ServantEquipment = Build(false);
-        private static readonly ICollection<DbInventoryItem> HeroEquipment = Build(true);
+        public static bool HasEquipment(GameLiving actor) => actor.Inventory != null;
 
-        private static ICollection<DbInventoryItem> Build(bool hero)
-        {
-            var equipment = new GameNpcInventoryTemplate();
-            if (hero)
-                equipment.AddNPCEquipment(eInventorySlot.TwoHandWeapon, HeroSwordModel, 0, 22); // client 2H orange flames
-            else
-            {
-                equipment.AddNPCEquipment(eInventorySlot.RightHandWeapon, ServantMaceModel);
-                equipment.AddNPCEquipment(eInventorySlot.LeftHandWeapon, ServantShieldModel);
-            }
-            return equipment.VisibleItems;
-        }
+        public static ICollection<DbInventoryItem> Equipment(GameLiving actor) => actor.Inventory?.VisibleItems;
 
-        private static int Kind(GameObject actor) => actor is NecromancerPet pet ? pet.AppearanceTemplateId : 0;
-
-        public static bool HasEquipment(GameLiving actor) =>
-            Kind(actor) is 204 or 206 || actor.Inventory != null;
-
-        public static ICollection<DbInventoryItem> Equipment(GameLiving actor) => Kind(actor) switch
-        {
-            204 => ServantEquipment,
-            206 => HeroEquipment,
-            _ => actor.Inventory?.VisibleItems
-        };
-
-        public static byte WeaponSlots(GameLiving actor) => Kind(actor) switch
-        {
-            204 => 0x10, // right hand and shield
-            206 => 0x22, // two-handed weapon in both hands
-            _ => actor.VisibleActiveWeaponSlots
-        };
+        public static byte WeaponSlots(GameLiving actor) => actor.VisibleActiveWeaponSlots;
 
         public static void CombatModels(GameObject attacker, GameObject defender, byte result,
             ref ushort weapon, ref ushort defenseWeapon)
         {
-            switch (Kind(attacker))
-            {
-                case 204: weapon = ServantMaceModel; break;
-                case 206: weapon = HeroSwordModel; break;
-            }
-            // Only decorate actual parry/block results; never create a defense.
-            if (result == 2 && Kind(defender) == 204)
-                defenseWeapon = ServantShieldModel;
-            else if (result == 1)
-            {
-                if (Kind(defender) == 204) defenseWeapon = ServantMaceModel;
-                else if (Kind(defender) == 206) defenseWeapon = HeroSwordModel;
-            }
         }
     }
 }

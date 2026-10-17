@@ -71,7 +71,7 @@ namespace DOL.GS.WeeklyQuest.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 249 && npc.X == 32526 && npc.Y == 27679)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 249, 32526, 27679))
 					{
 						Joe = npc;
 						break;

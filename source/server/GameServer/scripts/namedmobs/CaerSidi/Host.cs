@@ -4031,7 +4031,7 @@ namespace DOL.AI.Brain
 
         public override void Think()
         {
-            if (!CheckProximityAggro())
+            if (!CheckProximityAggro() && DOL.GS.EpicEncounterMechanics.FightIsOver(Body))
             {
                 BafHost = false;
                 BafMobs = false;

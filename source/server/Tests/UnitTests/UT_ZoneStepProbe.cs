@@ -46,8 +46,9 @@ namespace DOL.UnitTests
                         .Select(v => new Vector3(v[0], v[1], v[2])).ToArray();
                     var trace = new List<string>();
                     var watch = System.Diagnostics.Stopwatch.StartNew();
+                    NavQueryProfile.Reset();
                     bool ok = AutonomousZoneItinerary.ProbeNextStep(zones, region, At(ends[0]), At(ends[1]), ends[0], ends[1], nav, out var step, trace);
-                    lines.Add($"{item} => {(ok ? $"OK {step.Inside} > {step.Outside}" : "FAILED")} {watch.ElapsedMilliseconds}ms");
+                    lines.Add($"{item} => {(ok ? $"OK {step.Inside} > {step.Outside}" : "FAILED")} {watch.ElapsedMilliseconds}ms{NavQueryProfile.Summary()}");
                     lines.AddRange(trace.Select(t => "    " + t));
                 }
             }

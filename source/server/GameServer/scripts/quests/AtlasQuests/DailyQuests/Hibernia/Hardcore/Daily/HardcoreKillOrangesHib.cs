@@ -62,7 +62,7 @@ namespace DOL.GS.DailyQuest
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
 				{
-					if (npc.CurrentRegionID == 200 && npc.X == 335117 && npc.Y == 420642)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 200, 335117, 420642))
 					{
 						SucciHib = npc;
 						break;

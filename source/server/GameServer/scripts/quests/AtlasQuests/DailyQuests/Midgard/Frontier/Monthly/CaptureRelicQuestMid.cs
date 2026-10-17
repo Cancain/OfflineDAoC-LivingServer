@@ -71,7 +71,7 @@ namespace DOL.GS.MonthlyQuest.Midgard
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
 				{
-					if (npc.CurrentRegionID == 100 && npc.X == 765463 && npc.Y == 670000)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 100, 765463, 670000))
 					{
 						Kelteen = npc;
 						break;

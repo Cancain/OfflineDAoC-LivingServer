@@ -75,7 +75,7 @@ namespace DOL.GS.DailyQuest.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 200 && npc.X == 334962 && npc.Y == 420687)
+					if (DOL.GS.Quests.QuestNpcPlacement.IsAt(npc, 200, 334962, 420687))
 					{
 						Dean = npc;
 						break;
