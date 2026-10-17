@@ -306,11 +306,22 @@ alliances) only runs in a real server.
        now"). Watched for about 15 minutes, not 30.
     5. `/gc info`: dues 5%, and the bank held 8 silver 56 copper after about 15 minutes. Merit
        was still 0, since no guild bot levelled in that time.
-  - **Bug found: the starting guild blocks recruiting.** New characters join their realm's
-    starting guild (Clan Cotswold in Albion). `TryAnswerGuildRequest` and recruiting skip any
-    player with `Guild != null`, so out of the box "lf guild" gets no bot guild answer. It
-    worked only after `/gc quit`. Not fixed yet.
-  - **Not checked:** keep claims (6); alliances (7), which can't form with one guild per realm;
-    and `/ginvite` and `/gc remove` on a bot (8).
+  - **Bug found: the starting guild blocked recruiting.** New characters join their realm's
+    starting guild (Clan Cotswold in Albion). `TryAnswerGuildRequest` and recruiting skipped any
+    player with `Guild != null`, so out of the box "lf guild" got no bot guild answer. It
+    worked only after `/gc quit`. **Fixed in 0.36-chris.9**, below.
+  - **Not checked:** keep claims (6) and `/ginvite` and `/gc remove` on a bot (8).
   - **Only one guild formed.** Midgard and Hibernia, with 8 bots each, got none. With a small
     roster, this feature shows little outside the biggest realm.
+- **Second check (2026-10-17, build 0.36-chris.9, 300 bots per realm: 150 at level 1, 150 at level 50):**
+  - **Starting-guild fix, seen in game.** Claudecheck was put back in Clan Cotswold (rank
+    Initiate). "lf guild" in `/faction` got "Claudecheck, sending you an invite to Order of the
+    Oaken Shield" and the yes/no box. Accepting left Clan Cotswold by itself, joined the bot guild
+    as Soldier, and got a welcome. Test: `AStartingGuildDoesNotStopBotGuildsRecruitingYou`.
+  - **Guilds across all realms.** 90 seconds after start, 14 more guilds formed, for 5 per realm
+    (leveling, raiding, RvR and social charters).
+  - **Alliances (7), seen.** 30 seconds later each realm's raiding guild joined its RvR guild's
+    alliance. The game said "Knights of the Golden Chalice has joined the alliance of Order of the
+    Oaken Shield". `/as` chatter was not watched.
+  - Guild chat stayed lively with no flooding ("2 of us heading out to the frontier, join up if
+    you can", "4 guildies grouped up in Snowdonia"), and three guildmates greeted me at login.
