@@ -238,7 +238,7 @@ public class SocialExpansionSettingsTests
         }
 
         var type = launcher.GetType("OfflineDaoc.Launcher.SocialExpansionSettingsControl")!;
-        void Render(string file, Action<Control> setup)
+        void Render(string file, Action<Control> setup, bool bottom = false)
         {
             using var host = new Form { ShowInTaskbar = false, StartPosition = FormStartPosition.Manual, Location = new Point(-20_000, -20_000),
                 ClientSize = new Size(1180, 1060), BackColor = Color.FromArgb(35, 31, 26) };
@@ -248,6 +248,13 @@ public class SocialExpansionSettingsTests
             setup(panel);
             type.GetMethod("UpdateState")!.Invoke(panel, null);
             Application.DoEvents();
+            if (bottom)
+            {
+                // The CI desktop is small: show the XP card by scrolling the cards to the end.
+                var scroller = panel.Controls.OfType<Panel>().First(c => c.AutoScroll);
+                scroller.AutoScrollPosition = new Point(0, 10_000);
+                Application.DoEvents();
+            }
             using var image = new Bitmap(host.ClientSize.Width, host.ClientSize.Height);
             panel.DrawToBitmap(image, new Rectangle(Point.Empty, image.Size));
             image.Save(Path.Combine(folder, file));
@@ -269,8 +276,14 @@ public class SocialExpansionSettingsTests
             Xp(panel, "_playerXp", 1);
             Xp(panel, "_botXp", 2, "1-19:1.5;15-34:2.5");
         });
+        Render("5b-tab-editing-xp.png", panel =>
+        {
+            Xp(panel, "_playerXp", 1);
+            Xp(panel, "_botXp", 2, "1-19:1.5;15-34:2.5");
+        }, bottom: true);
         AllOn.Save(_database, null, () => true);
         Render("6-tab-saved-on.png", _ => { });
+        Render("6b-tab-saved-on-xp.png", _ => { }, bottom: true);
         _stopped = false;
         Render("7-tab-server-running.png", _ => { });
         TestContext.Progress.WriteLine("UI previews: " + folder);
