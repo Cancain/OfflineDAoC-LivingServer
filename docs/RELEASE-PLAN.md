@@ -191,7 +191,19 @@ living-world population work (M1).
 2003" ideas (grats and server firsts, death economy, frontier alarms, Camelot Herald, schedules and
 linkdeads, nemesis) plus bot memory of you, and fixes from the Social Expansion audit.
 - Every part is off by default and has its own switch in the launcher's Social Expansion tab.
-- Automated tests pass. **Not yet checked in game.**
+- Automated tests pass.
+- **Partly checked in game** (2026-10-17, builds 0.36-chris.3 to chris.8). Seen working: grats,
+  server firsts, bots remembering you, the bot schedule, nemesis records, the Camelot Herald, a
+  bot asking you for a rez by name, and a bot rezzing you. The checks found and fixed four bugs,
+  merged in pull request #6; the one in shared AI code is that dead gamebots no longer jump to
+  their spawn point. Not seen yet: frontier alarms, nemesis chat lines, "brb" in chat, linkdeads,
+  and you rezzing a bot. Details are in LIVING-SERVER.md, "In-game check".
+- **Branches (2026-10-17):** `feature/living-server` holds all the Social Expansion and Living
+  Server code; release builds `0.36-chris.4` to `chris.8` were cut from it. `main` has only
+  README, changelog and new-client updates, plus the same stuck-bot server fix that our branch
+  already has from 0.36. It doesn't have this code yet.
+- **Before the stage 7 merge into `main`:** stages 4, 5 and 5b still need their in-game checks.
+  XP by level range, bot guilds and personalities/voices have only been tested automatically.
 - Docs: [LIVING-SERVER.md](LIVING-SERVER.md). Planning record:
   [LIVING-SERVER-BACKLOG.md](LIVING-SERVER-BACKLOG.md).
 
