@@ -9745,7 +9745,7 @@
   },
   {
    "kind": "reply",
-   "topic": "general",
+   "topic": "player",
    "who": [],
    "realm": "*",
    "class": [],
@@ -9764,7 +9764,7 @@
   },
   {
    "kind": "reply",
-   "topic": "general",
+   "topic": "player",
    "who": [],
    "realm": "*",
    "class": [],
@@ -9783,7 +9783,7 @@
   },
   {
    "kind": "reply",
-   "topic": "general",
+   "topic": "player",
    "who": [],
    "realm": "*",
    "class": [],
@@ -9802,7 +9802,45 @@
   },
   {
    "kind": "reply",
-   "topic": "general",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "greeting",
+   "mood": "",
+   "weight": 1.0,
+   "text": "hey {player}, good to see you again",
+   "id": "840a72eefb7d"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "greeting",
+   "mood": "",
+   "weight": 1.0,
+   "text": "oh hi {player}",
+   "id": "e6e977e506f3"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
    "who": [],
    "realm": "*",
    "class": [],
@@ -9821,7 +9859,7 @@
   },
   {
    "kind": "reply",
-   "topic": "general",
+   "topic": "player",
    "who": [],
    "realm": "*",
    "class": [],
@@ -9840,7 +9878,7 @@
   },
   {
    "kind": "reply",
-   "topic": "general",
+   "topic": "player",
    "who": [],
    "realm": "*",
    "class": [],
@@ -9859,7 +9897,26 @@
   },
   {
    "kind": "reply",
-   "topic": "general",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "grouping",
+   "mood": "",
+   "weight": 1.0,
+   "text": "sure {player}, send an invite when you are ready",
+   "id": "08fcaca32f6d"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
    "who": [],
    "realm": "*",
    "class": [],
@@ -9878,7 +9935,7 @@
   },
   {
    "kind": "reply",
-   "topic": "general",
+   "topic": "player",
    "who": [],
    "realm": "*",
    "class": [],
@@ -9894,6 +9951,405 @@
    "weight": 1.0,
    "text": "see you around {player}",
    "id": "0127a4e45c95"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "farewell",
+   "mood": "",
+   "weight": 1.0,
+   "text": "later {player}",
+   "id": "f082895fd676"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "grinding",
+   "mood": "",
+   "weight": 1.0,
+   "text": "slow but steady {player}, you?",
+   "id": "680ea9b4ddd8"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "grinding",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{player}, xp is crawling tonight, how about you?",
+   "id": "6b63a614732b"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "grinding",
+   "mood": "",
+   "weight": 1.0,
+   "text": "not bad {player}, still grinding away",
+   "id": "c335888d7876"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "travel",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{player}, stablemaster is your friend, saves a lot of running",
+   "id": "fa2bde308cd0"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "travel",
+   "mood": "",
+   "weight": 1.0,
+   "text": "not sure {player}, ask in /faction, someone will know",
+   "id": "cc7c3050a15e"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "help",
+   "mood": "",
+   "weight": 1.0,
+   "text": "sure {player}, what do you need?",
+   "id": "d685c7808de2"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "help",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{player}, what's up?",
+   "id": "def5aea41e5f"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "help",
+   "mood": "",
+   "weight": 1.0,
+   "text": "for you {player}? what is it",
+   "id": "4c04f3dc9ba5"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "banter",
+   "mood": "",
+   "weight": 1.0,
+   "text": "lol {player}",
+   "id": "fed6c629b149"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "banter",
+   "mood": "",
+   "weight": 1.0,
+   "text": "haha {player}, sure",
+   "id": "b8213acafb31"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "banter",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{player} you never change :)",
+   "id": "2054557ebb74"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "rvr",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{player}, if you head out to the frontier let me know",
+   "id": "a9d1f8467f87"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "rvr",
+   "mood": "",
+   "weight": 1.0,
+   "text": "careful out there {player}",
+   "id": "0820b924798b"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "dungeon",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{player}, i'd go if we had a healer",
+   "id": "a8eca1cbe0a3"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "dungeon",
+   "mood": "",
+   "weight": 1.0,
+   "text": "sounds fun {player}, how deep are you going?",
+   "id": "b8daa9c71982"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "trading",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{player}, try the Realm Exchange, i saw some decent stuff there",
+   "id": "dfe7da088c1e"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "trading",
+   "mood": "",
+   "weight": 1.0,
+   "text": "not selling anything right now {player}, sorry",
+   "id": "7bae56f32d61"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "unknown",
+   "mood": "",
+   "weight": 1.0,
+   "text": "yeah {player}?",
+   "id": "b94c364d997e"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "unknown",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{player}?",
+   "id": "d83639e3f6be"
+  },
+  {
+   "kind": "reply",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player"
+   ],
+   "intent": "unknown",
+   "mood": "",
+   "weight": 1.0,
+   "text": "hm? what's up {player}",
+   "id": "707cd98c874d"
   },
   {
    "kind": "lfg",

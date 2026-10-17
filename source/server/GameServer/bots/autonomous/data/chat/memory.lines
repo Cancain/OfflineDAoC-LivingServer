@@ -93,27 +93,96 @@ heard {player} is a bit rough in chat, but plays ok
 watch out for that {player_class} near {place}, hits hard
 an enemy {player_class} has been hunting near {place}, careful
 
-# Ordinary replies that use the name when the bot knows you.
+# Ordinary replies that use the name when the bot knows you. Topic "player" keeps them apart from
+# the general replies, so a bot that remembers you picks one of these (in-game check 2026-10-17:
+# mixed with the general pool, only about one known reply in five used the name).
 @kind reply
+@topic player
 @intent greeting
 @needs knows_player
 @who *
 hey {player}!
 {player}! hi
 evening {player}, good to see you
+hey {player}, good to see you again
+oh hi {player}
 @kind reply
+@topic player
 @intent grouping
 @needs knows_player
 @who *
 for you {player}, sure, where are you?
 i would group with you again {player}, what level are you now?
 {player}, if you need one more i am around
+sure {player}, send an invite when you are ready
 @kind reply
+@topic player
 @intent farewell
 @needs knows_player
 @who *
 night {player}, take care
 see you around {player}
+later {player}
+@kind reply
+@topic player
+@intent grinding
+@needs knows_player
+@who *
+slow but steady {player}, you?
+{player}, xp is crawling tonight, how about you?
+not bad {player}, still grinding away
+@kind reply
+@topic player
+@intent travel
+@needs knows_player
+@who *
+{player}, stablemaster is your friend, saves a lot of running
+not sure {player}, ask in /faction, someone will know
+@kind reply
+@topic player
+@intent help
+@needs knows_player
+@who *
+sure {player}, what do you need?
+{player}, what's up?
+for you {player}? what is it
+@kind reply
+@topic player
+@intent banter
+@needs knows_player
+@who *
+lol {player}
+haha {player}, sure
+{player} you never change :)
+@kind reply
+@topic player
+@intent rvr
+@needs knows_player
+@who *
+{player}, if you head out to the frontier let me know
+careful out there {player}
+@kind reply
+@topic player
+@intent dungeon
+@needs knows_player
+@who *
+{player}, i'd go if we had a healer
+sounds fun {player}, how deep are you going?
+@kind reply
+@topic player
+@intent trading
+@needs knows_player
+@who *
+{player}, try the Realm Exchange, i saw some decent stuff there
+not selling anything right now {player}, sorry
+@kind reply
+@topic player
+@intent unknown
+@needs knows_player
+@who *
+yeah {player}?
+{player}?
+hm? what's up {player}
 
 # A friendly bot inviting you (the invite itself is a yes/no dialog).
 @kind lfg

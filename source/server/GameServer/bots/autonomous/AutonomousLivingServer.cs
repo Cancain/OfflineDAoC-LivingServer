@@ -63,8 +63,7 @@ public static partial class AutonomousLivingServer
         Load("memory", () => Memories.Load(GameServer.Database.SelectAllObjects<OfflineBotMemoryRecord>()));
         Load("nemesis", () => Nemeses.Load(GameServer.Database.SelectAllObjects<OfflineBotNemesisRecord>()));
         Load("server firsts", () => Firsts.Load(GameServer.Database.SelectAllObjects<OfflineServerFirstRecord>()));
-        if (FirstsOn)
-            Load("server firsts reached before records began", SeedFirsts);
+        Load("server firsts reached before records began", () => SeedFirstsOnce(FirstsOn));
         // One-kill nemesis rows older than a week are forgotten, so the table stays small (review 2026-10-16).
         if (NemesisOn)
             Load("old nemesis rows", () => Nemeses.RemoveWhere(row => row.Kills <= 1 && IsOlderThan(row.LastUtc, TimeSpan.FromDays(7))));

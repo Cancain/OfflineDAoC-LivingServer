@@ -4765,6 +4765,30 @@ namespace DOL.AI.Brain
             bot.TempProperties.GetProperty<GameRelic>(GameRelic.PLAYER_CARRY_RELIC_WEAK) == null &&
             string.IsNullOrEmpty(bot.TempProperties.GetProperty<string>("RvrEventForce"));
 
+        private long _nextRezSkipReport;
+
+        /// <summary>
+        /// Says in the server log why a rez bot near a dead player of its realm is not rezzing them (at most
+        /// every 15 seconds per bot), so a missing rez can be checked in game (in-game check 2026-10-17).
+        /// </summary>
+        private void ReportRezSkip(GameBot bot, string reason, long now)
+        {
+            if (now < _nextRezSkipReport || !log.IsInfoEnabled || bot?.CurrentRegion == null)
+                return;
+            _nextRezSkipReport = now + 15_000;
+            GamePlayer corpse = ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion).FirstOrDefault(player =>
+                player != null && !player.IsAlive && player.Realm == bot.Realm && bot.IsWithinRadius(player, PlayerRezSearchRadius));
+            if (corpse == null)
+                return;
+            string detail = reason == "no_rezzable_corpse"
+                ? $" hostiles_near={HostilesNear(bot, corpse)} same_group={bot.Group != null && corpse.Group == bot.Group} " +
+                  $"box_open={corpse.TempProperties.GetProperty<GameLiving>("RESURRECT_CASTER") != null} " +
+                  $"recently_offered={PlayerRezOffered.TryGetValue(corpse, out long offered) && now < offered} " +
+                  $"skipped={_rezSkipped.TryGetValue(corpse, out long skipped) && now < skipped}"
+                : string.Empty;
+            log.Info($"LIVING_SERVER_REZ_SKIP bot=\"{bot.Name}\" corpse=\"{corpse.Name}\" distance={(int)bot.GetDistanceTo(corpse)} reason={reason}{detail}");
+        }
+
         private void DropRezTarget(long now, bool skip)
         {
             if (skip && _rezTarget != null)
@@ -4787,6 +4811,8 @@ namespace DOL.AI.Brain
             {
                 if (_rezTarget != null)
                     DropRezTarget(now, false);
+                if (AutonomousLivingServer.DeathOn && bot?.ResurrectionSpell != null && bot.IsPlayerLedGroup)
+                    ReportRezSkip(bot, "in_player_group", now);
                 return false;
             }
             if (bot.IsCasting)
@@ -4805,6 +4831,8 @@ namespace DOL.AI.Brain
             {
                 if (_rezTarget != null)
                     DropRezTarget(now, false);
+                ReportRezSkip(bot, bot.InCombat ? "in_combat" : HasAggro ? "has_aggro" : !FreeToRezStrangers(bot) ? "busy" :
+                    bot.IsCrowdControlled || bot.IsSilenced ? "controlled" : "group_fighting", now);
                 return false;
             }
             Spell resurrection = bot.ResurrectionSpell;
@@ -4818,7 +4846,10 @@ namespace DOL.AI.Brain
                     return false;
                 _nextPlayerRezCheck = now + 2_000;
                 if (resurrection.Level > bot.Level || !CheckHealSpell(resurrection))
+                {
+                    ReportRezSkip(bot, resurrection.Level > bot.Level ? "spell_level" : "spell_not_ready", now);
                     return false;
+                }
                 if (PlayerRezClaims.Count > 8)
                     foreach (var stale in PlayerRezClaims.Where(pair => pair.Value.Until < now || pair.Key.IsAlive).Select(pair => pair.Key).ToArray())
                         PlayerRezClaims.TryRemove(stale, out _);
@@ -4830,7 +4861,10 @@ namespace DOL.AI.Brain
                     .Where(player => IsRezzableCorpse(bot, player, now) && !HostilesNear(bot, player))
                     .OrderBy(Body.GetDistanceTo).FirstOrDefault();
                 if (corpse == null)
+                {
+                    ReportRezSkip(bot, "no_rezzable_corpse", now);
                     return false;
+                }
                 // One bot per corpse; the claim is taken atomically so two bots thinking at once can't both start.
                 if (!PlayerRezClaims.TryAdd(corpse, (bot.DatabaseID, now + 30_000)) &&
                     !(PlayerRezClaims.TryGetValue(corpse, out var held) && held.BotId == bot.DatabaseID))
@@ -4849,6 +4883,9 @@ namespace DOL.AI.Brain
             {
                 if (now - _rezTargetSince > PlayerRezApproachMs || HostilesNear(bot, corpse))
                 {
+                    if (log.IsInfoEnabled)
+                        log.Info($"LIVING_SERVER_REZ_SKIP bot=\"{bot.Name}\" corpse=\"{corpse.Name}\" distance={(int)bot.GetDistanceTo(corpse)} " +
+                                 $"reason={(HostilesNear(bot, corpse) ? "hostiles_near" : "could_not_reach")} line_of_sight={BotGroupSupport.HasCorpseLineOfSight(bot, corpse)}");
                     DropRezTarget(now, true);
                     return false;
                 }
@@ -4863,6 +4900,8 @@ namespace DOL.AI.Brain
             var handler = ScriptMgr.CreateSpellHandler(bot, resurrection, m_mobSpellLine);
             if (handler == null || bot.Mana < Math.Max(bot.PowerCost(resurrection), handler.PowerCost(corpse)))
             {
+                if (log.IsInfoEnabled)
+                    log.Info($"LIVING_SERVER_REZ_SKIP bot=\"{bot.Name}\" corpse=\"{corpse.Name}\" reason={(handler == null ? "no_handler" : "no_power")}");
                 DropRezTarget(now, true);
                 return false;
             }
@@ -4873,12 +4912,16 @@ namespace DOL.AI.Brain
             bot.TargetObject = corpse;
             if (!bot.CastSpell(resurrection, m_mobSpellLine, false))
             {
+                if (log.IsInfoEnabled)
+                    log.Info($"LIVING_SERVER_REZ_SKIP bot=\"{bot.Name}\" corpse=\"{corpse.Name}\" reason=cast_refused");
                 bot.TargetObject = previous;
                 DropRezTarget(now, true);
                 return false;
             }
             // Held briefly while the cast runs; the 90-second hold starts when the box actually opens (above).
             PlayerRezOffered[corpse] = now + PlayerRezCastHoldMs;
+            if (log.IsInfoEnabled)
+                log.Info($"LIVING_SERVER_REZ bot=\"{bot.Name}\" corpse=\"{corpse.Name}\" distance={(int)bot.GetDistanceTo(corpse)}");
             DropRezTarget(now, false);
             AutonomousLivingServer.OnOfferingRez(bot, corpse);
             return true;

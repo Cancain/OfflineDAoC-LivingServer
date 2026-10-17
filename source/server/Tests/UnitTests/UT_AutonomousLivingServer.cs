@@ -297,6 +297,47 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void FirstsAreSeededOnceSoBotsMadeAtFiftyLaterDontTakeThem()
+        {
+            // In-game check 2026-10-17: every start re-seeded, so "+ Lv.50" bots took every level-50 title.
+            var firsts = new LivingServerTable<string, OfflineServerFirstRecord>("test", row => row.Title, StringComparer.OrdinalIgnoreCase);
+            int seeded = 0;
+            AutonomousLivingServer.SeedFirstsOnce(firsts, false, () => seeded++);
+            Assert.That((seeded, firsts.Count), Is.EqualTo((0, 0)), "switched off: nothing seeded, nothing written");
+            AutonomousLivingServer.SeedFirstsOnce(firsts, true, () => seeded++);
+            Assert.That(seeded, Is.EqualTo(1), "the first start with the switch on seeds");
+            Assert.That(firsts.TryGet(AutonomousLivingServer.RecordsBeganTitle, out var marker) && marker.Name == "", Is.True,
+                "the marker has no name, so the Herald never lists it");
+            AutonomousLivingServer.SeedFirstsOnce(firsts, true, () => seeded++);
+            AutonomousLivingServer.SeedFirstsOnce(firsts, true, () => seeded++);
+            Assert.That(seeded, Is.EqualTo(1), "later starts don't seed again");
+            AutonomousLivingServer.SeedFirstsOnce(firsts, false, () => seeded++);
+            Assert.That(firsts.TryGet(AutonomousLivingServer.RecordsBeganTitle, out _), Is.False, "switching off forgets the marker");
+            AutonomousLivingServer.SeedFirstsOnce(firsts, true, () => seeded++);
+            Assert.That(seeded, Is.EqualTo(2), "switching on again seeds who got there meanwhile");
+        }
+
+        [Test]
+        public void ARememberedPlayerIsAnsweredByNameForEveryOrdinaryIntent()
+        {
+            // In-game check 2026-10-17: known replies were drawn from the general pool too, so few used the name.
+            var random = new Random(6);
+            var slots = Slots(("player", "Chrisplays"), ("player_class", "cleric"), ("place", "Tomb of Mithra"));
+            foreach (string intent in new[] { "greeting", "grouping", "farewell", "grinding", "travel", "help", "banter", "rvr",
+                         "dungeon", "trading", "unknown" })
+                for (int i = 0; i < 12; i++)
+                {
+                    Assert.That(Corpus.TryPick("reply", Speaker((BotPersonalityType)(i % 6), "knows_player"), slots, null, DateTime.UtcNow,
+                        random, out string text, out _, intent, "player"), Is.True, intent);
+                    Assert.That(text, Does.Contain("Chrisplays").IgnoreCase, intent);
+                }
+            Assert.That(Corpus.Lines.Where(line => line.Kind == "reply" && line.Topic == "player").All(line => line.Text.Contains("{player}")),
+                Is.True, "every known-player reply uses the name");
+            Assert.That(Corpus.TryPick("reply", Speaker(BotPersonalityType.Leveler), slots, null, DateTime.UtcNow, random, out _, out _,
+                "greeting", "player"), Is.False, "only for a bot that knows the player");
+        }
+
+        [Test]
         public void TheLivingServerDocumentListsEverySetting()
         {
             string dir = TestContext.CurrentContext.TestDirectory;
