@@ -63,8 +63,10 @@ ask in faction, people usually answer
 i am low level but can come along
 lets duo, i need the company
 @levels 20-50
-our group could use a {class} like you, where are you?
-how many are you? we have room for {count}
+# Players lead and bots join (BotGroupInvite), so a bot offers to join you; it never promises an invite
+# (in-game check 2026-10-17: "we have room for 3" to a player's lfg, and no invite came).
+{class} here, where are you? invite me
+how many are you? i can fill a spot if you inv
 
 @kind reply
 @intent trading
