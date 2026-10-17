@@ -352,7 +352,7 @@ public static class AutonomousObjectiveAssignments
                                                          !HasActivePveAssignment(bot.PersistentRecord, utcNow) &&
                                                          !IsRvrEligible(bot.PersistentRecord, utcNow)).ToArray();
                 eAutonomousObjectiveKind?[] pvePlan = Plan(pvePool, false);
-                for (int i = 0; i < pvePool.Length; i++)
+                foreach (int i in AutonomousBotPersonality.PlannedFirst(pvePlan))
                 {
                     GameBot bot = pvePool[i];
                     eAutonomousObjectiveKind kind = pvePlan[i] ?? (TakesBattleground(bot,
@@ -372,7 +372,7 @@ public static class AutonomousObjectiveAssignments
                                                          !HasActivePveAssignment(bot.PersistentRecord, utcNow) &&
                                                          IsRvrEligible(bot.PersistentRecord, utcNow)).ToArray();
                 eAutonomousObjectiveKind?[] rvrPlan = Plan(rvrPool, true);
-                for (int i = 0; i < rvrPool.Length; i++)
+                foreach (int i in AutonomousBotPersonality.PlannedFirst(rvrPlan))
                 {
                     GameBot bot = rvrPool[i];
                     eAutonomousObjectiveKind kind;

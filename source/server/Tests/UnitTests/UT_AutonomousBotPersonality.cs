@@ -212,5 +212,52 @@ namespace DOL.GS.Tests
             Assert.That(plan.Count(k => k == eAutonomousObjectiveKind.Battleground), Is.EqualTo(10), "only 10 bots fit a bracket");
             Assert.That(Enumerable.Range(10, 40).All(i => plan[i] != eAutonomousObjectiveKind.Battleground), Is.True);
         }
+        /// <summary>
+        /// The allocator's RvR pass as it runs (review 2026-10-17): planned bots first, then the rest with the old
+        /// over-quota draw on live counters. 100 bots, 20 open RvR slots and nothing else open: exactly 20 RvR, as before
+        /// personalities (interleaving had given about 36).
+        /// </summary>
+        [Test]
+        public void ThePass_NeverRunsAGoalOverItsNumber()
+        {
+            for (int seed = 0; seed < 50; seed++)
+            {
+                var random = new Random(seed);
+                var plan = P.PlanGoals(Population(100), new bool[100], 0, 0, 20, 0, random);
+                // Solo and group are already full (locked bots): only the 20 RvR slots are open.
+                var target = new AutonomousObjectiveAssignments.Allocation(40, 40, 20);
+                int solo = 40, group = 40, rvr = 0;
+                foreach (int i in P.PlannedFirst(plan))
+                {
+                    int rvrNeeded = Math.Max(0, target.RvR - rvr);
+                    eAutonomousObjectiveKind kind = plan[i] ?? (rvrNeeded > 0 && random.Next(rvrNeeded) < rvrNeeded
+                        ? eAutonomousObjectiveKind.RvR
+                        : AutonomousObjectiveAssignments.ChoosePveObjective(target, solo, group, random));
+                    if (kind == eAutonomousObjectiveKind.RvR) rvr++;
+                    else if (kind == eAutonomousObjectiveKind.SoloPve) solo++;
+                    else group++;
+                }
+                Assert.That(rvr, Is.EqualTo(20), $"seed {seed}");
+            }
+        }
+
+        [Test]
+        public void PlannedFirst_PutsPlannedBotsFirstAndKeepsPoolOrder()
+        {
+            var plan = new eAutonomousObjectiveKind?[] { null, eAutonomousObjectiveKind.RvR, null, eAutonomousObjectiveKind.SoloPve };
+            Assert.That(P.PlannedFirst(plan), Is.EqualTo(new[] { 1, 3, 0, 2 }));
+            Assert.That(P.PlannedFirst(new eAutonomousObjectiveKind?[4]), Is.EqualTo(new[] { 0, 1, 2, 3 }), "personalities off: pool order");
+        }
+
+        [Test]
+        public void PlanGoals_DrawsBattlegroundsBeforeRvR_SoBracketBotsArentUsedUp()
+        {
+            var random = new Random(11);
+            var types = Enumerable.Repeat<BotPersonalityType?>(BotPersonalityType.NoLifer, 20).ToArray();
+            bool[] can = Enumerable.Range(0, 20).Select(i => i < 5).ToArray();
+            var plan = P.PlanGoals(types, can, 0, 0, 15, 5, random);
+            Assert.That(plan.Count(k => k == eAutonomousObjectiveKind.Battleground), Is.EqualTo(5));
+            Assert.That(plan.Count(k => k == eAutonomousObjectiveKind.RvR), Is.EqualTo(15));
+        }
     }
 }

@@ -208,19 +208,14 @@ public static class AutonomousBotPersonality
             open = floor;
         }
         double A(int i, eAutonomousObjectiveKind kind) => types[i] is { } type ? GoalAffinity(type, kind) : 1.0;
-        var remaining = new List<int>(Enumerable.Range(0, count));
         void Take(eAutonomousObjectiveKind kind, int slots, Func<int, bool> eligible, Func<int, double> weight)
         {
             if (slots <= 0)
                 return;
-            var chosen = remaining.Where(eligible)
-                .Select(i => (Index: i, Key: Math.Pow(random.NextDouble(), 1.0 / Math.Max(0.01, weight(i)))))
-                .OrderByDescending(entry => entry.Key).Take(slots).Select(entry => entry.Index).ToList();
-            foreach (int i in chosen)
-            {
+            foreach (int i in Enumerable.Range(0, count).Where(i => plan[i] == null && eligible(i))
+                         .Select(i => (Index: i, Key: Math.Pow(random.NextDouble(), 1.0 / Math.Max(0.01, weight(i)))))
+                         .OrderByDescending(entry => entry.Key).Take(slots).Select(entry => entry.Index).ToList())
                 plan[i] = kind;
-                remaining.Remove(i);
-            }
         }
         // Relative wish: how much more this bot wants the goal than the other goals still open to it.
         double Relative(int i, eAutonomousObjectiveKind kind, params eAutonomousObjectiveKind[] others)
@@ -228,10 +223,11 @@ public static class AutonomousBotPersonality
             double[] alternatives = others.Select(other => A(i, other)).ToArray();
             return A(i, kind) / (alternatives.Length == 0 ? 1.0 : alternatives.Average());
         }
-        Take(eAutonomousObjectiveKind.RvR, open[2], _ => true,
-            i => Relative(i, eAutonomousObjectiveKind.RvR, eAutonomousObjectiveKind.SoloPve, eAutonomousObjectiveKind.GroupPve));
+        // Battlegrounds first: only some bots can go (level brackets), so RvR mustn't use them up (review 2026-10-17).
         Take(eAutonomousObjectiveKind.Battleground, open[3], i => canBattleground[i],
             i => Relative(i, eAutonomousObjectiveKind.Battleground, eAutonomousObjectiveKind.SoloPve, eAutonomousObjectiveKind.GroupPve));
+        Take(eAutonomousObjectiveKind.RvR, open[2], _ => true,
+            i => Relative(i, eAutonomousObjectiveKind.RvR, eAutonomousObjectiveKind.SoloPve, eAutonomousObjectiveKind.GroupPve));
         Take(eAutonomousObjectiveKind.GroupPve, open[1], _ => true,
             i => Relative(i, eAutonomousObjectiveKind.GroupPve, eAutonomousObjectiveKind.SoloPve));
         Take(eAutonomousObjectiveKind.SoloPve, open[0], _ => true, _ => 1.0);
@@ -239,7 +235,15 @@ public static class AutonomousBotPersonality
     }
 
     /// <summary>The planner's type for a bot, or null when personalities don't apply to it.</summary>
-    public static BotPersonalityType? PlannerType(GameBot bot) => Applies(bot) ? For(bot).Type : null;
+    public static BotPersonalityType? PlannerType(GameBot bot) => Applies(bot) ? TypeFor(bot.DatabaseID) : null;
+
+    /// <summary>
+    /// The order a pass assigns its pool in: every planned bot first, then the rest (pool order kept within each).
+    /// The rest then see counters that already include every planned slot, so they can't take a planned bot's slot
+    /// (review 2026-10-17: interleaving let a goal run over its number).
+    /// </summary>
+    public static int[] PlannedFirst(eAutonomousObjectiveKind?[] plan) =>
+        Enumerable.Range(0, plan.Length).Where(i => plan[i] != null).Concat(Enumerable.Range(0, plan.Length).Where(i => plan[i] == null)).ToArray();
 
     /// <summary>Dungeon preference as a percentage of today's (100 = unchanged).</summary>
     public static int DungeonPreferencePercent(BotPersonality personality) => personality.Type switch

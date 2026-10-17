@@ -69,10 +69,12 @@ Zone memory is kept in memory only (32 zones per bot, forgotten when the server 
 **Goals (changed 2026-10-17).** Before this change, personality only tilted goals when a Bot Goals file existed, and
 only for bots reassigned outside the allocator's pass, so it barely mattered. Now, each time the allocator hands out
 goals to the bots of a realm and level band, it plans the open slots together:
-- RvR goes to the bots that want it most compared with their other choices, then battlegrounds, then groups versus
-  solo.
+- Battleground slots go first (only bots of a bracket's levels can take them), then RvR to the bots that want it
+  most compared with their other choices, then groups versus solo.
 - It is a weighted draw, so nothing is forced or banned, and it works with or without a saved Bot Goals setting.
-- The mix's numbers are filled exactly (`AutonomousBotPersonality.PlanGoals`).
+- The mix's open slots are filled exactly (`AutonomousBotPersonality.PlanGoals`). The planned bots are assigned
+  first, so bots beyond the open slots can't take a planned bot's slot; they then get a goal by the allocator's
+  usual over-quota rule, as before.
 
 In a test of 1,000 bots with a 40% solo, 40% group and 20% RvR mix:
 
@@ -85,8 +87,9 @@ In a test of 1,000 bots with a 40% solo, 40% group and 20% RvR mix:
 | Crafter | 70% | 25% | 5% |
 | No-lifer | 3% | 47% | 50% |
 
-A bot given a new goal between passes (for example when its group breaks up) still uses the older re-draw rule, and
-only when a Bot Goals setting is saved.
+Two cases still use the older re-draw rule, and only when a Bot Goals setting is saved:
+- a bot given a new goal between passes (for example when its group breaks up);
+- a bot left over once every open slot in its pass is filled.
 
 ## 3. Voices
 
