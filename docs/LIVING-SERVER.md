@@ -160,6 +160,17 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
     the group breaks up. Bots on a stable route, a siege job, a relic or an RvR event force never
     go linkdead.
 
+## New client (0.36c)
+
+Everything here runs in the server and the launcher, so it works the same with the original client and the Godot
+client. Checked on 2026-10-17 with `tools/newclient-compat` (network level, no game world): the Godot client's own
+network code and interface received every Living Server chat line and both yes / no boxes from the server's own
+packet code. Every line landed in the right channel and chat box, server firsts showed on screen, and the server
+read the ACCEPT answers. Result: 30 of 30 passed.
+
+One gap is the Godot client's, not this build's: it has no guild window yet, so a bot guild's member list can't be
+browsed there. Guild chat, guild names over heads and the invite box work.
+
 ## Camelot Herald
 
 **CAMELOT HERALD** in the Social Expansion tab writes a news page from the game database and
