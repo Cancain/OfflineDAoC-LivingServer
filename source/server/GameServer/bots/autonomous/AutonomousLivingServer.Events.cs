@@ -431,6 +431,7 @@ public static partial class AutonomousLivingServer
     private static void AskForRez(GameBot bot)
     {
         long deathTick = GameLoop.GameLoopTime;
+        string diedAt = $"{bot.CurrentRegionID}:{bot.X},{bot.Y},{bot.Z}";
         AskedAtDeath[bot.DatabaseID] = deathTick;
         Later(bot, 3_000 + Random.Shared.Next(4_000), () => !bot.IsAlive && AskedAtDeath.TryGetValue(bot.DatabaseID, out long t) && t == deathTick, () =>
         {
@@ -444,6 +445,7 @@ public static partial class AutonomousLivingServer
                          (rezzer == null && rezClass != null
                              ? $" near_rez_class=\"{rezClass.Name}\" alive={rezClass.IsAlive} has_rez_spell={CanRez(rezClass)}"
                              : string.Empty) +
+                         $" died_at={diedAt} now_at={bot.CurrentRegionID}:{bot.X},{bot.Y},{bot.Z} moving={bot.IsMoving}" +
                          $" region={bot.CurrentRegionID} players={DescribePlayersNear(bot)}");
             }
             bool grouped = rezzer != null && bot.Group != null && bot.Group == rezzer.Group;
@@ -475,7 +477,7 @@ public static partial class AutonomousLivingServer
     private static string DescribePlayersNear(GameBot bot)
     {
         var parts = ClientService.Instance.GetPlayers().Select(player =>
-            $"{player.Name}(region={player.CurrentRegionID},realm={(int)player.Realm},alive={player.IsAlive}," +
+            $"{player.Name}(region={player.CurrentRegionID},at={player.X},{player.Y},{player.Z},realm={(int)player.Realm},alive={player.IsAlive}," +
             $"state={player.ObjectState},distance={(player.CurrentRegionID == bot.CurrentRegionID ? (int)bot.GetDistanceTo(player) : -1)}," +
             $"class={player.CharacterClass?.ID},rez_class={IsRezClass(player)},can_rez={CanRez(player)})");
         return "[" + string.Join(";", parts) + "]";
