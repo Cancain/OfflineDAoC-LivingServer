@@ -83,7 +83,7 @@ jobs:
         shell: bash
         run: |
           dotnet build source/tools/OfflineDaoc.Launcher/OfflineDaoc.Launcher.csproj -c Release -p:SourceRevisionId=${{ github.sha }}
-          out=$(dotnet test source/tools/OfflineDaoc.Launcher.Tests/OfflineDaoc.Launcher.Tests.csproj -c Release -p:SourceRevisionId=${{ github.sha }} --filter "FullyQualifiedName~SocialExpansionSettingsTests" 2>&1) || { echo "$out"; echo "::error title=Social Expansion tab tests::failed"; exit 1; }
+          out=$(dotnet test source/tools/OfflineDaoc.Launcher.Tests/OfflineDaoc.Launcher.Tests.csproj -c Release -p:SourceRevisionId=${{ github.sha }} --filter "FullyQualifiedName~SocialExpansionSettingsTests|FullyQualifiedName~HeraldPageTests" 2>&1) || { echo "$out"; echo "::error title=Social Expansion tab tests::failed"; exit 1; }
           summary=$(echo "$out" | grep -E "(Passed|Failed)!" | tail -n 1 || true)
           echo "::notice title=Social Expansion tab tests::${summary:-no summary line found}"
 
@@ -92,7 +92,9 @@ jobs:
         if: always()
         with:
           name: launcher-ui-preview
-          path: "**/ui-preview/*.png"
+          path: |
+            **/ui-preview/*.png
+            **/ui-preview/*.html
           if-no-files-found: warn
 
       # Only after every server test passed: the installable server build (docs/RELEASE-PLAN.md).

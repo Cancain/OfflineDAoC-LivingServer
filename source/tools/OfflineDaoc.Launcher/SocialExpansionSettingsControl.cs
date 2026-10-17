@@ -41,6 +41,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
     private readonly RuneButton _save = Action("SAVE SETTINGS", DaocTheme.Gold);
     private readonly RuneButton _undo = Action("UNDO EDITS", DaocTheme.Iron);
     private readonly RuneButton _allOff = Action("ALL OFF", DaocTheme.Albion);
+    private readonly RuneButton _herald = Action("CAMELOT HERALD", DaocTheme.Hibernia);
     private readonly System.Windows.Forms.Timer _poll = new() { Interval = 2000 };
     private SocialExpansionSettings _saved = SocialExpansionSettings.Defaults;
     private bool _loading;
@@ -105,7 +106,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         footerGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
         footerGrid.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
         var buttons = new FlowLayoutPanel { AutoSize = true, WrapContents = false, Anchor = AnchorStyles.Right, BackColor = Color.Transparent, Margin = Padding.Empty };
-        buttons.Controls.AddRange([_undo, _allOff, _save]);
+        buttons.Controls.AddRange([_herald, _undo, _allOff, _save]);
         footerGrid.Controls.Add(_status, 0, 0);
         footerGrid.Controls.Add(buttons, 1, 0);
         footer.Controls.Add(footerGrid);
@@ -144,6 +145,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         _botXp.Changed += Edited;
         _save.Click += (_, _) => SaveSettings();
         _undo.Click += (_, _) => LoadSettings();
+        _herald.Click += async (_, _) => await OpenHeraldAsync();
         _allOff.Click += (_, _) =>
         {
             SetValues(ReadValues().AllOff());
@@ -233,6 +235,22 @@ internal sealed class SocialExpansionSettingsControl : UserControl
                 " Close other programs using the game's database, then click UNDO EDITS to read them again.", error: true);
         }
         UpdateState();
+    }
+
+    /// <summary>Writes the Camelot Herald from the game database (read-only; fine while the server runs) and opens it.</summary>
+    private async Task OpenHeraldAsync()
+    {
+        _herald.Enabled = false;
+        try
+        {
+            string runtime = Path.GetDirectoryName(Path.GetDirectoryName(_database)!)!;
+            string records = Path.Combine(runtime, "server", "realm-event-records.sqlite3");
+            string path = await Task.Run(() => HeraldPage.Write(_database, records, Path.Combine(runtime, "herald"), DateTime.Now));
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(path) { UseShellExecute = true });
+            SetNotice("HERALD WRITTEN: " + path, error: false);
+        }
+        catch (Exception ex) { SetNotice("THE HERALD COULD NOT BE WRITTEN: " + ex.Message, error: true); }
+        finally { _herald.Enabled = true; UpdateState(); }
     }
 
     private void SaveSettings()
