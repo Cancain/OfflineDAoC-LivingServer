@@ -50,7 +50,8 @@ files.
 - **In game** (owner's PC, new client, 300 bots per realm, every feature on):
   - Seen working: guild recruiting and alliances, debates, frontier alarms, breaks, bot memory and
     gossip, rez asks, a bot rezzing you, grats and server firsts, tells, /invite and /target by
-    name, and XP by level for players.
+    name, and XP by level for players. Bot XP by level raises bots' XP in game, but the exact
+    factor wasn't measured; see docs/XP-BY-LEVEL-RANGE.md.
   - Not yet seen in game: keep claims, guild merit, linkdeads, nemesis chat lines, you rezzing a
     bot, and the meetup fix.
   - The original game client wasn't tried.

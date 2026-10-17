@@ -104,7 +104,23 @@ applies outside your ranges.
     they keep the RvR rate as designed. Test in a PvE zone.
   - The first kill after a GM `/player level` change is topped up to the new level's floor, so
     it doesn't show the rate. Use the second kill.
-  - **Bot rates were not measured in game.** The log's `AUTONOMOUS_XP_PROGRESS` lines show
-    level-ups but not the base XP.
+  - **Bot rates, partly checked (2026-10-17, build 0.36-chris.11).** The log's
+    `AUTONOMOUS_XP_PROGRESS` lines show the XP of the kill that levels a bot, but not the base XP
+    or the mob. I ran 10 minutes with the suggested bot rates (1.5× for levels 1–19) and compared
+    these kills with about 1,250 from the day's runs at 1×:
+
+    | Level-up from | Kills at 1× (median XP) | Kills at 1.5× (median XP) | Ratio |
+    |---|---|---|---|
+    | 2 | 390 (14) | 5 (20) | 1.43 |
+    | 3 | 275 (26) | 14 (41) | 1.58 |
+    | 4 | 123 (58) | 21 (164) | 2.83 |
+    | 5 | 28 (120.5) | 9 (328) | 2.72 |
+
+    - Every level gained more with the setting on, and levels 2 and 3 come out near 1.5×.
+    - Levels 4 and 5 come out near 2.8×. The kills differ between runs: the 1× runs had
+      personalities on, which steers bots to other camps. The code multiplies only the base XP,
+      once (`GameBot.ScaleAutonomousExperience`); camp and group bonuses aren't scaled.
+    - So bot rates raise XP in game, but the exact factor isn't confirmed this way. A log of the
+      base XP per kill would settle it.
 - **Code:** `source/server/GameServer/gameutils/LevelRangeXpRates.cs`, used by `GamePlayer` and
   `GameBot`.
