@@ -162,6 +162,21 @@ While a scene runs, bots don't start other /faction chatter in that realm.
   showed in `/faction` ("someone just walked into our camp and started pulling haha", "first
   come first served, that is the rule", "just invite them more ppl more xp", "and if the group is
   full?"). It ended after 24 s with "fewer than two speakers left", so it was cut short.
+  - **Why:** a speaker had to be free (not fighting or casting) at the exact moment its line was
+    due. Two of the three level 4–5 bots were mid-fight at 12:35:42; one died seconds later.
+  - **Fixed in 0.36-chris.9:**
+    - A busy speaker is waited for (retried every 5 s, up to 45 s), then a stand-in takes the
+      line, or the line is skipped.
+    - The thread ends early only when fewer than two of its speakers are still in the world.
+    - Casting prefers bots on a town break.
+    - The log has `BOT_DEBATE_WAIT`.
+    - Tests: `DecideBeat_WaitsForABusySpeakerAndEndsOnlyWhenSpeakersAreGone`,
+      `Cast_PrefersBotsOnATownBreak`.
+  - **In game with chris.9 (300 bots per realm):** `alb_armsman_three_weapons` started 7½
+    minutes after start with 5 speakers. It played to the end in 3½ minutes
+    (`reason="finished"`): the armsman polearm / two-hander / crossbow argument, ending "Ok I
+    will just flip a coin at the trainer." No speaker was busy, so `BOT_DEBATE_WAIT` didn't
+    happen. The waiting path is covered by the unit test, not yet seen in game.
 - **Lines:** about 25 voice lines in `/faction`, `/say` and `/gu` fit the moment, in period
   style, with no `{` or `}`.
 - **Not checked:** how busy towns are compared with stock, how often lines repeat over hours,

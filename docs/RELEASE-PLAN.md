@@ -213,9 +213,18 @@ linkdeads, nemesis) plus bot memory of you, and fixes from the Social Expansion 
     debate started 5½ minutes in but was cut short after 24 s. Lines fit with no template
     leaks. Towns and long-term repetition weren't measured.
   - Details are in each feature's doc.
-- **Before the stage 7 merge into `main`:** fix the starting-guild bug and recheck "lf guild".
-  Then decide whether the unchecked parts (keep claims, alliances, bot XP rates, long sessions)
-  must be seen first or can ship marked as unchecked.
+- **0.36-chris.9 (2026-10-17):**
+  - The starting-guild fix and the debate wait were both checked in game, on 300 bots per realm
+    (150 at level 1, 150 at level 50).
+  - "lf guild" from Clan Cotswold got an invite, and accepting moved the character into the bot
+    guild.
+  - 5 guilds formed per realm, and 3 alliances.
+  - A 5-speaker debate played to the end. The busy-speaker wait itself wasn't triggered.
+  - Load: the launcher's bot AI delay was 0.8 ms with 549 bots online, 1.3 ms with 781, and
+    1.2 ms with 889 (4 ms budget). The log showed no lag warnings and no errors.
+- **Before the stage 7 merge into `main`:** decide whether the unchecked parts (keep claims, bot
+  XP rates, the busy-speaker wait in game, long sessions) must be seen first or can ship marked
+  as unchecked.
 - Docs: [LIVING-SERVER.md](LIVING-SERVER.md). Planning record:
   [LIVING-SERVER-BACKLOG.md](LIVING-SERVER-BACKLOG.md).
 
