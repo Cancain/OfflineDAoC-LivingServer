@@ -443,7 +443,8 @@ public static partial class AutonomousLivingServer
                 Log.Info($"LIVING_SERVER_REZ_ASK bot=\"{bot.Name}\" rezzer=\"{rezzer?.Name ?? "none"}\"" +
                          (rezzer == null && rezClass != null
                              ? $" near_rez_class=\"{rezClass.Name}\" alive={rezClass.IsAlive} has_rez_spell={CanRez(rezClass)}"
-                             : string.Empty));
+                             : string.Empty) +
+                         $" region={bot.CurrentRegionID} players={DescribePlayersNear(bot)}");
             }
             bool grouped = rezzer != null && bot.Group != null && bot.Group == rezzer.Group;
             Channel channel = grouped || bot.Group != null && GroupHasPlayer(bot.Group) ? Channel.Group : Channel.Say;
@@ -468,6 +469,16 @@ public static partial class AutonomousLivingServer
                      AutonomousBotVoices.TryEventLine(bot, "rez_ask", out string general, "general", flags: ["just_died"], noRepeat: false))
                 Speak(bot, channel, general);
         });
+    }
+
+    /// <summary>Every player online, for the rez ask log: name, region, realm, distance, class, can rez.</summary>
+    private static string DescribePlayersNear(GameBot bot)
+    {
+        var parts = ClientService.Instance.GetPlayers().Select(player =>
+            $"{player.Name}(region={player.CurrentRegionID},realm={(int)player.Realm},alive={player.IsAlive}," +
+            $"state={player.ObjectState},distance={(player.CurrentRegionID == bot.CurrentRegionID ? (int)bot.GetDistanceTo(player) : -1)}," +
+            $"class={player.CharacterClass?.ID},rez_class={IsRezClass(player)},can_rez={CanRez(player)})");
+        return "[" + string.Join(";", parts) + "]";
     }
 
     /// <summary>

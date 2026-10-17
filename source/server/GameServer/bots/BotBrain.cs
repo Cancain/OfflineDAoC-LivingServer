@@ -4813,6 +4813,9 @@ namespace DOL.AI.Brain
                     DropRezTarget(now, false);
                 if (AutonomousLivingServer.DeathOn && bot?.ResurrectionSpell != null && bot.IsPlayerLedGroup)
                     ReportRezSkip(bot, "in_player_group", now);
+                else if (AutonomousLivingServer.DeathOn && bot?.IsAutonomousWorldBot == true && bot.IsAlive && bot.ResurrectionSpell == null &&
+                         AutonomousLivingServer.IsRezClassId(bot.CharacterClass?.ID ?? 0))
+                    ReportRezSkip(bot, "no_rez_spell", now);
                 return false;
             }
             if (bot.IsCasting)

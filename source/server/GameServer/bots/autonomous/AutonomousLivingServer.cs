@@ -249,7 +249,9 @@ public static partial class AutonomousLivingServer
     }
 
     /// <summary>A real player of a class that can resurrect in 2002-2003.</summary>
-    public static bool IsRezClass(GamePlayer player) => player?.CharacterClass?.ID is
+    public static bool IsRezClass(GamePlayer player) => IsRezClassId(player?.CharacterClass?.ID ?? 0);
+
+    public static bool IsRezClassId(int classId) => classId is
         (int)eCharacterClass.Cleric or (int)eCharacterClass.Friar or (int)eCharacterClass.Healer or
         (int)eCharacterClass.Shaman or (int)eCharacterClass.Druid or (int)eCharacterClass.Warden or
         (int)eCharacterClass.Bard;
@@ -261,7 +263,15 @@ public static partial class AutonomousLivingServer
             return false;
         try
         {
-            return player.GetAllUsableListSpells().Any(entry => entry.Item2.OfType<Spell>().Any(spell => spell.SpellType == eSpellType.Resurrect));
+            if (player.GetAllUsableListSpells().Any(entry => entry.Item2.OfType<Spell>().Any(spell => spell.SpellType == eSpellType.Resurrect)))
+                return true;
+            // The usable-spell list missed a level 50 Cleric's Revive in game (2026-10-17: has_rez_spell=False),
+            // so the character's own spell lines are checked too: a resurrection at or below the line's level.
+            foreach (SpellLine line in player.GetSpellLines())
+                if (line != null && SkillBase.GetSpellList(line.KeyName).Any(spell =>
+                        spell != null && spell.SpellType == eSpellType.Resurrect && spell.Level <= line.Level))
+                    return true;
+            return false;
         }
         catch
         {
