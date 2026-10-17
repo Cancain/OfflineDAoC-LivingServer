@@ -171,6 +171,8 @@ public static class AutonomousBotChatCoordinator
         if (!BotGroupInvite.CloseEnoughToInviteByName(player, bot))
         {
             string where = Clean(bot.CurrentZone?.Description, "the other side of the realm");
+            if (bot.CurrentZone != null && bot.CurrentZone == player.CurrentZone)   // in-game check 2026-10-17: "im in Snowdonia" to a player in Snowdonia
+                return random.Next(2) == 0 ? $"im a ways off, other side of {where}. come find me and inv" : "sure, but im not close. meet up and inv me";
             return random.Next(2) == 0 ? $"im out in {where}, invite me when you are closer" : $"sure, but im in {where}. meet up and inv me";
         }
         return random.Next(3) switch
