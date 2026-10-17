@@ -236,7 +236,7 @@ public static class AutonomousBotGuildPlanner
 
     // Invented, period-style names. Places are the realm's own towns and zones. No real guild names.
     private static readonly RealmWords Albion = new(
-        ["Silver Hart", "White Rose", "Iron Gauntlet", "Crimson Lion", "Golden Chalice", "Black Boar", "Azure Tower",
+        ["Silver Hart", "White Rose", "Iron Gauntlet", "Crimson Lion", "Golden Chalice", "Black Boar", "Azure Banner",
          "Oaken Shield", "Broken Spear", "Gilded Falcon", "Red Griffin", "Grey Mantle"],
         ["Loyal", "Grey", "Stalwart", "Wandering", "Merry", "Valiant", "Hollow", "Last", "Steadfast", "Weary"],
         ["Wardens", "Lancers", "Pilgrims", "Guard", "Company", "Fellowship", "Vanguard", "Watch", "Brethren", "Riders"],

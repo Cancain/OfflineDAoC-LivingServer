@@ -146,6 +146,9 @@ public static class AutonomousBotDebates
 
     public static bool IsRunning(eRealm realm)
     {
+        // Switched off mid-scene, the scene's timer stops: it must not hold /faction for good (audit 2026-10-16).
+        if (!Enabled)
+            return false;
         lock (Sync)
             return Scenes.ContainsKey(realm);
     }

@@ -16,8 +16,12 @@ namespace DOL.GS.Tests
         private static readonly string[] KnownSlots =
             ["me", "class", "level", "realm", "zone", "monster", "item", "count", "q", "keep", "frontier", "enemy", "capital", "dungeon", "camp"];
 
-        // Slots that need bot memory of the player; lines using them are skipped until that exists.
+        // Slots that need bot memory of the player; general callers never fill them, so those lines are skipped
+        // unless the Living Server memory or rez code passes them in.
         private static readonly string[] MemorySlots = ["player", "place", "player_class"];
+
+        // Slots only the Living Server event that says the line fills (grats, firsts, alarms, nemesis).
+        private static readonly string[] EventSlots = ["target", "what", "size", "classes", "killer", "killer_class"];
 
         private static readonly string[] OutOfEra =
             ["world of warcraft", "discord", "twitch", "youtube", "lmao", "covid", "smh", "tbh", "ngl", "yeet"];
@@ -76,7 +80,7 @@ namespace DOL.GS.Tests
         [Test]
         public void Slots_AreOnlyOnesTheServerFillsOrMemorySlots()
         {
-            var allowed = KnownSlots.Concat(MemorySlots).ToHashSet();
+            var allowed = KnownSlots.Concat(MemorySlots).Concat(EventSlots).ToHashSet();
             var used = AllTexts().SelectMany(text => Regex.Matches(text, @"\{(\w+)\}").Select(match => match.Groups[1].Value)).ToHashSet();
             Assert.That(used.Except(allowed), Is.Empty, "Every slot is filled by the server or skipped as a memory slot.");
             Assert.That(AllTexts().Where(text => text.Contains('{') != text.Contains('}')), Is.Empty, "No broken braces.");
@@ -307,6 +311,61 @@ namespace DOL.GS.Tests
                 FullSlots(), recent, now.AddHours(1), random, out _, out _), Is.True, "Another realm has its own window.");
             Assert.That(Corpus.TryPick("ding", speaker, FullSlots(), recent, now.Add(VC.RecentLines.Window).AddMinutes(1), random, out _, out _),
                 Is.True, "Lines come back after the window.");
+        }
+
+        [Test]
+        public void RecentLines_HoldsEveryLineForTheWholeWindow()
+        {
+            // Audit 2026-10-16: the old 400-entry list let a busy realm repeat lines after an hour or two.
+            var recent = new VC.RecentLines();
+            DateTime now = new(2026, 10, 16, 20, 0, 0, DateTimeKind.Utc);
+            for (int i = 0; i < 1500; i++)
+                recent.Use(eRealm.Hibernia, "line" + i, now.AddSeconds(i));
+            Assert.That(recent.WasUsed(eRealm.Hibernia, "line0", now.AddHours(5)), Is.True, "the first of 1,500 lines is still held");
+            Assert.That(recent.WasUsed(eRealm.Hibernia, "line0", now.AddHours(6).AddSeconds(1)), Is.False);
+            Assert.That(recent.WasUsed(eRealm.Albion, "line0", now), Is.False, "realms are separate");
+            for (int i = 0; i < VC.RecentLines.Capacity + 10; i++)
+                recent.Use(eRealm.Midgard, "m" + i, now);
+            Assert.That(recent.Count(eRealm.Midgard), Is.LessThanOrEqualTo(VC.RecentLines.Capacity));
+        }
+
+        [Test]
+        public void TryPick_FiltersByTopicWhenAsked()
+        {
+            var random = new Random(5);
+            VC.Speaker speaker = Speaker(eRealm.Albion, 50, BotPersonalityType.Leveler, "Armsman", 9);
+            var slots = FullSlots();
+            slots["target"] = "Brannoc";
+            for (int i = 0; i < 20; i++)
+            {
+                Assert.That(Corpus.TryPick("grats", speaker, slots, null, DateTime.UtcNow, random, out _, out string id, topic: "fifty"), Is.True);
+                Assert.That(Corpus.Lines.Single(line => line.Id == id).Topic, Is.EqualTo("fifty"));
+            }
+        }
+
+        [Test]
+        public void LivingServerKinds_HaveLinesForEverySpeaker()
+        {
+            var random = new Random(3);
+            var slots = FullSlots();
+            foreach (string slot in EventSlots.Concat(MemorySlots))
+                slots[slot] = "x";
+            foreach (BotPersonalityType type in Enum.GetValues<BotPersonalityType>())
+            foreach ((string kind, string topic, string[] flags) in new[]
+            {
+                ("grats", null, new string[0]), ("grats", "fifty", new string[0]), ("rez_ask", null, new[] { "just_died" }),
+                ("rez_ask", "player", new[] { "just_died", "player_nearby" }), ("rez_thanks", null, new string[0]),
+                ("rez_offer", null, new string[0]), ("corpse", null, new[] { "just_died" }), ("sickness", null, new string[0]),
+                ("first", null, new string[0]), ("alarm", null, new[] { "in_rvr" }), ("nemesis", null, new string[0]),
+                ("revenge", null, new string[0]), ("session", "logon", new string[0]), ("session", "logoff", new string[0]),
+                ("session", "brb", new string[0]), ("session", "back", new string[0]), ("linkdead", "gone", new string[0]),
+                ("linkdead", "back", new string[0]), ("greet", null, new[] { "knows_player", "player_nearby" }),
+            })
+            {
+                VC.Speaker speaker = Speaker(eRealm.Midgard, 30, type, "Healer", 77, flags);
+                Assert.That(Corpus.TryPick(kind, speaker, slots, null, DateTime.UtcNow, random, out _, out _, topic: topic), Is.True,
+                    $"{type} has a {kind}/{topic} line");
+            }
         }
 
         [Test]

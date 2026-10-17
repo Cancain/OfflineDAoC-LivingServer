@@ -2411,6 +2411,40 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("bots", "bot_voices_debates", "When bot voices are on: bots of a realm play the corpus's debates and long threads in /faction while you are online, one at a time, 30-45 minutes apart, never repeating a scene until all have played.", true)]
 		public static bool BOT_VOICES_DEBATES;
 
+		// ---- Living Server (docs/LIVING-SERVER.md). Every part is off by default. ----
+
+		/// <summary>Bots remember the player: greetings by name, thanks for a rez or a group, gossip, grudges.</summary>
+		[ServerProperty("bots", "bot_living_memory", "Living Server: autonomous gamebots remember you (groups, rezzes, kills, rude words) and greet you by name, thank you later, gossip about you in /faction and hold grudges. Their lines need bot voices. False keeps today's bots.", false)]
+		public static bool BOT_LIVING_MEMORY;
+
+		/// <summary>Grats from nearby, grouped and guilded bots when a character dings; /faction grats for a 50.</summary>
+		[ServerProperty("bots", "bot_living_grats", "Living Server: when you or a bot gains a level, bots who saw it (grouped or nearby) say grats, and a realm's bots congratulate a new level 50 in /faction. Needs bot voices.", false)]
+		public static bool BOT_LIVING_GRATS;
+
+		/// <summary>Realm-wide announcements of server firsts, recorded for the Herald.</summary>
+		[ServerProperty("bots", "bot_living_firsts", "Living Server: the first character (you or a bot) of each class to reach level 50, and the first of each realm to each realm rank, is announced to everyone and recorded for the Camelot Herald.", false)]
+		public static bool BOT_LIVING_FIRSTS;
+
+		/// <summary>Rez requests and thanks, bots rezzing you, corpse runs and resurrection sickness chatter.</summary>
+		[ServerProperty("bots", "bot_living_death", "Living Server: a bot that dies near you asks you for a rez if your class can rez and thanks you after; a grouped or nearby bot healer may rez you; bots talk about corpse runs and resurrection sickness. Needs bot voices.", false)]
+		public static bool BOT_LIVING_DEATH;
+
+		/// <summary>Player-style enemy sightings in /faction from bots in the frontier.</summary>
+		[ServerProperty("bots", "bot_living_alarms", "Living Server: a bot in the frontier that sees an enemy group calls it out in /faction (rough size, classes, place), at most one call per realm every 2 minutes. Needs bot voices.", false)]
+		public static bool BOT_LIVING_ALARMS;
+
+		/// <summary>Bots remember who killed them in RvR, call them out and celebrate revenge.</summary>
+		[ServerProperty("bots", "bot_living_nemesis", "Living Server: a bot killed by an enemy remembers its killer, names it in /faction now and then, and celebrates when it kills that enemy back. Kills are recorded for the Camelot Herald's Most Wanted. Needs bot voices.", false)]
+		public static bool BOT_LIVING_NEMESIS;
+
+		/// <summary>When bots are online: the whole roster (off), shaped around your session, or by the real clock.</summary>
+		[ServerProperty("bots", "bot_schedule_mode", "Living Server: how many autonomous gamebots are online. off = the whole roster (today's behavior); session = shaped around your play session (most log in as you start, then people come and go); clock = the real time of day (busiest 8-11pm, quiet overnight).", "off")]
+		public static string BOT_SCHEDULE_MODE;
+
+		/// <summary>Bots take short breaks (brb) and now and then go linkdead and come back.</summary>
+		[ServerProperty("bots", "bot_living_breaks", "Living Server: an idle bot now and then says brb and logs off for a few minutes, or goes linkdead (its group hears about it) and comes back with an apology. Never during a fight, raid, siege or relic march.", false)]
+		public static bool BOT_LIVING_BREAKS;
+
 
 
 		#endregion

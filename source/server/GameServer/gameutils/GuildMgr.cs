@@ -161,6 +161,12 @@ namespace DOL.GS
                     onlineMember.GuildRank = null;
                 }
 
+                // Social Expansion: guilded gamebots leave a deleted guild at once, so no dues go into a guild
+                // that no longer exists (audit 2026-10-16).
+                foreach (GameBot bot in guild.GetOnlineBotMembers())
+                    guild.RemoveBotMember(bot);
+                AutonomousBotGuilds.ForgetGuild(guild.GuildID);
+
                 RemoveGuild(guild);
             }
 

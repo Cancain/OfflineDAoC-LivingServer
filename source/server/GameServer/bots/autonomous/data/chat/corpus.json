@@ -444,7 +444,14 @@
     "Socialite"
    ],
    "realm": "*",
-   "class": [],
+   "class": [
+    "Cleric",
+    "Friar",
+    "Healer",
+    "Shaman",
+    "Druid",
+    "Bard"
+   ],
    "levels": [
     1,
     19
@@ -4998,82 +5005,6 @@
    "intent": "",
    "mood": "",
    "weight": 1.0,
-   "text": "inc",
-   "id": "b8fe72f7b6da"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "inc, two of them",
-   "id": "28c5fe564cd1"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "add!",
-   "id": "855658955641"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "pulling",
-   "id": "aa68dd172d56"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
    "text": "pull?",
    "id": "91a97849bc31"
   },
@@ -5169,25 +5100,6 @@
    "intent": "",
    "mood": "",
    "weight": 1.0,
-   "text": "hp low, careful on the next one",
-   "id": "a9ff09e6aee9"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
    "text": "rez pls",
    "id": "449ff1588762"
   },
@@ -5245,103 +5157,8 @@
    "intent": "",
    "mood": "",
    "weight": 1.0,
-   "text": "rebuffing, hold the pull",
-   "id": "46050811f214"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "nice pull",
-   "id": "64ecc042978e"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
    "text": "clean pull, ty",
    "id": "7e5c531e02f1"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "that one had friends",
-   "id": "461feb086450"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "wipe incoming, run!",
-   "id": "6e9547012b7c"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "run run run",
-   "id": "722260949d96"
   },
   {
    "kind": "ambient",
@@ -5456,177 +5273,6 @@
    "weight": 1.0,
    "text": "anyone need power?",
    "id": "d8938e000622"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "watch the pat",
-   "id": "40a3a571e91d"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "pat coming from the left",
-   "id": "82be86983af3"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "careful, that one is orange",
-   "id": "828f803fb1a7"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "mez is on the caster",
-   "id": "8657bac65ba9"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "mez broke!",
-   "id": "d3025512db00"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "root is on, kill the other one",
-   "id": "e157dcddaeba"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "stun up, go",
-   "id": "093f9ac0706d"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "taunting, get it off the healer",
-   "id": "7cc6a871700c"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "i have aggro, keep healing me",
-   "id": "8bd1cdef2d47"
   },
   {
    "kind": "ambient",
@@ -5815,63 +5461,6 @@
    "intent": "",
    "mood": "",
    "weight": 1.0,
-   "text": "assisting you",
-   "id": "3eedb3164cc1"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "target the caster first",
-   "id": "240624581ad1"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "switching to the healer",
-   "id": "7ff8b2514c3b"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
    "text": "stick on me, moving to the next room",
    "id": "780af60bfc5a"
   },
@@ -5912,101 +5501,6 @@
    "weight": 1.0,
    "text": "everyone here? pulling in 5",
    "id": "1023d5e25a73"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "healer is oom, wait",
-   "id": "279e5abba27b"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "i got the adds",
-   "id": "941aa5d0f3a5"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "kite it, kite it",
-   "id": "0c8761563312"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "pet has aggro, all good",
-   "id": "9c9c21b12fed"
-  },
-  {
-   "kind": "ambient",
-   "topic": "group",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "group heal coming",
-   "id": "e04a5f8cecaf"
   },
   {
    "kind": "ambient",
@@ -6175,6 +5669,519 @@
    "weight": 1.0,
    "text": "anyone know what is past this room?",
    "id": "3e8e5f42802c"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "inc",
+   "id": "197aa53b51e2"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "inc, two of them",
+   "id": "c6717468dd9c"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "add!",
+   "id": "cbe033300a34"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "pulling",
+   "id": "069176c9080d"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "hp low, careful on the next one",
+   "id": "0900d31cc8c9"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "rebuffing, hold the pull",
+   "id": "0cec12c8e056"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "nice pull",
+   "id": "05f20c65e3ea"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "that one had friends",
+   "id": "90b44e4cc351"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "wipe incoming, run!",
+   "id": "6dfa0e93f532"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "run run run",
+   "id": "cf86f47a6f6b"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "watch the pat",
+   "id": "59c8650dba33"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "pat coming from the left",
+   "id": "ec769a83c927"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "careful, that one is orange",
+   "id": "870c6200ca4e"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "mez is on the caster",
+   "id": "b4fce204959f"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "mez broke!",
+   "id": "0c3c66aefef1"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "root is on, kill the other one",
+   "id": "87c99c07f2dd"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "stun up, go",
+   "id": "5ebbec343276"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "taunting, get it off the healer",
+   "id": "bac1d35e970d"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "i have aggro, keep healing me",
+   "id": "4c27a00b0c1c"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "assisting you",
+   "id": "6bfe17e1a718"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "target the caster first",
+   "id": "dfc99bac239d"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "switching to the healer",
+   "id": "b4868044678d"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "healer is oom, wait",
+   "id": "95e9b3fd2804"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "i got the adds",
+   "id": "1ab91706ef05"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "kite it, kite it",
+   "id": "94f81ba9e7b1"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "pet has aggro, all good",
+   "id": "4f2a4415ac95"
+  },
+  {
+   "kind": "combat",
+   "topic": "group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "group heal coming",
+   "id": "ad19caa34577"
   },
   {
    "kind": "lfg",
@@ -6798,6 +6805,2019 @@
    "weight": 1.0,
    "text": "lfm {dungeon} run, should take about an hour",
    "id": "08736ba19898"
+  },
+  {
+   "kind": "grats",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "grats {target}",
+   "id": "bf5e5fac689f"
+  },
+  {
+   "kind": "grats",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "gz {target}",
+   "id": "198322a0b2e3"
+  },
+  {
+   "kind": "grats",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "grats!",
+   "id": "c6b2f02bb398"
+  },
+  {
+   "kind": "grats",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "gz",
+   "id": "3bb499776761"
+  },
+  {
+   "kind": "grats",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "nice, grats {target}",
+   "id": "2b9f1aa62cb5"
+  },
+  {
+   "kind": "grats",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "gratz",
+   "id": "1ea52b30b7b8"
+  },
+  {
+   "kind": "grats",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "gz gz",
+   "id": "77efaa11f4a9"
+  },
+  {
+   "kind": "grats",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "grats, long road",
+   "id": "822ad3598124"
+  },
+  {
+   "kind": "grats",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "grats {target}, go train",
+   "id": "3f710b674132"
+  },
+  {
+   "kind": "grats",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "grats {target}, good group",
+   "id": "973f2f31dd63"
+  },
+  {
+   "kind": "grats",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "gz {target}, keep it going",
+   "id": "a02f358f3320"
+  },
+  {
+   "kind": "grats",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "ding grats, one more and i am there too",
+   "id": "450edded3a8a"
+  },
+  {
+   "kind": "grats",
+   "topic": "fifty",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "GRATS {target}!! 50!",
+   "id": "701279a9dd3c"
+  },
+  {
+   "kind": "grats",
+   "topic": "fifty",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "gz on 50 {target}, see you in the frontier",
+   "id": "d3eb2caa8ab5"
+  },
+  {
+   "kind": "grats",
+   "topic": "fifty",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "grats {target}, welcome to the end of the grind",
+   "id": "1caa137c9911"
+  },
+  {
+   "kind": "grats",
+   "topic": "fifty",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "50! huge grats {target}",
+   "id": "13b14e2aa5b4"
+  },
+  {
+   "kind": "grats",
+   "topic": "fifty",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "grats {target}!! we need a party for that one",
+   "id": "27d83512a734"
+  },
+  {
+   "kind": "grats",
+   "topic": "fifty",
+   "who": [
+    "NoLifer"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "gz {target}. now the real game starts",
+   "id": "e90124d0a0e1"
+  },
+  {
+   "kind": "grats",
+   "topic": "fifty",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "grats {target}, how long did that take, /played?",
+   "id": "77fe2859c551"
+  },
+  {
+   "kind": "rez_ask",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "rez pls?",
+   "id": "4bc50be380d9"
+  },
+  {
+   "kind": "rez_ask",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "any rez near {zone}?",
+   "id": "20c9c481332c"
+  },
+  {
+   "kind": "rez_ask",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "can i get a rez please",
+   "id": "6b8a63279478"
+  },
+  {
+   "kind": "rez_ask",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "rez? pretty please",
+   "id": "8911191fdaaf"
+  },
+  {
+   "kind": "rez_ask",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "anyone able to rez, dead by the {monster}",
+   "id": "87d2e770189c"
+  },
+  {
+   "kind": "rez_ask",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "rez plz, long walk from bind",
+   "id": "f405c3757d3f"
+  },
+  {
+   "kind": "rez_ask",
+   "topic": "general",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "anyone kind enough to rez me? :)",
+   "id": "e164caeb5c17"
+  },
+  {
+   "kind": "rez_ask",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "rez pls, dont want the sickness",
+   "id": "9c1535e5509a"
+  },
+  {
+   "kind": "rez_ask",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died",
+    "player_nearby"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{player} can you rez me?",
+   "id": "3616db11ec45"
+  },
+  {
+   "kind": "rez_ask",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died",
+    "player_nearby"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{player} rez pls?",
+   "id": "ed9177d05d39"
+  },
+  {
+   "kind": "rez_ask",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died",
+    "player_nearby"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "hey {player}, mind a rez?",
+   "id": "14ca7d46153c"
+  },
+  {
+   "kind": "rez_ask",
+   "topic": "player",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died",
+    "player_nearby"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{player} could you rez me when you are clear",
+   "id": "86008c4a87a7"
+  },
+  {
+   "kind": "rez_thanks",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "ty for the rez",
+   "id": "63767b558611"
+  },
+  {
+   "kind": "rez_thanks",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "thanks for the rez",
+   "id": "a6c6256c3675"
+  },
+  {
+   "kind": "rez_thanks",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "ty ty",
+   "id": "6bfb9c6562c2"
+  },
+  {
+   "kind": "rez_thanks",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "ty for the rez {target}",
+   "id": "4b60d996e88e"
+  },
+  {
+   "kind": "rez_thanks",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "tyvm, saved me the run",
+   "id": "353a96ee3493"
+  },
+  {
+   "kind": "rez_thanks",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "thank you, that bind run is brutal",
+   "id": "edc54cb7601b"
+  },
+  {
+   "kind": "rez_thanks",
+   "topic": "general",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "ty {target}! you are the best",
+   "id": "c9dd5bdee6b5"
+  },
+  {
+   "kind": "rez_thanks",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "ty, back to it",
+   "id": "9d170f177bfc"
+  },
+  {
+   "kind": "rez_offer",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "rezzing you {target}",
+   "id": "7db232649120"
+  },
+  {
+   "kind": "rez_offer",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "got you {target}, one sec",
+   "id": "ddd6f40adc9d"
+  },
+  {
+   "kind": "rez_offer",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "rez incoming",
+   "id": "6a84b853fd0f"
+  },
+  {
+   "kind": "rez_offer",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "hang on {target}, rezzing",
+   "id": "921d8c63212e"
+  },
+  {
+   "kind": "rez_offer",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "take it {target}, you owe me one",
+   "id": "5196f058b90b"
+  },
+  {
+   "kind": "corpse",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "releasing, cya at bind",
+   "id": "aa120feb12a8"
+  },
+  {
+   "kind": "corpse",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "too far for a rez, releasing",
+   "id": "5d7fe72ff7d7"
+  },
+  {
+   "kind": "corpse",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "running back from bind",
+   "id": "e1f3a3aa80f2"
+  },
+  {
+   "kind": "corpse",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "long run back to {zone}",
+   "id": "947b55a1dbba"
+  },
+  {
+   "kind": "corpse",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "anyone want to group while i run back?",
+   "id": "edcf8b17a5f7"
+  },
+  {
+   "kind": "sickness",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "res sickness, sitting for a bit",
+   "id": "282943f83498"
+  },
+  {
+   "kind": "sickness",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "sick again, taking a break",
+   "id": "b85d5853d647"
+  },
+  {
+   "kind": "sickness",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "rez sickness, give me a few",
+   "id": "ced962a08f0c"
+  },
+  {
+   "kind": "sickness",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "sitting out the sickness, then back",
+   "id": "26bdb12d5251"
+  },
+  {
+   "kind": "first",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "did you see? {target} is first to {what}",
+   "id": "78b6dac446ab"
+  },
+  {
+   "kind": "first",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "first {what} on the server, grats {target}",
+   "id": "d6fee457772c"
+  },
+  {
+   "kind": "first",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{target} is first to {what}, huge",
+   "id": "6fa4cdea45b9"
+  },
+  {
+   "kind": "first",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "wow, {target} beat everyone to {what}",
+   "id": "b9b831fdbb6d"
+  },
+  {
+   "kind": "first",
+   "topic": "general",
+   "who": [
+    "NoLifer"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "first to {what}? {target} has no life. respect",
+   "id": "b2690f42246d"
+  },
+  {
+   "kind": "alarm",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_rvr"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{size} {enemy} near {place}",
+   "id": "ffe0f834f04f"
+  },
+  {
+   "kind": "alarm",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_rvr"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "inc {size}+ {enemy} at {place}",
+   "id": "69a812cdc71e"
+  },
+  {
+   "kind": "alarm",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_rvr"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{enemy} zerg at {place}, {size} or more",
+   "id": "dba1364f5337"
+  },
+  {
+   "kind": "alarm",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_rvr"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "heads up, {size} {enemy} moving through {place}",
+   "id": "99f0dac5bd77"
+  },
+  {
+   "kind": "alarm",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_rvr"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{size} {enemy} at {place}, {classes}",
+   "id": "2e4a263e4934"
+  },
+  {
+   "kind": "alarm",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_rvr"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "small {enemy} group at {place}, {classes}",
+   "id": "b6bf1a92c7ae"
+  },
+  {
+   "kind": "alarm",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_rvr"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "spotted {size} {enemy} near {place}, careful",
+   "id": "629113c98a5a"
+  },
+  {
+   "kind": "alarm",
+   "topic": "general",
+   "who": [
+    "Daredevil"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_rvr"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{size} {enemy} at {place}, who wants to fight",
+   "id": "8caa06ff0d44"
+  },
+  {
+   "kind": "alarm",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_rvr"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{enemy} at {place}, avoid if you are leveling",
+   "id": "fdeee7d18e4b"
+  },
+  {
+   "kind": "nemesis",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "that {killer} {killer_class} again. has it out for me",
+   "id": "f39782b14be2"
+  },
+  {
+   "kind": "nemesis",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "same {killer} {killer_class} got me at {place} again. i will remember that",
+   "id": "8458a4be8045"
+  },
+  {
+   "kind": "nemesis",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "anyone seen that {killer} {killer_class}? i owe it one",
+   "id": "0ee388b3a73c"
+  },
+  {
+   "kind": "nemesis",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "watch out for a {killer_class} near {place}, killed me twice now",
+   "id": "9185da36ae1f"
+  },
+  {
+   "kind": "nemesis",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "that {killer} {killer_class} is camping {place}",
+   "id": "e29876d61b8a"
+  },
+  {
+   "kind": "nemesis",
+   "topic": "general",
+   "who": [
+    "Daredevil"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "that {killer_class} again. next time it goes the other way",
+   "id": "5e16406ea7ad"
+  },
+  {
+   "kind": "nemesis",
+   "topic": "general",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "same {killer} {killer_class} keeps killing me, anyone want to help",
+   "id": "6808311abf13"
+  },
+  {
+   "kind": "revenge",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "got that {killer} {killer_class}. we are even",
+   "id": "2e52fd51a8dd"
+  },
+  {
+   "kind": "revenge",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "that was for {place}",
+   "id": "91d9b6da73cc"
+  },
+  {
+   "kind": "revenge",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "finally got that {killer_class}",
+   "id": "26fa1158c0cb"
+  },
+  {
+   "kind": "revenge",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "that {killer} {killer_class} is down! told you i would",
+   "id": "a5d7f5f92633"
+  },
+  {
+   "kind": "session",
+   "topic": "logon",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "evening all",
+   "id": "a172832b2be2"
+  },
+  {
+   "kind": "session",
+   "topic": "logon",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "hey all",
+   "id": "e4bf87bb2b4c"
+  },
+  {
+   "kind": "session",
+   "topic": "logon",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "back on",
+   "id": "0bf04f4e17ab"
+  },
+  {
+   "kind": "session",
+   "topic": "logon",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "hi all, what did i miss",
+   "id": "8856820bf636"
+  },
+  {
+   "kind": "session",
+   "topic": "logon",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "morning everyone",
+   "id": "d20c781d014f"
+  },
+  {
+   "kind": "session",
+   "topic": "logon",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "hey everyone!! who is up for something",
+   "id": "a5f3e83a9654"
+  },
+  {
+   "kind": "session",
+   "topic": "logon",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "on for a couple hours, need a group",
+   "id": "b3cdb692b2c5"
+  },
+  {
+   "kind": "session",
+   "topic": "logoff",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "gn all",
+   "id": "c631db8acbf1"
+  },
+  {
+   "kind": "session",
+   "topic": "logoff",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "night all",
+   "id": "9572afa21b7b"
+  },
+  {
+   "kind": "session",
+   "topic": "logoff",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "calling it, gn",
+   "id": "57567a6c39b0"
+  },
+  {
+   "kind": "session",
+   "topic": "logoff",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "logging, cya tomorrow",
+   "id": "2f295a53b878"
+  },
+  {
+   "kind": "session",
+   "topic": "logoff",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "off to bed, gn",
+   "id": "0d337048213e"
+  },
+  {
+   "kind": "session",
+   "topic": "logoff",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "work in the morning, gn",
+   "id": "b6be2331e537"
+  },
+  {
+   "kind": "session",
+   "topic": "logoff",
+   "who": [
+    "NoLifer"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "one more pull... ok gn",
+   "id": "338f8e0c5818"
+  },
+  {
+   "kind": "session",
+   "topic": "brb",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "brb dinner",
+   "id": "0e47cd2ef969"
+  },
+  {
+   "kind": "session",
+   "topic": "brb",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "brb",
+   "id": "749a11bf4085"
+  },
+  {
+   "kind": "session",
+   "topic": "brb",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "afk a few",
+   "id": "b0d088178d90"
+  },
+  {
+   "kind": "session",
+   "topic": "brb",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "brb kids",
+   "id": "cd70d185d917"
+  },
+  {
+   "kind": "session",
+   "topic": "brb",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "phone, brb",
+   "id": "1318d0d71ccb"
+  },
+  {
+   "kind": "session",
+   "topic": "brb",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "brb food",
+   "id": "68ee43d807a6"
+  },
+  {
+   "kind": "session",
+   "topic": "brb",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "afk, door",
+   "id": "ab5781b7284a"
+  },
+  {
+   "kind": "session",
+   "topic": "back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "back",
+   "id": "ab541a49dbb0"
+  },
+  {
+   "kind": "session",
+   "topic": "back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "re",
+   "id": "2a870d1fa45d"
+  },
+  {
+   "kind": "session",
+   "topic": "back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "back, what did i miss",
+   "id": "91cf55bac417"
+  },
+  {
+   "kind": "session",
+   "topic": "back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "k back",
+   "id": "6d9c786d444e"
+  },
+  {
+   "kind": "session",
+   "topic": "back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "back, sorry",
+   "id": "cb902adf5447"
+  },
+  {
+   "kind": "linkdead",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{target} went ld",
+   "id": "35e77020df63"
+  },
+  {
+   "kind": "linkdead",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{target} linkdead?",
+   "id": "93f333dea15a"
+  },
+  {
+   "kind": "linkdead",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "lost {target}, ld i think",
+   "id": "ad3b57b46c77"
+  },
+  {
+   "kind": "linkdead",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{target} is frozen, ld",
+   "id": "35a2d21ff42e"
+  },
+  {
+   "kind": "linkdead",
+   "topic": "back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "sry ld",
+   "id": "dc321320f0c5"
+  },
+  {
+   "kind": "linkdead",
+   "topic": "back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "sorry, ld",
+   "id": "97e55e7681e6"
+  },
+  {
+   "kind": "linkdead",
+   "topic": "back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "back, stupid connection",
+   "id": "411e19af5d77"
+  },
+  {
+   "kind": "linkdead",
+   "topic": "back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "ld, sorry all",
+   "id": "180d27f1e199"
+  },
+  {
+   "kind": "linkdead",
+   "topic": "back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "modem dropped, back",
+   "id": "32686b81b0af"
   },
   {
    "kind": "greet",
@@ -26742,7 +28762,7 @@
      "text": "half of a warden's job happens before the pull, with the buffs",
      "variants": [
       "half of a warden's job happens before the pull, with the buffs",
-      "?D: warden buffs make every heal go further, people forget that"
+      "warden buffs make every heal go further, people forget that"
      ],
      "optional": true
     },
@@ -26840,7 +28860,7 @@
      "text": "name it something pretty, druids deserve pretty names",
      "variants": [
       "name it something pretty, druids deserve pretty names",
-      "?E: gz on the alt in advance"
+      "gz on the alt in advance"
      ],
      "optional": true
     },
@@ -26971,7 +28991,7 @@
      "text": "the eternal mez breaker question returns",
      "variants": [
       "the eternal mez breaker question returns",
-      "?E: lol, it is always the enchanter"
+      "lol, it is always the enchanter"
      ],
      "optional": true
     },
@@ -27065,7 +29085,7 @@
      "text": "bard melee is mostly for show",
      "variants": [
       "bard melee is mostly for show",
-      "?C: the swinging is decoration, the songs are the class"
+      "the swinging is decoration, the songs are the class"
      ],
      "optional": true
     },
@@ -27105,7 +29125,7 @@
      "text": "have fun, keep an eye on the enchanter",
      "variants": [
       "have fun, keep an eye on the enchanter",
-      "?E: watch out for the mez breakers"
+      "watch out for the mez breakers"
      ],
      "optional": true
     }
@@ -27245,7 +29265,7 @@
      "text": "and some go all damage and then cannot heal a scratch",
      "variants": [
       "and some go all damage and then cannot heal a scratch",
-      "?C: and some forget mentalism and wonder why groups pass them over"
+      "and some forget mentalism and wonder why groups pass them over"
      ],
      "optional": true
     },
@@ -27303,7 +29323,7 @@
      "text": "so the utility caster of hibernia",
      "variants": [
       "so the utility caster of hibernia",
-      "?A: the realm's swiss army knife then"
+      "the realm's swiss army knife then"
      ],
      "optional": true
     },
@@ -27493,7 +29513,7 @@
      "text": "and if two of them arrive?",
      "variants": [
       "and if two of them arrive?",
-      "?E: and when it does reach you?"
+      "and when it does reach you?"
      ],
      "optional": true
     },
@@ -27502,7 +29522,7 @@
      "text": "then you meet your bind point",
      "variants": [
       "then you meet your bind point",
-      "?C: then you learn where you bound"
+      "then you learn where you bound"
      ],
      "optional": true
     },
@@ -27573,7 +29593,7 @@
      "text": "up the stairs, past the merchant, then you are lost",
      "variants": [
       "up the stairs, past the merchant, then you are lost",
-      "?D: nobody knows, that is the secret of tir na nog"
+      "nobody knows, that is the secret of tir na nog"
      ],
      "optional": true
     },
@@ -27679,7 +29699,7 @@
      "text": "rip",
      "variants": [
       "rip",
-      "?F: sorry for your loss lol"
+      "sorry for your loss lol"
      ],
      "optional": true
     },
@@ -27768,7 +29788,7 @@
      "text": "do not let the heroes hear that",
      "variants": [
       "do not let the heroes hear that",
-      "?C: lol, let the heroes believe what they want"
+      "lol, let the heroes believe what they want"
      ],
      "optional": true
     },
@@ -27970,7 +29990,7 @@
      "text": "blademasters always have the best dyed armor in the realm",
      "variants": [
       "blademasters always have the best dyed armor in the realm",
-      "?F: blademasters spend more on dye than anyone"
+      "blademasters spend more on dye than anyone"
      ],
      "optional": true
     },
@@ -28068,7 +30088,7 @@
      "text": "and i get the job where things hit me, as usual",
      "variants": [
       "and i get the job where things hit me, as usual",
-      "?B: and i take the hits, like always"
+      "and i take the hits, like always"
      ],
      "optional": true
     },
@@ -28247,7 +30267,7 @@
      "text": "and it should never be the person who gets mezzed first",
      "variants": [
       "and it should never be the person who gets mezzed first",
-      "?B: pick someone who will not die in the first ten seconds"
+      "pick someone who will not die in the first ten seconds"
      ],
      "optional": true
     },
@@ -28296,7 +30316,7 @@
      "text": "fine, but you call targets out loud",
      "variants": [
       "fine, but you call targets out loud",
-      "?D: then type the target in group, every time"
+      "then type the target in group, every time"
      ],
      "optional": true
     },
@@ -28327,7 +30347,7 @@
      "text": "harsh. but fair",
      "variants": [
       "harsh. but fair",
-      "?B: lol the druid is serious"
+      "lol the druid is serious"
      ],
      "optional": true
     },
@@ -28476,7 +30496,7 @@
      "text": "you two should just group up",
      "variants": [
       "you two should just group up",
-      "?E: or work together, crazy idea"
+      "or work together, crazy idea"
      ],
      "optional": true
     },
@@ -28574,7 +30594,7 @@
      "text": "a frontier kill steal, report it to the officers",
      "variants": [
       "a frontier kill steal, report it to the officers",
-      "?D: ks in the frontier, a new low"
+      "ks in the frontier, a new low"
      ],
      "optional": true
     },
@@ -28703,7 +30723,7 @@
      "text": "archers on a wall during a siege are the worst thing in the game",
      "variants": [
       "archers on a wall during a siege are the worst thing in the game",
-      "?E: three archers on a keep wall, nothing worse"
+      "three archers on a keep wall, nothing worse"
      ],
      "optional": true
     },
@@ -28752,7 +30772,7 @@
      "text": "a good puller is half the camp, it matters",
      "variants": [
       "a good puller is half the camp, it matters",
-      "?D: pulling is a real job, do not sell it short"
+      "pulling is a real job, do not sell it short"
      ],
      "optional": true
     },
@@ -28914,7 +30934,7 @@
      "text": "turn the spell effects down, it helps",
      "variants": [
       "turn the spell effects down, it helps",
-      "?E: lower your settings, trust me"
+      "lower your settings, trust me"
      ],
      "optional": true
     },
@@ -29012,7 +31032,7 @@
      "text": "someone keep the animist alive, he is our army",
      "variants": [
       "someone keep the animist alive, he is our army",
-      "?E: druids, heal the animist"
+      "druids, heal the animist"
      ],
      "optional": true
     },
@@ -29201,7 +31221,7 @@
      "text": "the animists say the same thing",
      "variants": [
       "the animists say the same thing",
-      "?D: same story with the animists"
+      "same story with the animists"
      ],
      "optional": true
     },
@@ -29268,7 +31288,7 @@
      "text": "the most hibernian answer possible",
      "variants": [
       "the most hibernian answer possible",
-      "?E: style is half of hibernia"
+      "style is half of hibernia"
      ],
      "optional": true
     },
@@ -29421,7 +31441,7 @@
      "text": "E has died more than anyone in hibernia",
      "variants": [
       "E has died more than anyone in hibernia",
-      "?D: E learned that the hard way. many times"
+      "E learned that the hard way. many times"
      ],
      "optional": true
     },
@@ -29528,7 +31548,7 @@
      "text": "and the luricaduanes. they look friendly. they are not",
      "variants": [
       "and the luricaduanes. they look friendly. they are not",
-      "?E: beware the luricaduane, small but rude"
+      "beware the luricaduane, small but rude"
      ],
      "optional": true
     },
@@ -29683,7 +31703,7 @@
      "text": "the death worm remembers",
      "variants": [
       "the death worm remembers",
-      "?F: lol"
+      "lol"
      ],
      "optional": true
     },
@@ -29781,7 +31801,7 @@
      "text": "careful with the spraggon cutters, they hurt",
      "variants": [
       "careful with the spraggon cutters, they hurt",
-      "?B: the cutters are the ones to watch"
+      "the cutters are the ones to watch"
      ],
      "optional": true
     },
@@ -29970,7 +31990,7 @@
      "text": "peaceful is code for slow",
      "variants": [
       "peaceful is code for slow",
-      "?E: peaceful, so no xp"
+      "peaceful, so no xp"
      ],
      "optional": true
     },
@@ -30028,7 +32048,7 @@
      "text": "on that cliff, you mean",
      "variants": [
       "on that cliff, you mean",
-      "?C: you probably will, it is a long fall"
+      "you probably will, it is a long fall"
      ],
      "optional": true
     },
@@ -30077,7 +32097,7 @@
      "text": "send me a tell if you find anything red",
      "variants": [
       "send me a tell if you find anything red",
-      "?D: tell me where the reds are"
+      "tell me where the reds are"
      ],
      "optional": true
     }
@@ -30212,7 +32232,7 @@
      "text": "died in the vale yesterday, can confirm",
      "variants": [
       "died in the vale yesterday, can confirm",
-      "?F: something in the vale of balor trained me, so yes"
+      "something in the vale of balor trained me, so yes"
      ],
      "optional": true
     },
@@ -30310,7 +32330,7 @@
      "text": "see you on the island",
      "variants": [
       "see you on the island",
-      "?E: hy brasil awaits"
+      "hy brasil awaits"
      ],
      "optional": true
     },
@@ -30450,7 +32470,7 @@
      "text": "i stay for the merchants, honestly",
      "variants": [
       "i stay for the merchants, honestly",
-      "?C: the merchants are why i keep coming back"
+      "the merchants are why i keep coming back"
      ],
      "optional": true
     },
@@ -30530,7 +32550,7 @@
      "text": "i see why, it is calming",
      "variants": [
       "i see why, it is calming",
-      "?A: same, very relaxing"
+      "same, very relaxing"
      ],
      "optional": true
     },
@@ -30570,7 +32590,7 @@
      "text": "you will get lost again",
      "variants": [
       "you will get lost again",
-      "?D: see you in twenty minutes when you are lost"
+      "see you in twenty minutes when you are lost"
      ],
      "optional": true
     }
@@ -30714,7 +32734,7 @@
      "text": "yes please, eyes are worth a lot",
      "variants": [
       "yes please, eyes are worth a lot",
-      "?D: a scout is a scout"
+      "a scout is a scout"
      ],
      "optional": true
     },
@@ -30763,7 +32783,7 @@
      "text": "rangers, aim at their healers",
      "variants": [
       "rangers, aim at their healers",
-      "?F: arrows from the wall, target the healers"
+      "arrows from the wall, target the healers"
      ],
      "optional": true
     },
@@ -30830,7 +32850,7 @@
      "text": "they will be back tomorrow night",
      "variants": [
       "they will be back tomorrow night",
-      "?A: same time tomorrow, i bet"
+      "same time tomorrow, i bet"
      ],
      "optional": true
     }
@@ -30976,7 +32996,7 @@
      "text": "which ones are the mids, i cannot tell",
      "variants": [
       "which ones are the mids, i cannot tell",
-      "?F: sorry, how do i tell albs from mids in this mess"
+      "sorry, how do i tell albs from mids in this mess"
      ],
      "optional": true
     },
@@ -31025,7 +33045,7 @@
      "text": "mez is gone anyway, burn it all",
      "variants": [
       "mez is gone anyway, burn it all",
-      "?D: whoever broke the mez, good timing for once"
+      "whoever broke the mez, good timing for once"
      ],
      "optional": true
     },
@@ -31223,7 +33243,7 @@
      "text": "still sounds like decoration to me",
      "variants": [
       "still sounds like decoration to me",
-      "?D: i still say claiming is mostly decoration"
+      "i still say claiming is mostly decoration"
      ],
      "optional": true
     },
@@ -31312,7 +33332,7 @@
      "text": "the walls do not heal themselves",
      "variants": [
       "the walls do not heal themselves",
-      "?C: keeps need healers more than anything"
+      "keeps need healers more than anything"
      ],
      "optional": true
     },
@@ -31467,7 +33487,7 @@
      "text": "last time we died on the way in",
      "variants": [
       "last time we died on the way in",
-      "?E: last time half of us died before anyone hit him"
+      "last time half of us died before anyone hit him"
      ],
      "optional": true
     },
@@ -31565,7 +33585,7 @@
      "text": "tell your guilds, we need numbers",
      "variants": [
       "tell your guilds, we need numbers",
-      "?C: post it in every guild channel"
+      "post it in every guild channel"
      ],
      "optional": true
     },
@@ -31705,7 +33725,7 @@
      "text": "enjoy it, the albs are locked out",
      "variants": [
       "enjoy it, the albs are locked out",
-      "?D: and nobody else's realm in there, it is ours"
+      "and nobody else's realm in there, it is ours"
      ],
      "optional": true
     },
@@ -31794,7 +33814,7 @@
      "text": "famous last words in df",
      "variants": [
       "famous last words in df",
-      "?D: let me know how that goes"
+      "let me know how that goes"
      ],
      "optional": true
     },
@@ -31938,7 +33958,7 @@
      "text": "ouch",
      "variants": [
       "ouch",
-      "?B: heh"
+      "heh"
      ],
      "optional": true
     },
@@ -31996,7 +34016,7 @@
      "text": "ok, sometimes",
      "variants": [
       "ok, sometimes",
-      "?C: fair"
+      "fair"
      ],
      "optional": true
     },
@@ -32194,7 +34214,7 @@
      "text": "start a savings pile now though",
      "variants": [
       "start a savings pile now though",
-      "?C: but start saving now, seriously"
+      "but start saving now, seriously"
      ],
      "optional": true
     },
@@ -32252,7 +34272,7 @@
      "text": "ask for the quality before you pay",
      "variants": [
       "ask for the quality before you pay",
-      "?D: always check the quality before you hand over coin"
+      "always check the quality before you hand over coin"
      ],
      "optional": true
     },
@@ -32301,7 +34321,7 @@
      "text": "i will stick to fighting things",
      "variants": [
       "i will stick to fighting things",
-      "?E: ok they all sound miserable"
+      "ok they all sound miserable"
      ],
      "optional": true
     },
@@ -32392,7 +34412,7 @@
      "text": "everyone has one of those",
      "variants": [
       "everyone has one of those",
-      "?E: we all have a train story"
+      "we all have a train story"
      ],
      "optional": true
     },
@@ -32463,7 +34483,7 @@
      "text": "that is the least dangerous story ever told in faction",
      "variants": [
       "that is the least dangerous story ever told in faction",
-      "?C: no monsters? what kind of story is that"
+      "no monsters? what kind of story is that"
      ],
      "optional": true
     },
@@ -32512,7 +34532,7 @@
      "text": "and the trains",
      "variants": [
       "and the trains",
-      "?C: and the trains, do not forget the trains"
+      "and the trains, do not forget the trains"
      ],
      "optional": true
     },
@@ -32672,7 +34692,7 @@
      "text": "everyone starts that way",
      "variants": [
       "everyone starts that way",
-      "?C: yes, just stay behind the bard"
+      "yes, just stay behind the bard"
      ],
      "optional": true
     },
@@ -32721,7 +34741,7 @@
      "text": "i do not know what a twink is either",
      "variants": [
       "i do not know what a twink is either",
-      "?E: what is a twink"
+      "what is a twink"
      ],
      "optional": true
     },
@@ -56124,27 +58144,27 @@
     },
     {
      "role": "E",
-     "text": "delevel. lost a level to a train. still bitter",
+     "text": "a train through our camp. three deaths in a row, half a level gone. still bitter",
      "variants": [
-      "delevel. lost a level to a train. still bitter",
-      "the time i lost a level from dying too much"
+      "a train through our camp. three deaths in a row, half a level gone. still bitter",
+      "the night i died so much my xp bar went backwards for an hour"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "oh the delevel. the worst feeling",
+     "text": "oh the backwards xp bar. the worst feeling",
      "variants": [
-      "oh the delevel. the worst feeling",
-      "ouch, losing a ding is brutal"
+      "oh the backwards xp bar. the worst feeling",
+      "ouch, watching the bar shrink is brutal"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "at least you got to ding again lol",
+     "text": "at least the next ding felt amazing lol",
      "variants": [
-      "at least you got to ding again lol"
+      "at least the next ding felt amazing lol"
      ],
      "optional": true
     },

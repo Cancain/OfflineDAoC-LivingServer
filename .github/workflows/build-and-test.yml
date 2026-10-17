@@ -22,6 +22,14 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      # The embedded bot-voice corpus must be what its .lines sources build, and names chosen in code
+      # must pass the corpus's out-of-era rules (audit 2026-10-16).
+      - name: Check the bot-voice corpus and runtime names
+        shell: bash
+        run: |
+          python tools/bot-voices/build_corpus.py --verify
+          python tools/bot-voices/check_runtime_names.py
+
       - name: Create local server config (build only needs it to exist)
         shell: bash
         run: cp source/server/CoreServer/config/serverconfig.example.xml source/server/CoreServer/config/serverconfig.xml

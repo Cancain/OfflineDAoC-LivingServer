@@ -165,7 +165,7 @@ public static class AutonomousBotPersonality
         int risk = personality.Traits.Risk;
         if (typicalCon >= ConColor.YELLOW)
             weight = weight * (personality.Type == BotPersonalityType.Daredevil ? 200 + risk * 15 : 60 + risk * 8) / 100;
-        else if (typicalCon <= ConColor.GREEN)
+        else if (typicalCon != ConColor.UNKNOWN && typicalCon <= ConColor.GREEN)
             weight = weight * (personality.Type == BotPersonalityType.Daredevil ? 50 : 100 + (9 - risk) * 5) / 100;
         if (zoneIsFresh)
             weight = weight * (personality.Type == BotPersonalityType.Explorer ? 250 + personality.Traits.Curiosity * 25 : 100 + personality.Traits.Curiosity * 5) / 100;

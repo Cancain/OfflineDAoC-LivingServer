@@ -96,6 +96,7 @@ public static class AutonomousBotGuilds
             Log.Error("Bot guilds: could not load saved guilds and memberships", exception);
         }
         _timer = new Timer(OnTimer, null, FirstReconcileDelayMs, ReconcileIntervalMs);
+        _flushTimer = new Timer(_ => FlushWrites(), null, FlushIntervalMs, FlushIntervalMs);
     }
 
     [GameServerStoppedEvent]
@@ -103,7 +104,87 @@ public static class AutonomousBotGuilds
     {
         _timer?.Dispose();
         _timer = null;
+        _flushTimer?.Dispose();
+        _flushTimer = null;
+        FlushWrites();
     }
+
+    #region Membership writes (batched, off the game loop; audit 2026-10-16)
+
+    public const int FlushIntervalMs = 5_000;
+    private const int WriteBatch = 16;
+    private static Timer _flushTimer;
+    // Rows to insert or update, and rows to delete, written by FlushWrites in batches under the shared
+    // database write lock, as the bot status writer does. Callers of SetMembership/DeleteMembership hold Sync.
+    private static readonly Dictionary<long, OfflineBotGuildMemberRecord> PendingWrites = new();
+    private static readonly List<OfflineBotGuildMemberRecord> PendingDeletes = new();
+    private static int _flushing;
+
+    /// <summary>Writes queued membership changes. A failed batch stays queued and is tried again.</summary>
+    public static void FlushWrites()
+    {
+        if (Interlocked.Exchange(ref _flushing, 1) != 0)
+            return;
+        try
+        {
+            OfflineBotGuildMemberRecord[] writes;
+            OfflineBotGuildMemberRecord[] deletes;
+            lock (Sync)
+            {
+                writes = PendingWrites.Values.ToArray();
+                deletes = PendingDeletes.ToArray();
+                PendingWrites.Clear();
+                PendingDeletes.Clear();
+            }
+            if (writes.Length == 0 && deletes.Length == 0)
+                return;
+            var failedWrites = new List<OfflineBotGuildMemberRecord>();
+            var failedDeletes = new List<OfflineBotGuildMemberRecord>();
+            lock (AutonomousBotStatusPersistence.DatabaseWriteLock)
+            {
+                foreach (OfflineBotGuildMemberRecord[] chunk in writes.Where(row => !row.IsPersisted).Chunk(WriteBatch))
+                    if (!TryWrite(() => GameServer.Database.AddObject(chunk.Cast<DataObject>())))
+                        failedWrites.AddRange(chunk.Where(row => !row.IsPersisted));
+                foreach (OfflineBotGuildMemberRecord[] chunk in writes.Where(row => row.IsPersisted).Chunk(WriteBatch))
+                    if (!TryWrite(() => GameServer.Database.SaveObject(chunk.Cast<DataObject>())))
+                        failedWrites.AddRange(chunk);
+                foreach (OfflineBotGuildMemberRecord[] chunk in deletes.Where(row => row.IsPersisted).Chunk(WriteBatch))
+                    if (!TryWrite(() => GameServer.Database.DeleteObject(chunk.Cast<DataObject>())))
+                        failedDeletes.AddRange(chunk.Where(row => row.IsPersisted));
+            }
+            if (failedWrites.Count > 0 || failedDeletes.Count > 0)
+            {
+                lock (Sync)
+                {
+                    // A row changed again since the snapshot is already queued in its newer state.
+                    foreach (OfflineBotGuildMemberRecord row in failedWrites)
+                        if (MemberRows.TryGetValue(row.BotId, out var current) && ReferenceEquals(current, row))
+                            PendingWrites.TryAdd(row.BotId, row);
+                    PendingDeletes.AddRange(failedDeletes);
+                }
+                Log.Warn($"Bot guilds: {failedWrites.Count} membership write(s) and {failedDeletes.Count} delete(s) failed; retrying");
+            }
+        }
+        finally
+        {
+            Volatile.Write(ref _flushing, 0);
+        }
+    }
+
+    private static bool TryWrite(Func<bool> write)
+    {
+        try
+        {
+            return write();
+        }
+        catch (Exception exception)
+        {
+            Log.Error("Bot guilds: membership write failed", exception);
+            return false;
+        }
+    }
+
+    #endregion
 
     private static void LoadState()
     {
@@ -193,6 +274,7 @@ public static class AutonomousBotGuilds
                 ReconcileRealm(realm, roster, share, minLevel, nowUtc, changed);
         }
 
+        FlushWrites();
         if (changed.Count > 0)
             NpcService.Instance.Post(RebindLiveBots, changed.ToArray());
         if (AutonomousBotGuildAlliances.Enabled)
@@ -332,13 +414,25 @@ public static class AutonomousBotGuilds
         }
     }
 
+    /// <summary>A guild was deleted (/gc purge): its bot memberships and bot-guild marker go with it.</summary>
+    public static void ForgetGuild(string guildId)
+    {
+        if (string.IsNullOrEmpty(guildId))
+            return;
+        lock (Sync)
+        {
+            foreach (Membership membership in Members.Values.Where(m => m.GuildId == guildId).ToArray())
+                DeleteMembership(membership.BotId);
+            BotGuilds.TryRemove(guildId, out _);
+        }
+    }
+
     // Callers hold Sync.
     private static void SetMembership(long botId, string guildId, int rank, string joinedUtc)
     {
         if (!MemberRows.TryGetValue(botId, out OfflineBotGuildMemberRecord row))
         {
             row = new OfflineBotGuildMemberRecord { BotId = botId, GuildId = guildId, RankLevel = rank, JoinedUtc = joinedUtc ?? DateTime.UtcNow.ToString("O") };
-            GameServer.Database.AddObject(row);
             MemberRows[botId] = row;
         }
         else
@@ -348,8 +442,9 @@ public static class AutonomousBotGuilds
             row.GuildId = guildId;
             row.RankLevel = rank;
             row.Dirty = true;
-            GameServer.Database.SaveObject(row);
         }
+        // Written in batches by FlushWrites (a failed insert stays queued instead of being forgotten).
+        PendingWrites[botId] = row;
         Members[botId] = new Membership(botId, guildId, rank);
     }
 
@@ -357,7 +452,11 @@ public static class AutonomousBotGuilds
     private static void DeleteMembership(long botId)
     {
         if (MemberRows.Remove(botId, out OfflineBotGuildMemberRecord row))
-            GameServer.Database.DeleteObject(row);
+        {
+            PendingWrites.Remove(botId);
+            if (row.IsPersisted)
+                PendingDeletes.Add(row);
+        }
         Members.TryRemove(botId, out _);
     }
 

@@ -57,7 +57,7 @@ never bypassed.
 
 | Choice | Today | With personalities |
 |---|---|---|
-| Town break at a task boundary | 15% for every bot | 5–30% by type, scaled by sociability (the realm average stays about 15%) |
+| Town break at a task boundary | 15% for every bot | about 4–37.5% by type, scaled by sociability (the realm average is about 16–17%) |
 | Town break length | 15–30 minutes | ×0.7 (Leveler, NoLifer) to ×1.5 (Socialite), at least 5 minutes |
 | Goal (solo, group, RvR...) | one draw from the configured mix | a chance to **re-draw from the same mix** when the type dislikes the first goal; nothing is forced or banned |
 | Dungeon or outdoors | the configured dungeon preference | 60% (Crafter) to 170% (Daredevil) of it; a group uses its leader's |

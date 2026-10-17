@@ -152,8 +152,9 @@ public sealed class AutonomousBotVoiceCorpus
         types.Length == 0 || types.Any(t => string.Equals(t, type.ToString(), StringComparison.OrdinalIgnoreCase));
 
     /// <summary>Lines of a kind this speaker may say now (realm, class, level band, needed context, intent).</summary>
-    public IEnumerable<Line> Candidates(string kind, Speaker speaker, string intent = null) =>
+    public IEnumerable<Line> Candidates(string kind, Speaker speaker, string intent = null, string topic = null) =>
         Lines.Where(line => line.Kind == kind &&
+                            (topic == null || string.Equals(line.Topic, topic, StringComparison.Ordinal)) &&
                             RealmFits(line.Realm, speaker.Realm) &&
                             ClassFits(line.Classes, speaker.ClassName) &&
                             speaker.Level >= line.LevelLow && speaker.Level <= line.LevelHigh &&
@@ -169,11 +170,11 @@ public sealed class AutonomousBotVoiceCorpus
     /// slots can't be filled. False when nothing fits (the caller keeps its old line).
     /// </summary>
     public bool TryPick(string kind, Speaker speaker, IReadOnlyDictionary<string, string> slots, RecentLines recent,
-        DateTime now, Random random, out string text, out string lineId, string intent = null)
+        DateTime now, Random random, out string text, out string lineId, string intent = null, string topic = null)
     {
         text = null;
         lineId = null;
-        var pool = Candidates(kind, speaker, intent)
+        var pool = Candidates(kind, speaker, intent, topic)
             .Where(line => recent == null || !recent.WasUsed(speaker.Realm, line.Id, now))
             .Select(line => (Line: line, Weight: WeightFor(line, speaker)))
             .Where(entry => entry.Weight > 0)
@@ -293,33 +294,43 @@ public sealed class AutonomousBotVoiceCorpus
 
     #region No-repeat window
 
-    /// <summary>Line ids used per realm in the last <see cref="Window"/> (at most <see cref="Capacity"/> per realm).</summary>
+    /// <summary>
+    /// When each line was last used in each realm, kept for <see cref="Window"/>. The capacity is far
+    /// above the corpus size, so a line really is not repeated in a realm within the window (audit
+    /// 2026-10-16: a 400-entry list could let a busy realm repeat lines after an hour or two).
+    /// </summary>
     public sealed class RecentLines
     {
         public static readonly TimeSpan Window = TimeSpan.FromHours(6);
-        public const int Capacity = 400;
-        private readonly Dictionary<eRealm, LinkedList<(string Id, DateTime When)>> _byRealm = new();
+        public const int Capacity = 5000;
+        private readonly Dictionary<eRealm, Dictionary<string, DateTime>> _byRealm = new();
 
         public bool WasUsed(eRealm realm, string id, DateTime now)
         {
             lock (_byRealm)
-            {
-                if (!_byRealm.TryGetValue(realm, out var list))
-                    return false;
-                return list.Any(entry => entry.Id == id && now - entry.When < Window);
-            }
+                return _byRealm.TryGetValue(realm, out var used) && used.TryGetValue(id, out DateTime when) && now - when < Window;
         }
 
         public void Use(eRealm realm, string id, DateTime now)
         {
             lock (_byRealm)
             {
-                if (!_byRealm.TryGetValue(realm, out var list))
-                    _byRealm[realm] = list = new LinkedList<(string, DateTime)>();
-                list.AddLast((id, now));
-                while (list.Count > Capacity || list.First != null && now - list.First.Value.When >= Window)
-                    list.RemoveFirst();
+                if (!_byRealm.TryGetValue(realm, out var used))
+                    _byRealm[realm] = used = new Dictionary<string, DateTime>(StringComparer.Ordinal);
+                used[id] = now;
+                if (used.Count <= Capacity)
+                    return;
+                foreach (string old in used.Where(entry => now - entry.Value >= Window).Select(entry => entry.Key).ToList())
+                    used.Remove(old);
+                foreach (string oldest in used.OrderBy(entry => entry.Value).Take(used.Count - Capacity).Select(entry => entry.Key).ToList())
+                    used.Remove(oldest);
             }
+        }
+
+        public int Count(eRealm realm)
+        {
+            lock (_byRealm)
+                return _byRealm.TryGetValue(realm, out var used) ? used.Count : 0;
         }
     }
 

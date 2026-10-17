@@ -440,7 +440,8 @@ public static class AutonomousBotGuildSocial
         if (target == null)
             return false;
         officer.Say(Lines.OfferInviteNearby(target.Name, target.CharacterClass?.Name, guild.Name, Random.Shared));
-        SendInviteDialog(target, officer, guild);
+        // TryIdle runs in parallel brain ticks; the player's dialog state belongs to the client service (audit 2026-10-16).
+        ClientService.Instance.Post(static state => SendInviteDialog(state.Player, state.Officer, state.Guild), (Player: target, Officer: officer, Guild: guild));
         return true;
     }
 

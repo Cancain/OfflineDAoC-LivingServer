@@ -53,6 +53,7 @@ public class HeraldPageTests
             INSERT INTO Relic VALUES (3, 1, 0, '2026-10-16 20:00:00');
             INSERT INTO Relic VALUES (3, 3, 1, '');
             INSERT INTO offline_server_firsts VALUES ('First Champion to level 50', 3, 'Brannoc', 'Champion', '2026-10-16T20:00:00Z');
+            INSERT INTO offline_server_firsts VALUES ('First to realm rank 9', 0, '', '', '');
             INSERT INTO offline_bot_nemesis VALUES ('Chrisplays', 1, 7);
             """);
     }
@@ -78,6 +79,7 @@ public class HeraldPageTests
         Assert.That(html, Does.Contain("Scabbard of Excalibur").And.Contain("captured from Albion"));
         Assert.That(html, Does.Contain("Caer Benowyc"), "a keep in enemy hands is listed");
         Assert.That(html, Does.Contain("First Champion to level 50"));
+        Assert.That(html, Does.Not.Contain("First to realm rank 9"), "firsts reached before records began are not named");
         Assert.That(html, Does.Contain("Most Wanted"));
         Assert.That(html, Does.Contain("Fianna").And.Not.Contain("Starting Guild"));
         Assert.That(html, Does.Contain("RR2L0"), "Chrisplays has 7,200 realm points");

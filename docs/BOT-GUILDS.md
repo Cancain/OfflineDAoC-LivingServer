@@ -144,7 +144,7 @@ are short, lowercase and period-plain (`AutonomousBotGuildChatLines`).
   - The guild that just recruited answers if one of its members is online. Otherwise the guild
     whose charter best fits your level answers.
   - Its highest-ranked online member replies, and you get a **yes/no dialog**.
-  - Yes: you join at the lowest rank and are welcomed.
+  - Yes: you join at rank 8 (one above the bots' rank 9) and are welcomed.
   - No: no more offers for 24 hours.
 - **Unprompted offers:** now and then, an officer standing near you while you're unguilded and
   within 10 levels offers an invite, at most once a day per character.
@@ -154,7 +154,9 @@ are short, lowercase and period-plain (`AutonomousBotGuildChatLines`).
 **Formation order:** group formation orders candidates guildmates-first (shuffled within each tier).
 - In **PvE**, the leader's guildmates get the first claim on role slots; class roles still decide
   the final group.
-- In **RvR**, warbands fill with guildmates first.
+- In **RvR**, roaming warbands fill with guildmates first. Siege parties and forced raids (the
+  0.36 group paths) are formed by role and distance only; guild order and the "we're grouping"
+  guild-chat line don't apply to them.
 
 ### 3.7 Keeps (phase 4)
 
@@ -162,7 +164,8 @@ are short, lowercase and period-plain (`AutonomousBotGuildChatLines`).
   under the player rules:
   - the keep's realm;
   - not under attack;
-  - not a relic, portal or battleground keep;
+  - not a relic or portal keep, and not a battleground keep unless `allow_bg_claim` is on (off
+    in the release);
   - `guilds_claim_limit` (1 in the release);
   - `claim_num` members inside (8; 4 for a tower).
 - **When:** attempts run every 20 seconds for about three minutes after the capture.

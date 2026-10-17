@@ -2,6 +2,7 @@
 
   python tools/bot-voices/build_corpus.py            (check and write corpus.json, print coverage)
   python tools/bot-voices/build_corpus.py --check    (check only; exit 1 on any problem)
+  python tools/bot-voices/build_corpus.py --verify   (CI: exit 1 if corpus.json is not what the sources build)
 
 Line files: source/server/GameServer/bots/autonomous/data/chat/*.lines. The format is described in
 docs/bot-voices/DESIGN.md (section 3). Every line is new writing for this project.
@@ -19,7 +20,10 @@ CHAT = ROOT / 'source/server/GameServer/bots/autonomous/data/chat'
 OUT = CHAT / 'corpus.json'
 
 KINDS = {'ambient', 'reply', 'lfg', 'trade', 'rvr', 'greet', 'thanks', 'grudge', 'gossip', 'ding', 'death',
-         'camp', 'debate'}
+         'camp', 'debate',
+         # Living Server (docs/LIVING-SERVER.md)
+         'grats', 'rez_ask', 'rez_thanks', 'rez_offer', 'corpse', 'sickness', 'first', 'alarm', 'nemesis', 'revenge',
+         'session', 'linkdead', 'combat'}
 TYPES = {'Leveler', 'Crafter', 'Socialite', 'Explorer', 'Daredevil', 'NoLifer'}
 REALMS = {'alb', 'mid', 'hib'}
 CLASSES = {
@@ -37,7 +41,9 @@ INTENTS = {'unknown', 'greeting', 'banter', 'abuse', 'grouping', 'grinding', 'tr
            'trading', 'help', 'farewell', 'ignoreoutofworld'}
 MOODS = {'friendly', 'neutral', 'cool', 'rival'}
 SLOTS = {'me', 'class', 'level', 'realm', 'zone', 'monster', 'npc', 'item', 'count', 'camp', 'dungeon',
-         'capital', 'enemy', 'keep', 'frontier', 'player', 'player_class', 'place', 'q'}
+         'capital', 'enemy', 'keep', 'frontier', 'player', 'player_class', 'place', 'q',
+         # Living Server
+         'target', 'what', 'size', 'classes', 'killer', 'killer_class'}
 MEMORY_SLOTS = {'player', 'player_class', 'place'}
 MAX_RAW = 140
 
@@ -76,8 +82,8 @@ def check_text(text, tags, where, problems):
     for slot in SLOT_RE.findall(text):
         if slot not in SLOTS:
             problems.append(f'{where}: unknown slot {{{slot}}}')
-        elif slot in MEMORY_SLOTS and 'knows_player' not in tags['needs'] and tags['kind'] not in (
-                'greet', 'thanks', 'grudge', 'gossip'):
+        elif slot in MEMORY_SLOTS and 'knows_player' not in tags['needs'] and 'player_nearby' not in tags['needs'] and tags['kind'] not in (
+                'greet', 'thanks', 'grudge', 'gossip', 'alarm', 'nemesis', 'revenge'):
             problems.append(f'{where}: memory slot {{{slot}}} needs @needs knows_player or a memory kind')
     if text.count('{') != text.count('}'):
         problems.append(f'{where}: unbalanced braces')
@@ -218,6 +224,7 @@ def norm(text):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--check', action='store_true')
+    parser.add_argument('--verify', action='store_true', help='fail if the committed corpus.json differs from the sources')
     args = parser.parse_args()
     problems, lines, scenes = [], [], []
     files = sorted(CHAT.glob('*.lines'))
@@ -285,7 +292,18 @@ def main():
                lines=[{k: v for k, v in dict(x, id=hashlib.sha1((x['kind'] + '|' + x['text']).encode()).hexdigest()[:12]).items()
                        if k != 'where'} for x in lines],
                scenes=[{k: v for k, v in s.items() if k != 'where'} for s in scenes])
-    OUT.write_text(json.dumps(out, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
+    # Scene beats must never start with a role marker ("?D: ..."): the server sends them as they are.
+    markers = [v for sc in out['scenes'] for b in sc['beats'] for v in b.get('variants', [b.get('text', '')])
+               if v and re.match(r'^\??[A-F]:\s', v)]
+    if markers:
+        raise SystemExit(f'{len(markers)} scene line(s) start with a role marker, e.g. {markers[0]!r}')
+    if args.verify:
+        committed = json.loads(OUT.read_text(encoding='utf-8'))
+        if committed != json.loads(json.dumps(out, ensure_ascii=False)):
+            raise SystemExit('corpus.json is stale: run python tools/bot-voices/build_corpus.py and commit it')
+        print('corpus.json matches its sources')
+        return
+    OUT.write_text(json.dumps(out, ensure_ascii=False, indent=1) + '\n', encoding='utf-8', newline='\n')
     print('wrote', OUT.relative_to(ROOT))
 
 

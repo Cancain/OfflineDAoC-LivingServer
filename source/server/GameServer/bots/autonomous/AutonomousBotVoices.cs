@@ -94,8 +94,10 @@ public static class AutonomousBotVoices
     {
         (string Name, int Low, int High)[] dungeons = realm switch
         {
-            eRealm.Albion => [("Tomb of Mithra", 7, 17), ("Tepok's Mine", 16, 24), ("Keltoi Fogou", 19, 28),
-                ("the Catacombs of Cardova", 24, 40), ("Stonehenge Barrows", 36, 50)],
+            // The Catacombs of Cardova (24-40) is left out: players read "catacombs" as the 2004 expansion
+            // (audit 2026-10-16); Keltoi Fogou and the Barrows cover those levels.
+            eRealm.Albion => [("Tomb of Mithra", 7, 17), ("Tepok's Mine", 16, 24), ("Keltoi Fogou", 19, 32),
+                ("Stonehenge Barrows", 32, 50)],
             eRealm.Midgard => [("Nisse's Lair", 8, 21), ("Cursed Tomb", 18, 28), ("Vendo Caverns", 20, 35),
                 ("Varulvhamn", 25, 40), ("Spindelhalla", 33, 50)],
             eRealm.Hibernia => [("Muire Tomb", 12, 20), ("Spraggon Den", 15, 25), ("Koalinth Tribal Caverns", 20, 30),
@@ -172,6 +174,9 @@ public static class AutonomousBotVoices
         {
             foreach (var pair in SharedSlots(bot.Realm, bot.Level, random, bot.CurrentRegion?.IsDungeon == true ? zone : null))
                 slots[pair.Key] = pair.Value;
+            // A bot at a camp names where it really is, not a dungeon for its level (audit 2026-10-16).
+            if (!string.IsNullOrEmpty(record?.CurrentCampId) && !string.IsNullOrEmpty(zone))
+                slots["camp"] = zone;
         }
         return slots;
     }

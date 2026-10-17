@@ -1499,7 +1499,9 @@ namespace DOL.GS
         {
             money.AssertLockAcquisition();
             long share = AutonomousBotGuildEconomy.ShareAfterDues(this, money.Value, out long dues);
+            // The whole coin must fit in the purse before it is split, so returned dues can never be lost (audit 2026-10-16).
             if (!IsAutonomousWorldBot || IsTemporaryGroupHelper || DatabaseID <= 0 ||
+                PersistentRecord != null && PersistentRecord.MoneyCopper > long.MaxValue - money.Value ||
                 !AutonomousBotEconomy.AddMoney(DatabaseID, share))
                 return TryPickUpResult.DoesNotWant;
             // Guild dues come out of the same real coin; a full bank leaves them with the bot.

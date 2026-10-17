@@ -44,6 +44,8 @@ public static class HeraldPage
     /// <summary>Realm rank and level ("RR3L4") for a realm point total, as the server's table counts them.</summary>
     public static string RealmRank(long realmPoints)
     {
+        // As GamePlayer.CalculateRealmLevelFromRPs: no realm points is RR1L0, any points at all at least RR1L1.
+        if (realmPoints <= 0) return "RR1L0";
         int index = 0;
         for (int level = RealmPointsForLevel.Length - 1; level > 0; level--)
         {
@@ -120,7 +122,7 @@ public static class HeraldPage
 
         var firsts = new List<(string Title, int Realm, string Name, string ClassName, string When)>();
         if (tables.Contains("offline_server_firsts"))
-            foreach (var r in Rows(c, "SELECT Title, Realm, Name, ClassName, AchievedUtc FROM offline_server_firsts ORDER BY AchievedUtc DESC LIMIT 40"))
+            foreach (var r in Rows(c, "SELECT Title, Realm, Name, ClassName, AchievedUtc FROM offline_server_firsts WHERE Name <> '' ORDER BY AchievedUtc DESC LIMIT 40"))
                 firsts.Add((Str(r[0]), Int(r[1]), Str(r[2]), Str(r[3]), Str(r[4])));
 
         var wanted = new List<(string Name, int Realm, int Kills, int Hunters)>();
@@ -166,7 +168,7 @@ public static class HeraldPage
             int taken = keeps.Count(k => k.Realm == realm && k.Original != realm);
             var owned = relics.Where(r => r.Realm == realm).ToList();
             h.Append($"<div class=\"card {RealmCss[realm]}\"><h3>{RealmNames[realm]}</h3>");
-            h.Append($"<p class=\"big\">{held}</p><p class=\"caption\">keeps and towers held{(taken > 0 ? $", {taken} taken from the enemy" : "")}</p>");
+            h.Append($"<p class=\"big\">{held}</p><p class=\"caption\">keeps held{(taken > 0 ? $", {taken} taken from the enemy" : "")}</p>");
             h.Append("<ul class=\"relics\">");
             if (owned.Count == 0) h.Append("<li class=\"muted\">No relics on its shrines</li>");
             foreach (var relic in owned.OrderBy(r => r.Original).ThenBy(r => r.Type))

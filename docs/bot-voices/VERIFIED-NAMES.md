@@ -78,3 +78,20 @@ Names checked against the 0.35 world database and the bots' camp catalog. Lines 
 ## Classes and specialization lines
 
 See RESEARCH-BRIEF.md section 5. Never mention: Bainshee, Vampiir, Heretic, Valkyrie, Warlock, Mauler, Sluaghbinder.
+
+## Names chosen in code (added 2026-10-16)
+
+These are put into lines by the server, not written in the `.lines` files.
+`tools/bot-voices/check_runtime_names.py` runs them through the corpus's out-of-era rules in CI.
+
+- **Dungeons (`AutonomousBotVoices.DungeonFor`):** from Kirstena's 2002 atlas level ranges. The code
+  comment records that they were checked against the world database on 2026-10-12; they were not
+  re-checked on 2026-10-16. Albion: Tomb of Mithra, Tepok's Mine, Keltoi Fogou, Stonehenge Barrows.
+  Midgard: Nisse's Lair, Cursed Tomb, Vendo Caverns, Varulvhamn, Spindelhalla. Hibernia: Muire Tomb,
+  Spraggon Den, Koalinth Tribal Caverns, Treibh Caillte, Coruscating Mine. The Catacombs of Cardova is
+  no longer named (players read "catacombs" as the 2004 expansion).
+- **Places in bot guild names (`AutonomousBotGuildPlanner`):** classic towns and zones of each realm:
+  Avalon, Salisbury, Cotswold, Lyonesse, Ludlow, Humberton, Pennine, Dartmoor, Cornwall (Albion);
+  Jordheim, Mularn, Haggerfel, Svealand, Gotar, Myrkwood, Uppland, Vasudheim, Audliten (Midgard);
+  Tir na Nog, Connacht, Lough Derg, Ardee, Howth, Mag Mell, Innis Carthaig, Ardagh (Hibernia). Not
+  checked against the world database; they are period place names, not monsters or quest NPCs.

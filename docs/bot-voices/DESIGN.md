@@ -174,8 +174,9 @@ A line whose slot can't be filled is skipped, never sent half-empty.
 ### 3.4 Choosing a line
 
 1. **Filter** by kind, the speaker's realm, class, level band, type (with type weight) and flags.
-2. **Skip** any line used in this realm in the last 6 hours: a ring buffer of the last 400 line ids
-   per realm.
+2. **Skip** any line used in this realm in the last 6 hours: the time each line was last used,
+   per realm (up to 5,000 entries, well above the corpus size). Grats and rez thanks are short and
+   frequent, so they skip this check (a "gz" can repeat).
 3. **Pick** by weight, fill the slots, apply the voice, and cap the length at 160 characters.
 
 ### 3.5 Long threads
