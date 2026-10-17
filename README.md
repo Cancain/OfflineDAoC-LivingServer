@@ -39,16 +39,18 @@ Social Expansion makes them feel like a community, not just a population.
 | **Bot voices** | 842 lines written for the era and checked against period slang, chosen by realm, class, level, situation and personality. Each bot writes in one of five styles (plain, terse, chatty, proper or typo-prone). No line repeats in a realm within six hours. |
 | **/faction debates** | 296 multi-bot conversations: class and spec arguments, relic and keep alerts, dragon raids, Darkness Falls, buffbots, zergs, realm pride and more. A different cast plays one every 30–45 minutes while you're online. |
 | **XP by level range** | Separate player and bot XP rates for level bands. The suggested setting keeps levels 1–34 worth playing and compresses the 35–50 grind. |
+| **Living Server** | Bots remember you: they greet you by name, thank you for an old rez and stay cool if you insulted them. Dings get grats chains, and the first to 50 in each class is announced server-wide. Dead bots ask you for a rez, and passing bot healers rez you. Frontier bots call incoming enemy groups in /faction, and bots hold grudges against the enemies who keep killing them. Bots can log on and off on a schedule (by session or by your clock), take "brb" breaks and now and then go linkdead. Each part has its own switch. |
+| **Camelot Herald** | A news page written from your world: realm point leaders, guilds, keeps, relics, server firsts and the realms' Most Wanted. One button in the launcher. |
 
 ## Safe to try
 
-- **Everything starts switched off.** Turn each feature on with a one-line switch, and off again
-  the same way. With all of them off, it plays exactly like the base game.
+- **Everything starts switched off.** Turn each feature on in the launcher's Social Expansion tab,
+  and off again the same way. With all of them off, it plays exactly like the base game.
 - **It never breaks the base game's rules.** Real loot, the Realm Exchange, stablemaster routes,
   bots earning their armor and the other owner rules are untouched.
 - **Install and undo in one click.** The installer checks that your game is the right version,
   backs up every file it replaces, and verifies each copy. `ROLLBACK.cmd` puts the originals back.
-- **It's tested.** 2,849 automated server tests pass on the 0.36 build. In-game testing comes next.
+- **It's tested.** 2,887 automated server tests pass on the 0.36 build. In-game testing comes next.
 
 ## How to get it (once released)
 
@@ -59,9 +61,10 @@ Social Expansion makes them feel like a community, not just a population.
 
 ## Details
 
-- [Bot guilds: design and status](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.36-chris.1/docs/BOT-GUILDS.md)
-- [Bot personalities, voices and debates](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.36-chris.1/docs/BOT-PERSONALITIES.md)
-- [XP by level range](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.36-chris.1/docs/XP-BY-LEVEL-RANGE.md)
+- [Bot guilds: design and status](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.36-chris.2/docs/BOT-GUILDS.md)
+- [Bot personalities, voices and debates](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.36-chris.2/docs/BOT-PERSONALITIES.md)
+- [XP by level range](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.36-chris.2/docs/XP-BY-LEVEL-RANGE.md)
+- [Living Server and the Camelot Herald](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.36-chris.2/docs/LIVING-SERVER.md)
 
 ## Credits
 
