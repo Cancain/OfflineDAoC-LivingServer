@@ -18,7 +18,7 @@ namespace DOL.GS.Tests
         [Test]
         public void BuildName_IsAForkBuildOfThisRelease()
         {
-            Assert.That(ForkBuildInfo.BuildName, Does.Match(@"^\d+\.\d+b?-chris\.\d+$"));
+            Assert.That(ForkBuildInfo.BuildName, Does.Match(@"^\d+\.\d+b?-se\.\d+$"));
         }
     }
 }

@@ -161,8 +161,12 @@ Each stage ends with a check. Nothing moves on until the check passes.
 
 ### Stage 7: release
 
-1. **Merge:** pull request `release/0.36-chris.N` → `main`, with your approval.
-2. **Tag:** `v0.36-chris.N` on your fork.
+**Naming (owner, 2026-10-17):** releases are named `0.36-se.N` (Social Expansion), never with a
+personal name. The first release is `0.36-se.1`; the `0.36-chris.N` names above and below were
+test builds.
+
+1. **Merge:** pull request `release/0.36-se.N` → `main`, with your approval.
+2. **Tag:** `v0.36-se.N` on your fork.
 3. **Publish:** a GitHub Release with the zip, with your approval.
    - **Choice:** your fork is public, so the release would be too; a draft release keeps it to you.
    - **Contents:** only the server build (built from the GPL source) and the scripts; never a
@@ -174,7 +178,7 @@ Each stage ends with a check. Nothing moves on until the check passes.
 **Done for 0.36 on 2026-10-16** (see the update at the top). **When 0.37 code is published:**
 1. Merge it into `main`.
 2. Rebuild the release branch and rerun CI.
-3. Repeat stage 3's smoke test on a 0.37 install, then release `0.37-chris.1`.
+3. Repeat stage 3's smoke test on a 0.37 install, then release `0.37-se.1`.
 
 **Don't** install a 0.36-based build over a 0.37 install: it would roll back his 0.37 server
 changes. The installer refuses it.

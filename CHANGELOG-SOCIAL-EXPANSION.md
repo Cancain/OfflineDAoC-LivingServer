@@ -3,7 +3,7 @@
 What this fork adds to shadowofze's Offline DAoC. The base game's own changes are in
 [CHANGELOG.md](CHANGELOG.md). The newest version is first.
 
-## 0.36-chris.11 — 2026-10-17
+## 0.36-se.1 — 2026-10-17
 
 The first release, for Offline DAoC **0.36 / 0.36b** (with or without the 0.36c new client). It
 replaces the server (`GameServer.dll`) and the launcher (which gets a **Social Expansion** tab).
