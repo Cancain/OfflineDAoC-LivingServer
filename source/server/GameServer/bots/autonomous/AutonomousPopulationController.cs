@@ -114,7 +114,11 @@ public static class AutonomousPopulationController
             // Scheduled-off bots still finishing something (often a group) stay online. For their first 15 minutes
             // they count, so logins wait for them (10% slack); after that they no longer hold the schedule back.
             if (scheduled)
+            {
                 missing = Math.Min(missing, desired + desired / 10 - online - AutonomousBotSchedule.RecentOverstays - PendingSpawns.Count);
+                // Hard ceiling: never more than a quarter above the schedule's number in total.
+                missing = Math.Min(missing, desired + desired / 4 - AutonomousBotRegistry.Count - PendingSpawns.Count);
+            }
             _populationSatisfied = missing <= 0;
             if (missing <= 0)
                 return;

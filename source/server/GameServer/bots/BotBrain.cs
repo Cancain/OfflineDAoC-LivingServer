@@ -4740,6 +4740,7 @@ namespace DOL.AI.Brain
         public const long PlayerRezApproachMs = 20_000;
         public const int PlayerRezHostileRadius = 700;
         private long _nextPlayerRezCheck;
+        private long _nextRezBoxCheck;
         private GamePlayer _rezTarget;
         private long _rezTargetSince;
         private long _nextRezWalk;
@@ -4768,9 +4769,8 @@ namespace DOL.AI.Brain
         {
             if (skip && _rezTarget != null)
             {
-                if (_rezSkipped.Count > 8)
-                    foreach (GamePlayer stale in _rezSkipped.Where(pair => pair.Value < now).Select(pair => pair.Key).ToArray())
-                        _rezSkipped.Remove(stale);
+                foreach (GamePlayer stale in _rezSkipped.Where(pair => pair.Value < now).Select(pair => pair.Key).ToArray())
+                    _rezSkipped.Remove(stale);
                 _rezSkipped[_rezTarget] = now + 120_000;
             }
             if (_rezTarget != null && PlayerRezClaims.TryGetValue(_rezTarget, out var claim) && claim.BotId == BotBody?.DatabaseID)
@@ -4791,6 +4791,15 @@ namespace DOL.AI.Brain
             }
             if (bot.IsCasting)
                 return bot.castingComponent.SpellHandler?.Spell?.SpellType == eSpellType.Resurrect && bot.TargetObject is GamePlayer;
+            // A rez box from a gamebot is open: once it closes (accepted, declined or timed out), no bot offers
+            // again for 90 seconds. Checked by every rez bot nearby, whatever its mana or fight state.
+            if (now >= _nextRezBoxCheck)
+            {
+                _nextRezBoxCheck = now + 2_000;
+                foreach (GamePlayer player in ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion))
+                    if (!player.IsAlive && player.TempProperties.GetProperty<GameLiving>("RESURRECT_CASTER") is GameBot)
+                        PlayerRezOffered[player] = now + PlayerRezOfferCooldownMs;
+            }
             if (bot.InCombat || HasAggro || bot.IsCrowdControlled || bot.IsSilenced || !FreeToRezStrangers(bot) ||
                 bot.Group != null && bot.Group.GetMembersInTheGroup().Any(member => member.IsAlive && member.InCombat))
             {
@@ -4817,11 +4826,6 @@ namespace DOL.AI.Brain
                     foreach (var stale in PlayerRezOffered.Where(pair => pair.Value < now).Select(pair => pair.Key).ToArray())
                         PlayerRezOffered.TryRemove(stale, out _);
                 List<GamePlayer> players = ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion);
-                // A rez box from a gamebot is open: once it closes (accepted or declined), no bot offers
-                // again for 90 seconds.
-                foreach (GamePlayer player in players)
-                    if (!player.IsAlive && player.TempProperties.GetProperty<GameLiving>("RESURRECT_CASTER") is GameBot)
-                        PlayerRezOffered[player] = now + PlayerRezOfferCooldownMs;
                 corpse = players
                     .Where(player => IsRezzableCorpse(bot, player, now) && !HostilesNear(bot, player))
                     .OrderBy(Body.GetDistanceTo).FirstOrDefault();

@@ -146,7 +146,7 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
 - Busy scheduled-off bots (often in a bot group) stay online until they're free. For their first
   15 minutes they count against the schedule, so logins wait for them (with 10% slack); after that
   they no longer hold back the bots whose turn it is, so the total can run above the schedule's
-  number for a while.
+  number for a while, but never more than a quarter above it.
 
 ### Breaks and linkdeads (`bot_living_breaks`)
 - **Breaks:** an idle bot (the same rules as logging out) now and then says "brb" and logs off for

@@ -218,7 +218,14 @@ public sealed class LivingServerTable<TKey, TRow> where TRow : DataObject, ILivi
                     if (!write.Copy.IsPersisted || write.Copy.Dirty)
                         continue;
                     write.Live.IsPersisted = true;
-                    write.Live.AcceptPersistenceBaseline(write.Copy);
+                    try
+                    {
+                        write.Live.AcceptPersistenceBaseline(write.Copy);
+                    }
+                    catch (ArgumentException)
+                    {
+                        write.Live.Dirty = true;   // no baseline: the next save writes every column
+                    }
                 }
                 // (A row removed while its first insert runs is queued in _deletes by RemoveWhere and is
                 // persisted above, so the next flush deletes it.)
