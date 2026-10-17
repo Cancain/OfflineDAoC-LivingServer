@@ -1197,6 +1197,14 @@ namespace DOL.AI.Brain
 
         public override void Think()
         {
+            // Living Server linkdead (bot_living_breaks): the bot stands still and does nothing until it
+            // "reconnects" (30-90 s) or is attacked (AutonomousBotSchedule.OnAttacked wakes it).
+            if (AutonomousBotSchedule.IsFrozen(BotBody))
+            {
+                if (BotBody.IsMoving)
+                    BotBody.StopMoving();
+                return;
+            }
             bool nativeSpeedTravelStarted;
             if (CompanionFollowPolicy.ObserveAndCancelBuffs(BotBody, out nativeSpeedTravelStarted))
             {
@@ -1259,6 +1267,9 @@ namespace DOL.AI.Brain
                     return;
                 }
             }
+
+            if (TryResurrectNearbyPlayer())
+                return;
 
             if (AutonomousDefensivePull.Hold(BotBody))
             {
@@ -1594,7 +1605,8 @@ namespace DOL.AI.Brain
 
             DateTime now = DateTime.UtcNow;
             if (!AutonomousBotChat.ShouldSpeak(now, _lastIdleRoleplayUtc,
-                    bot.InCombat || bot.IsAttacking || bot.IsCasting || bot.IsOnStableMasterRoute))
+                    bot.InCombat || bot.IsAttacking || bot.IsCasting || bot.IsOnStableMasterRoute,
+                    null, AutonomousBotPersonality.ChatRateFactor(bot)))
                 return;
 
             OfflineWorldBotRecord record = bot.PersistentRecord;
@@ -1605,7 +1617,7 @@ namespace DOL.AI.Brain
                 bot.Name, bot.ClassName, bot.CurrentZone?.Description,
                 record?.TargetName, record?.TravelDestination, item, string.Empty,
                 bot.Level, Math.Max(1, (int)(bot.Group?.MemberCount ?? 1)), bot.Realm);
-            if (AutonomousBotChatCoordinator.TryStartAmbient(bot, context))
+            if (AutonomousBotGuildSocial.TryIdle(bot) || AutonomousBotChatCoordinator.TryStartAmbient(bot, context))
                 _lastIdleRoleplayUtc = now;
         }
 
@@ -4714,6 +4726,209 @@ namespace DOL.AI.Brain
         }
 
         private readonly BotSupportReach _supportReach = new();
+
+        // Living Server (bot_living_death): an autonomous gamebot that can rez raises a real player of its
+        // realm lying dead within 1,500 units who is not in its group. The player still gets the normal
+        // accept/decline prompt, and is offered at most once every 90 seconds by any bot (a decline is not
+        // answered with another box). Never while the bot or its group fights, never into hostile mobs, and
+        // never by a bot on a siege job, holding a siege position, carrying a relic or in an RvR event force.
+        // A corpse it can't reach within 20 seconds is skipped for 2 minutes (review 2026-10-16).
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<GamePlayer, (long BotId, long Until)> PlayerRezClaims = new();
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<GamePlayer, long> PlayerRezOffered = new();
+        public const int PlayerRezSearchRadius = 1_500;
+        public const long PlayerRezOfferCooldownMs = 90_000;
+        public const long PlayerRezApproachMs = 20_000;
+        public const int PlayerRezHostileRadius = 700;
+        private long _nextPlayerRezCheck;
+        private long _nextRezBoxCheck;
+        private GamePlayer _rezTarget;
+        private long _rezTargetSince;
+        private long _nextRezWalk;
+        private readonly Dictionary<GamePlayer, long> _rezSkipped = new();
+        public const long PlayerRezCastHoldMs = 30_000;
+
+        private bool IsRezzableCorpse(GameBot bot, GamePlayer player, long now) =>
+            player != null && !player.IsAlive && player.Realm == bot.Realm && player.ObjectState == GameObject.eObjectState.Active &&
+            player.CurrentRegion == bot.CurrentRegion && (bot.Group == null || player.Group != bot.Group) &&
+            bot.IsWithinRadius(player, PlayerRezSearchRadius) && player.TempProperties.GetProperty<GameLiving>("RESURRECT_CASTER") == null &&
+            !(_rezSkipped.TryGetValue(player, out long skipped) && now < skipped) &&
+            !(PlayerRezOffered.TryGetValue(player, out long offered) && now < offered) &&
+            (!PlayerRezClaims.TryGetValue(player, out var claim) || claim.BotId == bot.DatabaseID || claim.Until < now);
+
+        private static bool HostilesNear(GameBot bot, GameLiving corpse) =>
+            corpse.GetNPCsInRadius(PlayerRezHostileRadius).Any(npc => npc != null && npc.IsAlive && npc is not GameBot &&
+                npc.Brain is IOldAggressiveBrain { AggroLevel: > 0 } && GameServer.ServerRules.IsAllowedToAttack(npc, bot, true));
+
+        private bool FreeToRezStrangers(GameBot bot) =>
+            !bot.IsOnStableMasterRoute && !bot.IsReturningAfterRelease && !BotSiegeRuntime.Assigned(bot) &&
+            !BotSiegeRuntime.HoldingPosition(bot) &&
+            bot.TempProperties.GetProperty<GameRelic>(GameRelic.PLAYER_CARRY_RELIC_WEAK) == null &&
+            string.IsNullOrEmpty(bot.TempProperties.GetProperty<string>("RvrEventForce"));
+
+        private long _nextRezSkipReport;
+
+        /// <summary>
+        /// Says in the server log why a rez bot near a dead player of its realm is not rezzing them (at most
+        /// every 15 seconds per bot), so a missing rez can be checked in game (in-game check 2026-10-17).
+        /// </summary>
+        private void ReportRezSkip(GameBot bot, string reason, long now)
+        {
+            if (now < _nextRezSkipReport || !log.IsInfoEnabled || bot?.CurrentRegion == null)
+                return;
+            _nextRezSkipReport = now + 15_000;
+            GamePlayer corpse = ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion).FirstOrDefault(player =>
+                player != null && !player.IsAlive && player.Realm == bot.Realm && bot.IsWithinRadius(player, PlayerRezSearchRadius));
+            if (corpse == null)
+                return;
+            string detail = reason == "no_rezzable_corpse"
+                ? $" hostiles_near={HostilesNear(bot, corpse)} same_group={bot.Group != null && corpse.Group == bot.Group} " +
+                  $"box_open={corpse.TempProperties.GetProperty<GameLiving>("RESURRECT_CASTER") != null} " +
+                  $"recently_offered={PlayerRezOffered.TryGetValue(corpse, out long offered) && now < offered} " +
+                  $"skipped={_rezSkipped.TryGetValue(corpse, out long skipped) && now < skipped}"
+                : string.Empty;
+            log.Info($"LIVING_SERVER_REZ_SKIP bot=\"{bot.Name}\" corpse=\"{corpse.Name}\" distance={(int)bot.GetDistanceTo(corpse)} reason={reason}{detail}");
+        }
+
+        private void DropRezTarget(long now, bool skip)
+        {
+            if (skip && _rezTarget != null)
+            {
+                foreach (GamePlayer stale in _rezSkipped.Where(pair => pair.Value < now).Select(pair => pair.Key).ToArray())
+                    _rezSkipped.Remove(stale);
+                _rezSkipped[_rezTarget] = now + 120_000;
+            }
+            if (_rezTarget != null && PlayerRezClaims.TryGetValue(_rezTarget, out var claim) && claim.BotId == BotBody?.DatabaseID)
+                PlayerRezClaims.TryRemove(_rezTarget, out _);
+            _rezTarget = null;
+        }
+
+        private bool TryResurrectNearbyPlayer()
+        {
+            GameBot bot = BotBody;
+            long now = GameLoop.GameLoopTime;
+            if (!AutonomousLivingServer.DeathOn || bot?.IsAutonomousWorldBot != true || bot.IsTemporaryGroupHelper ||
+                bot.IsPlayerLedGroup || !bot.IsAlive || bot.ResurrectionSpell == null || bot.CurrentRegion == null)
+            {
+                if (_rezTarget != null)
+                    DropRezTarget(now, false);
+                if (AutonomousLivingServer.DeathOn && bot?.ResurrectionSpell != null && bot.IsPlayerLedGroup)
+                    ReportRezSkip(bot, "in_player_group", now);
+                else if (AutonomousLivingServer.DeathOn && bot?.IsAutonomousWorldBot == true && bot.IsAlive && bot.ResurrectionSpell == null &&
+                         AutonomousLivingServer.IsRezClassId(bot.CharacterClass?.ID ?? 0))
+                    ReportRezSkip(bot, "no_rez_spell", now);
+                return false;
+            }
+            if (bot.IsCasting)
+                return bot.castingComponent.SpellHandler?.Spell?.SpellType == eSpellType.Resurrect && bot.TargetObject is GamePlayer;
+            // A rez box from a gamebot is open: once it closes (accepted, declined or timed out), no bot offers
+            // again for 90 seconds. Checked by every rez bot nearby, whatever its mana or fight state.
+            if (now >= _nextRezBoxCheck)
+            {
+                _nextRezBoxCheck = now + 2_000;
+                foreach (GamePlayer player in ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion))
+                    if (!player.IsAlive && player.TempProperties.GetProperty<GameLiving>("RESURRECT_CASTER") is GameBot)
+                        PlayerRezOffered[player] = now + PlayerRezOfferCooldownMs;
+            }
+            if (bot.InCombat || HasAggro || bot.IsCrowdControlled || bot.IsSilenced || !FreeToRezStrangers(bot) ||
+                bot.Group != null && bot.Group.GetMembersInTheGroup().Any(member => member.IsAlive && member.InCombat))
+            {
+                if (_rezTarget != null)
+                    DropRezTarget(now, false);
+                ReportRezSkip(bot, bot.InCombat ? "in_combat" : HasAggro ? "has_aggro" : !FreeToRezStrangers(bot) ? "busy" :
+                    bot.IsCrowdControlled || bot.IsSilenced ? "controlled" : "group_fighting", now);
+                return false;
+            }
+            Spell resurrection = bot.ResurrectionSpell;
+            GamePlayer corpse = _rezTarget;
+            if (!IsRezzableCorpse(bot, corpse, now))
+            {
+                if (_rezTarget != null)
+                    DropRezTarget(now, false);
+                corpse = null;
+                if (now < _nextPlayerRezCheck)
+                    return false;
+                _nextPlayerRezCheck = now + 2_000;
+                if (resurrection.Level > bot.Level || !CheckHealSpell(resurrection))
+                {
+                    ReportRezSkip(bot, resurrection.Level > bot.Level ? "spell_level" : "spell_not_ready", now);
+                    return false;
+                }
+                if (PlayerRezClaims.Count > 8)
+                    foreach (var stale in PlayerRezClaims.Where(pair => pair.Value.Until < now || pair.Key.IsAlive).Select(pair => pair.Key).ToArray())
+                        PlayerRezClaims.TryRemove(stale, out _);
+                if (PlayerRezOffered.Count > 8)
+                    foreach (var stale in PlayerRezOffered.Where(pair => pair.Value < now).Select(pair => pair.Key).ToArray())
+                        PlayerRezOffered.TryRemove(stale, out _);
+                List<GamePlayer> players = ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion);
+                corpse = players
+                    .Where(player => IsRezzableCorpse(bot, player, now) && !HostilesNear(bot, player))
+                    .OrderBy(Body.GetDistanceTo).FirstOrDefault();
+                if (corpse == null)
+                {
+                    ReportRezSkip(bot, "no_rezzable_corpse", now);
+                    return false;
+                }
+                // One bot per corpse; the claim is taken atomically so two bots thinking at once can't both start.
+                if (!PlayerRezClaims.TryAdd(corpse, (bot.DatabaseID, now + 30_000)) &&
+                    !(PlayerRezClaims.TryGetValue(corpse, out var held) && held.BotId == bot.DatabaseID))
+                {
+                    if (!(PlayerRezClaims.TryGetValue(corpse, out var old) && old.Until < now &&
+                          PlayerRezClaims.TryUpdate(corpse, (bot.DatabaseID, now + 30_000), old)))
+                        return false;
+                }
+                _rezTarget = corpse;
+                _rezTargetSince = now;
+            }
+            if (!CheckHealSpell(resurrection))
+                return false;
+            int range = bot.castingComponent.CalculateSpellRange(resurrection);
+            if (!bot.IsWithinRadius(corpse, range) || !BotGroupSupport.HasCorpseLineOfSight(bot, corpse))
+            {
+                if (now - _rezTargetSince > PlayerRezApproachMs || HostilesNear(bot, corpse))
+                {
+                    if (log.IsInfoEnabled)
+                        log.Info($"LIVING_SERVER_REZ_SKIP bot=\"{bot.Name}\" corpse=\"{corpse.Name}\" distance={(int)bot.GetDistanceTo(corpse)} " +
+                                 $"reason={(HostilesNear(bot, corpse) ? "hostiles_near" : "could_not_reach")} line_of_sight={BotGroupSupport.HasCorpseLineOfSight(bot, corpse)}");
+                    DropRezTarget(now, true);
+                    return false;
+                }
+                if (now >= _nextRezWalk || !bot.IsMoving)
+                {
+                    _nextRezWalk = now + 3_000;
+                    bot.StopMovingOnPath();
+                    bot.WalkTo(new Point3D(corpse.X, corpse.Y, corpse.Z), bot.MaxSpeed);
+                }
+                return true;
+            }
+            var handler = ScriptMgr.CreateSpellHandler(bot, resurrection, m_mobSpellLine);
+            if (handler == null || bot.Mana < Math.Max(bot.PowerCost(resurrection), handler.PowerCost(corpse)))
+            {
+                if (log.IsInfoEnabled)
+                    log.Info($"LIVING_SERVER_REZ_SKIP bot=\"{bot.Name}\" corpse=\"{corpse.Name}\" reason={(handler == null ? "no_handler" : "no_power")}");
+                DropRezTarget(now, true);
+                return false;
+            }
+            GameObject previous = bot.TargetObject;
+            bot.attackComponent.StopAttack();
+            bot.StopFollowing();
+            bot.StopMoving();
+            bot.TargetObject = corpse;
+            if (!bot.CastSpell(resurrection, m_mobSpellLine, false))
+            {
+                if (log.IsInfoEnabled)
+                    log.Info($"LIVING_SERVER_REZ_SKIP bot=\"{bot.Name}\" corpse=\"{corpse.Name}\" reason=cast_refused");
+                bot.TargetObject = previous;
+                DropRezTarget(now, true);
+                return false;
+            }
+            // Held briefly while the cast runs; the 90-second hold starts when the box actually opens (above).
+            PlayerRezOffered[corpse] = now + PlayerRezCastHoldMs;
+            if (log.IsInfoEnabled)
+                log.Info($"LIVING_SERVER_REZ bot=\"{bot.Name}\" corpse=\"{corpse.Name}\" distance={(int)bot.GetDistanceTo(corpse)}");
+            DropRezTarget(now, false);
+            AutonomousLivingServer.OnOfferingRez(bot, corpse);
+            return true;
+        }
 
         /// <summary>
         /// A group member a heal or buff may be aimed at: this bot, or a member within

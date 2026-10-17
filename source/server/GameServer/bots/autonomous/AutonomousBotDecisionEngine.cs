@@ -190,7 +190,7 @@ public static class AutonomousBotDecisionEngine
     }
 
     public static PveEnvironment SelectPveEnvironment(IEnumerable<Camp> camps, int groupSize,
-        int level, Random random = null)
+        int level, Random random = null, int preferencePercent = 100)
     {
         Camp[] choices = camps?.Where(camp => camp != null).ToArray() ?? Array.Empty<Camp>();
         bool hasDungeon = choices.Any(camp => camp.IsDungeon);
@@ -207,12 +207,13 @@ public static class AutonomousBotDecisionEngine
             .Select(group => DungeonAvailability(group))
             .DefaultIfEmpty(0)
             .Max();
-        int effectivePreference = preference * availability / 1_000;
+        // preferencePercent: a personality's dungeon taste (100 = unchanged; AutonomousBotPersonality).
+        int effectivePreference = Math.Min(950, preference * Math.Max(0, preferencePercent) / 100) * availability / 1_000;
         return random.Next(1_000) < effectivePreference ? PveEnvironment.Dungeon : PveEnvironment.Outdoor;
     }
 
     public static Camp SelectWithinEnvironment(IEnumerable<Camp> camps, PveEnvironment environment,
-        Random random = null)
+        Random random = null, Func<Camp, int> personalWeightPercent = null)
     {
         Camp[] choices = camps?.Where(camp => camp != null &&
             (environment == PveEnvironment.Dungeon ? camp.IsDungeon : !camp.IsDungeon)).ToArray()
@@ -221,7 +222,7 @@ public static class AutonomousBotDecisionEngine
             return null;
         random ??= Random.Shared;
         if (environment != PveEnvironment.Dungeon)
-            return SelectByLiveSpawns(choices, random);
+            return SelectByLiveSpawns(choices, random, personalWeightPercent);
 
         var regions = choices.GroupBy(camp => camp.RegionId)
             .Select(group => new
@@ -252,15 +253,20 @@ public static class AutonomousBotDecisionEngine
 
     public static int OutdoorSpawnWeight(Camp camp) => Math.Clamp(camp.LiveMobCount, 1, OutdoorSpawnWeightCap);
 
-    private static Camp SelectByLiveSpawns(Camp[] choices, Random random)
+    /// <summary>A camp's draw weight: live spawns, times an optional personal taste (percent, AutonomousBotPersonality).</summary>
+    public static int OutdoorDrawWeight(Camp camp, Func<Camp, int> personalWeightPercent) =>
+        personalWeightPercent == null ? OutdoorSpawnWeight(camp)
+            : Math.Max(1, OutdoorSpawnWeight(camp) * Math.Max(1, personalWeightPercent(camp)));
+
+    private static Camp SelectByLiveSpawns(Camp[] choices, Random random, Func<Camp, int> personalWeightPercent = null)
     {
         int total = 0;
         foreach (Camp camp in choices)
-            total += OutdoorSpawnWeight(camp);
+            total += OutdoorDrawWeight(camp, personalWeightPercent);
         int draw = random.Next(total);
         foreach (Camp camp in choices)
         {
-            int weight = OutdoorSpawnWeight(camp);
+            int weight = OutdoorDrawWeight(camp, personalWeightPercent);
             if (draw < weight)
                 return camp;
             draw -= weight;

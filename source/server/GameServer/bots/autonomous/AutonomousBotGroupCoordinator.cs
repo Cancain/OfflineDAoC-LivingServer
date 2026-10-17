@@ -163,6 +163,7 @@ public static partial class AutonomousBotGroupCoordinator
         try
         {
             RealmEventNotices.Pulse(now);
+            AutonomousLivingServer.Pulse(now);
             RealmEventControls.Pulse();
             AutonomousRealmRaid.Pulse(now);
             AutonomousRealmRaid.RecruitForcedParty(now);
@@ -1553,7 +1554,8 @@ public static partial class AutonomousBotGroupCoordinator
                                           candidate.IsReturningAfterRelease, candidate.InCombat,
                                           candidate.IsAttacking, (candidate.Brain as BotBrain)?.HasAggro == true,
                                           candidate.GetDistanceTo(leader))))
-                .OrderBy(candidate => Math.Abs(candidate.Level - leader.Level))
+                .OrderBy(candidate => AutonomousBotGuilds.GuildmateRank(leader, candidate))
+                .ThenBy(candidate => Math.Abs(candidate.Level - leader.Level))
                 .ThenBy(candidate => candidate.GetDistanceTo(leader))
                 .ToArray();
             Dictionary<long, BotPveGroupRole> pveRoles = null;
@@ -1609,6 +1611,7 @@ public static partial class AutonomousBotGroupCoordinator
             Sessions[group] = session;
             GameBot[] formedMembers = BotMembers(group);
             WriteSessionMetadata(session, formedMembers);
+            AutonomousBotGuildSocial.OnGroupFormed(formedMembers, objectiveKind == eAutonomousObjectiveKind.RvR);
             Log.Info($"AUTONOMOUS_GROUP_FORMED group={session.Id} realm={GlobalConstants.RealmToName(leader.Realm)} " +
                      $"size={formedMembers.Length} lockedSize={session.LockedSize} objective={objectiveKind} " +
                      $"members=\"{string.Join(",", formedMembers.Select(member => member.Name))}\" " +
@@ -2114,6 +2117,15 @@ public static partial class AutonomousBotGroupCoordinator
         if (now < session.NextAttendanceTick)
             return;
         session.NextAttendanceTick = now + 5_000;
+        foreach (GameBot member in members)
+        {
+            int deathCount = member.PersistentRecord?.DeathCount ?? 0;
+            if (session.Attendance.ReachedDeathLimit(member.DatabaseID, deathCount, now))
+                Log.Warn($"AUTONOMOUS_GROUP_MEETUP_DEATHS group={session.Id} bot={member.Name} id={member.DatabaseID} " +
+                         $"level={member.Level} deaths={session.Attendance.DeathsSinceStart(member.DatabaseID, deathCount)} " +
+                         $"waitedSeconds={session.Attendance.WaitedMilliseconds(member.DatabaseID, now) / 1000} region={member.CurrentRegionID} " +
+                         $"at={(int)member.X},{(int)member.Y} rendezvous={(int)session.Rendezvous.X},{(int)session.Rendezvous.Y}");
+        }
         // Capture attendance before removals shift group indexes/formation slots.
         GameBot[] missing = members.Where(member =>
             session.Attendance.Observe(member.DatabaseID, now, AtRendezvous(session, member))).ToArray();
@@ -2708,8 +2720,10 @@ public static partial class AutonomousBotGroupCoordinator
     {
         selected = [];
         roles = null;
+        // Guildmates of the leader get the first claim on slots (docs/BOT-GUILDS.md, phase 3); roles still decide.
         GameBot[] pool = candidates.Where(candidate => candidate?.CharacterClass != null)
-            .OrderBy(_ => Random.Shared.Next()).ToArray();
+            .OrderBy(candidate => AutonomousBotGuilds.GuildmateRank(leader, candidate))
+            .ThenBy(_ => Random.Shared.Next()).ToArray();
         eCharacterClass[] poolClasses = pool.Select(candidate => (eCharacterClass)candidate.CharacterClass.ID).ToArray();
         if (!TryMatchPveRoster((eCharacterClass)leader.CharacterClass.ID, poolClasses, minimumSize, maximumSize,
                 out BotPveGroupRole[] template, out int[] owners))

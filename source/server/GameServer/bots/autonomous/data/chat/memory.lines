@@ -1,0 +1,198 @@
+# Lines that use the bot's memory of you. {player} is your character's name, {player_class} its
+# class, {place} where the remembered event happened. New writing (see docs/bot-voices).
+
+@kind greet
+@mood friendly
+@who *
+hey {player}! good to see you again
+{player}! still alive i see :)
+look who it is, hey {player}
+{player}, been a while, how goes it?
+oh hey {player}, out hunting again?
+hail {player}
+{player}! we should group again sometime
+evening {player}, the realm missed you
+hey {player}, still remember that run at {place}
+{player}, my favorite {player_class}, hi
+@who Socialite
+{player}!! hi hi, what are you up to tonight?
+@who Leveler
+hey {player}, i dinged twice since we grouped
+@kind greet
+@mood neutral
+@who *
+hi {player}
+oh, {player}. hey
+evening {player}
+hey there {player}
+@kind greet
+@mood cool
+@who *
+{player}.
+oh. you.
+hm, {player}
+@kind greet
+@mood rival
+@who *
+watch yourself out there, {player_class}
+we remember you, {player_class}
+
+@kind thanks
+@topic rez
+@who *
+ty again for the rez at {place}, {player}
+{player} saved me at {place}, still owe you one
+never forgot that rez at {place}, ty {player}
+still grateful for the rez back at {place}
+@topic heal
+@who *
+ty for the heals earlier {player}
+those heals at {place} kept me standing, ty
+{player} you healed me through some ugly pulls, ty
+@topic group
+@who *
+good group at {place} the other day, ty {player}
+had fun at {place} with you {player}, again sometime?
+ty for the group {player}, best xp i have had all week
+{player} carried that group at {place}, honestly
+thanks for the invite back at {place}
+@topic trade
+@who *
+ty for buying my {item} {player}, hope it serves you well
+that thing you sold me is still on my back, ty {player}
+
+@kind grudge
+@who *
+@mood cool
+not you again
+i remember what you said, {player}
+pass, find someone else
+no thanks
+maybe another time. much later
+i will group with almost anyone. almost
+@mood rival
+you got lucky at {place}, {player_class}
+next time at {place} goes differently
+
+@kind gossip
+@mood friendly
+@who *
+anyone grouped with {player}? great {player_class}, highly recommend
+{player} rezzed half our group at {place} tonight, what a legend
+shout out to {player} for saving our run at {place}
+if you need a {player_class}, {player} is good people
+{player} pulled us out of a mess at {place}, ty again
+grouped with {player} at {place}, solid player
+@who Socialite
+# only about a player with no guild yet (a starting guild counts as none): in-game check 2026-10-17, said of a
+# player already in a bot guild
+@needs player_guildless
+we should get {player} into a guild, that one knows what they are doing
+@needs
+@mood cool
+@who *
+{player} is fine i guess, just not my kind of group
+heard {player} is a bit rough in chat, but plays ok
+@mood rival
+watch out for that {player_class} near {place}, hits hard
+an enemy {player_class} has been hunting near {place}, careful
+
+# Ordinary replies that use the name when the bot knows you. Topic "player" keeps them apart from
+# the general replies, so a bot that remembers you picks one of these (in-game check 2026-10-17:
+# mixed with the general pool, only about one known reply in five used the name).
+@kind reply
+@topic player
+@intent greeting
+@needs knows_player
+@who *
+hey {player}!
+{player}! hi
+evening {player}, good to see you
+hey {player}, good to see you again
+oh hi {player}
+@kind reply
+@topic player
+@intent grouping
+@needs knows_player
+@who *
+for you {player}, sure, where are you?
+i would group with you again {player}, what level are you now?
+{player}, if you need one more i am around
+sure {player}, send an invite when you are ready
+@kind reply
+@topic player
+@intent farewell
+@needs knows_player
+@who *
+night {player}, take care
+see you around {player}
+later {player}
+@kind reply
+@topic player
+@intent grinding
+@needs knows_player
+@who *
+slow but steady {player}, you?
+{player}, xp is crawling tonight, how about you?
+not bad {player}, still grinding away
+@kind reply
+@topic player
+@intent travel
+@needs knows_player
+@who *
+{player}, stablemaster is your friend, saves a lot of running
+not sure {player}, ask in /faction, someone will know
+@kind reply
+@topic player
+@intent help
+@needs knows_player
+@who *
+sure {player}, what do you need?
+{player}, what's up?
+for you {player}? what is it
+@kind reply
+@topic player
+@intent banter
+@needs knows_player
+@who *
+lol {player}
+haha {player}, sure
+{player} you never change :)
+@kind reply
+@topic player
+@intent rvr
+@needs knows_player
+@who *
+{player}, if you head out to the frontier let me know
+careful out there {player}
+@kind reply
+@topic player
+@intent dungeon
+@needs knows_player
+@who *
+{player}, i'd go if we had a healer
+sounds fun {player}, how deep are you going?
+@kind reply
+@topic player
+@intent trading
+@needs knows_player
+@who *
+{player}, try the Realm Exchange, i saw some decent stuff there
+not selling anything right now {player}, sorry
+@kind reply
+@topic player
+@intent unknown
+@needs knows_player
+@who *
+yeah {player}?
+{player}?
+hm? what's up {player}
+
+# A friendly bot inviting you (the invite itself is a yes/no dialog).
+@kind lfg
+@topic invite
+@needs knows_player
+@who *
+{player}, we have room at {camp}, want in?
+hey {player}, want to join us? sending an invite
+{player} you looking? we could use a {player_class}

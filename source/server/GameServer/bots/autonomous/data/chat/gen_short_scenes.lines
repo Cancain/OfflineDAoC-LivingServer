@@ -1,0 +1,1096 @@
+# Short /faction scenes (4-9 lines each): quick exchanges players had every night in 2001-2003,
+# Classic and Shrouded Isles. New writing for this project. Most beats carry alternatives so a scene
+# plays differently each time; "?" beats are optional.
+
+@kind debate
+
+# ======================= Any realm =======================
+@realm *
+
+@topic camp_check
+@levels 10-40
+@scene sh_camp_check_taken
+@role B type=Leveler
+A: anyone at {camp}? | {q} is {camp} taken right now | camp check {camp}, anybody there
+B: we are, full group, sorry | yeah we have it, been here a while | taken, but we might pack up soon
+A: how long are you staying | any idea when you are done | ok, mind if i wait close by
+B: an hour maybe, our healer has a bedtime | until someone falls asleep at the keyboard | hard to say, we keep saying one more pull
+?C: try {zone}, it was empty when i left | {zone} was wide open a bit ago | nobody at all in {zone} when i rode through
+A: ty, heading over | cool thanks | ok np, gl with the pulls
+
+@topic camp_sharing
+@levels 15-45
+@scene sh_camp_share
+@role B type=Daredevil
+@role C type=Socialite
+A: someone just pulled our spawn at {camp} | some solo guy keeps tagging our pulls at {camp} | who keeps grabbing mobs at {camp}
+B: that was me, didnt see a group there | oops, my bad, thought it was free | sorry, it looked like nobody was on it
+A: we have been here two hours lol | we have the camp, check before you pull pls | there are six of us standing right here
+B: want to just join? i can pull | how about i take the far spawn and you keep the near one
+C: split the camp, everyone gets xp, nobody types angry essays | sharing beats arguing about who got there first
+?A: fine, works for me | ok, deal | alright, as long as you ask first next time
+B: deal | ty, i will stay out of your way | works for me
+
+@topic trainer
+@levels 1-10
+@scene sh_trainer_where
+@role B type=*
+@role C type=Socialite
+A: where do i find my trainer? | how do i train, cant find the guy | {q} where are the trainers
+B: every starter town has trainers, and {capital} has all of them | look for the npc with your class guild in the title
+C: and spend your points while you are there | dont forget to train your specs when you visit
+A: wait i have points to spend? | i have been leveling with nothing trained lol | train? i thought it was automatic
+?C: lol, go train, you will feel twice as strong | that explains why you hit like a wet noodle | oh no. go now
+A: on my way, ty | heading there now, thx both | ok running to town
+
+@topic stable_master
+@levels 5-30
+@scene sh_stable_master
+@role C type=Socialite
+A: where is the stable master? | how do i get a horse to {zone} | anyone know where the horse guy is
+B: find the stable master and buy a ticket, the horse knows the way | look for the horses and the guy standing next to them
+C: you dont get to steer btw, the horse goes where it goes | its a ticket, not a pet, and it picks the road for you
+?A: wait i cant steer? | so i just sit there? | is the ride long
+C: sit back and alt tab, best part of the trip | grab a snack, its a scenic route | enjoy the view, its free
+A: lol ok ty | sounds relaxing actually | fine by me
+
+@topic rez_request
+@levels 10-50
+@scene sh_need_rez
+@role B type=*
+A: anyone have a rez near {zone}? | died in {zone}, any healer close for a rez | lf rez in {zone}, will owe you big
+B: where exactly? | omw, which part of the zone | i can come, give me a minute
+A: right by the {monster} spawn | near where the {monster} hangs out, you will see my body | by the {monster}, sorry, its a bad spot
+?C: careful, those aggro on rezzers too | dont get the healer killed as well lol | bring a friend, that spot bites
+B: found you, accept it | rez coming, hit yes | there you go
+A: ty ty, saved me the run | owe you one | thank you, the walk back is brutal
+
+@topic ding
+@levels 10-49
+@scene sh_ding_gz_joke
+@role B type=Socialite
+@role C type=*
+A: ding {level}! | DING {level} | finally, ding {level}
+B: gz! | grats | gz, about time
+C: grats, only a few dozen levels to go | gz, see you at the next ding in a week | nice, still a long walk to 50 though
+A: way to ruin the moment lol | thanks for that, very motivating | there is always one
+?B: gz anyway, ignore the grump | dont listen to them, enjoy the ding | celebrate, the next one can wait
+C: hey, my grats was sincere | in my defense i said grats first | i was being supportive in my own way
+
+@topic price_check
+@levels 20-50
+@scene sh_price_check
+@role B type=Crafter
+@role C type=*
+A: pc on {item}? | price check {item}, anyone | what does {item} usually go for
+B: depends on the bonuses, what does it have | hard to say without knowing what it does | what stats are on it
+?A: some strength, some con, nothing crazy | decent bonuses, nothing fancy | it has a proc, thats all i know
+C: whatever someone will pay, thats the price | sell it to the first person who does not laugh | ask high, they will tell you if you are wrong
+B: if it procs, ask a lot. if not, ask a little | crafted stuff is cheap now, dont aim too high | most people would rather buy crafted, keep it modest
+A: ok ill start high and drop | fair, putting it up to see what bites | guess i will find out
+
+@topic selling_drop
+@levels 15-50
+@scene sh_selling_drop
+@role B type=*
+@role C type=*
+A: selling {item}, pst | wts {item}, decent bonuses, pst offers | got {item} off a named, anyone want it
+B: what class can use it | is it any good for casters | what bonuses does it have
+A: good for melee mostly | it has strength on it, so probably not you | a tank would love it
+?C: is faction the trade channel now | no shopping in my faction chat pls | wrong channel for selling lol
+B: pass then, ty | might take it for my alt, sending a tell | hm, maybe, i will pst you
+A: np | ty, still open to offers | ok, holding it for a bit
+
+@topic mez_break
+@levels 20-50
+@scene sh_mez_break_blame
+@role B type=*
+@role C type=Daredevil
+A: who broke mez, the whole camp just woke up | mez broke and we wiped, who did it | someone broke the mez again
+C: i only had one dot out... oh | uh, does a dot count | i might have put a dot on the wrong one
+B: the dot. the dot broke it | dots break mez, every time, every single time | that dot ticked on the mezzed one
+C: sorry, sorry | ok that one is on me | i will only dot the assist target, promise
+?D: happens to everyone once | at least you admit it, most never do | everyone breaks one mez in their life
+A: run back and rebuff, we go again | lol fine, everyone run back | ok, regroup at the camp
+
+@topic spec_question
+@levels 5-30
+@scene sh_spec_deep_or_wide
+@role B type=NoLifer
+@role C type=Leveler
+A: {q} should a {class} go deep in one line or spread out? | is it better to spread spec points or put them all in one line
+B: deep. one line high beats two lines halfway | go deep in your main line, everything else is filler
+C: spread it, leveling is easier with a few tools | a little of everything solos better early on
+B: tools dont matter if nothing lands | early on maybe, by 50 you will wish you had gone deep
+?A: so the answer is... | great, two answers and both sound right | i am more confused than before
+B: deep | go deep, trust me
+C: spread | spread, trust me instead
+
+@topic guild_search
+@levels 10-40
+@scene sh_lf_guild_casual
+@role B type=Socialite
+@role C type=*
+A: any guilds recruiting? casual, evenings mostly | lf a guild, nothing hardcore, just people to group with | looking for a small guild, anyone
+B: we are small, mostly evenings, pst | my guild is like six people and a dog, want in? | we would take you, we have a few at your level
+C: ask what they do first, some guilds only do rvr | make sure people actually log on, half the guilds are empty rosters
+A: mostly pve for now, some rvr later | i just want people who answer in guild chat | anything with people awake at night
+B: thats us, we never shut up | we talk more than we play honestly | we have that, plenty of chatter
+?C: sounds like a fit then | ok they seem alright
+A: tell on its way | pst incoming | sent you a tell
+
+@topic keep_inc
+@levels 35-50
+@scene sh_inc_keep_ram
+@role B type=NoLifer
+@role C type=Daredevil
+A: INC {keep}, {enemy} with a ram! | {enemy} at {keep}, they have a ram up | {keep} under attack, need bodies now
+B: how many | numbers? | how big is the group
+A: two groups at least, maybe more | a full zerg, cant even count them | looks like one group and some stragglers
+C: omw from {frontier} | coming, riding in now | on my way, save me a few
+?D: anyone on the walls or just you | who is defending right now | how many of us are inside
+A: just me and the guards lol | the guards are doing their best | its me and a lot of hope
+B: hold on, help coming | hang in there, we are close | stall them, we are almost there
+
+@topic stealther_warning
+@levels 30-50
+@scene sh_stealther_on_road
+@role B type=*
+A: stealther near {keep}, watch yourselves | careful in {frontier}, a stealther just jumped me | {enemy} stealther camping the road to {keep}
+B: what class | which kind | did you see who it was
+A: no idea, i was dead before i saw anything | couldnt tell, two hits and gone | something with daggers, that narrows it down lol
+?C: they always pick the lone healer | and this is why nobody rides out alone | they love that road
+B: group up before you ride out | ride in pairs, they wont jump two | heading there now, will sweep it
+A: ty, waiting at the door | ok, released, will wait for a group | thx, staying put for now
+
+@topic afk_jokes
+@levels 5-50
+@scene sh_afk_dinner_joke
+@role B type=Socialite
+A: brb, dinner | afk, food | brb, getting called down to eat
+B: dont die | take your time, the monsters will wait | bring some back for us
+?C: famous last words, they come back to a corpse | betting they come back dead
+A: relax, im in {capital} | im in town, nothing can reach me | i parked somewhere safe
+C: thats what the last guy said | sure, until someone trains a guard on you | ok, we will see
+?B: i will guard your body | i will keep an eye on you
+
+@topic back_from_afk
+@levels 5-50
+@scene sh_back_from_dinner
+@role B type=*
+@role C type=Socialite
+A: back, what did i miss | back from dinner | ok back, anything happen
+B: you missed a whole wipe, it was beautiful | we leveled twice while you ate | the healer quit, its just us now
+A: really? | wait what | ugh, of course
+B: no lol, we just sat here | kidding, we sat and waited | lol no, nothing happened
+?C: what was dinner | did you bring any back | hope it was worth the wait
+A: pasta | leftovers, nothing exciting | something my mom made, cant complain
+
+@topic late_night
+@levels 1-50
+@scene sh_still_awake
+@role B type=Leveler
+@role C type=*
+A: anyone else still up | its so late and im still pulling | why am i still awake
+B: one more level, then sleep | the camp never sleeps so neither do i | always one more pull
+C: the sun is coming up here lol | work in a few hours, this is fine | the birds are singing outside, i should log
+?A: same | thats the spirit | lol same here
+B: night shift crew | real players log off at sunrise | last one awake turns off the realm
+
+@topic newbie_greys
+@levels 1-15
+@scene sh_newbie_grey_xp
+@role B type=*
+@role C type=Socialite
+A: why am i getting no xp | been killing these for ages and my bar wont move | is xp broken? nothing moves
+B: what color do they con | check the con color, grey gives nothing | are they grey to you?
+A: grey i think | whats con | they look kind of grey yeah
+C: grey means too easy, no xp, go find blue or yellow ones | find stuff that cons blue or yellow, that is where the xp is
+?B: and stay away from red for now | purple means run, just so you know | orange is fine with a friend, red is not
+A: oh. ty | that explains a lot lol | ok moving on
+
+@topic newbie_bind
+@levels 1-15
+@scene sh_newbie_bind_point
+@role B type=*
+@role C type=*
+A: died and woke up across the zone?? | why did i come back so far away | i released and now im lost
+B: you went back to your bind point, bind closer to where you hunt | release sends you to your bind, set it in the nearest town
+C: everyone forgets that the first time | classic, been there | that one gets all of us
+?A: how do i bind | wheres the bind thing | does binding cost anything
+B: stand by the bindstone in town and type /bind | find the bindstone near town and /bind
+A: ty, binding now | cool, wont make that mistake again | got it
+
+@topic realm_pride
+@levels 20-50
+@scene sh_enemy_cant_hold
+@role B type=NoLifer
+@role C type=Socialite
+A: {enemy} took {keep} again, give it a day | {enemy} sitting in {keep} like they own it | watching {enemy} take {keep} was like watching paint dry
+B: they win on numbers, not skill | they have more people online, thats all | numbers, always numbers
+C: be nice, somebody has to give us realm points | we need them, who else would feed us rps | without them we would just be fighting guards
+?A: lol fair | true, keep them happy | ok they can stay
+B: we will have it back by morning | we take it back tonight | give it until tonight
+
+@topic crafting_brag
+@levels 20-50
+@scene sh_first_masterpiece
+@role B type=Crafter
+@role C type=*
+A: just got a masterpiece!! | first mp ever | finally hit a masterpiece
+B: gz, what was it | nice, what piece | grats, what did you make
+A: a chest piece, perfect quality | a weapon, finally | a helm, after a mountain of materials lol
+C: so you will make me one for free right | friend price? | can i get one at cost lol
+A: friend price is full price | sure, bring the materials and a lot of coin | for you, double
+?B: spoken like a real crafter | thats the crafter spirit
+
+@topic dungeon_invite
+@levels 25-45
+@scene sh_dungeon_lfm
+@role B type=Daredevil
+@role C type=Leveler
+A: going into {dungeon}, need two more | lfm {dungeon}, have a healer | {dungeon} run, any takers
+B: me! | im in | invite pls, bored out of my mind
+C: how deep are you going | is it ok for my level | which part of it
+A: the first rooms, nothing crazy | just the entrance camps | deep enough to be fun
+?B: i vote all the way in | deeper is better
+A: inviting, meet at the entrance | sending invites, see you at the zone in | inv out, hurry up
+
+@topic lf_healer
+@levels 20-45
+@scene sh_lfm_healer_camp
+@role B type=*
+A: lf healer, rest of the group ready | need a healer, full group otherwise | lfm healer, good camp, steady xp
+B: what level | where at | how many in group
+A: {level}ish, at {camp} | at {camp}, levels around {level} | {camp}, seven of us waiting
+?C: every group in the realm wants a healer tonight | healers are worth their weight in gold tonight
+B: i can come on my healer alt | sending a tell, my healer is close | maybe, give me a bit to switch characters
+A: ty, saving the spot | awesome, we wait | great, we sit until you get here
+
+@topic kill_stealing
+@levels 10-40
+@scene sh_ks_quick
+@role B type=Daredevil
+@role C type=*
+A: who just ks'd me at {camp} | someone is stealing my pulls at {camp} | was that a ks at {camp}? really?
+B: it was on nobody, i swear | it wasnt tagged when i hit it | sorry, i thought it was free
+A: it was running at me | i was halfway done with it | i had it on the way back to me
+C: plenty of spawns, take turns | just group up, takes two seconds | share the camp and stop counting
+?B: fine, want an invite | ok ok, sending invite | ill go somewhere else
+A: ty | fine | ok, sure
+
+@topic train
+@levels 15-45
+@scene sh_train_out_dungeon
+@role B type=*
+@role C type=*
+A: TRAIN coming out of {dungeon}! | train at the entrance of {dungeon}, move! | everyone near {dungeon}, train heading out
+B: how many | which way is it going | how big
+A: a lot, just run | half the dungeon, maybe more | too many to count, heading your way
+C: thanks for the warning, already dead | the warning came a little late | i hear you from the death screen
+?A: sorry, i was the one running | my fault, the pull went wrong | that was me, i panicked
+B: everyone out | running | too late, i see them
+
+@topic lfg
+@levels 10-40
+@scene sh_lfg_bored_solo
+@role B type=Leveler
+@role C type=*
+A: lfg, anyone, anything | so bored of soloing, lfg | lfg {level} {class}, will do whatever
+B: we have a spot at {camp}, slow but steady | need one more at {camp}, interested?
+A: yes pls | anything beats solo | sure, inv
+?C: grab it before someone else does | lucky, i waited an hour once | take it, groups are rare tonight
+B: inv sent | invited, meet us there | sent, see you at the camp
+A: omw | thx
+
+@topic real_weather
+@levels 1-50
+@scene sh_storm_outside
+@role B type=*
+@role C type=*
+A: thunderstorm here, if i drop its the power | storm outside, might lose power any minute | snowing here, perfect night to stay in and play
+B: im playing until mine cuts out too | unplug before you fry your modem | sounds cozy, have fun
+?C: its sunny where i am lol | no storm here, just a long night | its raining here too
+A: if i vanish mid pull you know why | the lights just flickered | i will warn you if the lights go
+B: lol | go save your pc | good luck
+
+@topic lag
+@levels 1-50
+@scene sh_lag_spike
+@role B type=*
+@role C type=*
+A: anyone else lagging | is the server lagging for everyone | huge lag spike just now
+B: yeah | same | it is not just you
+C: rubberbanding all over {zone} | i ran into a wall three times | my spell went off way late
+?A: probably a big fight somewhere | someone must be sieging something | half the realm is in one zone again
+B: seems better now | ok, smooth again | gone now
+
+@topic guild_recruiting
+@levels 1-50
+@scene sh_guild_recruits
+@role B type=*
+@role C type=Socialite
+A: my guild is recruiting all levels, pst | recruiting, friendly guild, pst for info | small guild looking for active people, pst
+B: what do you do | rvr or pve | how many are active
+A: a bit of everything | mostly leveling and a raid now and then | we try to do keep raids on weekends
+C: anyone ever on at night | are people on late | anyone around after midnight
+A: plenty of night owls | we have a few who never sleep | always someone on late
+?B: will send you a tell | maybe, i will pst you | ok, sounds decent
+
+@topic battleground
+@levels 18-24
+@scene sh_thid_tonight
+@role B type=Daredevil
+@role C type=*
+A: anyone going to thidranki? | thid tonight? | heading to thidranki soon, who is in
+B: im in | sure, i need rps anyway | after this pull
+C: watch out for twinks, they eat newbies | bring a healer, the twinks are everywhere | last time a twink farmed me all night, have fun
+?A: i am not a twink, i promise | ill stay with the zerg | i will hide behind the healer
+B: see you in there | ok, meet you inside | group up when we get there
+
+@topic spellcraft
+@levels 35-50
+@scene sh_need_spellcrafter
+@role B type=Crafter
+@role C type=*
+A: any spellcrafters around? | need a spellcrafter, i have the gems | lf spellcrafter, can pay
+B: me, what do you need | i craft, what pieces | depends what you want, pst
+A: full suit eventually, one piece tonight | just one piece to start | a weapon to begin with
+B: bring the gems and the armor and pst | ok, meet me in {capital} | send a tell when you are in town
+?C: that crafter is good, used them before | listen to them, they know their stuff
+A: ty | omw | great, heading in
+
+@topic pets
+@levels 5-30
+@scene sh_pet_runs_off
+@role B type=*
+@role C type=*
+A: my pet just pulled half the camp | pet decided to go solo again | why does my pet attack everything
+?B: lol pets | pets have a mind of their own | thats what pets do
+C: put it on passive before the next pull | set it to passive, then pick targets yourself
+A: wait there is a passive setting | oh there are pet commands? | i never touched those buttons
+C: yes, it changes everything | look at your pet window | yep, life changing
+A: ok ty | trying it now
+
+@topic named_spotted
+@levels 15-45
+@scene sh_named_up
+@role B type=Explorer
+@role C type=*
+A: anyone seen the named in {zone}? | is there a named up in {zone} right now | heard a named roams {zone}, true?
+B: just killed it, sorry lol | it died a few minutes ago, sorry | a group just took it down
+A: aw | what did it drop | of course
+B: nothing good, dont bother | some coin and junk | a decent drop actually, but it was mine
+?C: always the way | thats how it goes with named | someone always beats you to it
+A: next time | ok, ill wait for the repop | figures
+
+@topic darkness_falls
+@levels 30-49
+@scene sh_df_open
+@role B type=*
+@role C type=*
+A: is df open for us? | do we have df right now | can we get into darkness falls
+B: yes, we have it | yeah, we took it back earlier | yep, open, go go
+?C: get in while it lasts | go while its ours | hurry before {enemy} take keeps back
+A: where should i hunt in there | whats good for my level inside
+B: start near the entrance and work in | ask in there, plenty of groups | depends on your level, start shallow
+A: ty | heading in | ok, see you inside
+
+@topic death_penalty
+@levels 10-50
+@scene sh_pray_at_grave
+@role B type=*
+A: just died twice in a row | lost a big chunk of xp, ugh | died to an add, there goes my evening
+B: did you pray at your grave | go back and pray at the gravestone, you get some back | /pray at your grave, it helps
+A: forgot about that | wait, where is it | i always forget that
+B: where you died, look for it | back where you fell | right at the spot, you cant miss it
+?C: and dont die on the way there lol | watch out for the same add | careful, that spot is still hot
+A: ok | heading back | going now
+
+@topic speed
+@levels 5-45
+@scene sh_speed_taxi
+@role B type=*
+@role C type=Socialite
+A: any speed classes around {capital}? | can someone give me speed out to the zone | lf speed to {zone}
+B: im here, follow me | on my way out of town, tag along | sure, stay close
+?C: speed taxi, open late | the speed bus is leaving lol | free rides tonight
+A: ty | following | thanks, right behind you
+B: dont fall behind | stay in range or you lose it | keep up, i dont stop
+
+@topic realm_ranks
+@levels 30-50
+@scene sh_first_rr
+@role B type=Daredevil
+@role C type=*
+A: got my first realm rank! | finally have some realm points | first rr, feels good
+B: gz, now buy something useful | grats, what will you spend it on
+A: no idea, ideas? | purge maybe? | thinking about something simple
+B: ask ten people, get ten answers | everyone will tell you something different | depends on your class
+C: buy what keeps you alive | pick what fixes your worst problem | go with your gut
+?D: mine are still sitting there unspent lol | i saved mine for weeks before deciding
+A: helpful, thanks all | lol ok
+
+@topic crafting_grind
+@levels 10-50
+@scene sh_craft_bar_boredom
+@role B type=Crafter
+@role C type=*
+A: crafting for hours, so boring | anyone else grinding crafting tonight | my eyes glaze over watching the progress bar
+B: you get used to it | put on music, helps | thats the job
+?C: why do it then | is it even worth it | i could never
+B: when you make something perfect, worth it | for the coin later | because people pay for good gear
+A: one more skill point then bed | ok back to the bar | lol back to clicking
+
+@topic loot_rules
+@levels 20-50
+@scene sh_loot_rules
+@role B type=*
+@role C type=*
+A: we rolling on drops or free for all | loot rules? | who gets drops in this group
+B: roll for what you can use | roll, but only if its an upgrade | rolls, and no rolling on stuff to sell
+C: the healer gets first pick, keep the healer happy | whoever needs it, healer first
+?A: i like that | ok sounds good | fair enough
+B: fine by me | agreed | works
+
+@topic alts
+@levels 20-50
+@scene sh_which_alt
+@role B type=*
+@role C type=*
+A: making an alt, any ideas | bored of my main, alt time | what alt should i roll
+B: a healer, everyone needs one | something different from your main | a stealther, for a change of pace
+C: roll something that solos, alts never find groups | pet class, it practically levels itself
+?A: hmm | all good ideas | thats not helping me decide
+A: pet class it is | probably a healer, groups will love me | ok i will try a few and see
+B: good choice | gl | have fun
+
+@topic wrong_channel
+@levels 1-50
+@scene sh_wrong_channel
+@role B type=*
+@role C type=Socialite
+A: ok mom, one more pull | yes i took out the trash | coming down for dinner, one more pull
+B: lol | wrong channel | uh
+C: aww | we are all very proud of you | tell your mom we said hi
+A: wrong channel | oops | ugh, wrong window
+?B: its ok, we wont tell | nobody saw anything | too late, everyone saw
+
+@topic morning
+@levels 1-50
+@scene sh_morning_all
+@role B type=*
+@role C type=*
+A: morning all | good morning realm | morning, coffee in hand
+B: morning | hey | mornin
+C: its nighttime here lol | have you even slept | its afternoon for me
+?A: no sleep needed | i slept a bit | sleep is for the weak
+B: respect | lol | fair enough
+
+@topic group_wipe
+@levels 15-50
+@scene sh_wipe_laugh
+@role B type=Daredevil
+@role C type=*
+A: wiped at {camp}, anyone near for a rez | full group wipe at {camp}, lol | we all died at {camp}, it was glorious
+B: how | what happened | who pulled
+A: two adds and a patrol | the puller grabbed the whole room | someone pulled the wrong one
+?C: was it the bard | it was the tank, it is always the tank | let me guess, nobody had aggro
+B: on my way | i can rez a couple, hold on | lol, coming
+A: ty | we will be here, lying down | great, we are not going anywhere
+
+@topic dragon_raid
+@levels 45-50
+@scene sh_dragon_raid_call
+@role B type=Daredevil
+@role C type=*
+A: dragon raid tonight, who is in? | anyone want to try the dragon tonight | raid on the dragon later, need people
+B: in | count me in | what time
+A: after dinner | when we have enough people | as soon as we fill up
+C: i went last time, wiped twice | bring healers, lots of healers | last time we had too few healers
+?B: we will be fine | this time will be different
+A: meet in {capital} | gathering soon, pst for invite | ill post when we form up
+
+@topic heal_thanks
+@levels 10-50
+@scene sh_random_heal_thanks
+@role B type=*
+@role C type=*
+A: ty to whoever healed me in {zone} | thanks random healer, saved my life | whoever healed me just now, ty
+B: that was me | np | yw
+C: realm love | nice | thats how it should be
+?A: owe you one | buying you a drink if we meet in town | you are the best
+B: anytime | np, happens | no problem
+
+@topic frontier_quiet
+@levels 35-50
+@scene sh_frontier_quiet
+@role B type=*
+@role C type=NoLifer
+A: is {frontier} quiet tonight? | anything happening in {frontier} | any action out there
+B: dead quiet | {enemy} are all asleep | nothing, just guards standing around
+C: they were at {keep} an hour ago, gone now | saw a small group near {keep} | quiet before the storm
+?A: boring | maybe i will level instead | i will wait a bit
+B: try later, they come out late | the late crowd will show up | wait for the late shift
+
+# ======================= Midgard =======================
+@realm mid
+
+@topic camp_check
+@levels 40-50
+@scene sh_mid_spindel_check
+@role B class=Healer,Shaman
+@role C type=Leveler
+A: anyone in spindelhalla? looking for a spot | spindel check, which camps are open | {q} is spindelhalla packed tonight
+B: two groups deep inside, the entrance is free | we are on the arachite krigare, rest looks open | busy, but the entrance camps were empty
+A: need a healer for the entrance then | any healers want to come along | if a healer joins we can take the open spot
+B: i can heal after this pull | i will come when my group breaks up | give me a few, my group is wrapping up
+?C: spindel at night is the best xp in midgard | spindel never gets old | i have spent half my life in that place
+A: saving you a spot | ok, waiting by the entrance | great, see you down there
+
+@topic directions
+@levels 10-18
+@scene sh_mid_nisse_newbie
+@role B type=*
+@role C type=Daredevil
+A: where is nisse's lair? | how do i find nisse's lair, heard its good for my level | lf group for nisse's lair, never been
+B: dungeon full of tomtes, ask for a group and someone will lead | follow a group the first time, its easy to find after that
+?C: watch the tomte caitiffs, they hit harder than they look | bring friends, tomtes come in bunches
+A: do they add a lot | do they help each other | do they run away
+C: they help each other, pull one at a time | yes, pull carefully | yes, one at a time or you will regret it
+A: ty, finding a group first | ok, heading out | ill gather a few people
+
+@topic dungeon_invite
+@levels 22-32
+@scene sh_mid_vendo_run
+@role B class=Skald
+@role C class=Healer
+A: lfm vendo caverns, have a tank and a healer | vendo run, need damage and a speed class | forming for vendo caverns, who wants in
+B: skald here, speed and songs | i can bring speed, inv | skald free, invite me
+?D: vendo yowlers are the worst, bring a mezzer | dont let the yowlers surround you | vendo is great xp if nobody runs
+A: inv sent, now we need a pac healer | welcome, one more and we go | great, still want a second healer
+C: i can come, pacification spec | healer here, mostly pac, i can mez | pac healer free, send an invite
+A: perfect | that fills it | ok we roll
+
+@topic class_question
+@levels 10-40
+@scene sh_mid_hunter_spec
+@role B class=Hunter
+@role C class=Hunter
+A: hunter question, spear or bow for leveling? | new hunter, where do my points go | {q} hunters, which line first
+B: spear and beastcraft, the pet tanks and you stab | beastcraft first, the pet does the work early on
+C: composite bow, pull from range and finish it before it arrives | bow all day, why walk up to anything
+B: until something gets close and you have nothing | the bow is nice in rvr, for leveling it is slow
+C: nothing gets close, thats the point | it dies before it reaches me
+?A: two hunters, two answers | i will try both and see | of course you disagree
+B: spear | beastcraft, final answer
+C: bow | trust the bow
+
+@topic bonedancer
+@levels 5-25
+@scene sh_mid_bonedancer_alt
+@role B class=Bonedancer
+@role C type=*
+A: are bonedancers any good? thinking of rolling one | anyone play a bonedancer, how is it | bonedancer alt, worth it?
+B: spec bone army and you have a whole crew of skeletons | best solo class in midgard if you ask me | lots of pets, lots of fun
+C: until you lag the zone with skeletons | lol, the skeleton parade | they look so creepy marching around
+B: thats the charm | creepy is the point | the skeletons are my friends
+?A: sold | rolling one now | ok, making one tonight
+B: welcome to the bone side | have fun with the crew | dont forget your pets
+
+@topic keep_inc
+@levels 35-50
+@scene sh_mid_inc_bledmeer
+@role B type=NoLifer
+@role C type=Daredevil
+A: INC bledmeer faste, albs at the door | albs hitting bledmeer, need help | bledmeer faste under siege, anyone in the frontier
+B: how many | alb or hib | big zerg or a group
+A: albs, a full group plus | albion, at least a group | lots, cant tell, they have a ram
+C: omw from jordheim | coming, give me a minute | riding out now
+?D: watch for their scouts on the hill | albs always bring archers, careful | their minstrels will mez anyone near the door
+B: hold the inner door | we are coming, keep the lord up | dont die before we get there
+A: trying | hurry | the door is not going to last
+
+@topic jordheim
+@levels 5-20
+@scene sh_mid_jordheim_lost
+@role B type=*
+@role C type=Socialite
+A: lost in jordheim, where are the trainers? | jordheim is huge, where is my trainer | how do i find anything in jordheim
+B: the trainers are spread around the city, walk the halls | follow the main hall, you will find them | which class? i can tell you where to look
+C: everyone gets lost in jordheim the first time | the layout is a maze, give it a week | i still get lost and i am 50
+?A: i have been walking for ages | found the bank but no trainer | i am going in circles
+B: keep at it, its there | look for your class in the name | try the other side of the hall
+A: found it! | ty | ok found him finally
+
+@topic leveling_zones
+@levels 40-50
+@scene sh_mid_aegir_or_classic
+@role B type=Explorer
+@role C type=Leveler
+A: raumarik or aegir for the last few levels? | is aegir worth it or should i stay in raumarik | iarnwood or malmohus for my next few levels
+B: aegir, the zones are pretty and nobody is there | faraheim is great, and empty | delling crater, try it once at least
+C: raumarik, everyone is there and groups are easy | malmohus, the drakulv are good xp | stay in the classic zones, thats where the groups are
+B: empty means no competition | crowds mean ks drama | pretty matters when you grind for weeks
+?C: empty also means no group | and nobody around to rez you | in aegir you solo whether you like it or not
+A: hm, maybe both | trying aegir tonight | ok, raumarik it is
+
+@topic ding
+@levels 20-49
+@scene sh_mid_runie_ding
+@role B class=Runemaster
+@role C type=Socialite
+A: who dinged, i saw grats flying | {q} someone dinged, who | was that a ding?
+B: me, ding {level} on my runemaster | that was me, {level} runie | me, finally
+C: gz! now go outdamage the thane | grats, more darkness more fun | gz runie
+?D: runies are the best, gz | grats, the bolts must hit harder now
+B: ty all | ty ty, back to the camp | thanks, now to put points in suppression lol
+A: gz from me too | grats | nice, gz
+
+@topic dragon_raid
+@levels 47-50
+@scene sh_mid_gjalp_raid
+@role B class=Healer,Shaman
+@role C type=Daredevil
+A: gjalpinulva raid tonight, who wants in | dragon raid on gjalpinulva later, need healers | anyone up for gjalpinulva
+B: healer here, in | i can heal | how many so far
+A: enough to try | a few groups | we need more healers though
+?C: last time half the raid died to the breath | bring resist buffs | stand where the leader says, please
+B: count me in | ill bring my healer | ok, i will be there
+A: meet in jordheim | gathering in jordheim soon | pst for an invite
+
+@topic rez_request
+@levels 18-28
+@scene sh_mid_cursed_tomb_rez
+@role B class=Healer,Shaman
+@role C type=*
+A: anyone near the cursed tomb for a rez? | died in the cursed tomb, need a rez | lf rez in the cursed tomb, draugr got me
+B: omw, where | coming, which room | im at the entrance, how deep are you
+A: just past the entrance | by the draugr warriors | not far, first hall
+?C: careful with the vengeful ghouls | ghouls add from behind, watch it | dont pull anything on the way in
+B: rez sent | there you go | got you, accept
+A: ty healer | owe you | thanks a lot
+
+@topic stealther_warning
+@levels 35-50
+@scene sh_mid_hunt_the_stealther
+@role B class=Shadowblade
+@role C type=Socialite
+A: infiltrator in uppland, careful | hib nightshade near the road in jamtland | someone keeps getting stabbed near the keep
+B: i will go hunt it | stealth vs stealth, my favorite | omw, give me a minute
+C: shadowblade on the job lol | go get them, shadow | let the blade handle it
+?A: be careful, it might have friends | it hit hard, watch out | it was fast, real fast
+B: got it | it ran off | lost it in the trees
+A: nice | ty for trying | heh, next time
+
+@topic selling_drop
+@levels 40-50
+@scene sh_mid_malmohus_drop
+@role B type=Crafter
+@role C type=*
+A: got a nice drop from a drakulv in malmohus, selling | wts a drop from malmohus, pst | malmohus drop up for sale, caster stats
+B: crafted is close enough and cheaper | i could make you something similar | is it better than crafted though
+A: it has a proc | crafted cant do this one | trust me, its good
+C: pst me, maybe | my thane could use that | what do you want for it
+A: make an offer | pst me | send me a number
+?B: fine, the proc wins | ok, the proc is nice | i will lose this one
+
+@topic class_question
+@levels 15-40
+@scene sh_mid_savage_or_zerk
+@role B class=Savage
+@role C class=Berserker
+A: savage or berserker for an alt? | thinking zerker, or should i go savage | {q} savage or zerk
+B: savage, hand to hand and savagery, fast hits and you feel them | savage, the speed of those hits is addictive
+C: berserker, left axe and the rage, nothing hits harder | zerk, two axes and a bad attitude
+B: savages look cooler | savage wins on speed
+C: zerkers look cooler | zerk wins on everything else
+?A: lol | so pick by looks | now i have to pick by looks
+B: savage | savage, final
+C: zerk | zerker, always
+
+@topic relics
+@levels 30-50
+@scene sh_mid_relics_home
+@role B type=NoLifer
+@role C type=*
+A: we still have both relics? | mjollner faste still ours? | anyone know where our relics are
+B: both home | grallarhorn faste is fine, the relics are home | still safe, the albs tried last night
+C: midgard holds, as always | of course, we have the numbers | relics stay home
+?A: heh, good | proud of us | love to hear it
+B: until the hibs get organized | dont jinx it | for now
+A: lol | knocking on wood
+
+# ======================= Albion =======================
+@realm alb
+
+@topic camp_check
+@levels 38-50
+@scene sh_alb_barrows_check
+@role B type=Leveler
+@role C type=*
+A: camp check stonehenge barrows | anyone in the barrows right now | barrows check, need a spot for a group
+B: deep goblins are taken, the fallen warriors look free | one group on the goblins, the rest is open | busy, but there is room further in
+A: ty, heading in | ok, we will try further in | cool, thanks for the info
+?C: the barrows at night, best xp in albion | barrows again, it never gets old | half my life has been spent in that place
+B: watch the cave hounds, they wander | dont drag the grave goblins into your pulls | careful with adds near the walls
+A: will do | noted | ok, ty
+
+@topic newbie
+@levels 1-10
+@scene sh_alb_cotswold_start
+@role B type=*
+@role C type=Socialite
+A: just made a char, im in cotswold, what now | new to albion, what do i do in cotswold | {q} new here, where should i go first
+B: see your trainer, then hunt outside town in camelot hills | camelot hills is right outside, start there
+C: snakes and young boars first, bandits once you have a few levels | start small, emerald snakes and young boars, then work up
+?A: anything i should avoid | what kills newbies here | any tips
+C: stay away from red cons | dont fight two things at once | bandits hit harder than they look
+A: ty! | ok going | thanks both
+
+@topic dungeon_invite
+@levels 7-14
+@scene sh_alb_mithra_run
+@role B type=Daredevil
+@role C type=*
+A: lfm tomb of mithra, newbie run | tomb of mithra, need a few more | anyone want to do mithra with me
+B: me | im in | invite please
+C: its dark and full of ghosts, have fun | the haunting glooms used to give me nightmares | mithra, good memories, go
+?B: do we have a healer | whats the plan | is anyone bringing a cleric
+A: a friar said maybe, we will see | no healer yet, we are brave | we go anyway, sitting is free
+B: works for me | ok | lets go
+
+@topic class_question
+@levels 10-40
+@scene sh_alb_cleric_solo
+@role B class=Cleric
+@role C type=*
+A: can a cleric solo? | is a smite cleric any good alone | thinking cleric alt, can it level alone
+B: a smite cleric solos fine, just slowly | with smite, yes, slow but steady | rejuvenation clerics, not so much, smite clerics yes
+C: why solo, every group in albion wants a cleric | you will get invites all day, why bother | just group, clerics never wait for groups
+B: some nights you want quiet | groups are not always there at night | true, but it is nice to have the choice
+?A: so both work | sounds good either way | ok so it can, but nobody lets it
+A: cleric it is | ok rolling one | thanks
+
+@topic speed
+@levels 10-45
+@scene sh_alb_minstrel_ride
+@role B class=Minstrel
+@role C type=*
+A: any minstrels in camelot for speed? | minstrel speed out to salisbury plains? | need speed out of camelot
+B: here, follow | sure, leaving now | stay close
+C: minstrels, the taxis of albion | minstrel bus leaving, all aboard | a minstrel is the best friend you can have
+?A: ty! | following | right behind you
+B: dont stop to fight anything | stay close or you lose the song | if you stop, you walk
+A: ok | yep | got it
+
+@topic keep_inc
+@levels 35-50
+@scene sh_alb_inc_benowyc
+@role B type=NoLifer
+@role C type=Daredevil
+A: INC caer benowyc, mids at the gate | caer benowyc under attack | mids at benowyc, need help
+B: numbers? | how many mids | zerg or small group
+A: big, they brought a ram | two groups, maybe three | a lot of them, and a lot of healers
+C: coming | omw, riding | on my way, save some for me
+?D: watch their healers, they mez everything | pac healers will lock down the doorway | target their healers first
+B: hold the door | we are coming | dont let the lord die
+A: hurry | ok | will try
+
+@topic camp_check
+@levels 20-35
+@scene sh_alb_avalon_isle
+@role B type=Explorer
+@role C type=Leveler
+A: anyone on avalon isle? looking for drakoran | drakoran camp check on avalon isle | avalon isle, any good spots open
+B: the marauders are free | lots of space, nobody there | quiet tonight, take your pick
+A: ty | heading there | great
+C: avalon isle is so pretty, wasted on xp | campacorentin is just as good and closer | i always end up back in cornwall
+B: empty beats crowded | avalon isle is more fun | to each their own
+?A: ill try both | pretty and empty sounds good to me
+
+@topic necromancer
+@levels 5-25
+@scene sh_alb_necro_shade
+@role B class=Necromancer
+@role C type=*
+A: necro question, why did i turn into a shadow | i cast my pet and became a shade?? | what is shade form, am i bugged
+B: thats normal, you are a shade and the pet does the work | not bugged, the pet is your real body in a fight
+C: necros are so weird, love them | necromancers, the strangest class in albion
+?A: so i just stand there? | can i still cast | what happens if the pet dies
+B: keep the pet alive, thats the whole game | protect the pet and you will be fine | look after the pet and it looks after you
+A: ok | weird but ok | interesting
+
+@topic ding
+@levels 20-49
+@scene sh_alb_wizard_ding
+@role B class=Wizard
+@role C type=*
+B: ding {level} on my wizard | ding {level}, wiz life | ding! {level} wizard
+C: gz, now go burn things | grats, fire or cold | gz, which line are you
+B: fire, always fire | cold, for the snares | earth, dont judge
+?D: earth wizards are underrated | fire hits hardest, everyone knows | cold is the smart choice
+C: lol | gz anyway | nice, keep going
+A: gz | grats | gz wiz
+
+@topic dragon_raid
+@levels 47-50
+@scene sh_alb_golestandt
+@role B type=Daredevil
+@role C class=Cleric,Friar
+A: golestandt raid forming | anyone for golestandt tonight | dragon raid, golestandt, need people
+B: in | count me | what time
+A: soon, gathering in camelot | when we fill up | in a couple of hours
+C: i will bring my cleric | you will want healers, i can come | count me in for heals
+?B: last time we got so close | i hope this is the night | this time we win
+A: pst for invite | will post when we form | ok
+
+@topic archers
+@levels 30-50
+@scene sh_alb_scout_complaints
+@role B class=Scout
+@role C type=*
+A: everyone hates our scouts lol | heard the mids want our scouts nerfed | hibs crying about scouts again
+B: longbows are just good | let them come closer then | scouts have the range, deal with it
+C: maybe stop shooting people from across the zone | your scouts are why my healer logged off | it is a little unfair, admit it
+B: never | nope | its called skill
+?A: lol | heh | here we go
+C: one day they nerf it | enjoy it while it lasts | wait for the next patch
+
+@topic stealther_warning
+@levels 35-50
+@scene sh_alb_infil_watch
+@role B class=Infiltrator
+@role C type=*
+A: shadowblade near caer erasleigh, careful | mid stealther in pennine mountains | nightshade by the keep, just died to it
+B: i will sweep the road | omw, stealthed | let me look for it
+C: and here i was riding alone | thanks, staying in the keep | waiting for a group before i ride out
+?A: it hits hard, careful | it went toward the hills | it was fast
+B: nothing here now | its gone, or its good | cant find it, stay sharp
+A: thanks for looking | ok, stay safe | ty
+
+@topic class_question
+@levels 15-45
+@scene sh_alb_reaver_lines
+@role B class=Reaver
+@role C class=Reaver
+A: reaver question, flexible or soulrending | new reaver, which line first | {q} what do reavers spec
+B: soulrending, the lifetaps keep you alive | soulrending first, the taps are the class
+C: flexible, the flex weapons are the fun part | flexible first, the whip is why you rolled a reaver
+B: fun does not keep you standing | you can have fun after you stop dying
+C: dying in style counts | i never die, i whip
+?D: nobody knows how to play a reaver yet lol | reavers are still a mystery to most of us
+A: ok helpful | i will flip a coin | thanks, i guess
+
+@topic class_question
+@levels 15-45
+@scene sh_alb_armsman_weapons
+@role B class=Armsman
+@role C class=Armsman
+A: armsman question, polearm or two handed | what weapon should an armsman spec | polearm or two handed, armsmen pls
+B: polearm, the big slow hits | polearm all the way | polearm, nothing feels better
+C: two handed, the swings come faster | two handed, polearms are too slow | two handed, trust me
+B: slow but it hurts | you only need one big hit | the swing time is worth it
+?C: you wont say that in rvr | wait until you try two handed in a fight
+A: i will try both | ok, thanks | fair, ill see
+
+@topic relics
+@levels 30-50
+@scene sh_alb_lost_relic
+@role B type=NoLifer
+@role C type=*
+A: did we just lose the relic at castle myrddin? | castle myrddin relic is gone?? | anyone know what happened at castle myrddin
+B: yeah, the mids came in the middle of the night | gone, nobody was online to defend | they hit it at a time when we were all asleep
+C: we take it back this weekend | we need a raid, who is in | we will get it back
+?A: of course they waited until we logged | classic night raid | sneaky mids
+B: castle excalibur still holds at least | at least the other one is home | one relic left, guard it
+A: sigh | ok | we should organize
+
+# ======================= Hibernia =======================
+@realm hib
+
+@topic camp_check
+@levels 18-26
+@scene sh_hib_spraggon_check
+@role B type=Leveler
+@role C type=*
+A: anyone in spraggon den? | spraggon den check | {q} is spraggon den full tonight
+B: we have the pit spraggons, the rest looks open | one group in there, plenty of room | the cutters are free, we are on the sprites
+A: ty, coming down | ok heading over | cool
+?C: spraggon den, where every hib grew up | i must have killed a thousand spraggons there | love that place
+B: watch the root worms, they add | careful with the earth sprites | dont pull past our group pls
+A: will do | ok | noted, thanks
+
+@topic rez_request
+@levels 12-18
+@scene sh_hib_muire_rez
+@role B class=Druid,Bard
+@role C type=*
+A: died in muire tomb, need a rez | muire tomb, a mummy hag got me, rez anyone | rez in muire pls, near the entrance
+B: omw | coming, how deep | i can, give me a minute
+A: right inside | near the tomb creepers | not far in
+?C: muire tomb eats newbies | everyone dies there once | the death worms got me there too
+B: found you, accept | rez up | there you go
+A: ty! | thanks, owe you one | saved me a long run
+
+@topic stable_master
+@levels 5-20
+@scene sh_hib_tnn_horse
+@role B type=*
+@role C type=Socialite
+A: where is the stable master in tir na nog? | how do i get out of tir na nog fast | horse route from tir na nog?
+B: look for the horses, the stable master sells tickets | find the stable master, buy a ticket, enjoy the ride
+C: tir na nog is a maze the first time | i still get lost in tir na nog | everyone wanders tir na nog for a week
+?A: found the bank at least | i keep ending up at the same tree | i keep walking past the same merchant
+B: keep going, you will find it | follow the road out, then look around | ask in faction again if you get stuck
+A: found it, ty | ok | thanks
+
+@topic mez_break
+@levels 20-50
+@scene sh_hib_bard_mez_break
+@role B class=Bard,Mentalist
+@role C class=Enchanter
+A: who broke the mez | mez broke, the camp is awake | who woke up the adds
+C: my area spell, sorry | that was me, the area spell hit the mezzed ones | oops, my spell hit everything
+B: no area damage near the mezzed ones, please | please target only the one we are killing | i just mezzed those, give me a break
+C: sorry, sticking to single target | ok, will be careful | my bad, wont happen again
+?D: enchanters and their area spells | classic | happens every night
+A: run back, regroup | ok, back to camp | rebuffing
+
+@topic animist
+@levels 15-50
+@scene sh_hib_shroom_fields
+@role B class=Animist
+@role C type=*
+A: who planted all the shrooms on the hill | there are mushrooms everywhere in the camp | why is the road covered in mushrooms
+B: me, sorry | thats me, the shrooms are my friends | my turrets, dont touch them
+C: animists, the gardeners of hibernia | lol, the mushroom farm | i walked into them by accident
+B: they do the work, i just plant | they hit hard, dont laugh | they kill things, thats all i need
+?A: fair | ok, carry on | they look funny though
+B: thanks | heh | ty
+
+@topic keep_inc
+@levels 35-50
+@scene sh_hib_inc_crauchon
+@role B type=NoLifer
+@role C type=Daredevil
+A: INC dun crauchon, albs at the door | albs hitting dun crauchon | dun crauchon under attack, need help
+B: how many | numbers? | is it a zerg
+A: a full group, maybe more | lots, they brought a ram | two groups and their scouts
+C: omw | riding out | coming, hold
+?D: bring a mentalist for mez | watch the scouts on the walls | their minstrels will mez the door
+B: on our way, keep the door up | riding hard, hang on | almost there, hold them
+A: ok | hurry | holding
+
+@topic class_question
+@levels 10-45
+@scene sh_hib_eldritch_line
+@role B class=Eldritch
+@role C class=Eldritch
+A: eldritch question, light, mana or void | new eldritch, where do my points go | {q} eldritches, which line
+B: void, the damage is the whole point | void, nothing else comes close
+C: light, it is cheap on power and you keep casting | light, you will never run out of power
+B: running out of power is a skill issue | power is for spending
+C: tell that to the group sitting while you med | i never sit, you always sit
+?D: mana is the real answer and you both know it | some mana helps either way
+A: ok | helpful as always | i will try one and see
+
+@topic newbie
+@levels 1-10
+@scene sh_hib_mag_mell_start
+@role B type=*
+@role C type=Socialite
+A: just started, im in mag mell, what now | new hib, what do i do in mag mell | {q} new here, where do i hunt
+B: kill the small stuff around town, lough wolves and orchard nippers | start outside mag mell, the wolves and the nippers
+C: talk to your trainer first, they give you a few tasks | see your trainer and spend your points
+?A: anything to watch out for | what should i stay away from | any advice
+B: never fight two at once | if it cons red, walk away | watch your own health bar, not just theirs
+A: ty | ok going | thanks both
+
+@topic class_question
+@levels 20-50
+@scene sh_hib_ranger_or_ns
+@role B class=Ranger
+@role C class=Nightshade
+A: ranger or nightshade, which is better | {q} ranger or nightshade for rvr | thinking ranger, or nightshade?
+B: ranger, recurve bow and celtic dual, range and melee | ranger, you can shoot and stab
+C: nightshade, nightshade magic and stealth, you pick the fight | nightshade, critical strike and you win
+B: you have to get close though | rangers see you coming
+C: they never see me coming | i am already behind you
+?A: lol | spooky | ok then
+B: ranger | ranger, final
+C: nightshade | ns, always
+
+@topic dragon_raid
+@levels 47-50
+@scene sh_hib_glimmer_king
+@role B class=Druid,Bard,Warden
+@role C type=Daredevil
+A: raid on cuuldurach the glimmer king tonight | anyone for the glimmer king | glimmer king raid, need healers
+B: im in for heals | count me in | ill bring heals
+C: in, wanted that for ages | finally, count me in | yes please
+?A: we are short on healers | bring every resist you have | full power before the pull please
+B: see you there | pst me invite | ok
+A: gathering in tir na nog | soon, will post | pst me
+
+@topic leveling_zones
+@levels 35-50
+@scene sh_hib_hy_brasil
+@role B type=Explorer
+@role C type=Leveler
+A: anyone leveling in hy brasil? | is domnann worth it | {q} any good spots in hy brasil
+B: domnann is beautiful and empty | world's end is worth the trip | hy brasil is empty, great xp
+C: empty means no group though | the classic zones have the groups | i stay where the people are
+B: solo is fine with no ks | quiet is the point | no competition at all
+?A: i will check it out | sounds fun | ok
+C: have fun alone | send a postcard | gl
+
+@topic class_question
+@levels 5-40
+@scene sh_hib_valewalker
+@role B class=Valewalker
+@role C type=*
+A: valewalker question, scythe or arboreal path | new valewalker, what do i spec | {q} valewalkers, which line first
+B: scythe for leveling, arboreal path later | scythe early, arboreal path once you have the levels
+C: nobody knows how valewalkers work yet | valewalkers, still a mystery | i have never even grouped with one
+B: we know, trust us | lol | we are rare but we exist
+?A: so | ok | hmm
+B: scythe first, trust me | swing first, cast later
+A: thanks | ok trying it
+
+@topic ding
+@levels 20-49
+@scene sh_hib_druid_ding
+@role B class=Druid
+@role C type=Socialite
+B: ding {level} on my druid | ding! {level} druid | ding {level}, finally
+C: gz! now heal me | grats druid | gz, groups everywhere want you
+?D: druids, the most wanted class in hibernia | gz, nature druid?
+B: ty | thanks all | ty ty
+A: gz | grats | gz druid
+
+@topic relics
+@levels 30-50
+@scene sh_hib_relic_check
+@role B type=NoLifer
+@role C type=*
+A: are our relics home? | dun lamfhota still has our relic? | relics safe?
+B: both home | yes, dun dagda is safe too | safe, for now
+C: hibernia holds | mids tried last week | the albs keep trying
+?A: good | heh | nice
+B: someone guard them | keep an eye on it | night raids are the risk
+A: ok | lol | we will see
+
+@topic class_question
+@levels 20-45
+@scene sh_hib_champion_hero
+@role B class=Champion
+@role C class=Hero
+A: champion or hero for my alt | {q} hero or champion | thinking about champion, or hero?
+B: champion, valor and the debuffs | champion, valor wins fights
+C: hero, celtic spear or large weapons, and you tank | hero, the best tank in hibernia
+B: tanks are boring | a hero cant debuff
+C: debuffs dont matter if you die | i hold aggro, you die
+?A: lol | here we go | heh
+B: champion | champ, always
+C: hero | hero, trust me

@@ -1,0 +1,211 @@
+# Living Server (docs/LIVING-SERVER.md): grats, rez requests and thanks, corpse runs, resurrection
+# sickness, server firsts, frontier alarms, nemesis, sessions (logging on and off, breaks) and
+# linkdeads. New writing for this project, in the voice of 2002-2003 players.
+# Slots: {target} the one being congratulated or rezzed, {killer}/{killer_class} the race and class
+# of the enemy who killed the speaker, {size} a rough head count, {classes} what was seen, {place} where.
+
+# ---- Grats: another character dinged ------------------------------------------------------------
+@kind grats
+@who *
+grats {target}
+gz {target}
+grats!
+gz
+nice, grats {target}
+gratz
+gz gz
+grats, long road
+grats {target}, go train
+@kind grats
+@needs in_group
+@who *
+grats {target}, good group
+gz {target}, keep it going
+ding grats, one more and i am there too
+@kind grats
+@topic fifty
+@who *
+GRATS {target}!! 50!
+gz on 50 {target}, see you in the frontier
+grats {target}, welcome to the end of the grind
+50! huge grats {target}
+@who Socialite
+grats {target}!! we need a party for that one
+@who NoLifer
+gz {target}. now the real game starts
+@who Leveler
+grats {target}, how long did that take, /played?
+
+# ---- Rez: asking, thanks, corpse runs, sickness --------------------------------------------------
+@kind rez_ask
+@who *
+@needs just_died
+rez pls?
+any rez near {zone}?
+can i get a rez please
+rez? pretty please
+anyone able to rez, dead by the {monster}
+rez plz, long walk from bind
+@who Socialite
+anyone kind enough to rez me? :)
+@who Leveler
+rez pls, dont want the sickness
+
+@kind rez_ask
+@topic player
+@needs just_died,player_nearby
+@who *
+{player} can you rez me?
+{player} rez pls?
+hey {player}, mind a rez?
+{player} could you rez me when you are clear
+
+@kind rez_thanks
+@who *
+ty for the rez
+thanks for the rez
+ty ty
+ty for the rez {target}
+tyvm, saved me the run
+thank you, that bind run is brutal
+@who Socialite
+ty {target}! you are the best
+@who Leveler
+ty, back to it
+
+@kind rez_offer
+@who *
+rezzing you {target}
+got you {target}, one sec
+rez incoming
+hang on {target}, rezzing
+take it {target}, you owe me one
+
+@kind corpse
+@who *
+@needs just_died
+releasing, cya at bind
+too far for a rez, releasing
+running back from bind
+long run back to {zone}
+anyone want to group while i run back?
+
+@kind sickness
+@who *
+res sickness, sitting for a bit
+sick again, taking a break
+rez sickness, give me a few
+sitting out the sickness, then back
+
+# ---- Server firsts (realm-wide) -----------------------------------------------------------------
+@kind first
+@who *
+did you see? {target} is first to {what}
+first {what} on the server, grats {target}
+{target} is first to {what}, huge
+wow, {target} beat everyone to {what}
+@who NoLifer
+first to {what}? {target} has no life. respect
+
+# ---- Frontier alarms (/faction) ------------------------------------------------------------------
+@kind alarm
+@who *
+@needs in_rvr
+{size} {enemy} near {place}
+inc {size}+ {enemy} at {place}
+{enemy} zerg at {place}, {size} or more
+heads up, {size} {enemy} moving through {place}
+{size} {enemy} at {place}, {classes}
+small {enemy} group at {place}, {classes}
+spotted {size} {enemy} near {place}, careful
+@who Daredevil
+@needs in_rvr
+{size} {enemy} at {place}, who wants to fight
+@who Leveler
+@needs in_rvr
+{enemy} at {place}, avoid if you are leveling
+
+# ---- Nemesis -------------------------------------------------------------------------------------
+# Enemy names are hidden in the frontier, so {killer} is the killer's race and {killer_class} its
+# class as the speaker's realm would see them ("that troll berserker").
+@kind nemesis
+@who *
+that {killer} {killer_class} again. has it out for me
+same {killer} {killer_class} got me at {place} again. i will remember that
+anyone seen that {killer} {killer_class}? i owe it one
+watch out for a {killer_class} near {place}, killed me twice now
+that {killer} {killer_class} is camping {place}
+@who Daredevil
+that {killer_class} again. next time it goes the other way
+@who Socialite
+same {killer} {killer_class} keeps killing me, anyone want to help
+
+@kind revenge
+@who *
+got that {killer} {killer_class}. we are even
+that was for {place}
+finally got that {killer_class}
+that {killer} {killer_class} is down! told you i would
+
+# ---- Sessions: logging on and off, breaks, linkdeads ---------------------------------------------
+@kind session
+@topic logon
+@who *
+evening all
+hey all
+back on
+hi all, what did i miss
+morning everyone
+@who Socialite
+hey everyone!! who is up for something
+@who Leveler
+on for a couple hours, need a group
+
+@kind session
+@topic logoff
+@who *
+gn all
+night all
+calling it, gn
+logging, cya tomorrow
+off to bed, gn
+work in the morning, gn
+@who NoLifer
+one more pull... ok gn
+
+@kind session
+@topic brb
+@who *
+brb dinner
+brb
+afk a few
+brb kids
+phone, brb
+brb food
+afk, door
+
+@kind session
+@topic back
+@who *
+back
+re
+back, what did i miss
+k back
+back, sorry
+
+@kind linkdead
+@topic gone
+@who *
+{target} went ld
+{target} linkdead?
+lost {target}, ld i think
+{target} is frozen, ld
+
+@kind linkdead
+@topic back
+@who *
+sry ld
+sorry, ld
+back, stupid connection
+ld, sorry all
+modem dropped, back

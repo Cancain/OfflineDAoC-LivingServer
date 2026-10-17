@@ -1,0 +1,787 @@
+# Long Midgard /faction threads (Classic + Shrouded Isles, up to 1.65). New writing; names from
+# docs/bot-voices/VERIFIED-NAMES.md, specialization lines from RESEARCH-BRIEF section 5.
+# "A | B" on a beat = alternatives (one is picked), "?" = beat that only sometimes plays, "~ N" = lull.
+
+@kind debate
+@realm mid
+
+@topic healer_shaman_second
+@levels 25-50
+@scene mid_heal_trio
+@role B class=Healer
+@role C class=Shaman
+@role D type=Leveler,NoLifer
+@role E type=Socialite
+A: {q} putting together a spindel group tonight, healer plus shaman or two healers? | building an 8man for tonight, do i want a shaman or a second healer | real question for the realm: second healer or a shaman in a full group
+B: two healers. one pacs, one mends, nobody dies | double healer every time, the group heals stack and you never run dry | second healer. more power in the pool means longer pulls
+C: shaman. i cure the diseases and poisons and my debuffs make the pull die faster | you want a shaman, the debuffs alone save more health than a second heal would | a shaman turns a hard pull into an easy one, two healers just mop up
+B: debuffs are nice until a mob resists them and the tank is still taking full hits
+C: and two healers are nice until something diseases the tank and nobody can clear it | ok and who cures disease in your double healer group? nobody
+D: i ran double healer through all of my 40s and never thought about disease once | honestly for xp double healer just chains faster, nobody sits for pow
+~ 25
+E: what did i walk into, the healer war again? | ah, heal debate. pull up a chair everyone | is this the shaman thing? i love the shaman thing
+A: lol yes, round whatever it is now
+?E: grabbing snacks, carry on
+C: look, a shaman also buffs, so your healer can stop wasting power on buffs | with a shaman around the healer keeps power for heals instead of buffs
+B: healer buffs are fine thanks | augmentation buffs do the job, i dont need help buffing
+D: the real question is who is MA and whether the tank can hold aggro | none of it matters if the puller brings back three adds
+?C: true, the puller is always the problem
+~ 30
+A: so if i only have one slot left? | ok but say i can only fit one of the two
+B: healer, every time, the group lives or dies on the main heals
+C: if the main healer is good, add a shaman. if not, two healers wont save you either | a good main healer plus a shaman beats two average healers
+D: depends on the camp. spindel adds hit hard, more healing helps there | for spindelhalla id lean healer, for raumarik maybe shaman
+E: or bring one of each and a skald and quit thinking so hard
+?B: ...fair enough i guess
+~ 20
+A: ok shaman says yes in tells, healer slot still open if anyone wants it | update, i got a shaman, still lf one more healer for spindel | shaman signed up. need a healer, pst
+B: sending you a tell now
+C: told you it would end up with both of us | see, healer and shaman together, as midgard intended
+
+@topic pac_or_mending
+@levels 30-50
+@scene mid_pac_mending
+@role B class=Healer
+@role C class=Healer
+@role D type=Daredevil,Leveler
+A: respec question. at 40, is pac really worth it or should i go full mending | thinking about respeccing my healer, pac or mending | healer friends, sell me on pac or sell me on mending
+B: pac. a group without mez is a group that wipes on the first add | pac all day. one mez on the add and the fight stays clean | if you want to be invited to good groups, go pac
+C: mending. the mez breaks, the heals dont | full mending here, my heals land bigger and cost less of my bar
+B: the mez only breaks if someone hits it, which is a group problem not a healer problem
+C: someone always hits it. there is always one | every group has that one guy who aoes the mezzed add
+D: guilty lol | that guy is me, sorry in advance
+~ 20
+A: does pac still heal enough to be the main healer? | can a pac healer carry the heals alone though
+B: in an even con group, sure. on orange pulls you want a mender with you
+C: which is why every serious group runs one of each
+?D: or a shaman
+?C: or a shaman, fine, whatever works
+~ 25
+B: also pac gets you out of trouble in the frontier, a mez on a group is huge | in rvr a good pac mez changes the whole fight
+C: and a mending healer is the reason the group is still standing when the mez breaks | sure, and when the mez ends someone has to keep everyone alive
+A: so for pve mending, for rvr pac? | sounds like mending if i mostly level, pac if i mostly rvr
+D: that is how my guild does it | we push our healers pac at 50 for the frontier
+B: you can always respec later, it is not forever
+C: just dont go half and half with nothing high enough to matter | whatever you do, dont split it so thin nothing works
+~ 30
+?A: ok... going to stare at the trainer for a while
+D: hey, my group needs a healer at varulvhamn, either spec, want in? | psst, we need heals in varulvhamn right now, any spec. invite?
+A: sure, inv me | yes please, taking the horse now
+B: problem solved, the group chose for you
+C: gl, come back and tell us which spec you picked | have fun, tell them you are mending till proven otherwise
+
+@topic cave_shaman_solo
+@levels 20-45
+@scene mid_cave_shaman_night
+@role B class=Shaman
+@role C type=Leveler
+@role D class=Warrior,Thane
+@role E type=Explorer
+A: anyone actually leveled a cave shaman? subterranean all the way | {q} is full subterranean shaman a real thing or a joke | {q} any cave shamans out there, how is it going
+B: me. 34 right now, mostly solo, the dots do the work | yep, cave shaman here. i dot it, back off a bit, sit, repeat | im one. it is slow but it is a different game from heal duty
+C: why would you play a support class and not support | a shaman that wont heal is just a weird caster
+B: i heal fine, i just dont live in the heal bar | i can still heal, the base heals do the job on small pulls
+D: as a tank i want my shaman healing me, not dotting the third mob | i dont care what the shaman casts as long as my health bar stays up
+~ 30
+E: cave shaman in vendo caverns is actually great, the svendo hate diseases | took a cave shaman friend through vendo, dots everything and walks away
+B: right? a diseased mob heals slower too
+C: i didnt know disease did that | wait, disease slows their healing?
+B: a lot. great on anything that likes to sit and heal | yep, both regen and heals on it. cave is all about that
+?D: huh, learned something tonight
+~ 20
+D: still, in a group i would invite the mending shaman first
+B: and in a group i play like a mending shaman, the dots are extra | when im grouped i heal first and dot when everyone is full
+C: so you are a mending shaman with a hobby | sounds like you just have a backup plan
+B: pretty much lol
+?E: cave shaman camping the cursed tomb at night, thats the life
+~ 25
+A: tempted to roll one now | ok im rolling a cave shaman tonight
+D: please learn the heal key anyway | just put a heal on bar one, for the tanks
+B: it is already there. bar one, right next to the dots
+?C: gl with it, post when you hit 20
+E: welcome to the cave | the diseased life awaits you
+
+@topic skald_speed_or_shouts
+@levels 20-50
+@scene mid_skald_twist
+@role B class=Skald
+@role C type=NoLifer
+@role D class=Berserker,Savage
+@role E type=Socialite
+@role F type=Leveler
+A: why does every group ask the skald to sit on speed the whole time | {q} skald here, am i allowed to do damage or am i just a horse | does anyone let their skald actually fight
+B: i ask myself that every night | same question, different skald lol
+C: speed is the reason skalds get invites. that is just the truth | because without speed the pull runs back slower and the xp drops
+A: i have damage shouts for a reason though
+D: let him swing, a skald hitting next to me is free damage | skald in melee range is great, more stuff dies
+C: until the add shows up and nobody can run because speed dropped
+B: you can keep speed going and still fight, it is not either or | i keep the song up and swing, it works fine
+~ 25
+E: random but i miss the skald shouts in the frontier, those big numbers | the skald shouts in a keep fight are so much fun to watch
+?F: lol the numbers on those
+C: in the frontier you need speed more than anywhere | frontier is where speed matters most, ask anyone who got run down
+D: which is why skalds there are speed and nothing else | yeah in rvr i just want the song
+B: so in pve im speed, in rvr im speed. when do i get to be a skald
+~ 30
+F: brb pull | pulling, back in a sec
+E: honestly skald is the most popular class in midgard and nobody admits it | every group i join has a skald. you guys are everywhere
+A: because we are useful, apparently only for one thing | everywhere and asked to do one job
+?C: one very important job
+B: speed is the song, shouts are the fun, battlesongs is both | battlesongs has a lot more in it than speed, people forget
+~ 20
+F: back, what did i miss, still on skalds? | back. still skalds? cool
+D: still skalds, yes
+?E: forever skalds
+A: ok new rule, i keep speed and you all pretend my shouts are carrying the group | fine, speed on, but i get credit for the damage
+C: deal. nobody checks the damage anyway | sure, we will clap at every shout
+B: ...that is all we ever wanted
+
+@topic thane_spec_split
+@levels 15-50
+@scene mid_thane_split
+@role B class=Thane
+@role C class=Warrior
+@role D type=NoLifer,Explorer
+A: thane question. how much stormcalling is too much | {q} thanes, do you max stormcalling or your weapon | new thane here, lightning or hammer?
+B: weapon first, stormcalling enough for the good shocks | i run high storm, i love the lightning more than the hammer
+C: if you want to tank, put it in shields and weapon and let the casters cast | thane tanking is fine on small stuff, on hard pulls thats my job
+B: thanes tank fine, we wear chain and carry a shield
+C: chain, sure. im in plate... wait no, we are both in chain. ok i got nothing | ok ok we wear the same armor, i still have more health
+?D: lol
+~ 25
+D: the best thane i ever grouped with pulled with lightning and tanked the add at the same time | i once saw a thane hold two adds off the healer at the cursed tomb
+A: thats the dream | ok thats what i want to be
+C: thats a thane doing a warrior job well. i respect it | fine, a good thane is good. most of them stand in the back casting
+B: we dont stand in the back, we just like range sometimes | casting from melee range is still melee
+~ 30
+A: so half and half is ok? | is a hybrid spec bad or is that the point of the class
+D: hybrid is the whole point. you are never the best at one thing | for a thane the split is the build
+B: and you are never useless | never the best, never useless. thane motto
+?C: i like that one actually
+C: just dont stand in my aggro and complain when the mob turns | if the mob turns on you, dont run to me
+~ 20
+?B: when has a thane ever run
+D: gtg, adds at my camp | two {monster} just walked into us, bbl | INC here, later all
+C: same, my puller just came back with a train | and my group wants me back, puller is on the way
+B: lightning out, catch you all later | hammer up, see you
+
+@topic warrior_pride
+@levels 20-50
+@scene mid_warrior_pride
+@role B class=Warrior
+@role C class=Berserker
+@role D class=Healer,Shaman
+@role E type=Crafter
+A: shout out to warriors, the most underrated class in midgard | can we talk about how nobody appreciates warriors | {q} why does everyone roll zerker when warriors are right there
+B: thank you. finally | someone finally said it
+C: warriors are great. someone has to stand there while i do the damage | love warriors, they hold the mob still so i can hit it
+B: and someone has to explain to the healer why the zerker died first | yeah and who pulls it off you when you go berserk and lose aggro
+D: as a healer, a good warrior is the easiest group i will ever heal | a warrior who holds aggro means i only watch one health bar
+~ 25
+C: in fairness i only die when the warrior forgets to taunt | i die because i hit harder than the taunts, not my fault
+B: you die because you open with your biggest style on a fresh pull
+?D: every single time, too
+A: what do warriors spec anyway, i always forget | newbie q, what are the warrior lines besides weapon
+B: weapon, shields, and thrown weapons for pulling. shields is the tank part | your weapon, shields, and thrown weapons. throwing axes make pulling easy
+E: and warriors are my best customers, they replace a shield every few levels | i sell more shields to warriors than to everyone else together
+~ 30
+C: ok but in rvr who do you want on the door, a warrior or me | for a keep door i still want zerkers
+B: for the door, you. for the healer getting jumped, me | you on the door, me peeling the stealther off our healer
+D: please, yes, more warriors peeling for the healer | as a healer i want three warriors next to me in the frontier
+?E: i can make you three shields for the price of two
+~ 20
+C: fine, warriors are good. i will say it once | ok i admit it, warriors are the backbone
+B: screenshotting that | can i get that in writing
+?A: someone carve it over the jordheim gate
+D: next group i need a tank im sending you a tell | noted, you are on my tank list now
+B: :)
+
+@topic berserker_savage_feud
+@levels 20-50
+@scene mid_zerk_savage_feud
+@role B class=Berserker
+@role C class=Savage
+@role D type=NoLifer,Daredevil
+A: zerkers vs savages, who wins a duel in the end | serious one, savage or berserker for rvr | {q} if you could only bring one, zerker or savage
+B: zerker. berserk style hits harder than anything a savage swings | berserker. two axes, berserk, done
+C: savage. hand to hand is fast and the self buffs make us a different class | savage, easy. the buffs make me faster than you and i hit just as hard
+B: buffs that cost health. you start every fight half dead | your buffs eat your own health bar, i dont have that problem
+C: i start every fight already winning | the health comes back. the speed doesnt leave
+D: savages are newer and people still dont know how to fight them | half the realm still doesnt know what a savage does
+~ 25
+A: what do savages actually use, claws? | newbie question, what weapons does a savage use
+C: hand to hand weapons, katars and claws, one on each hand | katars and claws. it looks silly and it works
+B: it looks like you are trying to scratch a door open | you look like a cat fighting a keep door
+?C: and you look like a lumberjack
+~ 30
+D: in a group i want the zerker for the burst, solo id take the savage | burst damage zerker, steady damage savage. both good
+B: solo too, berserk kills before the mob gets going | i solo just fine thank you
+C: you solo greens
+B: i solo blues with style | i solo blues and look good doing it
+?D: nobody looks good in a dwarf hat
+~ 25
+A: so no winner | ok no winner then
+D: there is never a winner, there is just the next patch | the winner is whoever didnt get nerfed this month
+C: savage wins, im calling it | savages win by default
+B: berserkers win on the numbers, im calling it too
+?A: two winners, everyone go home
+~ 30
+C: still savage though | ...savage
+B: zerker. forever
+
+@topic savage_health_cost
+@levels 15-40
+@scene mid_savage_newbie
+@role B class=Savage
+@role C class=Healer,Shaman
+@role D type=Socialite
+A: new savage here, why do my buffs keep eating my health | {q} just started a savage and i keep dying before the fight even starts | savage question, are the buffs supposed to hurt this much
+B: welcome. the savagery buffs cost health, that is the price | savagery buffs are paid in health. yes really
+A: so i buff and then fight at three quarters health?
+B: you buff, sit a moment, then pull. dont buff into a pull | buff early and sit. never buff right before the pull
+C: or group with a healer who knows you are a savage | or tell your healer you buff yourself so they dont panic
+?D: the healer panic is real lol
+~ 25
+A: which buff first? | ok which buffs matter most
+B: the ones that make you swing faster and hit harder. the rest are extras when you are higher | speed of swing first, damage next. the rest when you have the points
+C: and dont forget hand to hand, the buffs mean nothing with low weapon skill | keep hand to hand up with your level or you just miss a lot
+?A: noted, ty
+~ 30
+D: how is the leveling treating you btw | where are you leveling, still around mularn?
+A: west svealand now, the sveawolves are rough | west svealand, the large sveawolves hit back hard
+B: savage tip, fight them one at a time and keep a buff running between pulls | pick yellows and blues one at a time, keep the buffs up
+C: and sit to full health. impatience kills more savages than mobs do | rest before the pull, every single time
+~ 20
+A: ok got it. buff, sit, pull, dont be dumb | buff, sit, pull. got it
+D: words to live by | best summary of savage play ive seen
+?B: youll be fine, savages are fun once it clicks
+A: ty all, going back out | thanks, heading back to the wolves
+C: send a tell if you need a heal, im in myrkwood | im nearby if you die, rez on request
+B: gl out there!
+
+@topic hunter_bow_pet
+@levels 25-50
+@scene mid_hunter_range
+@role B class=Hunter
+@role C type=Daredevil
+@role D class=Runemaster,Spiritmaster
+@role E type=NoLifer
+A: got shot to death by an albion scout from somewhere i couldnt even see | {q} is it just me or are enemy archers hitting from across the zone | three arrows and im dead, never saw the guy
+B: welcome to how they feel about us | hunters do the same to them, for what it is worth
+C: their scouts sit on hills and shoot people who are just traveling | scouts on the hill outside every keep, every night
+B: and we sit on our hills. it is an archer thing | every realm has hill archers. ours are just nicer
+~ 25
+D: as a caster i die to archers more than anything | archers are the worst for us cloth wearers
+E: then dont travel alone. archers hate groups | an archer fears a group with a healer, travel with one
+A: easy to say at 3am | there is nobody to travel with at this hour
+?E: fair point
+~ 30
+D: random question, how good is the hunter pet in pve | hunters, is the pet worth putting points in beastcraft for
+B: the pet is great solo. it tanks, i shoot, everybody is happy | beastcraft pet takes the hits while i shoot, it makes soloing easy
+D: so like a light version of a spiritmaster | sounds like what i do but with a bow
+B: smaller pet, more bow | a smaller pet and a lot more arrows
+?C: and a spear when they get close
+B: yes, spear for when they run up on you | spear when they close the gap, if i get the chance
+~ 25
+C: i still think the archers are fine. you just have to rush them | close the distance fast and an archer is easy
+A: easy for a savage, not for me on foot without speed | sure, with speed. i was alone
+E: this is why every group wants a skald lol
+D: everything always comes back to skalds
+?B: skalds and arrows, the midgard way
+~ 20
+A: ok heading back out, staying off the hills this time | back to the frontier, avoiding hills
+C: bring a friend next time | find a group, seriously
+
+@topic shadowblade_weapons
+@levels 30-50
+@scene mid_sb_two_axes
+@role B class=Shadowblade
+@role C class=Shadowblade
+@role D type=Socialite,Leveler
+A: shadowblades, left axe or a big two hander | {q} sb respec time, two hander or left axe | planning my shadowblade at 50, two handed or dual axes
+B: left axe. more swings, more poison on the target | dual axes. envenom on two weapons is twice the fun
+C: two hander. the opener from stealth hits like a truck | two handed every time, the first hit from stealth decides the fight
+B: and if the first hit doesnt kill them? | sure, until they live through it
+C: then i hit again, harder | then the second hit does it
+~ 25
+D: how do you even find people out there alone | do sbs just wander the frontier waiting for someone
+B: pretty much. sit near a road, wait for someone to run by alone | camp a road between keeps and wait
+C: or follow a lone caster until they sit to med | casters sitting to med are the best target there is
+D: and that is why i never travel alone
+?B: smart, honestly
+~ 30
+A: what about critical strike, is it worth it with left axe | how much critical strike do you guys run
+C: a lot. the openers from stealth live there | critical strike is where the stealth openers are, i keep it high
+B: i keep it decent but left axe and envenom come first | some, but left axe and envenom take most of my points
+?C: and that is why your opener tickles
+B: my opener is two axes, it never tickles | tickles twice, poisons both times
+~ 25
+D: do you ever fight other stealthers | what happens when two stealthers meet
+C: the one who sees the other first wins | whoever spots first wins, simple as that
+B: or you both stand there awkwardly and walk away | or you both pretend not to see each other
+?A: lol stealther diplomacy
+A: ok im going two hander and blaming you both if it fails | going left axe. if it fails im blaming the two hander guy
+C: deal | fair enough
+
+@topic mystic_choice
+@levels 20-50
+@scene mid_three_mystics
+@role B class=Runemaster
+@role C class=Spiritmaster
+@role D class=Bonedancer
+@role E type=Leveler
+@role F type=Socialite
+A: rolling a caster, runemaster, spiritmaster or bonedancer? | {q} which of the three midgard casters should i roll | rm, sm or bd for a first caster
+B: runemaster. runecarving nukes, groups always want damage | rm, every group needs a nuker
+C: spiritmaster. the pet tanks while i cast, solo is easy | sm, my spirit pet does half my work
+D: bonedancer. you get a whole army, why have one pet | bd. a commander and his little helpers. who needs friends
+E: for groups i see rms invited the most | in my groups we take runemasters first, pets get in the way
+C: pets are only in the way if the owner doesnt park them | a parked pet is never in the way
+~ 25
+D: bonedancers do fine in groups, my commander soaks hits for the tank | my army helps the tank, people forget that
+E: until the pets pull the next camp by themselves | until a skeleton wanders into the next room
+?D: that was one time
+F: what did i miss, are we fighting about pets again | caster talk? im in
+A: picking a caster, everyone has opinions | caster question and three casters answered
+~ 30
+B: solo is the only place pet classes beat me. in groups i win | solo goes to the pets, sure. groups go to me
+C: in groups i can still nuke. darkness and suppression are shared, remember | we have the same darkness and suppression lines, i can cast too
+B: you can. you just dont have runecarving | sure, but the big nukes live in runecarving
+D: and nobody else gets bone army, so | and nobody gets the army but me
+?F: everyone is special
+~ 20
+A: ok which one levels fastest solo | fastest to 50 alone?
+C: sm or bd, the pet makes it easy | pet classes for solo, no question
+B: true, rm solo is slow. but the groups make up for it
+E: groups are faster than any solo anyway, if you can find one | a good group beats solo every time
+F: so roll whichever one looks coolest | pick the one with the best robe, honestly
+?A: ...the bonedancer does look cool
+D: welcome to the army | told you so
+
+@topic bonedancer_lag
+@levels 30-50
+@scene mid_bone_lag
+@role B class=Bonedancer
+@role C type=NoLifer
+@role D type=Daredevil
+A: was it just me or did the keep fight lag out tonight | {q} anyone else freeze at the keep fight earlier | the last siege was a slideshow for me
+C: three bonedancers with full armies on the wall, that will do it | count the skeletons, that was the lag | every bd in the realm showed up with pets, of course it lagged
+B: hey, we bring damage | the army is the class, i cant leave it home
+C: you bring a lot of little bones my computer has to draw | my video card does not like your little friends
+?D: lol the little friends
+~ 25
+D: honestly the pets soak the enemy area damage, which is good for us | the skeletons eat the enemy nukes. better them than me
+C: sure, but i couldnt even see the door
+B: you can turn down the spell effects in the options, it helps | lower the effects in the options, it helped me
+A: i did, still froze | already did that, still frozen
+~ 30
+D: the enemy pet classes are worse, their theurgists fill the screen with pets | theurgists on the wall are worse than bonedancers, trust me
+B: thank you | see, it is not just us
+C: two wrongs dont make a frame rate | it is everyones pets, i just want a smooth fight
+?A: new computer time maybe
+A: my computer is two years old, it should be fine | i built this pc last year, come on
+~ 20
+B: ill park my army behind the keep next time | ok next siege the bones stay in the back
+C: appreciated | thank you, my frames thank you
+D: inc on the north gate, they are back | they are at the gate again, everyone back to the keep | alert, enemy group at the gate
+B: army up, lets go | bones, wake up, we are going in
+?C: and here comes the lag
+
+@topic route_mularn_up
+@levels 1-25
+@scene mid_route_mentor
+@role B type=NoLifer,Leveler
+@role C type=Explorer
+@role D type=Socialite
+@role E type=Leveler
+A: first character ever, where do i go after the vale of mularn | {q} new to the game, what comes after mularn | level 9 here, kind of lost, where next
+B: myrkwood forest next, then nisses lair once you have a group | head to myrkwood around 10, then nisses lair in your teens
+C: myrkwood is pretty at night, watch for the arachites | the arachite weblashers in myrkwood will surprise you
+?D: welcome to midgard, glad youre here!
+A: what comes after the forest? | ok and after nisses?
+B: cursed tomb in the low 20s, then vendo caverns | low 20s cursed tomb, high 20s vendo
+E: cursed tomb is where i learned to group. draugr everywhere | draugr warriors in cursed tomb taught me what an add is
+~ 30
+A: do i need a group for the tomb? | can i solo cursed tomb
+E: you can try. you will meet the floor | at 22 alone? i would not
+C: group up. the tomb is a social place anyway | the tomb has people in it all day, just ask in faction
+B: after vendo, skona ravine in the 30s, then the big 40s camps | vendo, then skona ravine, then you pick a 40s zone
+~ 25
+A: whats a 40s zone | which 40s zones?
+B: spindelhalla, varulvhamn, raumarik, malmohus. people fight about which is best | spindelhalla or varulvhamn, people argue forever about it
+?E: spindel. always spindel
+?C: varulvhamn, the werewolf camps are prettier
+D: dont rush it though, the camps are half the fun | take your time, the people at each camp are the game
+~ 20
+A: thanks, writing this down | ok writing it down. mularn, myrkwood, nisse, tomb, vendo, skona
+B: then 50, then trollheim and the frontier | at 50 you start over in the frontier, but dont think about that yet
+D: send a tell if you get stuck, happy to help | pst me if you need anything at all
+A: ty everyone :) | thanks, really appreciate it
+
+@topic aegir_or_classic
+@levels 35-50
+@scene mid_aegir_vs_home
+@role B type=Explorer
+@role C type=Leveler
+@role D type=NoLifer
+@role E type=Crafter
+A: level 38, aegir or stay home for the 40s | {q} is aegir worth it for the 40s or stick to the classic zones | trying aegir for the first time, good idea?
+B: aegir. gripklosa and delling crater are full of xp and nobody is there | go aegir, new zones, empty camps
+C: classic. spindelhalla has groups all day, you never wait | stay in midgard proper, spindelhalla is always busy
+B: busy is the problem. i like having a camp to myself
+C: busy means groups. aegir at night is a ghost town | empty camps mean no group invites
+~ 30
+D: the loot on the island is better from what ive seen | aegir drops are nicer for the level, that matters at 40
+E: as a crafter, i noticed fewer people buying gear from me since aegir | ever since aegir opened my sales dropped, everyone wears drops now
+?D: sorry lol
+~ 25
+A: what about delling crater, is it too hard | hows delling at 40
+B: hrimthursa are rough but worth it with a good group | the hrimthursa shamans hurt, bring a healer who can keep up
+D: faraheim is easier if delling is too much | faraheim is a softer start, cicadas and deer and so on
+?E: deer with xp, the best kind
+~ 20
+C: spindel vs varulvhamn though. thats the real question for the 40s | forget aegir, the real fight is spindel or varulvhamn
+B: varulvhamn. werewolves give good xp and look cool | varulv, werewolf camps are classic
+C: spindel. the krigare give great xp and the pulls are steady | spindel, the arachite krigare camp is the best in midgard
+D: both are fine, just pick the one where your friends are | pick where your guild is, nothing else matters
+~ 30
+A: ok trying gripklosa tonight, if nobody is there im going to spindel | gripklosa first, spindel as backup
+B: say hi to the griffons | watch out for the griffon gliders
+?C: see you in spindel in an hour lol
+
+@topic nisse_lair_group
+@levels 8-20
+@scene mid_nisse_lair
+@role B type=Leveler
+@role C type=Explorer
+@role D type=Daredevil
+A: anyone at nisses lair? looking for a group | {q} lfg nisses lair, level {level} | heading to nisses lair, is anyone there
+B: we are at the entrance, 4 of us, need a healer more than anything | i have a group at nisses, we need heals
+A: im a {class}, will that work?
+B: everything helps, come on in | sure, we take anyone who can pull their weight
+~ 25
+C: careful with the tomte sentinels, they hit way harder than the caitiffs | the sentinels hit hard, pull the caitiffs first
+D: i went deep alone last night, the lair guards almost had me | soloed into the back last night, bad idea
+C: the back is a group place. the poisonous cave spiders alone will eat you | dont go to the back without a group, the spiders poison everything
+?D: i made it out with a sliver of health lol
+~ 30
+A: how deep do we go | which room is best for xp
+B: the first big room is fine at your level, then we move in | start near the entrance, move in when the cons go blue
+C: nisses is a good teacher. everyone learns about adds there | you will learn what pulling means in there
+?A: sounds fun honestly
+D: and trains. you will learn about trains | and you will meet your first train
+B: please do not make a train | nobody train us today, please
+~ 20
+A: omw, coming from mularn | on my way, a few minutes
+B: inv when you get here | ill inv when you reach the door
+D: and set loot rules before the first pull, trust me | decide who loots what before we start, saves a fight later
+?C: lol wise words
+A: here. inv pls | at the door now
+
+@topic mularn_jordheim_life
+@levels 1-50
+@scene mid_town_life
+@role B type=Socialite
+@role C type=Crafter
+@role D type=Explorer
+@role E type=Leveler
+A: jordheim is so empty tonight | {q} anyone else in jordheim? feels like a ghost town | quiet night in jordheim
+B: everyone is in the frontier or asleep | half the realm is in the frontier, the other half in bed
+C: im here, standing at the forge like always | im in jordheim crafting, as usual
+A: i remember when mularn was packed, you couldnt even see the ground | mularn on launch week, people everywhere, remember that
+D: i remember the hill cats. so many dead dwarves to hill cats | the hill cats outside mularn killed more of us than any enemy
+?B: lol the hill cats, never forget
+~ 30
+E: i still go back to mularn to help newbies sometimes | i ride back to the vale to buff newbies now and then
+B: thats nice of you | aw thats sweet
+E: someone helped me there, so | it was done for me once
+C: jordheim is a maze though, still get lost after a year | how do people find anything in jordheim, it is a maze
+~ 25
+D: you get used to it. or you bind outside | i just bind at the gate and walk in
+?C: i walked in circles for ten minutes last week
+A: the music in jordheim is nice at least | i like the jordheim music, very calm
+B: the horse ride to mularn is my favorite. just watching the trees | i take the horse to mularn just to look at the view
+~ 20
+E: ok im off to bed. night midgard | night all, early shift tomorrow
+B: night! | sleep well
+?D: gn
+C: guess it is just me and the forge again | back to smithing in the quiet
+A: ill keep you company for a bit | im still here for a while
+
+@topic keep_defense_bledmeer
+@levels 35-50
+@scene mid_bledmeer_call
+@role B type=NoLifer
+@role C type=Daredevil
+@role D class=Healer
+@role E class=Skald
+@role F type=Leveler
+A: bledmeer faste is under attack, anyone around? | {q} bledmeer is flashing, who can come | they are hitting bledmeer faste, we need people
+B: how many? | numbers?
+A: maybe one group of hibs, they have a ram | looks like eight hibs and a ram at the door
+C: one group? we can take one group | eight is nothing, omw
+D: healer here, coming from jordheim, give me a few minutes | im porting now, healer on the way
+~ 20
+F: is it worth leaving my exp group for this | im mid camp in raumarik, do i come?
+B: if we lose bledmeer we lose a lot of ground, so yes | bledmeer matters, come if you can
+F: ugh fine, leaving at the next pull | ok after this pull
+?C: the frontier calls
+E: speed for anyone heading there, meet me at the portal | skald at the portal keep, ill speed the run | running speed from the portal, form up
+~ 30
+A: theyre on the inner door now | outer door is down, they are inside
+B: did anyone claim nottmoor? we could use the guards | is glenlock even ours still? the hibs took it yesterday
+C: forget the other keeps, just get to bledmeer | worry about the map later, get to the fight
+?B: fair, fair
+D: at the portal, waiting on speed | here with the skald, who else is coming
+~ 15
+F: coming, two minutes out | almost there, wait for me
+E: leaving in thirty seconds, whoever is here is here | going now, catch up on the road
+C: nobody fights the lord without me | dont you dare start without me
+~ 25
+A: they pulled back, i think they saw us coming | the hibs are running, they saw the group
+B: chase or hold? | do we chase them or hold the keep
+C: chase! | chase obviously
+D: hold. fix the doors first | hold, we need the doors repaired
+?A: lol midgard in a nutshell
+
+@topic relic_castles_watch
+@levels 40-50
+@scene mid_relic_watch
+@role B type=NoLifer
+@role C type=Socialite
+@role D type=Daredevil
+@role E type=Crafter
+A: who is watching mjollner faste tonight | {q} anyone guarding our relics or are we trusting the guards | quick check, is anyone at grallarhorn faste right now
+B: nobody, as usual. everyone thinks the guards will hold | nobody. the guards are on their own
+C: the guards wont hold against a real raid | if a forty man raid shows up, guards are a speed bump
+D: so go stand there yourself | then go stand at the castle all night, ill wait
+B: i did last week. four hours. nothing happened | i stood at grallarhorn for three hours once, saw a deer
+~ 30
+E: does the relic even matter that much? | what does holding the relic do for me as a crafter
+B: it boosts the whole realm. melee or magic depending on which one | it gives the realm a bonus, either the strength one or the power one
+E: and if we lose it? | and losing it?
+B: we lose the bonus, and they gain one | we lose it, and they get stronger. thats the whole game out there
+?C: plus the shame of it
+~ 25
+D: the albs always raid at like 4am | relic raids at 4am are the worst, nobody is online
+C: thats the point. they wait till we sleep | they know exactly when we sleep
+A: we should set up a guild rotation | what if every guild took one night a week
+B: ive suggested that three times | tried, nobody signs up
+?D: id sign up
+~ 30
+C: sign up then. ill post a list in the morning | ok ill make a list tomorrow, ping me
+D: put me down for friday | friday nights, im in
+E: if anyone needs doors repaired, i can help with that | ill bring my tools for the doors
+?A: everyone say your nights in tells
+B: well see how long this lasts | i give it a week
+
+@topic dragon_raid_planning
+@levels 45-50
+@scene mid_dragon_raid
+@role B type=Daredevil
+@role C class=Healer,Shaman
+@role D type=NoLifer
+@role E type=Socialite
+@role F type=Leveler
+A: dragon raid on gjalpinulva tonight, who is in | {q} we are doing gjalpinulva later, need bodies | raid on the dragon tonight, all 45+ welcome
+B: me. never killed her yet | im in, first time for me
+C: healers needed i assume | how many healers do you have
+A: four so far, we want more | not enough. never enough healers for a dragon
+D: last time we wiped twice before she went down | the first try always wipes, just accept it
+E: what time? | when do we leave?
+A: after the next hour, meet at the bind | in an hour, everyone meet in jordheim
+~ 30
+F: newbie raid question, what do i actually do | never done a dragon, what should i do
+D: stay spread out, follow the raid leader, dont pull anything | listen to the leader and dont stand where everyone else stands
+B: and stay out of her front | and never stand in front of her
+?F: noted, no front
+C: and if you die, stay dead till the rezzers are ready | dont release if you die, wait for a rez
+~ 25
+E: is it worth it? the loot gets rolled among like fifty people | with that many people, the loot is a lottery
+D: its the experience. bragging rights | you go for the story, not the loot
+B: and the story is always the wipe | and the story is usually how we wiped
+?C: the wipes are the best stories
+~ 20
+A: ok forming groups now, send tells with class and level | form up, tell me class and level
+F: {level} {class}, ready | {class}, {level}, count me in
+E: count me in, ill be on the horse | im coming, riding over now
+C: healer, inv me to the healer group | healer here, put me with the other healers
+?D: and dont blame me when we wipe the first time
+A: invites going out, see you all there | sending invites now
+
+@topic iarnvidiur_lair
+@levels 45-50
+@scene mid_iarn_lair
+@role B type=Explorer
+@role C type=Daredevil
+@role D type=Leveler
+A: has anyone been deep in iarnvidiurs lair | {q} iarnvidiurs lair, worth it or a waste of a night | thinking of trying the lair in aegir, anyone done it
+B: been to the entrance. the redcaps nearly ended me | i saw the first rooms. redcap davin hit like a hammer
+C: we tried the big guy himself once | we pulled iarnvidiur once with two groups
+A: and? | how did that go?
+C: it went badly | we all died, very quickly
+?D: lol of course it did
+~ 25
+D: is the xp good before the boss | how are the regular camps in there for xp
+B: the hatchling syvers are good xp if you have a strong group | the syver hatchlings are decent, need a good healer
+C: and a group that can stay alive when the redcaps add | if the redcaps add you need a tank who can take it
+~ 30
+A: whats even down there, is it worth exploring | is there anything to see in there
+B: captured iarn dwarves, big halls, it feels like a story | captive dwarves and big rooms, feels like you are in somebodys house
+?C: a very angry somebody
+D: id rather do spindel, honestly | ill stick to spindel, less dying
+C: less dying, less fun
+~ 20
+A: ok if i get a group together, whos in | if i make a group for the lair this weekend, anyone want to come
+C: me, obviously | im in, no question
+B: ill come for the sights | count me in, i want to see the back
+D: fine. but if we wipe im going back to spindel | fine, but im bringing my spindel groups healer
+?A: deal, see you saturday
+
+@topic darkness_falls_open
+@levels 30-50
+@scene mid_df_access
+@role B type=NoLifer
+@role C type=Leveler
+@role D type=Daredevil
+@role E type=Crafter
+A: do we even have df right now? | {q} who has darkness falls tonight | is df open for us or did we lose it
+B: not anymore, hibs took two keeps this afternoon | no, we lost a keep and the albs have it now
+C: there goes my xp plan for the night | there goes my leveling
+B: you could help take the keeps back | the fastest way to get df back is the frontier
+C: im 36, id be useless | im too low for keep fights
+D: nobody is useless at a door, everyone can hit it | anyone can swing at a door, come on
+~ 30
+E: i miss df mostly because my customers came out of it rich | when df is ours my sales go up, everyone has coin
+?A: and the drops are nice too
+A: whats so good about df anyway, i never went | newbie in df question, why does everyone want it so much
+C: xp for every level, groups everywhere, and loot | camps for every level from 20s to 40s
+D: and the demons. the necyomancers are fun to fight | plated fiends and necyomancers, good fights all around
+~ 25
+B: the realm with the most keeps holds df. so its really an rvr prize | df goes to whoever holds the most keeps. its a reward for rvr
+C: which punishes people who just want to level | so the levelers pay for the rvr side losing
+B: or it pushes levelers to help the rvr side | or it gives levelers a reason to help
+?D: harsh but true
+~ 20
+A: ok so, keep raid tonight? | anyone organizing a keep run to get it back
+D: ill lead one, an hour from now at the portal | we go in an hour, meet at the portal
+C: fine, ill come and hit a door | ok, ill be the guy at the door
+E: ill repair whatever we take | i can patch doors after
+?B: thats the midgard spirit right there
+
+@topic midgard_zerg_jokes
+@levels 30-50
+@scene mid_zerg_pride
+@role B type=NoLifer
+@role C type=Daredevil
+@role D type=Socialite
+@role E type=Explorer
+A: an alb in emain just told me midgard only wins by zerging | {q} heard an alb say we are nothing but a zerg | apparently we are the zerg realm, according to the albs
+B: we win because we show up. thats not a zerg, thats attendance | showing up is a skill
+C: we zerg because the zerg works | i mean we do zerg. we zerg very well
+D: lol | true though
+B: small groups are fun, but keeps fall to numbers | a door does not care how skilled you are
+~ 25
+E: emain? what were you doing in emain | wait, why were you in hibernias frontier
+A: relic raid with the guild, we lost | we tried a raid in emain macha, it went poorly
+?C: lost to the hib zerg, ironically
+~ 30
+C: honestly the albs zerg too, they just call it a raid | when albs bring forty people its a strategy
+D: and hibs call it a party | and when hibs bring forty its a festival
+B: everyone zergs. we just do it in bigger furs | all three realms zerg, we just wear more fur
+?E: and horns. dont forget the horns
+~ 20
+A: i still like the 8man fights better | honestly the best fights are 8 vs 8 anyway
+C: 8man is great until a zerg rolls over you | then forty trolls walk over the hill
+B: the trolls are ours at least | as long as the trolls are ours, im fine
+D: midgard: we bring the hill | midgard motto: more trolls than you
+?E: put it on a banner
+A: ok next time an alb says zerg im just going to say thank you | next time i hear zerg, im taking it as a compliment
+
+@topic guild_recruit_talk
+@levels 15-50
+@scene mid_guild_hunt
+@role B type=Socialite
+@role C type=NoLifer
+@role D type=Leveler
+@role E type=Crafter
+A: looking for a guild, casual, not too big | {q} any small guilds recruiting? i just want people to talk to | guildless and lonely, anyone recruiting
+B: were small, mostly adults with jobs, we level together on weekends | small family guild here, we group when people are on
+C: were an rvr guild, we raid every night, you need to be 40+ | if you want rvr, we run keeps every evening, 40 and up
+A: im 27, so i guess the small one for now | 27 here, i think the small guild fits better
+?C: come back at 40 lol
+~ 25
+D: big guilds are nice because theres always someone to group with | the advantage of a big guild is never grouping alone
+B: small guilds are nice because you know everyones name | in a small guild, you know everybody
+E: and someone always crafts for you | and theres a crafter in every guild, thats me
+~ 30
+A: is there a guild house? | do you have a house?
+B: a small one, out in the housing zone. were saving for a bigger one | yep, small house, working on a bigger one
+?E: i put my forge in it
+C: we have three houses and a big hall for meetings | our guild owns half a street of houses
+D: houses are nice, but i just want groups | i care about groups, not furniture
+~ 20
+A: ok, the family guild, im interested, what do i need to do | small guild person, how do i join
+B: just come say hi on our next group night, well invite you | send me a tell, ill invite you tonight
+A: sending now | tell sent
+?D: welcome to the family
+
+@topic jordheim_crafting
+@levels 15-50
+@scene mid_jordheim_forge
+@role B type=Crafter
+@role C type=Crafter
+@role D type=Leveler
+A: armorcraft or weaponcraft, which one makes more money in jordheim | {q} crafters, which craft pays best | thinking about crafting, which line actually makes money
+B: armorcraft. everyone needs a full suit, and every few levels | armor sells, five pieces every few levels
+C: weaponcraft. one weapon, but they pay more for a good one | weapons, people pay a lot for a masterpiece axe
+B: spellcraft is the real money at 50 though | at 50, spellcraft gems are where the coin is
+~ 30
+D: does crafting take long | how long does crafting take to get good
+C: forever. weeks of making the same thing | a long time. so much repetition
+B: i made two hundred studded helms last week | ive made more helms than i can count
+?D: lol what do you do with them
+B: sell them to the merchant at a loss | merchant buys them, for less than the materials
+~ 25
+A: is masterpiece real or a rumor | do masterpieces actually happen
+C: real. rare, but real | real, i got one yesterday after a week of nothing
+B: when you see the message you scream a little | the masterpiece message is the best feeling in the game
+?A: worth it then
+~ 20
+D: honestly i just buy my gear from crafters like you | ill just keep buying, thanks
+C: and we thank you | thats what we need, more customers
+A: ok, armorcraft it is. any tips? | armor then, any advice
+B: sell to your guild first, buy materials in bulk, never sell at the forge | buy the materials in bulk, sell to friends
+C: and dont quit in the middle. everyone quits in the middle | dont stop halfway, it gets better
+?D: and get a comfy chair
+
+@topic late_night_tales
+@levels 20-50
+@scene mid_late_tales
+@role B type=Explorer
+@role C type=Daredevil
+@role D type=Socialite
+@role E type=Leveler
+@role F type=*
+A: 3am in midgard, story time. worst death you ever had | {q} anyone awake? tell me your best death story | late night, slow camp. best wipe story, go
+C: fell off a cliff in raumarik and landed in a mob camp | i once jumped off a ledge in malmohus to escape and landed in a drakulv camp
+B: i got lost in muspelheim and walked straight into a lava lizard | i followed a ghost light in myrkwood into a pond full of mobs once
+?D: lol classic myrkwood
+~ 30
+E: our puller once brought back the entire cursed tomb | in vendo our puller came back with every svendo in the cave
+D: everyone has that puller | we all had that puller
+E: hes a 50 now, still pulls like that | still my friend, still a train machine
+~ 25
+F: what did i miss, story time? | ooh story time, count me in
+A: worst death stories | best wipes, go
+F: grouped with a healer who fell asleep at the keyboard in spindel | our healer went afk for pizza right as the pull came
+?C: the pizza afk, a true classic
+~ 30
+B: mine is the vendo yowler that chased me to the zone line | a vendo yowler followed me all the way out and killed me at the exit
+D: i once died to a hill cat at level 30 because i was afk | died to a hill cat at 30, never telling my guild
+?E: you just told the whole realm
+~ 25
+A: ok, best part of the night so far | this beats the camp
+C: next pull just showed up, i gotta go | my group is calling, bye
+F: good stories, night all | gn midgard
+B: midgard at 3am is the best midgard | love these nights

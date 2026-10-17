@@ -1,0 +1,62 @@
+{
+ "version": 1,
+ "note": "Writing styles applied after a line is chosen (docs/bot-voices/DESIGN.md section 1.2). A bot's voice is fixed from its database id.",
+ "voices": {
+  "plain": {
+   "share": 0.35,
+   "capitalize": false,
+   "end_period": false,
+   "abbreviate": {},
+   "expand": {},
+   "emote_chance": 0.0,
+   "typo_chance": 0.0
+  },
+  "proper": {
+   "share": 0.15,
+   "capitalize": true,
+   "capitalize_sentences": true,
+   "end_period": true,
+   "no_period_after": [":)", ":P", ":D", "?", "!", "."],
+   "abbreviate": {},
+   "expand": {"u": "you", "ur": "your", "pls": "please", "ty": "thanks", "np": "no problem", "dont": "don't", "cant": "can't", "im": "I'm", "i": "I", "isnt": "isn't", "wont": "won't", "doesnt": "doesn't", "didnt": "didn't"},
+   "emote_chance": 0.0,
+   "typo_chance": 0.0
+  },
+  "terse": {
+   "share": 0.25,
+   "capitalize": false,
+   "end_period": false,
+   "strip_punctuation": true,
+   "abbreviate": {"you": "u", "your": "ur", "please": "pls", "thanks": "ty", "people": "ppl", "because": "cuz", "though": "tho", "about": "abt", "tonight": "tonite", "anyone": "any1"},
+   "expand": {},
+   "emote_chance": 0.0,
+   "typo_chance": 0.0
+  },
+  "chatty": {
+   "share": 0.2,
+   "capitalize": false,
+   "end_period": false,
+   "abbreviate": {},
+   "expand": {},
+   "emotes": [":)", ":P", "heh", "lol", "haha", ":D"],
+   "emote_chance": 0.35,
+   "typo_chance": 0.0
+  },
+  "typo_prone": {
+   "share": 0.05,
+   "capitalize": false,
+   "end_period": false,
+   "abbreviate": {"you": "u"},
+   "expand": {},
+   "emote_chance": 0.0,
+   "typo_chance": 0.17,
+   "typo_rule": "swap two adjacent letters in one word of at least 4 letters; at most one typo per line"
+  }
+ },
+ "experience": {
+  "newbie": {"max_level": 14, "kinds_preferred": ["ambient"], "topics_preferred": ["newbie", "leveling"]},
+  "regular": {"max_level": 39},
+  "veteran": {"min_level": 40, "topics_preferred": ["veteran", "advice"], "joins_debates": true}
+ },
+ "limits": {"max_length": 160, "recent_window_hours": 6, "recent_ring_per_realm": 400}
+}

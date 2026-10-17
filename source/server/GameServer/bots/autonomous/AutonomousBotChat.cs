@@ -78,12 +78,14 @@ public static class AutonomousBotChat
         return Fill(template, context);
     }
 
-    public static bool ShouldSpeak(DateTime utcNow, DateTime lastSpokeUtc, bool inCombat, Random random = null)
+    public static bool ShouldSpeak(DateTime utcNow, DateTime lastSpokeUtc, bool inCombat, Random random = null,
+        double rateFactor = 1.0)
     {
         if (inCombat || utcNow - lastSpokeUtc < TimeSpan.FromMinutes(4))
             return false;
         random ??= Random.Shared;
-        return random.NextDouble() < 0.012;
+        // rateFactor: a personality's chattiness (1.0 = unchanged; AutonomousBotPersonality).
+        return random.NextDouble() < 0.012 * Math.Clamp(rateFactor, 0.0, 3.0);
     }
 
     private static string Fill(string text, Context context)

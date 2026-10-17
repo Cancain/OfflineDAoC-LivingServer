@@ -182,7 +182,8 @@ namespace DOL.GS
             if (!IsInsideIdleTown(bot, selected))
                 return FinishTownIdle(bot, "Arrival is outside the safe area");
             DateTime arrived = DateTime.UtcNow;
-            TimeSpan? duration = AutonomousTownDowntime.RollWithinBudget(deadline - arrived);
+            TimeSpan? duration = AutonomousBotPersonality.ScaleTownBreak(bot,
+                AutonomousTownDowntime.RollWithinBudget(deadline - arrived), deadline - arrived);
             if (!duration.HasValue)
                 return FinishTownIdle(bot, "Travel left insufficient time for the minimum break");
             _townIdleUntilUtc = arrived.Add(duration.Value);

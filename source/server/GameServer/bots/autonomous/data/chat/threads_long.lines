@@ -1,0 +1,378 @@
+# Long /faction threads that unfold over several minutes: people join late, drift off topic, leave
+# for a pull and come back. "~ N" is a lull of N seconds. Arguments are period knowledge in new
+# words; place, class and specialization names are checked against the world database.
+
+@kind debate
+@realm *
+
+@topic buffbots
+@levels 30-50
+@scene long_buffbots
+@role B type=NoLifer
+@role C type=Socialite
+@role D type=Leveler
+@role E type=Crafter
+@role F type=*
+A: {q} serious question, is running a buffbot on a second account cheating?
+B: cheating how? it is my coin, my account, my time
+C: it is a whole person's worth of help that one person controls
+B: so? nobody else wanted to group at 4am
+D: i tried soloing my 30s without one and it was miserable
+C: miserable is how you find a group though
+~ 25
+B: the buffs make a solo player as strong as a duo, that is the point
+C: and that is the problem. why would anyone invite a support class anymore?
+E: as a crafter i love buffbots, everyone with one buys two sets of gear
+D: lol, true
+~ 30
+F: wait what did i miss
+A: buffbot argument, round three
+F: oh. bots are fine in pve, ruin the frontier though
+B: everyone in the frontier has buffs anyway
+F: from a person who can get mezzed. a bot sits in the back untouchable
+C: that is my point exactly. the bot never takes risks
+B: the bot sits behind a wall like any careful healer would
+~ 40
+D: honestly the real fix is more people grouping
+C: thank you
+B: i group all the time, the bot just covers the empty hours
+E: anyone need armor for their bot by the way
+A: lol
+~ 20
+F: so where did we land
+C: bots fine for leveling, not in the frontier
+B: bots fine everywhere, people just like to complain
+D: we landed nowhere, same as always
+A: good talk everyone :)
+
+@topic stealthers
+@levels 35-50
+@scene long_stealth
+@role B type=Leveler,Crafter
+@role C type=NoLifer
+@role D type=Daredevil
+@role E type=Socialite
+A: third time tonight a stealther got me on the road to {keep}
+B: same. you cannot even see them before the stun lands
+C: you are walking alone through the frontier at night, what did you expect
+B: i expected to reach the keep
+D: honestly i love it, keeps you on your toes
+B: easy to say when it is not your bind point you are running from
+~ 30
+E: you could just ask in faction for a group to travel with
+A: i did, nobody answered
+C: that is the real lesson. the frontier punishes people alone
+B: so leveling players should never set foot out there?
+C: they should travel with friends, like everyone else does
+~ 35
+D: or you buy see-hidden friends. i mean literally, a group with a stealther in it
+E: lol stealther escorts
+B: so to stop stealthers i need my own stealther
+D: yes. welcome to the frontier
+~ 25
+C: for what it is worth, stealthers die instantly to any real group
+B: then why do they never fight real groups
+C: because we are not stupid
+A: ok that one made me laugh
+E: invite me next time you head out, i will come
+A: deal, leaving in five
+
+@topic relics
+@levels 40-50
+@scene long_relic_loss
+@role B type=NoLifer
+@role C type=Socialite
+@role D type=Leveler
+@role E type=Daredevil
+@role F type=*
+A: we lost the relic. how did we lose the relic
+B: they hit the keep with forty people while we were split across the map
+C: i was there, we had maybe twelve defenders
+D: i was leveling, sorry
+B: half the realm was leveling, that is the problem
+D: i am allowed to level
+~ 30
+E: we should take it back tonight
+B: with what army? look at the frontier, it is empty
+C: post a time and people will come
+F: i can bring my guild, maybe eight of us
+E: that is a start
+~ 40
+B: honestly the realm with the most people will always hold the relics
+C: then we fight smarter, not bigger
+B: smarter does not knock down a door
+F: rams do. who can build rams?
+E: i can carry one
+~ 25
+D: ok i will come after this level, maybe twenty minutes
+C: meet at the portal keep in half an hour
+B: fine. i will scout their numbers first
+A: this is the most organized we have been all week
+F: do not jinx it
+~ 60
+C: how many are we so far?
+E: i count fourteen and two rams
+B: they have twenty around the keep, it is doable if we hit the door fast
+A: lets go
+
+@topic best_class
+@levels 1-50
+@realm mid
+@scene long_best_class_mid
+@role B class=Healer,Shaman
+@role C class=Berserker,Savage,Warrior,Thane
+@role D class=Runemaster,Spiritmaster,Bonedancer
+@role E class=Skald
+@role F type=*
+A: new to midgard, what class should i roll?
+C: zerker. two axes, big numbers, no thinking
+B: healer. every group wants one and you will never wait for an invite
+D: runemaster if you like watching things melt from a distance
+E: skald, everyone loves you because you make them run fast
+A: ok that is four answers
+F: welcome to midgard
+~ 30
+B: real talk, healers never have trouble finding groups
+C: and never have fun soloing
+B: pac healers solo fine if they are careful
+C: careful is a polite word for slow
+~ 25
+D: casters are the middle ground, solo okay, group great
+E: skald is the middle ground. you can fight and the group loves you
+C: you just want a speed bot for yourself
+E: i AM the speed bot
+~ 35
+F: what do you want to do at 50? frontier or dungeons?
+A: probably both
+F: then healer or skald, both get invited to everything
+C: or zerker and get invited to nothing but have fun anyway
+A: lol
+~ 20
+B: whatever you pick, find a guild. it matters more than the class
+D: true
+A: thanks everyone, going to try a skald first
+E: the right answer
+
+@realm *
+@topic leveling_route
+@levels 1-30
+@realm hib
+@scene long_leveling_hib
+@role B type=Leveler
+@role C type=Explorer
+@role D type=Socialite
+@role E type=Daredevil
+A: just hit 10, where should i go next?
+B: lough derg is done for you, head to connacht
+C: or silvermine, the view is great and the monsters are tougher
+B: tougher means slower at 10
+E: tougher means more fun
+~ 30
+D: find people your level in mag mell first, everything is faster in a group
+A: mag mell is empty right now
+D: then ask in faction, like you just did :)
+~ 25
+B: around 15 try muire tomb if you can get a group
+C: take a druid, the mummy hags hurt
+E: take a druid and pull two hags at once
+B: please do not listen to that
+~ 30
+A: and after that?
+B: spraggon den in your 20s, best xp around
+C: shannon estuary is calmer if you want to solo between groups
+D: and the battleground at 20, you will love it
+E: or hate it if the twinks are out
+~ 20
+A: this is great, thank you all
+B: train every level, do not forget
+C: and look at the scenery once in a while
+A: will do
+
+@realm *
+@topic zerg
+@levels 40-50
+@scene long_zerg_vs_8man
+@role B type=NoLifer
+@role C type=Socialite,Leveler
+@role D type=Daredevil
+@role E type=*
+A: ok settle this. is following the zerg real rvr or not
+B: the zerg is a crowd walking from keep to keep. real fights are 8 against 8
+C: the zerg takes keeps and relics, that is literally the war
+B: and nobody in it needs to know how to play
+C: half the realm does not have a set group, the zerg is where they fit in
+~ 30
+D: i do both. zerg when i want points, small group when i want a fight
+E: same, the zerg is a warm bath, the 8man is a cold shower
+B: the 8man is where you learn your class
+C: the zerg is where you learn the map
+~ 35
+A: what about lag though
+B: exactly. forty people in one place and everyone is a slideshow
+C: turn your effects down and stop complaining
+D: lol
+~ 25
+E: honestly the best night is when a small group catches the zerg on a bridge
+D: holding a choke point with eight people against thirty, nothing beats it
+B: see, that is real rvr
+C: and the thirty still take the keep afterwards
+~ 30
+A: so we need both
+C: we always needed both
+B: fine. but my group still laughs at the zerg
+E: and the zerg still owns the map
+A: perfect, nobody changed their mind. very rvr
+
+@topic crafting_economy
+@levels 20-50
+@scene long_crafting_rant
+@role B type=Crafter
+@role C type=Leveler
+@role D type=NoLifer
+@role E type=Crafter
+A: why does a crafted suit cost so much?
+B: you know what metal bars cost? and how many fail before one comes out right?
+C: i could farm a named for a week and still pay less
+B: then farm the named. let me know how the stats look
+~ 30
+E: and do not forget the hours on the skill. every point of skill is coin burned
+C: that is your choice though, nobody asked you to craft
+E: everybody asked, the moment they wanted armor
+~ 25
+D: spellcrafting is where the real cost is, gems are not cheap
+B: and one overcharge gone wrong eats the profit of three orders
+C: so do not overcharge
+B: then your stats are worse and you complain about that instead
+~ 35
+A: is there a cheaper way?
+E: buy a plain crafted piece and fill it with drops for the other slots
+D: or wait until 50 and do the whole suit once
+C: or stop worrying and level
+B: or tip your crafter
+A: lol ok, what do you charge for a chest piece
+B: send me your stats and level, we can talk
+
+@topic nerfs
+@levels 35-50
+@scene long_nerf_thread
+@role B type=Daredevil
+@role C type=NoLifer
+@role D type=Socialite
+@role E type=Leveler
+@role F type=*
+A: is it just me or does my class feel weaker since the last patch
+B: every class feels weaker after a patch, it is the law
+C: they changed a lot of styles, maybe your favorite combo got slower
+A: maybe. still feels bad
+~ 30
+D: i swear every patch someone says their class is dead
+B: and then that someone is still playing it a month later
+E: i just want to level, i do not care what they change
+~ 25
+F: honestly the other realm's version of my class is the real problem
+C: every realm says that about every other realm
+F: because it is true every time
+D: lol
+~ 30
+C: real advice: try other specs before you decide it is the patch
+A: you might be right, i have not touched my spec in twenty levels
+B: or roll something new, nerfs cannot catch you if you keep moving
+E: or just keep playing, it is still the best game around
+A: fair enough, going to respec and see
+
+@topic worst_wipe
+@levels 20-50
+@scene long_worst_wipe
+@role B type=Daredevil
+@role C type=Socialite
+@role D type=Leveler
+@role E type=Explorer
+A: storytime. what is the worst wipe you have ever been part of?
+B: i pulled an entire room in {dungeon} because i thought it was one monster
+C: lol we have all been there
+B: eight of us, everyone dead in ten seconds, healer still typing
+~ 25
+D: mine was a train. someone ran past us with half the dungeon behind them
+E: the classic. did they at least yell train?
+D: they yelled sorry. after
+C: sorry is the least helpful word in the game
+~ 30
+C: mine was my own fault, i forgot to rebuff and the tank went down on the first pull
+A: rebuffs, the silent killer
+E: mine was exploring. found a pretty cave, it was full of purples
+B: love it
+~ 35
+D: worst part is the run back
+B: worst part is explaining to the group in chat
+C: worst part is when it happens again ten minutes later
+A: this is why i love this game
+E: same honestly
+B: who wants to go wipe somewhere tonight
+D: lol i am in
+
+@topic dragon
+@levels 45-50
+@scene long_dragon_planning
+@role B type=NoLifer
+@role C type=Socialite
+@role D type=Leveler
+@role E type=Daredevil
+@role F type=*
+A: anyone interested in a dragon raid this weekend?
+B: yes. how many do we have?
+A: two guilds so far, maybe thirty people
+C: we need way more than that for a dragon
+~ 30
+E: i will be there, i want to see the breath with my own eyes
+D: what does it drop? is it worth a whole night
+B: the loot is a lottery, the experience is the point
+D: the experience of dying to a breath attack?
+E: exactly
+~ 35
+F: how do we split the loot with that many people
+C: rolls per guild, then per person
+B: or points for showing up, like the bigger guilds do
+F: points sound fair, rolls sound fun
+~ 25
+C: i will post the time in faction every hour until then
+A: saturday night, meet in the capital
+D: ok i am in, but only if somebody brings a lot of healers
+B: healers first, everyone else second
+E: and nobody stands in front of the head
+A: rule one of dragons. see everyone saturday
+
+@topic caster_pride
+@levels 35-50
+@realm alb
+@scene long_alb_casters
+@role B class=Wizard
+@role C class=Sorcerer
+@role D class=Theurgist
+@role E class=Cabalist
+@role F class=Cleric
+A: settle this, best caster in albion?
+B: wizard. fire from across the room, nothing else needed
+C: sorcerer. without my mez your fire lands on a crowd that kills us all
+D: theurgist. my pets win fights while you two argue
+E: cabalist. dots and a simulacrum, slow but nothing escapes
+~ 30
+F: as the cleric who heals all of you, the best caster is the one standing behind the tank
+B: ouch
+C: fair though
+~ 25
+D: real talk, pets carry solo play. no caster solos like a theurgist
+E: necromancers might disagree
+D: necromancers are not even sure what they are
+B: and wizards solo just fine if you kite
+C: kiting is just running with extra steps
+~ 30
+A: what about the frontier?
+B: wizards, big damage ends fights
+C: sorcerers, a mezzed group cannot fight back
+F: clerics, because none of you survive without me
+E: lol she is not wrong
+~ 20
+A: so the answer is everyone needs a cleric
+F: the answer is always that
+B: fine. wizard is still the best
+C: sure it is
