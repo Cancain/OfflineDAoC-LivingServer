@@ -63,8 +63,7 @@ public static partial class AutonomousLivingServer
         Load("memory", () => Memories.Load(GameServer.Database.SelectAllObjects<OfflineBotMemoryRecord>()));
         Load("nemesis", () => Nemeses.Load(GameServer.Database.SelectAllObjects<OfflineBotNemesisRecord>()));
         Load("server firsts", () => Firsts.Load(GameServer.Database.SelectAllObjects<OfflineServerFirstRecord>()));
-        if (FirstsOn)
-            Load("server firsts reached before records began", SeedFirsts);
+        Load("server firsts reached before records began", () => SeedFirstsOnce(FirstsOn));
         // One-kill nemesis rows older than a week are forgotten, so the table stays small (review 2026-10-16).
         if (NemesisOn)
             Load("old nemesis rows", () => Nemeses.RemoveWhere(row => row.Kills <= 1 && IsOlderThan(row.LastUtc, TimeSpan.FromDays(7))));
@@ -250,7 +249,9 @@ public static partial class AutonomousLivingServer
     }
 
     /// <summary>A real player of a class that can resurrect in 2002-2003.</summary>
-    public static bool IsRezClass(GamePlayer player) => player?.CharacterClass?.ID is
+    public static bool IsRezClass(GamePlayer player) => IsRezClassId(player?.CharacterClass?.ID ?? 0);
+
+    public static bool IsRezClassId(int classId) => classId is
         (int)eCharacterClass.Cleric or (int)eCharacterClass.Friar or (int)eCharacterClass.Healer or
         (int)eCharacterClass.Shaman or (int)eCharacterClass.Druid or (int)eCharacterClass.Warden or
         (int)eCharacterClass.Bard;
@@ -262,7 +263,15 @@ public static partial class AutonomousLivingServer
             return false;
         try
         {
-            return player.GetAllUsableListSpells().Any(entry => entry.Item2.OfType<Spell>().Any(spell => spell.SpellType == eSpellType.Resurrect));
+            if (player.GetAllUsableListSpells().Any(entry => entry.Item2.OfType<Spell>().Any(spell => spell.SpellType == eSpellType.Resurrect)))
+                return true;
+            // The usable-spell list missed a level 50 Cleric's Revive in game (2026-10-17: has_rez_spell=False),
+            // so the character's own spell lines are checked too: a resurrection at or below the line's level.
+            foreach (SpellLine line in player.GetSpellLines())
+                if (line != null && SkillBase.GetSpellList(line.KeyName).Any(spell =>
+                        spell != null && spell.SpellType == eSpellType.Resurrect && spell.Level <= line.Level))
+                    return true;
+            return false;
         }
         catch
         {

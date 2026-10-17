@@ -2665,8 +2665,31 @@ namespace DOL.GS
         /// The ordinary RemoveFromWorld pet release is retained, allowing the
         /// pet manager to re-summon a legal pet in the destination region.
         /// </summary>
+        private long _deadMoveLoggedForDeath = -1;
+
+        public override bool MoveInRegion(ushort regionID, int x, int y, int z, ushort heading, bool forceMove)
+        {
+            LogDeadMove(regionID, x, y, z, "MoveInRegion");
+            return base.MoveInRegion(regionID, x, y, z, heading, forceMove);
+        }
+
+        private void LogDeadMove(ushort regionID, int x, int y, int z, string how)
+        {
+            if (!IsAutonomousWorldBot || IsAlive || _deadMoveLoggedForDeath == _deathTick || !log.IsInfoEnabled)
+                return;
+            _deadMoveLoggedForDeath = _deathTick;
+            string stack = string.Join(" <- ", new System.Diagnostics.StackTrace(2, false).GetFrames()
+                .Take(8).Select(frame => frame.GetMethod() is { } method ? $"{method.DeclaringType?.Name}.{method.Name}" : "?"));
+            log.Info($"LIVING_SERVER_DEAD_MOVE bot=\"{Name}\" id={DatabaseID} how={how} deadMs={GameLoop.GameLoopTime - _deathTick} " +
+                     $"from={CurrentRegionID}:{X},{Y},{Z} to={regionID}:{x},{y},{z} by={stack}");
+        }
+
         public override bool MoveTo(ushort regionID, int x, int y, int z, ushort heading)
         {
+            // In game 2026-10-17 dead gamebots were found near their bind within seconds of dying, still dead, so
+            // nobody could rez them. LogDeadMove says once per death who moves a dead gamebot (a normal release
+            // moves the corpse before reviving it, so it shows up here too, about 20 s or 90 s after the death).
+            LogDeadMove(regionID, x, y, z, "MoveTo");
             // Owner 2026-10-07: travelling the old frontiers, the pets of the player's /spawn and /raid companions died
             // on every move (the move removes the bot from the world, which released its pet) and their pet classes kept
             // re-summoning. Within a region a companion's pet now comes along and is placed behind it, as a player's pet

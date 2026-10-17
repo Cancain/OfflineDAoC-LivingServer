@@ -100,7 +100,8 @@ public static partial class AutonomousLivingServer
         string mood = MoodOf(row);
         if (mood == "cool")
             return AutonomousBotVoices.TryEventLine(bot, "grudge", out text, slots: slots, flags: ["knows_player"], mood: "cool");
-        return AutonomousBotVoices.TryEventLine(bot, "reply", out text, slots: slots, flags: ["knows_player"], intent: intent);
+        // Only the lines written for a known player (topic "player"): the general replies don't use the name.
+        return AutonomousBotVoices.TryEventLine(bot, "reply", out text, "player", slots, ["knows_player"], intent: intent);
     }
 
     /// <summary>Once a second on the game loop: grouping notes, greetings, gossip (each on its own timer).</summary>

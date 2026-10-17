@@ -198,6 +198,35 @@ public static partial class AutonomousLivingServer
     /// titles are marked as reached before records began (no name, never announced), so the next
     /// character to get there is not wrongly called the first.
     /// </summary>
+    /// <summary>
+    /// The row that says records began (no name, so the Herald never lists it). Titles are seeded only
+    /// when it is missing: the first start with the switch on, or the first one after the switch was
+    /// off. Before, every start re-seeded, so level 50 bots made with the launcher's "+ Lv.50" button
+    /// (born at 50, never reaching it) took "first to level 50" and every class title at the next
+    /// restart, and nobody could earn them again (in-game check 2026-10-17).
+    /// </summary>
+    public const string RecordsBeganTitle = "~ records began";
+
+    /// <summary>Seeds the firsts reached before records began, once (see <see cref="RecordsBeganTitle"/>).</summary>
+    internal static void SeedFirstsOnce(bool firstsOn) => SeedFirstsOnce(Firsts, firstsOn, SeedFirsts);
+
+    /// <summary>The rule of <see cref="SeedFirstsOnce(bool)"/> on any table (tests pass their own seeding).</summary>
+    public static void SeedFirstsOnce(LivingServerTable<string, OfflineServerFirstRecord> firsts, bool firstsOn, Action seed)
+    {
+        bool began = firsts.TryGet(RecordsBeganTitle, out _);
+        if (!firstsOn)
+        {
+            // Switched off: forget that records began, so switching on again re-seeds who got there meanwhile.
+            if (began)
+                firsts.RemoveWhere(row => string.Equals(row.Title, RecordsBeganTitle, StringComparison.OrdinalIgnoreCase));
+            return;
+        }
+        if (began)
+            return;
+        seed();
+        firsts.TryAdd(RecordsBeganTitle, new OfflineServerFirstRecord { Title = RecordsBeganTitle, AchievedUtc = DateTime.UtcNow.ToString("O") });
+    }
+
     private static void SeedFirsts()
     {
         var reached = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -402,10 +431,23 @@ public static partial class AutonomousLivingServer
     private static void AskForRez(GameBot bot)
     {
         long deathTick = GameLoop.GameLoopTime;
+        string diedAt = $"{bot.CurrentRegionID}:{bot.X},{bot.Y},{bot.Z}";
         AskedAtDeath[bot.DatabaseID] = deathTick;
         Later(bot, 3_000 + Random.Shared.Next(4_000), () => !bot.IsAlive && AskedAtDeath.TryGetValue(bot.DatabaseID, out long t) && t == deathTick, () =>
         {
             GamePlayer rezzer = NearbyRezzer(bot);
+            if (Log.IsInfoEnabled)
+            {
+                // Says who could have rezzed, so a missing ask can be checked in game (in-game check 2026-10-17).
+                GamePlayer rezClass = rezzer ?? (bot.CurrentRegion == null ? null : ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion).FirstOrDefault(player =>
+                    player.Realm == bot.Realm && IsRezClass(player) && bot.IsWithinRadius(player, 2_500)));
+                Log.Info($"LIVING_SERVER_REZ_ASK bot=\"{bot.Name}\" rezzer=\"{rezzer?.Name ?? "none"}\"" +
+                         (rezzer == null && rezClass != null
+                             ? $" near_rez_class=\"{rezClass.Name}\" alive={rezClass.IsAlive} has_rez_spell={CanRez(rezClass)}"
+                             : string.Empty) +
+                         $" died_at={diedAt} now_at={bot.CurrentRegionID}:{bot.X},{bot.Y},{bot.Z} moving={bot.IsMoving}" +
+                         $" region={bot.CurrentRegionID} players={DescribePlayersNear(bot)}");
+            }
             bool grouped = rezzer != null && bot.Group != null && bot.Group == rezzer.Group;
             Channel channel = grouped || bot.Group != null && GroupHasPlayer(bot.Group) ? Channel.Group : Channel.Say;
             if (rezzer != null)
@@ -429,6 +471,16 @@ public static partial class AutonomousLivingServer
                      AutonomousBotVoices.TryEventLine(bot, "rez_ask", out string general, "general", flags: ["just_died"], noRepeat: false))
                 Speak(bot, channel, general);
         });
+    }
+
+    /// <summary>Every player online, for the rez ask log: name, region, realm, distance, class, can rez.</summary>
+    private static string DescribePlayersNear(GameBot bot)
+    {
+        var parts = ClientService.Instance.GetPlayers().Select(player =>
+            $"{player.Name}(region={player.CurrentRegionID},at={player.X},{player.Y},{player.Z},realm={(int)player.Realm},alive={player.IsAlive}," +
+            $"state={player.ObjectState},distance={(player.CurrentRegionID == bot.CurrentRegionID ? (int)bot.GetDistanceTo(player) : -1)}," +
+            $"class={player.CharacterClass?.ID},rez_class={IsRezClass(player)},can_rez={CanRez(player)})");
+        return "[" + string.Join(";", parts) + "]";
     }
 
     /// <summary>

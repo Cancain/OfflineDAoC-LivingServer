@@ -4,8 +4,8 @@ Part of the Social Expansion fork. The goal (Chris, 2026-10-16): make the autono
 like players on a 2003 server, through continuity and consequence more than through more chat.
 
 **Status:** built on `feature/living-server`. Automated tests pass (see "Tests" below).
-**Not yet checked in game.** Every part starts **off**; with everything off the server behaves
-exactly as before.
+**Partly checked in game** (2026-10-17, see "In-game check" below). Every part starts **off**; with
+everything off the server behaves exactly as before.
 
 Only autonomous gamebots change. Your `/spawn` companions and real players are never affected.
 Lines come from the bot-voices corpus (`living_server.lines` and `memory.lines`), in each bot's
@@ -44,7 +44,7 @@ stopped; they are used at the next start. The server keys (category `bots`) are:
     the same bot at most every 45 minutes. Groupmates don't greet.
   - Sometimes **thanks you for an old rez or a good group**, naming the place.
   - **Answers you by name** (most of the time) when you talk near it, in `/faction`, or by its
-    name. A cool bot gives you a short brush-off.
+    name. A cool bot gives you a short brush-off. Insults and out-of-game talk keep the old replies.
   - Now and then (every 30–60 minutes per realm) a bot that likes you **mentions you in
     `/faction`**, never one standing next to you.
 - Memory is chat only. It never changes who groups with whom, and it never refuses you.
@@ -72,6 +72,9 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
 - **Turning it on in a played world:** titles someone already holds are marked "reached before
   records began" (no name, never announced). So the next character to get there isn't wrongly
   called the first.
+  - This happens once: at the first start with the switch on, and again only if the switch was
+    off in between. Bots made later with the launcher's **+ Lv.50** button never reached 50, so
+    they don't take the level 50 titles.
 - **Not built:** "first kill of a big named monster".
 
 ### Rezzes and corpse runs (`bot_living_death`)
@@ -80,7 +83,11 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
     player for a rez by name, after a few seconds: in `/group` if you're grouped, in `/say` if
     you're close, otherwise as a `/send`.
   - "Can rez" means a Cleric, Friar, Healer, Shaman, Druid, Warden or Bard who has learned a
-    resurrection spell.
+    resurrection spell (from the spells it lists, or a resurrection spell in its spell lines at
+    or below the line's level).
+  - The bot's corpse stays where it died until it releases, so it can be rezzed there.
+  - With nobody who can rez near, a bot sometimes asks generally ("rez pls?", "anyone able to
+    rez, dead by the spirit hound") in `/group`, or in `/say` when you're close.
   - The bot then waits the long release timer (90 s) instead of 20 s, even if you aren't in its
     group.
 - **Releasing and being rezzed:**
@@ -99,6 +106,9 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
   - A bot on a siege job, holding a siege position, carrying a relic or in an RvR event force
     doesn't come. A bot that can't reach you within 20 seconds gives up on you for 2 minutes.
   - Groupmates already rezzed you before; that is unchanged.
+- **Server log:** every ask is logged as `LIVING_SERVER_REZ_ASK` (with who could have rezzed),
+  every rez a bot starts on you as `LIVING_SERVER_REZ`, and a rez bot near your corpse that
+  doesn't rez says why as `LIVING_SERVER_REZ_SKIP` (at most every 15 seconds per bot).
 
 ### Frontier alarms (`bot_living_alarms`)
 - **When:** a bot in the frontier or a battleground sees 3 or more enemy players or gamebots
@@ -215,11 +225,82 @@ Automated (no running world):
   - `HeraldPageTests`.
 - **Corpus:** `build_corpus.py --verify` and `check_runtime_names.py` in CI.
 
-**Not yet checked in game.** Suggested checks:
+## In-game check (2026-10-17)
+
+Played on the owner's PC with build 0.36-chris.3 in the Godot client (0.36c), all eight switches
+on, schedule `session`, 50 bots made with the launcher. About two hours, an Albion Cleric.
+
+**Seen working in game:**
+- **Grats:** on a ding with two bots in the group: `[Party] Hareralfrey: "gratz"`,
+  `[Party] Maraenisette: "grats Claudecheck, go train :P"`.
+- **Server first:** reaching realm rank 2 put "Server first: Claudecheck is the first on the
+  server to reach realm rank 2" on screen and in the system window. Two bots cheered in `/faction`.
+- **Memory:** grouping was saved within seconds (`offline_bot_memory`). A former groupmate passing
+  by said "had fun at Camelot Hills with you Claudecheck, again sometime? :P", and later "Claudecheck!
+  we should group again sometime".
+- **Rezzes:** a groupmate that died asked in `/group` "anyone able to rez, dead by the spirit
+  hound", then after releasing said "long run back to Camelot Hills :)".
+- **Schedule:** bots logged out (one said "gn all" in `/say` beside me, out of combat) and came
+  back about 25 minutes later. The server log has 10 `LIVING_SERVER_LOGOUT` lines in two hours,
+  two of them breaks (`reason=brb`); I wasn't near those two, so their "brb" wasn't seen in chat.
+- **Nemesis:** a Hibernian Enchanter killing an Albion bot at Hadrian's Wall was saved with race,
+  class and place.
+- **Camelot Herald:** the page listed the server first, the realm point leaders and Most Wanted
+  (two Midgard bots with two kills each).
+
+**Bugs found and fixed after this check:**
+- A bot that knew you answered by name only about one time in five: its known-player replies were
+  mixed with the general replies. They now have their own topic, and there are known-player
+  replies for every ordinary intent (test `ARememberedPlayerIsAnsweredByNameForEveryOrdinaryIntent`).
+- Every server start re-seeded the "reached before records began" titles, so bots made at level 50
+  with the launcher took "first to level 50" and all the class titles. Seeding now happens once
+  (test `FirstsAreSeededOnceSoBotsMadeAtFiftyLaterDontTakeThem`).
+
+**Not seen in the first check** (both fixed and then seen in the second check, below):
+- A bot rezzing me. Four tries near a level 50 Friar or Cleric: one bot was logged out by the
+  schedule, one stayed in a fight, and two walked on while travelling.
+- A bot asking me for a rez by name. With my level 50 Cleric (Revive learned) beside a bot that
+  died, no ask came.
+- Frontier alarms, the nemesis complaint and revenge lines, the "brb" line and linkdeads: not
+  seen in two hours. They need a frontier fight, repeated kills or an hour or more in one group.
+
+**Second check, builds 0.36-chris.5 to chris.8** (same PC, Godot client, schedule `off` so the
+level 50 healers stayed online). The new log lines found two causes:
+- **"Can rez" was false for a Cleric 50 with Revive.** It only looked at the spells the client
+  lists, and those didn't include Revive. It now also checks the character's spell lines for a
+  resurrection spell at or below the line's level (chris.5). The log then showed `can_rez=True`.
+- **A dead gamebot's corpse moved to its spawn point within milliseconds.** When a bot dies its
+  brain stops, and stopping a brain sent the body "home". `LIVING_SERVER_DEAD_MOVE` showed
+  `by=ABrain.Stop deadMs=33`. So the bot asked for a rez from a corpse that was no longer beside
+  you, and no player or bot could reach it. This probably also broke bot-to-bot rezzes in bot
+  groups before this branch. A dead gamebot now stays where it died. Its release still moves it
+  to its bind, at 20 s (or 90 s when someone near can rez), and a rezzed bot's brain starts again
+  (chris.8).
+
+Seen in game with chris.8:
+- **A bot asks me by name:** a level 4 Friar that died 655 units from my Cleric sent "Claudecheck
+  rez pls?". The log has `LIVING_SERVER_REZ_ASK ... rezzer="Claudecheck" died_at=... now_at=...`
+  with the same position twice. The corpse stayed there for the full 90 s, then released.
+- **Every other bot death** in that session also kept its corpse in place until the release at
+  21 s. No `by=ABrain.Stop` moves were logged.
+- **A bot rezzes me:** I died beside a level 50 Cleric bot that wasn't in my group. It said "rez
+  incoming", the log has `LIVING_SERVER_REZ bot="Seraorith" corpse="Claudecheck" distance=6`, and
+  the accept box appeared. My first accept came after the stock 15-second offer had expired.
+  About 90 s later it offered again ("got you Claudecheck, one sec lol"); I accepted and was
+  rezzed.
+
+Not checked: a player rezzing a dead bot, and its thank-you line. The Godot client clears your
+target when the bot dies and doesn't show the corpse, so Revive had no target ("You must select
+a target for this spell!"). The original client wasn't tried.
+
+**Godot client gaps seen** (the client's, not this build's):
+- The FOLLOW and FACE buttons send `/follow` and `/face`, which the server doesn't have.
+- A dead NPC's corpse isn't shown and can't be targeted, so you can't rez a bot from it.
+
+Suggested checks that remain:
 1. Turn on **Grats**, group with bots and level: groupmates say grats in `/group`.
-2. Turn on **Rezzes and corpse runs** on a rez class: a bot that dies near you asks you by name
-   and thanks you after you rez it. Die near a bot healer that isn't in your group: it offers a
-   rez and you get the accept box.
+2. Turn on **Rezzes and corpse runs** on a rez class, in the original client: rez a bot that
+   asked you by name, and it thanks you. (The ask and a bot rezzing you were seen with chris.8.)
 3. Turn on **Bots remember you**: group with a bot for a while, leave, and walk past it later. It
    greets you by name.
 4. Turn on **Frontier alarms** and go to the frontier: `/faction` calls enemy groups, at most one
