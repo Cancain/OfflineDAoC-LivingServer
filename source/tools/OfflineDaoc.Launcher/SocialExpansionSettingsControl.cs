@@ -31,8 +31,8 @@ internal sealed class SocialExpansionSettingsControl : UserControl
     private readonly CheckBox _personalities = Switch("Bot personalities");
     private readonly CheckBox _voices = Switch("Bot voices");
     private readonly CheckBox _debates = Switch("/faction debates", part: true);
-    private readonly XpRow _playerXp = new("YOUR CHARACTERS", SocialExpansionSettings.SuggestedPlayerXp, "Suggested  3× · 5× · 12×");
-    private readonly XpRow _botXp = new("AUTONOMOUS BOTS", SocialExpansionSettings.SuggestedBotXp, "Suggested  1.5× · 2.5× · 6×");
+    private readonly XpRow _playerXp = new("YOUR CHARACTERS", SocialExpansionSettings.SuggestedPlayerXp, "3× · 5× · 12×");
+    private readonly XpRow _botXp = new("AUTONOMOUS BOTS", SocialExpansionSettings.SuggestedBotXp, "1.5× · 2.5× · 6×");
     private readonly Label _status = new()
     {
         Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft,
@@ -84,8 +84,8 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         var note = new Label
         {
             Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Font = StatusFont, ForeColor = DaocTheme.Muted,
-            Text = "Inside these level ranges the rate replaces the flat XP on the Options tab; other levels keep it. The suggested rates keep " +
-                   "levels 1–34 worth playing and shorten the 35–50 grind. Custom ranges look like 1-19:3;20-34:5;35-50:12.",
+            Text = "Suggested rates are for levels 1–19 · 20–34 · 35–50: they keep levels 1–34 worth playing and shorten the 35–50 grind. " +
+                   "Inside a range its rate replaces the flat XP on the Options tab; other levels keep it.",
         };
         xp.Grid.Controls.Add(note, 0, xp.Grid.RowCount - 1);
         xp.Grid.SetColumnSpan(note, 3);
@@ -404,7 +404,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         private readonly string _label;
         private readonly string _suggested;
         private readonly ComboBox _mode = new() { DropDownStyle = ComboBoxStyle.DropDownList, Width = 128 };
-        private readonly TextBox _text = new() { Width = 250 };
+        private readonly TextBox _text = new() { Width = 220 };
         private readonly Label _hint = new() { AutoSize = true, Font = DescriptionFont, ForeColor = DaocTheme.Parchment, Margin = new Padding(4, 7, 0, 0) };
         private readonly Label _error = new() { Dock = DockStyle.Fill, Font = StatusFont, ForeColor = DaocTheme.Danger, TextAlign = ContentAlignment.TopLeft };
         private readonly string _suggestedHint;
@@ -470,9 +470,9 @@ internal sealed class SocialExpansionSettingsControl : UserControl
             _text.Visible = _mode.SelectedIndex != Off;
             _hint.Text = _mode.SelectedIndex switch
             {
-                Off => "Your flat rate from the Options tab, at every level.",
-                Suggested => _suggestedHint + "  for levels 1–19 · 20–34 · 35–50",
-                _ => "first-last:rate; …",
+                Off => "The flat rate from the Options tab",
+                Suggested => _suggestedHint,
+                _ => "first-last:rate;  …",
             };
         }
 
