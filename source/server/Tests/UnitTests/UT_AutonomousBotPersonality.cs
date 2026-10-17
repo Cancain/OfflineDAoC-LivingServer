@@ -213,9 +213,9 @@ namespace DOL.GS.Tests
             Assert.That(Enumerable.Range(10, 40).All(i => plan[i] != eAutonomousObjectiveKind.Battleground), Is.True);
         }
         /// <summary>
-        /// The allocator's RvR pass as it runs (review 2026-10-17): planned bots first, then the rest with the old
-        /// over-quota draw on live counters. 100 bots, 20 open RvR slots and nothing else open: exactly 20 RvR, as before
-        /// personalities (interleaving had given about 36).
+        /// The allocator's RvR pass (review 2026-10-17): planned bots first, then the rest with the old over-quota draw on
+        /// live counters. 100 bots, 20 open RvR slots and nothing else open: exactly 20 RvR. This test copies the loop of
+        /// AutonomousObjectiveAssignments (its RvR-pass fallback draw included); keep the two in step.
         /// </summary>
         [Test]
         public void ThePass_NeverRunsAGoalOverItsNumber()
@@ -230,7 +230,9 @@ namespace DOL.GS.Tests
                 foreach (int i in P.PlannedFirst(plan))
                 {
                     int rvrNeeded = Math.Max(0, target.RvR - rvr);
-                    eAutonomousObjectiveKind kind = plan[i] ?? (rvrNeeded > 0 && random.Next(rvrNeeded) < rvrNeeded
+                    int soloNeeded = Math.Max(0, target.SoloPve - solo);
+                    int groupNeeded = Math.Max(0, target.GroupPve - group);
+                    eAutonomousObjectiveKind kind = plan[i] ?? (rvrNeeded > 0 && random.Next(rvrNeeded + soloNeeded + groupNeeded) < rvrNeeded
                         ? eAutonomousObjectiveKind.RvR
                         : AutonomousObjectiveAssignments.ChoosePveObjective(target, solo, group, random));
                     if (kind == eAutonomousObjectiveKind.RvR) rvr++;

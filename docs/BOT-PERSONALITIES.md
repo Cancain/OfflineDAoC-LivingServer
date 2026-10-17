@@ -87,9 +87,10 @@ In a test of 1,000 bots with a 40% solo, 40% group and 20% RvR mix:
 | Crafter | 70% | 25% | 5% |
 | No-lifer | 3% | 47% | 50% |
 
-Two cases still use the older re-draw rule, and only when a Bot Goals setting is saved:
-- a bot given a new goal between passes (for example when its group breaks up);
-- a bot left over once every open slot in its pass is filled.
+Personality doesn't choose goals in two cases:
+- A bot given a new goal between passes (for example when its group breaks up) uses the older re-draw rule, and
+  only when a Bot Goals setting is saved.
+- A bot left over once every open slot in its pass is filled gets the allocator's usual over-quota goal.
 
 ## 3. Voices
 
