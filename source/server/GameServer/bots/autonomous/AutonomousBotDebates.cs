@@ -27,8 +27,10 @@ public sealed class OfflineBotSceneHeardRecord : DataObject
 /// Debates and long threads (docs/bot-voices/DESIGN.md 3.5, part of the Social Expansion): the
 /// corpus's scenes play in /faction, cast from online bots of the realm by personality and class,
 /// one scene at a time per realm, 30-45 minutes apart, only while a real player of the realm is
-/// online. Lines arrive at typing pace; a speaker who goes into combat or logs off is replaced by
-/// another bot that fits, or skipped; with fewer than two speakers left the thread ends early.
+/// online, cast from bots on a town break first. Lines arrive at typing pace. A speaker who is
+/// fighting or casting is waited for (up to 45 s); one who stays busy, dies or logs off is replaced
+/// by another bot that fits, or the line is skipped. The thread ends early only when fewer than two
+/// of its speakers are still in the world.
 /// </summary>
 public static class AutonomousBotDebates
 {
@@ -43,7 +45,41 @@ public static class AutonomousBotDebates
 
     #region Pure rules (tested)
 
-    public readonly record struct Candidate(long Id, BotPersonalityType Type, string ClassName, int Level);
+    /// <summary>A bot that could speak. <paramref name="InTown"/>: on a town break, so least likely to be pulled into a fight.</summary>
+    public readonly record struct Candidate(long Id, BotPersonalityType Type, string ClassName, int Level, bool InTown = false);
+
+    /// <summary>Where a cast speaker is when its line is due.</summary>
+    public enum SpeakerState { Free, Busy, Gone }
+
+    /// <summary>What a beat does: say it, wait for a busy speaker, skip it, or end the thread.</summary>
+    public enum BeatDecision { Speak, Wait, Skip, End }
+
+    /// <summary>How often a beat whose speaker is fighting or casting is retried.</summary>
+    public const int BusyRetryMs = 5_000;
+
+    /// <summary>
+    /// How long a thread waits for a busy speaker before a stand-in takes the line. A fight lasts a few
+    /// seconds and a thread a minute or two; ending at the first busy moment cut threads among levelling
+    /// bots short (in-game check 2026-10-17: camp_etiquette ended after 24 s, "fewer than two speakers left").
+    /// </summary>
+    public const int MaxBusyWaitMs = 45_000;
+
+    /// <summary>
+    /// The rule for one beat. A free cast speaker speaks. A busy one is waited for (up to
+    /// <see cref="MaxBusyWaitMs"/>). After that, or when the speaker died or logged off, a stand-in
+    /// speaks; without one the beat is skipped while two speakers are still around (busy counts as
+    /// around), and the thread ends only when fewer than two are.
+    /// </summary>
+    public static BeatDecision DecideBeat(SpeakerState castSpeaker, long waitedMs, bool standInAvailable, int speakersAround)
+    {
+        if (castSpeaker == SpeakerState.Free)
+            return BeatDecision.Speak;
+        if (castSpeaker == SpeakerState.Busy && waitedMs < MaxBusyWaitMs)
+            return BeatDecision.Wait;
+        if (standInAvailable)
+            return BeatDecision.Speak;
+        return speakersAround >= 2 ? BeatDecision.Skip : BeatDecision.End;
+    }
 
     /// <summary>Typing pace: 3 seconds plus about 60 ms a character, within 3-10 seconds.</summary>
     public static int BeatDelayMs(string text) => Math.Clamp(3_000 + (text?.Length ?? 0) * 60, 3_000, 10_000);
@@ -64,7 +100,9 @@ public static class AutonomousBotDebates
     {
         var cast = new Dictionary<string, long>(StringComparer.Ordinal);
         var used = new HashSet<long>();
-        Candidate[] pool = candidates.Where(c => LevelFits(scene, c.Level)).OrderBy(_ => random.Next()).ToArray();
+        // Bots on a town break first: a thread cast from grinding bots stalls at their next pull.
+        Candidate[] pool = candidates.Where(c => LevelFits(scene, c.Level)).OrderByDescending(c => c.InTown)
+            .ThenBy(_ => random.Next()).ToArray();
         // Roles with requirements first, so the open roles don't take the only fitting bot.
         foreach (string role in scene.SpeakingRoles.OrderByDescending(r => scene.Roles.TryGetValue(r, out var s) ?
                      s.Classes.Length * 2 + s.Types.Length : 0))
@@ -135,6 +173,8 @@ public static class AutonomousBotDebates
         public Dictionary<string, string> Shared;
         public int Beat;
         public long NextAt;
+        /// <summary>When the current beat started waiting for a busy speaker; 0 when not waiting.</summary>
+        public long WaitingSince;
     }
 
     private static readonly object Sync = new();
@@ -205,7 +245,20 @@ public static class AutonomousBotDebates
         bot.DatabaseID > 0;
 
     private static Candidate CandidateOf(GameBot bot) =>
-        new(bot.DatabaseID, AutonomousBotPersonality.For(bot).Type, bot.CharacterClass?.Name ?? bot.ClassName ?? string.Empty, bot.Level);
+        new(bot.DatabaseID, AutonomousBotPersonality.For(bot).Type, bot.CharacterClass?.Name ?? bot.ClassName ?? string.Empty, bot.Level,
+            bot.PersistentRecord?.ObjectivePhase == AutonomousWorldBotController.TownIdlePhase);
+
+    private static SpeakerState StateOf(GameBot bot, eRealm realm)
+    {
+        if (bot?.IsAutonomousWorldBot != true || bot.IsTemporaryGroupHelper || bot.Realm != realm || !bot.IsAlive ||
+            bot.ObjectState != GameObject.eObjectState.Active || bot.DatabaseID <= 0)
+            return SpeakerState.Gone;
+        return bot.InCombat || bot.IsCasting ? SpeakerState.Busy : SpeakerState.Free;
+    }
+
+    private static SpeakerState CastState(eRealm realm, Running running, string role) =>
+        running.Cast.TryGetValue(role, out long id) && AutonomousBotRegistry.TryGet(id, out GameBot bot)
+            ? StateOf(bot, realm) : SpeakerState.Gone;
 
     private static void TickRealm(eRealm realm, long now)
     {
@@ -281,18 +334,35 @@ public static class AutonomousBotDebates
                 running.NextAt = now + Math.Max(1, beat.PauseSeconds) * 1_000L;
                 return;
             }
-            if (beat.Optional && Random.Shared.NextDouble() < 0.5 || beat.Variants.Length == 0)
+            // An optional beat is rolled once, not again on every retry while its speaker is busy.
+            if (running.WaitingSince == 0 && beat.Optional && Random.Shared.NextDouble() < 0.5 || beat.Variants.Length == 0)
                 continue;
-            GameBot speaker = SpeakerFor(realm, running, beat.Role);
-            if (speaker == null)
+            SpeakerState state = CastState(realm, running, beat.Role);
+            long waited = running.WaitingSince == 0 ? 0 : now - running.WaitingSince;
+            GameBot speaker = state == SpeakerState.Free || state == SpeakerState.Busy && waited >= MaxBusyWaitMs || state == SpeakerState.Gone
+                ? SpeakerFor(realm, running, beat.Role) : null;
+            switch (DecideBeat(state, waited, speaker != null, SpeakersAround(realm, running)))
             {
-                if (ActiveSpeakers(realm, running) < 2)
-                {
+                case BeatDecision.Wait:
+                    if (running.WaitingSince == 0)
+                    {
+                        running.WaitingSince = now;
+                        if (Log.IsInfoEnabled)
+                            Log.Info($"BOT_DEBATE_WAIT realm={realm} scene={running.Scene.Id} role={beat.Role} beat={running.Beat}");
+                    }
+                    running.Beat--; // retry this beat
+                    running.NextAt = now + BusyRetryMs;
+                    return;
+                case BeatDecision.End:
                     End(realm, "fewer than two speakers left");
                     return;
-                }
-                continue;
+                case BeatDecision.Skip:
+                    running.WaitingSince = 0;
+                    continue;
             }
+            running.WaitingSince = 0;
+            if (speaker == null)
+                continue;
             string[] filledVariants = FilledVariants(beat, AutonomousBotVoices.SlotsFor(speaker, Random.Shared, running.Shared));
             if (filledVariants.Length == 0)
                 continue;
@@ -333,8 +403,9 @@ public static class AutonomousBotDebates
         return replacement;
     }
 
-    private static int ActiveSpeakers(eRealm realm, Running running) =>
-        running.Cast.Values.Count(id => AutonomousBotRegistry.TryGet(id, out GameBot bot) && Eligible(bot, realm));
+    /// <summary>Cast members still in the world and of the realm; one fighting or casting still counts.</summary>
+    private static int SpeakersAround(eRealm realm, Running running) =>
+        running.Cast.Values.Count(id => AutonomousBotRegistry.TryGet(id, out GameBot bot) && StateOf(bot, realm) != SpeakerState.Gone);
 
     private static void End(eRealm realm, string reason)
     {

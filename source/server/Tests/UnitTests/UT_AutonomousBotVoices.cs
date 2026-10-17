@@ -429,6 +429,45 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void DecideBeat_WaitsForABusySpeakerAndEndsOnlyWhenSpeakersAreGone()
+        {
+            // In-game check 2026-10-17: camp_etiquette ended after 24 s because two of three levelling bots
+            // were mid-fight when a line came due. A fight is now waited out.
+            Assert.Multiple(() =>
+            {
+                Assert.That(Debates.DecideBeat(Debates.SpeakerState.Free, 0, false, 1), Is.EqualTo(Debates.BeatDecision.Speak));
+                Assert.That(Debates.DecideBeat(Debates.SpeakerState.Busy, 0, false, 1), Is.EqualTo(Debates.BeatDecision.Wait),
+                    "A busy speaker is waited for, even when it is the only other one around.");
+                Assert.That(Debates.DecideBeat(Debates.SpeakerState.Busy, Debates.MaxBusyWaitMs - 1, true, 3), Is.EqualTo(Debates.BeatDecision.Wait),
+                    "The original speaker keeps the line while the wait lasts.");
+                Assert.That(Debates.DecideBeat(Debates.SpeakerState.Busy, Debates.MaxBusyWaitMs, true, 3), Is.EqualTo(Debates.BeatDecision.Speak),
+                    "After the wait a stand-in takes the line.");
+                Assert.That(Debates.DecideBeat(Debates.SpeakerState.Busy, Debates.MaxBusyWaitMs, false, 2), Is.EqualTo(Debates.BeatDecision.Skip),
+                    "Still busy, no stand-in, two around: skip the line, keep the thread.");
+                Assert.That(Debates.DecideBeat(Debates.SpeakerState.Gone, 0, false, 2), Is.EqualTo(Debates.BeatDecision.Skip));
+                Assert.That(Debates.DecideBeat(Debates.SpeakerState.Gone, 0, false, 1), Is.EqualTo(Debates.BeatDecision.End),
+                    "Only when fewer than two are left does the thread end.");
+            });
+
+            // A short fight: the speaker is busy for three retries, then free again. The line is said, not dropped.
+            Debates.SpeakerState[] fight = [Debates.SpeakerState.Busy, Debates.SpeakerState.Busy, Debates.SpeakerState.Busy, Debates.SpeakerState.Free];
+            Debates.BeatDecision last = Debates.BeatDecision.Wait;
+            for (int retry = 0; retry < fight.Length && last == Debates.BeatDecision.Wait; retry++)
+                last = Debates.DecideBeat(fight[retry], retry * (long)Debates.BusyRetryMs, false, 2);
+            Assert.That(last, Is.EqualTo(Debates.BeatDecision.Speak));
+        }
+
+        [Test]
+        public void Cast_PrefersBotsOnATownBreak()
+        {
+            VC.Scene scene = TestScene(healerRole: false);
+            var grinding = Enumerable.Range(1, 8).Select(id => new Debates.Candidate(id, BotPersonalityType.Leveler, "Warrior", 15)).ToList();
+            var inTown = new Debates.Candidate(100, BotPersonalityType.Leveler, "Warrior", 15, InTown: true);
+            for (int seed = 0; seed < 20; seed++)
+                Assert.That(Debates.Cast(scene, [.. grinding, inTown], new Random(seed)).Values, Does.Contain(100L), $"seed {seed}");
+        }
+
+        [Test]
         public void ChooseScene_NoRepeatUntilEveryFittingSceneIsHeard()
         {
             var random = new Random(2);

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using DOL.Database;
 using NUnit.Framework;
 using Lines = DOL.GS.AutonomousBotGuildChatLines;
 using Social = DOL.GS.AutonomousBotGuildSocial;
@@ -147,6 +148,21 @@ namespace DOL.GS.Tests
                 Assert.That(Social.ChooseGuildForPlayer(guilds, 45, null), Is.EqualTo("a"), "RvR fits 45.");
                 Assert.That(Social.ChooseGuildForPlayer([], 15, null), Is.Null);
                 Assert.That(Social.ChooseGuildForPlayer([guilds[3]], 15, null), Is.Null);
+            });
+        }
+
+        [Test]
+        public void AStartingGuildDoesNotStopBotGuildsRecruitingYou()
+        {
+            // In-game check 2026-10-17: every new character is in its realm's starting guild (Clan Cotswold),
+            // and bot guilds skipped anyone with a guild, so "lf guild" was never answered.
+            var starting = new Guild(new DbGuild { GuildName = "Clan Cotswold", GuildID = "start", Realm = 1, IsStartingGuild = true });
+            var real = new Guild(new DbGuild { GuildName = "Avalon Wardens", GuildID = "real", Realm = 1 });
+            Assert.Multiple(() =>
+            {
+                Assert.That(Social.CountsAsGuildless(null), Is.True);
+                Assert.That(Social.CountsAsGuildless(starting), Is.True);
+                Assert.That(Social.CountsAsGuildless(real), Is.False);
             });
         }
     }

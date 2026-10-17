@@ -342,7 +342,7 @@ public static class AutonomousBotGuildSocial
     /// </summary>
     public static bool TryAnswerGuildRequest(GamePlayer player, string message, bool faction)
     {
-        if (!InvitesEnabled || player == null || player.Guild != null || player.Level < Math.Max(1, Properties.BOT_GUILD_MIN_LEVEL))
+        if (!InvitesEnabled || player == null || !CountsAsGuildless(player.Guild) || player.Level < Math.Max(1, Properties.BOT_GUILD_MIN_LEVEL))
             return false;
         string openGuildId;
         lock (Sync)
@@ -377,7 +377,7 @@ public static class AutonomousBotGuildSocial
         string offer = Lines.OfferInvite(player.Name, chosen.Name, Random.Shared);
         _ = new ECSGameTimer(officer, _ =>
         {
-            if (!Eligible(officer) || player.ObjectState != GameObject.eObjectState.Active || player.Guild != null)
+            if (!Eligible(officer) || player.ObjectState != GameObject.eObjectState.Active || !CountsAsGuildless(player.Guild))
                 return 0;
             if (faction)
                 AutonomousBotChatCoordinator.BroadcastFaction(officer.Name, officer.Realm, offer);
@@ -398,7 +398,7 @@ public static class AutonomousBotGuildSocial
         eRealm realm = officer.Realm;
         int minLevel = Math.Max(1, Properties.BOT_GUILD_MIN_LEVEL);
         bool audience = ClientService.Instance.GetPlayersOfRealm(realm)
-            .Any(player => player.Guild == null && player.Level >= minLevel);
+            .Any(player => CountsAsGuildless(player.Guild) && player.Level >= minLevel);
         if (!audience)
             return false;
         lock (Sync)
@@ -423,7 +423,7 @@ public static class AutonomousBotGuildSocial
         {
             foreach (GamePlayer player in ClientService.Instance.GetPlayersOfRegion(officer.CurrentRegion))
             {
-                if (player.ObjectState != GameObject.eObjectState.Active || player.Realm != officer.Realm || player.Guild != null ||
+                if (player.ObjectState != GameObject.eObjectState.Active || player.Realm != officer.Realm || !CountsAsGuildless(player.Guild) ||
                     player.Level < minLevel || Math.Abs(player.Level - officer.Level) > 10 || player.InCombat ||
                     !officer.IsWithinRadius(player, WorldMgr.SAY_DISTANCE))
                     continue;
@@ -463,13 +463,20 @@ public static class AutonomousBotGuildSocial
                     DeclinedUntil[PlayerKey(answering)] = DateTime.UtcNow + DeclineMemory;
                 return;
             }
-            if (answering.Guild != null)
+            if (!CountsAsGuildless(answering.Guild))
             {
                 answering.Out.SendMessage("You are still in a guild, you'll have to leave it first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
             DbGuildRank joinRank = target.GetRankByID(AutonomousBotGuilds.PlayerJoinRank) ?? target.GetRankByID(AutonomousBotGuildPlanner.LowestRank);
-            if (answering.Realm != target.Realm || joinRank == null || !target.AddPlayer(answering, joinRank))
+            if (answering.Realm != target.Realm || joinRank == null)
+                return;
+            // A new character starts in its realm's starting guild; accepting a bot guild's invite moves it
+            // out of that guild first, as /gc quit would (in-game check 2026-10-17: "lf guild" got no answer
+            // while the character was still in Clan Cotswold).
+            if (answering.Guild != null && !answering.Guild.RemovePlayer(answering.Name, answering))
+                return;
+            if (!target.AddPlayer(answering, joinRank))
                 return;
             GameBot[] speakers = Speakers(target);
             int count = Math.Min(speakers.Length, 1 + (Random.Shared.NextDouble() < 0.5 ? 1 : 0));
@@ -482,6 +489,12 @@ public static class AutonomousBotGuildSocial
     #endregion
 
     #region Helpers
+
+    /// <summary>
+    /// True when a player can be recruited by a bot guild: no guild, or only the realm's starting guild
+    /// (every new character is put in one, so treating it as a real guild meant nobody was ever recruited).
+    /// </summary>
+    public static bool CountsAsGuildless(Guild guild) => guild == null || guild.IsStartingGuild;
 
     /// <summary>True when a real player in the guild can hear guild chat.</summary>
     public static bool HasListener(Guild guild) =>
