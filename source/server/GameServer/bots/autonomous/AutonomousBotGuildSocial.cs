@@ -510,7 +510,7 @@ public static class AutonomousBotGuildSocial
         }, delayMs);
     }
 
-    private static void SendGuildLine(Guild guild, string speaker, string text)
+    public static void SendGuildLine(Guild guild, string speaker, string text)
     {
         string safe = (text ?? string.Empty).Trim();
         if (safe.Length == 0)

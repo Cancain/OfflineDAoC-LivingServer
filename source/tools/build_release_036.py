@@ -50,7 +50,9 @@ QUEST_RESPAWN_SECONDS = 300
 
 # Personal or run-state files that are never part of a public world.
 EXCLUDED_DIRS = {"logs", "backups", "dxvk-staging", "deployment-backups", "keep-relic-reset-backups", "progress-backups",
-                 "screenshots", ".git", "testresults", "dumps"}
+                 "screenshots", ".git", "testresults", "dumps",
+                 # the Camelot Herald page names the player's characters (written by the launcher)
+                 "herald"}
 EXCLUDED_NAMES = {"account.txt", "rvr-world.json", "bot-goals.json", "bot-world.json", "bot-world.request", "bot-ai-delay.json",
                   "realm-events.request.json", "realm-events.result.json", "realm-event-records.sqlite3",
                   "realm-event-records.sqlite3-wal", "realm-event-records.sqlite3-shm", "errorlog.txt",
@@ -104,7 +106,8 @@ def copy_tree(source: Path, target: Path, keep=lambda rel: True) -> dict[str, st
 def check_runtime_files(runtime: Path):
     """Nothing personal, diagnostic or experimental ships; the navigation data does."""
     bad = [p.relative_to(runtime).as_posix() for p in runtime.rglob("*") if p.is_file() and (
-        p.name.lower() in FORBIDDEN_NAMES or p.name.lower().endswith(FORBIDDEN_SUFFIXES) or "before-" in p.name.lower())]
+        p.name.lower() in FORBIDDEN_NAMES or p.name.lower().endswith(FORBIDDEN_SUFFIXES) or "before-" in p.name.lower() or
+        "herald" in [part.lower() for part in p.relative_to(runtime).parts[:-1]])]
     assert not bad, f"files that must not ship: {bad[:20]}"
     missing = [name for name in REQUIRED_FILES if not (runtime / name).is_file()]
     assert not missing, f"required files missing: {missing}"
@@ -129,6 +132,8 @@ def clean_world(database: Path, policy: dict, defaults: dict) -> dict:
     con.execute("DELETE FROM ServerProperty WHERE lower(`Key`) = 'bot_guilds_enabled' OR lower(`Key`) LIKE 'bot\\_guild\\_%' ESCAPE '\\'")
     # Social Expansion switches ship off too (server defaults).
     con.execute("DELETE FROM ServerProperty WHERE lower(`Key`) = 'bot_personalities_enabled' OR lower(`Key`) LIKE 'bot\\_voices\\_%' ESCAPE '\\'")
+    # Living Server switches and the bot schedule ship off (server defaults; docs/LIVING-SERVER.md).
+    con.execute("DELETE FROM ServerProperty WHERE lower(`Key`) = 'bot_schedule_mode' OR lower(`Key`) LIKE 'bot\\_living\\_%' ESCAPE '\\'")
     # Starting guild definitions and ranks are world data; their earned state is not.
     con.execute("UPDATE Guild SET RealmPoints=0,BountyPoints=0,Bank=0,MeritPoints=0,Webpage='',Email='',"
                 "Motd='',oMotd='',HaveGuildHouse=0,GuildHouseNumber=0,AllianceID=''")
@@ -197,6 +202,8 @@ def verify_clean(con: sqlite3.Connection, policy: dict, defaults: dict) -> dict:
                        "('bot_guilds_enabled') OR lower(`Key`) LIKE 'bot\\_guild\\_%' ESCAPE '\\'").fetchone()[0] == 0, "bot guild settings"
     assert con.execute("SELECT COUNT(*) FROM ServerProperty WHERE lower(`Key`) = 'bot_personalities_enabled' "
                        "OR lower(`Key`) LIKE 'bot\\_voices\\_%' ESCAPE '\\'").fetchone()[0] == 0, "social expansion settings"
+    assert con.execute("SELECT COUNT(*) FROM ServerProperty WHERE lower(`Key`) = 'bot_schedule_mode' "
+                       "OR lower(`Key`) LIKE 'bot\\_living\\_%' ESCAPE '\\'").fetchone()[0] == 0, "living server settings"
     assert con.execute("SELECT COUNT(*) FROM GuildRank WHERE GuildID NOT IN "
                        "(SELECT GuildID FROM Guild WHERE IsStartingGuild=1)").fetchone()[0] == 0, "orphan guild ranks"
     for table in policy["ProgressTables"] + policy.get("OptionalProgressTables", []) + policy["ClearTables"] + ["FactionAggroLevel"]:

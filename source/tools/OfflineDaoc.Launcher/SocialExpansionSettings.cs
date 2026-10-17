@@ -26,6 +26,15 @@ public sealed record SocialExpansionSettings
     public bool Personalities { get; init; }
     public bool Voices { get; init; }
     public bool Debates { get; init; } = true;
+    public bool LivingMemory { get; init; }
+    public bool LivingGrats { get; init; }
+    public bool LivingFirsts { get; init; }
+    public bool LivingDeath { get; init; }
+    public bool LivingAlarms { get; init; }
+    public bool LivingNemesis { get; init; }
+    /// <summary>off, session or clock (AutonomousBotSchedule).</summary>
+    public string ScheduleMode { get; init; } = "off";
+    public bool LivingBreaks { get; init; }
     public string PlayerXpByLevel { get; init; } = "";
     public string BotXpByLevel { get; init; } = "";
 
@@ -46,6 +55,14 @@ public sealed record SocialExpansionSettings
         ("bot_personalities_enabled", "bots", "Autonomous gamebots get a personality and traits that tilt town breaks, goals, dungeons, camps and chattiness (see docs/BOT-PERSONALITIES.md)."),
         ("bot_voices_enabled", "bots", "Autonomous gamebots say pre-written, period lines in their own writing style (docs/bot-voices/DESIGN.md)."),
         ("bot_voices_debates", "bots", "When bot voices are on: bots of a realm play debates and long threads in /faction while you are online."),
+        ("bot_living_memory", "bots", "Living Server: autonomous gamebots of your realm remember grouping with you, your rezzes and rude words; they greet you by name, thank you for an old rez, answer you by name, mention you in /faction now and then, and stay cool after insults. Chat only. False keeps today's bots."),
+        ("bot_living_grats", "bots", "Living Server: when you or a bot gains a level, groupmates say grats in /group and bots nearby in /say, and a realm's bots cheer a new level 50 in /faction."),
+        ("bot_living_firsts", "bots", "Living Server: the first character on the server (you or a bot) to reach level 50, the first of each class to reach 50 and the first to each realm rank from 2 up are announced to everyone and recorded for the Camelot Herald."),
+        ("bot_living_death", "bots", "Living Server: a bot that dies near you asks you for a rez if your class can rez, waits longer for it and thanks you after; a bot healer that is not in your group may rez you (you still accept or decline); bots talk about corpse runs and resurrection sickness."),
+        ("bot_living_alarms", "bots", "Living Server: a bot in the frontier that sees 3 or more enemies calls it out in /faction (rough size, classes, place), at most one call per realm every 2 minutes."),
+        ("bot_living_nemesis", "bots", "Living Server: a bot killed by an enemy remembers its killer, names it (by race and class) in /faction after the second kill, and celebrates when it kills that enemy back. Kills are recorded for the Camelot Herald's Most Wanted."),
+        ("bot_schedule_mode", "bots", "Living Server: when autonomous gamebots are online. off = the whole roster (today's behavior); session = each bot plays sessions of 1-4 hours with 20 minutes to 2 hours away, timed from server start; clock = your PC's time of day (busiest 7-11pm and weekends, quiet overnight)."),
+        ("bot_living_breaks", "bots", "Living Server: an idle bot now and then says brb and logs off for 5-25 minutes, and a bot grouped with you rarely goes linkdead for 30-90 seconds (the group hears about it) and comes back with an apology. Never during a fight, siege or relic march."),
         ("xp_rate_by_level", "rates", "Optional XP rate by level range for real player characters (set in the launcher's Social Expansion tab)."),
         ("bot_xp_rate_by_level", "rates", "Optional XP rate by level range for autonomous gamebots (set in the launcher's Social Expansion tab)."),
     ];
@@ -64,6 +81,14 @@ public sealed record SocialExpansionSettings
         ["bot_personalities_enabled"] = Bool(Personalities),
         ["bot_voices_enabled"] = Bool(Voices),
         ["bot_voices_debates"] = Bool(Debates),
+        ["bot_living_memory"] = Bool(LivingMemory),
+        ["bot_living_grats"] = Bool(LivingGrats),
+        ["bot_living_firsts"] = Bool(LivingFirsts),
+        ["bot_living_death"] = Bool(LivingDeath),
+        ["bot_living_alarms"] = Bool(LivingAlarms),
+        ["bot_living_nemesis"] = Bool(LivingNemesis),
+        ["bot_schedule_mode"] = ScheduleMode,
+        ["bot_living_breaks"] = Bool(LivingBreaks),
         ["xp_rate_by_level"] = PlayerXpByLevel.Trim(),
         ["bot_xp_rate_by_level"] = BotXpByLevel.Trim(),
     };
@@ -124,6 +149,16 @@ public sealed record SocialExpansionSettings
             else
                 minLevel = level;
         }
+        string schedule = d.ScheduleMode;
+        if (stored.TryGetValue("bot_schedule_mode", out string? scheduleText) && !string.IsNullOrWhiteSpace(scheduleText))
+        {
+            schedule = scheduleText.Trim().ToLowerInvariant();
+            if (!ScheduleModes.Contains(schedule))
+            {
+                Problem("bot_schedule_mode", $"bot_schedule_mode = \"{scheduleText}\" is not off, session or clock, so the server reads it as off.");
+                schedule = "off";
+            }
+        }
         return new SocialExpansionSettings
         {
             BotGuilds = ReadBool("bot_guilds_enabled", d.BotGuilds),
@@ -137,29 +172,47 @@ public sealed record SocialExpansionSettings
             Personalities = ReadBool("bot_personalities_enabled", d.Personalities),
             Voices = ReadBool("bot_voices_enabled", d.Voices),
             Debates = ReadBool("bot_voices_debates", d.Debates),
+            LivingMemory = ReadBool("bot_living_memory", d.LivingMemory),
+            LivingGrats = ReadBool("bot_living_grats", d.LivingGrats),
+            LivingFirsts = ReadBool("bot_living_firsts", d.LivingFirsts),
+            LivingDeath = ReadBool("bot_living_death", d.LivingDeath),
+            LivingAlarms = ReadBool("bot_living_alarms", d.LivingAlarms),
+            LivingNemesis = ReadBool("bot_living_nemesis", d.LivingNemesis),
+            ScheduleMode = schedule,
+            LivingBreaks = ReadBool("bot_living_breaks", d.LivingBreaks),
             // Kept as written: an invalid range setting shows its own error in the tab (the server ignores it).
             PlayerXpByLevel = stored.TryGetValue("xp_rate_by_level", out string? player) ? player?.Trim() ?? "" : "",
             BotXpByLevel = stored.TryGetValue("bot_xp_rate_by_level", out string? bots) ? bots?.Trim() ?? "" : "",
         };
     }
 
+    /// <summary>The schedule modes the server knows (AutonomousBotSchedule.Parse).</summary>
+    public static readonly string[] ScheduleModes = ["off", "session", "clock"];
+
+    /// <summary>True when any Living Server part is on.</summary>
+    public bool AnyLiving => LivingMemory || LivingGrats || LivingFirsts || LivingDeath || LivingAlarms || LivingNemesis ||
+                             ScheduleMode != "off" || LivingBreaks;
+
     /// <summary>
-    /// "All off": the three features and both XP ranges off. The share, lowest level and each part keep their
+    /// "All off": the three features, every Living Server part and both XP ranges off. The share, lowest level and each part keep their
     /// values, so turning a feature back on later restores the player's own choices.
     /// </summary>
     public SocialExpansionSettings AllOff() => this with
     {
         BotGuilds = false, Personalities = false, Voices = false, PlayerXpByLevel = "", BotXpByLevel = "",
+        LivingMemory = false, LivingGrats = false, LivingFirsts = false, LivingDeath = false, LivingAlarms = false,
+        LivingNemesis = false, ScheduleMode = "off", LivingBreaks = false,
     };
 
     /// <summary>True when every feature and both XP ranges are off.</summary>
-    public bool IsAllOff => !BotGuilds && !Personalities && !Voices && PlayerXpByLevel.Trim() == "" && BotXpByLevel.Trim() == "";
+    public bool IsAllOff => !BotGuilds && !Personalities && !Voices && !AnyLiving && PlayerXpByLevel.Trim() == "" && BotXpByLevel.Trim() == "";
 
     /// <summary>Why these settings can't be saved, or null when they can.</summary>
     public string? Validate()
     {
         if (GuildSharePercent is < 0 or > 100) return "The share of bots in guilds must be 0 to 100%.";
         if (GuildMinLevel is < 0 or > 50) return "The lowest guild level must be 0 to 50.";
+        if (!ScheduleModes.Contains(ScheduleMode)) return "The bot schedule must be off, session or clock.";
         return XpError("Your XP by level", PlayerXpByLevel) ?? XpError("Bot XP by level", BotXpByLevel);
     }
 

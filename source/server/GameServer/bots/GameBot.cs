@@ -967,6 +967,7 @@ namespace DOL.GS
                 AutonomousBotStatusPersistence.Queue(this);
                 AutonomousBotGuildSocial.OnBotDeath(this);
                 AutonomousBotVoices.OnBotDeath(this);
+                AutonomousLivingServer.OnBotDied(this, killer);
             }
             StartDeathRecoveryTimer();
         }
@@ -998,7 +999,8 @@ namespace DOL.GS
                 AutonomousBotGroupCoordinator.PveCorpseRecovery(this);
             if (groupDisposition == AutonomousBotGroupCoordinator.PveCorpseDisposition.HoldForResurrection)
                 return 3000;
-            bool resurrectionPossible = HasViableResurrector();
+            // Living Server: a real player of the realm who can rez, nearby but not grouped, also earns the long wait.
+            bool resurrectionPossible = HasViableResurrector() || AutonomousLivingServer.HasNearbyPlayerRezzer(this);
             long releaseDelay = resurrectionPossible ? 90_000 : 20_000;
             if (groupDisposition is not (AutonomousBotGroupCoordinator.PveCorpseDisposition.ReleaseAndDisband or
                 AutonomousBotGroupCoordinator.PveCorpseDisposition.ReleaseAndRejoin) &&
@@ -1101,6 +1103,8 @@ namespace DOL.GS
                 release = new Point3D(capital.X, capital.Y, capital.Z);
             }
             release ??= _deathLocation;
+            if (IsAutonomousWorldBot)
+                AutonomousLivingServer.OnBotReleasing(this);
             // Transfer the corpse first: a failed MoveTo must not revive the bot
             // at its killer or cause HandleDeathRecovery to discard its timer.
             if (!MoveTo(releaseRegion, release.X, release.Y, release.Z, Heading))
@@ -1143,6 +1147,8 @@ namespace DOL.GS
                 TryReturnTemporaryCompanionToLeader(true);
             Brain?.FSM?.SetCurrentState(eFSMStateType.FOLLOW);
             Brain?.Start();
+            if (IsAutonomousWorldBot && AutonomousLivingServer.OnBotResurrected(this, caster))
+                return;
             Say(Random.Shared.Next(3) switch
             {
                 0 => $"My thanks, {caster?.Name ?? "friend"}. I am ready to continue.",
@@ -1597,12 +1603,22 @@ namespace DOL.GS
             if (!IsAutonomousWorldBot || amount <= 0)
                 return;
             AutonomousRealmPoints += amount;
+            int previousRealmLevel = RealmLevel;
             RealmLevel = Math.Max(RealmLevel, AutonomousBotRealmPointRewards.RealmLevelFor(AutonomousRealmPoints));
             AutonomousStuckWatchdog.MarkProgress(this, eAutonomousProgressKind.RealmPoints);
             MarkAutonomousStateDirty();
+            if (RealmLevel != previousRealmLevel)
+                AutonomousLivingServer.OnBotRealmLevel(this, previousRealmLevel);
         }
 
         public override void GainRealmPoints(long amount) => GainRealmPoints(amount, true);
+
+        public override void EnemyKilled(GameLiving enemy)
+        {
+            base.EnemyKilled(enemy);
+            if (IsAutonomousWorldBot)
+                AutonomousLivingServer.OnBotKilled(this, enemy);
+        }
 
         public override void GainExperience(GainedExperienceEventArgs arguments, bool notify = true)
         {
@@ -1672,6 +1688,7 @@ namespace DOL.GS
                     AutonomousBotGuildEconomy.OnBotLevelsGained(this, previousLevel);
                     AutonomousBotGuildSocial.OnBotLevelUp(this);
                     AutonomousBotVoices.OnBotLevelUp(this);
+                    AutonomousLivingServer.OnLevelUp(this, Level);
                 }
             }
             else
@@ -2807,6 +2824,7 @@ namespace DOL.GS
                 controlledBrain.OnOwnerAttacked(ad);
 
             BotBrain.NotifyNearbyGroupBots(this, ad);
+            AutonomousBotSchedule.OnAttacked(this);
             base.OnAttackedByEnemy(ad);
         }
 

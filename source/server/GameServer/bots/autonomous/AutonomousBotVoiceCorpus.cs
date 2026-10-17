@@ -152,9 +152,10 @@ public sealed class AutonomousBotVoiceCorpus
         types.Length == 0 || types.Any(t => string.Equals(t, type.ToString(), StringComparison.OrdinalIgnoreCase));
 
     /// <summary>Lines of a kind this speaker may say now (realm, class, level band, needed context, intent).</summary>
-    public IEnumerable<Line> Candidates(string kind, Speaker speaker, string intent = null, string topic = null) =>
+    public IEnumerable<Line> Candidates(string kind, Speaker speaker, string intent = null, string topic = null, string mood = null) =>
         Lines.Where(line => line.Kind == kind &&
                             (topic == null || string.Equals(line.Topic, topic, StringComparison.Ordinal)) &&
+                            (mood == null || string.Equals(line.Mood, mood, StringComparison.Ordinal)) &&
                             RealmFits(line.Realm, speaker.Realm) &&
                             ClassFits(line.Classes, speaker.ClassName) &&
                             speaker.Level >= line.LevelLow && speaker.Level <= line.LevelHigh &&
@@ -170,11 +171,11 @@ public sealed class AutonomousBotVoiceCorpus
     /// slots can't be filled. False when nothing fits (the caller keeps its old line).
     /// </summary>
     public bool TryPick(string kind, Speaker speaker, IReadOnlyDictionary<string, string> slots, RecentLines recent,
-        DateTime now, Random random, out string text, out string lineId, string intent = null, string topic = null)
+        DateTime now, Random random, out string text, out string lineId, string intent = null, string topic = null, string mood = null)
     {
         text = null;
         lineId = null;
-        var pool = Candidates(kind, speaker, intent, topic)
+        var pool = Candidates(kind, speaker, intent, topic, mood)
             .Where(line => recent == null || !recent.WasUsed(speaker.Realm, line.Id, now))
             .Select(line => (Line: line, Weight: WeightFor(line, speaker)))
             .Where(entry => entry.Weight > 0)

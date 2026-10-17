@@ -1,8 +1,13 @@
 # Living Server backlog (planning)
 
-Status: **planning only.** Nothing here is built, and nothing here changes the Social Expansion
-release. New development still waits until that release is played and fixed
-(see [RELEASE-PLAN.md](RELEASE-PLAN.md)).
+Status (2026-10-16): **built** on `feature/living-server`, plus bot memory of you. What was built,
+and what wasn't, is in [LIVING-SERVER.md](LIVING-SERVER.md). This file is the planning record.
+
+Changes from the plan:
+- The Herald is a static page written by the launcher, not the `atlas_api` web API (Chris's choice).
+- Schedules have both modes, `session` and `clock`, with a switch (Chris's choice).
+- There is no fake patch day (Chris's choice).
+- Nemesis lines name enemies by race and class, since enemy names are hidden in the frontier.
 
 Owner: Chris. Chosen 2026-10-16. Goal: make the bots feel like players on a 2003 server, through
 continuity and consequence more than through more chat lines.

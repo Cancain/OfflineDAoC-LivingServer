@@ -163,6 +163,7 @@ public static partial class AutonomousBotGroupCoordinator
         try
         {
             RealmEventNotices.Pulse(now);
+            AutonomousLivingServer.Pulse(now);
             RealmEventControls.Pulse();
             AutonomousRealmRaid.Pulse(now);
             AutonomousRealmRaid.RecruitForcedParty(now);

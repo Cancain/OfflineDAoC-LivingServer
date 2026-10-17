@@ -31,6 +31,14 @@ internal sealed class SocialExpansionSettingsControl : UserControl
     private readonly CheckBox _personalities = Switch("Bot personalities");
     private readonly CheckBox _voices = Switch("Bot voices");
     private readonly CheckBox _debates = Switch("/faction debates", part: true);
+    private readonly CheckBox _memory = Switch("Bots remember you");
+    private readonly CheckBox _grats = Switch("Grats");
+    private readonly CheckBox _firsts = Switch("Server firsts");
+    private readonly CheckBox _death = Switch("Rezzes and corpse runs");
+    private readonly CheckBox _alarms = Switch("Frontier alarms");
+    private readonly CheckBox _nemesis = Switch("Nemeses");
+    private readonly ComboBox _schedule = Choice("Bot schedule", "Off  (all online)", "Session", "Real clock");
+    private readonly CheckBox _breaks = Switch("Breaks and linkdeads");
     private readonly XpRow _playerXp = new("YOUR CHARACTERS", SocialExpansionSettings.SuggestedPlayerXp, "3× · 5× · 12×");
     private readonly XpRow _botXp = new("AUTONOMOUS BOTS", SocialExpansionSettings.SuggestedBotXp, "1.5× · 2.5× · 6×");
     private readonly Label _status = new()
@@ -87,6 +95,17 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         Dependent(_debates, Add(voices, _debates, null, "Spec arguments, relic alerts and long threads in /faction, every 30–45 minutes while you play. Needs bot voices."),
             v => v.Voices);
 
+        var living = Card("LIVING SERVER", DaocTheme.Gold, 8);
+        Add(living, _memory, null, "Bots of your realm remember grouping with you, your rezzes and rude words: they greet and thank you by name.");
+        Add(living, _grats, null, "Dings get grats from the group and bots nearby; a new level 50 gets cheers in /faction.");
+        Add(living, _firsts, null, "The first to level 50, to 50 in each class and to each realm rank is announced and goes in the Herald.");
+        Add(living, _death, null, "Dead bots ask you for a rez and thank you; a passing bot healer may rez you (you still accept).");
+        Add(living, _alarms, null, "A frontier bot that sees 3+ enemies calls size, classes and place in /faction (once per 2 minutes).");
+        Add(living, _nemesis, null, "Bots remember who killed them, name the killer in /faction and gloat when they get revenge.");
+        Captioned(Caption("BOT SCHEDULE", part: false), Add(living, null, _schedule,
+            "Off: all bots online. Session: bots play 1–4 hour sessions. Real clock: busy evenings, quiet nights."));
+        Add(living, _breaks, null, "Idle bots go brb for 5–25 minutes; a bot in your group rarely goes linkdead for a minute.");
+
         var xp = Card("XP BY LEVEL RANGE", DaocTheme.Gold, 5);
         xp = xp with { Height = TitleRow + 2 * (XpRow.Height + XpRow.ErrorHeight) + Row + CardPadding };
         _playerXp.AddTo(xp.Grid);
@@ -119,6 +138,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
             (Intro(), 40),
             (guilds.Panel, guilds.Height),
             (voices.Panel, voices.Height),
+            (living.Panel, living.Height),
             (xp.Panel, xp.Height),
         ];
         page.RowCount = parts.Length;
@@ -137,8 +157,10 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         Controls.Add(scroller);
         scroller.BringToFront();   // docked last, so it fills what the footer leaves
 
-        foreach (var box in new[] { _guilds, _guildSocial, _guildRecruit, _guildClaims, _guildEconomy, _guildAlliances, _personalities, _voices, _debates })
+        foreach (var box in new[] { _guilds, _guildSocial, _guildRecruit, _guildClaims, _guildEconomy, _guildAlliances, _personalities, _voices, _debates,
+                     _memory, _grats, _firsts, _death, _alarms, _nemesis, _breaks })
             box.CheckedChanged += (_, _) => Edited();
+        _schedule.SelectedIndexChanged += (_, _) => Edited();
         _share.ValueChanged += (_, _) => Edited();
         _minLevel.ValueChanged += (_, _) => Edited();
         _playerXp.Changed += Edited;
@@ -189,6 +211,14 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         Personalities = _personalities.Checked,
         Voices = _voices.Checked,
         Debates = _debates.Checked,
+        LivingMemory = _memory.Checked,
+        LivingGrats = _grats.Checked,
+        LivingFirsts = _firsts.Checked,
+        LivingDeath = _death.Checked,
+        LivingAlarms = _alarms.Checked,
+        LivingNemesis = _nemesis.Checked,
+        ScheduleMode = SocialExpansionSettings.ScheduleModes[Math.Max(0, _schedule.SelectedIndex)],
+        LivingBreaks = _breaks.Checked,
         PlayerXpByLevel = _playerXp.Value,
         BotXpByLevel = _botXp.Value,
     };
@@ -207,6 +237,14 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         _personalities.Checked = settings.Personalities;
         _voices.Checked = settings.Voices;
         _debates.Checked = settings.Debates;
+        _memory.Checked = settings.LivingMemory;
+        _grats.Checked = settings.LivingGrats;
+        _firsts.Checked = settings.LivingFirsts;
+        _death.Checked = settings.LivingDeath;
+        _alarms.Checked = settings.LivingAlarms;
+        _nemesis.Checked = settings.LivingNemesis;
+        _schedule.SelectedIndex = Math.Max(0, Array.IndexOf(SocialExpansionSettings.ScheduleModes, settings.ScheduleMode));
+        _breaks.Checked = settings.LivingBreaks;
         _playerXp.Value = settings.PlayerXpByLevel;
         _botXp.Value = settings.BotXpByLevel;
         _loading = false;
@@ -320,6 +358,9 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         if (s.BotGuilds) on.Add("bot guilds");
         if (s.Personalities) on.Add("personalities");
         if (s.Voices) on.Add(s.Debates ? "voices and debates" : "voices");
+        int living = new[] { s.LivingMemory, s.LivingGrats, s.LivingFirsts, s.LivingDeath, s.LivingAlarms, s.LivingNemesis,
+            s.ScheduleMode != "off", s.LivingBreaks }.Count(x => x);
+        if (living > 0) on.Add($"Living Server ({living} of 8 parts)");
         if (s.PlayerXpByLevel != "" || s.BotXpByLevel != "") on.Add("XP by level");
         return on.Count == 0
             ? "Settings are loaded from the saved server settings. Everything is off: the game plays like the normal release."
@@ -396,10 +437,26 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         Margin = new Padding(part ? 22 : 0, 0, 0, 0),
     };
 
-    private static Label Caption(string text) => new()
+    /// <summary>Places a caption in its row's first column (for a control row that is always active).</summary>
+    private static void Captioned(Control caption, Label description)
+    {
+        if (description.Parent is TableLayoutPanel grid)
+            grid.Controls.Add(caption, 0, grid.GetRow(description));
+    }
+
+    private static ComboBox Choice(string name, params string[] items)
+    {
+        var box = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 128, AccessibleName = name };
+        box.Items.AddRange(items);
+        box.SelectedIndex = 0;
+        StyleInput(box);
+        return box;
+    }
+
+    private static Label Caption(string text, bool part = true) => new()
     {
         Dock = DockStyle.Fill, Text = text, Font = LabelFont, ForeColor = DaocTheme.Parchment, TextAlign = ContentAlignment.MiddleLeft,
-        Padding = new Padding(22, 0, 0, 0),
+        Padding = new Padding(part ? 22 : 0, 0, 0, 0),
     };
 
     private static Label Description(string text) => new()

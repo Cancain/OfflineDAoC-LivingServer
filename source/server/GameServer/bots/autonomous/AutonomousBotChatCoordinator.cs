@@ -273,6 +273,9 @@ public static class AutonomousBotChatCoordinator
         bool directed = mentioned.Length > 0;
         if (directed)
             eligible = mentioned;
+        // Living Server memory: bots that heard an insult remember it (chat only).
+        if (intent == eAutonomousChatIntent.Abuse)
+            AutonomousLivingServer.RecordAbuse(directed ? mentioned : eligible.Where(bot => !faction).Take(1), player);
         int count = directed || hasKnowledge || intent is eAutonomousChatIntent.IgnoreOutOfWorld or eAutonomousChatIntent.Abuse
             ? Math.Min(1, eligible.Length)
             : RollResponseCount(eligible.Length);
@@ -285,7 +288,7 @@ public static class AutonomousBotChatCoordinator
                 ? knowledge
                 : directed
                     ? GenerateDirectedReply(message)
-                    : VoicedReply(responder, message, () => faction ? GenerateFactionReply(message) : GenerateLocalReply(responder, message));
+                    : VoicedReply(responder, message, () => faction ? GenerateFactionReply(message) : GenerateLocalReply(responder, message), player);
             if (!TryAddDistinctResponse(scheduledResponses, response, out response))
                 continue;
             Schedule(responder, 1_300 + scheduledIndex++ * 1_800 + Random.Shared.Next(1_200), () =>
@@ -342,10 +345,13 @@ public static class AutonomousBotChatCoordinator
     }
 
     /// <summary>A corpus reply for the line's intent in the responder's voice, else the old reply.</summary>
-    private static string VoicedReply(GameBot responder, string incoming, Func<string> fallback)
+    private static string VoicedReply(GameBot responder, string incoming, Func<string> fallback, GamePlayer player = null)
     {
-        if (AutonomousBotVoices.Enabled && AutonomousBotVoices.TryLine(responder, "reply", out string voiced,
-                AutonomousBotVoices.IntentName(AutonomousChatIntentModel.Predict(incoming))))
+        string intent = AutonomousBotVoices.IntentName(AutonomousChatIntentModel.Predict(incoming));
+        // A bot that remembers this player answers by name, or coolly after abuse (Living Server memory).
+        if (player != null && Random.Shared.NextDouble() < 0.6 && AutonomousLivingServer.TryKnownReply(responder, player, intent, out string known))
+            return known;
+        if (AutonomousBotVoices.Enabled && AutonomousBotVoices.TryLine(responder, "reply", out string voiced, intent))
             return voiced;
         return fallback();
     }

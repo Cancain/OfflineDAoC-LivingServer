@@ -218,6 +218,43 @@ public static class AutonomousBotVoices
         }
     }
 
+    /// <summary>
+    /// A line for a Living Server event (docs/LIVING-SERVER.md). Needs only the corpus, so it works
+    /// whether bot voices are on or off. The caller adds the event's slots ({target}, {player},
+    /// {killer}...) and flags (knows_player, player_nearby...). Short, frequent kinds (grats, rez
+    /// thanks) pass noRepeat false so a "gz" can be said again within the six-hour window.
+    /// </summary>
+    public static bool TryEventLine(GameBot bot, string kind, out string text, string topic = null,
+        IReadOnlyDictionary<string, string> slots = null, IEnumerable<string> flags = null, bool noRepeat = true,
+        string intent = null, string mood = null, Random random = null)
+    {
+        text = null;
+        if (Corpus == null || bot == null || !bot.IsAutonomousWorldBot || bot.DatabaseID <= 0)
+            return false;
+        random ??= Random.Shared;
+        try
+        {
+            VC.Speaker speaker = SpeakerFor(bot);
+            if (flags != null)
+            {
+                var merged = new HashSet<string>(speaker.Flags, StringComparer.Ordinal);
+                merged.UnionWith(flags);
+                speaker = speaker with { Flags = merged };
+            }
+            Dictionary<string, string> all = SlotsFor(bot, random);
+            if (slots != null)
+                foreach (var pair in slots)
+                    all[pair.Key] = pair.Value;
+            return Corpus.TryPick(kind, speaker, all, noRepeat ? Recent : null, DateTime.UtcNow, random, out text, out _,
+                intent, topic, mood);
+        }
+        catch (Exception exception)
+        {
+            Log.Warn($"Living Server: no {kind} line for {bot.Name}", exception);
+            return false;
+        }
+    }
+
     /// <summary>Picks the kind of an unprompted line from the bot's situation and personality.</summary>
     public static string AmbientKind(GameBot bot, bool faction, Random random)
     {

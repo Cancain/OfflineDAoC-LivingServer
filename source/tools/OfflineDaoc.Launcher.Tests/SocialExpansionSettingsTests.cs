@@ -57,6 +57,8 @@ public class SocialExpansionSettingsTests
         BotGuilds = true, GuildSharePercent = 60, GuildMinLevel = 10, Personalities = true, Voices = true,
         GuildAlliances = false, PlayerXpByLevel = SocialExpansionSettings.SuggestedPlayerXp,
         BotXpByLevel = SocialExpansionSettings.SuggestedBotXp,
+        LivingMemory = true, LivingGrats = true, LivingFirsts = true, LivingDeath = true, LivingAlarms = true,
+        LivingNemesis = true, ScheduleMode = "clock", LivingBreaks = true,
     };
 
     [Test] public void NoRowsMeansTheServerDefaultsEverythingOff()
@@ -80,6 +82,9 @@ public class SocialExpansionSettingsTests
         Assert.That(rows["bot_personalities_enabled"], Is.EqualTo("True"));
         Assert.That(rows["xp_rate_by_level"], Is.EqualTo("1-19:3;20-34:5;35-50:12"));
         Assert.That(rows["xp_rate"], Is.EqualTo("1"), "the flat rate is not touched");
+        Assert.That(rows["bot_living_memory"], Is.EqualTo("True"));
+        Assert.That(rows["bot_schedule_mode"], Is.EqualTo("clock"));
+        Assert.That(rows["bot_living_breaks"], Is.EqualTo("True"));
         var problems = new List<string>();
         Assert.That(SocialExpansionSettings.Load(_database, problems), Is.EqualTo(AllOn));
         Assert.That(problems, Is.Empty);
@@ -113,6 +118,22 @@ public class SocialExpansionSettingsTests
         Assert.That(keys, Is.EquivalentTo(new[] { "bot_guilds_enabled", "bot_guild_share" }));
         Assert.That(loaded.BotXpByLevel, Is.EqualTo("50-1:2"), "an invalid range setting is kept so its error can be shown");
         Assert.That(loaded.Validate(), Does.Contain("ends before it starts"));
+    }
+
+    [Test] public void LivingServerScheduleIsReadLikeTheServerAndAllOffSwitchesEveryPartOff()
+    {
+        Exec("INSERT INTO ServerProperty VALUES ('bots', 'bot_schedule_mode', 'd', '', 'sometimes', '', 'bot_schedule_mode')");
+        var problems = new List<string>();
+        var keys = new HashSet<string>();
+        var loaded = SocialExpansionSettings.Load(_database, problems, keys);
+        Assert.That(loaded.ScheduleMode, Is.EqualTo("off"), "the server reads an unknown mode as off");
+        Assert.That(keys, Is.EquivalentTo(new[] { "bot_schedule_mode" }));
+        Assert.That(AllOn with { ScheduleMode = "weekly" }, Has.Property("IsAllOff").False);
+        Assert.That((AllOn with { ScheduleMode = "weekly" }).Validate(), Does.Contain("off, session or clock"));
+        var off = AllOn.AllOff();
+        Assert.That(off.AnyLiving, Is.False);
+        Assert.That(off.IsAllOff, Is.True);
+        Assert.That((SocialExpansionSettings.Defaults with { ScheduleMode = "session" }).IsAllOff, Is.False);
     }
 
     [Test] public void NothingIsWrittenWhileTheServerRunsOrWithInvalidRanges()
@@ -281,7 +302,7 @@ public class SocialExpansionSettingsTests
         }
 
         var type = launcher.GetType("OfflineDaoc.Launcher.SocialExpansionSettingsControl")!;
-        void Render(string file, Action<Control> setup, bool bottom = false)
+        void Render(string file, Action<Control> setup, bool bottom = false, int scroll = 0)
         {
             using var host = new Form { ShowInTaskbar = false, StartPosition = FormStartPosition.Manual, Location = new Point(-20_000, -20_000),
                 ClientSize = new Size(1180, 1060), BackColor = Color.FromArgb(35, 31, 26) };
@@ -291,6 +312,12 @@ public class SocialExpansionSettingsTests
             setup(panel);
             type.GetMethod("UpdateState")!.Invoke(panel, null);
             Application.DoEvents();
+            if (scroll > 0)
+            {
+                var scroller = panel.Controls.OfType<Panel>().First(c => c.AutoScroll);
+                scroller.AutoScrollPosition = new Point(0, scroll);
+                Application.DoEvents();
+            }
             if (bottom)
             {
                 // The CI desktop is small: show the XP card by scrolling the cards to the end.
@@ -324,8 +351,15 @@ public class SocialExpansionSettingsTests
             Xp(panel, "_playerXp", 1);
             Xp(panel, "_botXp", 2, "1-19:1.5;15-34:2.5");
         }, bottom: true);
+        Render("5c-tab-editing-living.png", panel =>
+        {
+            F<CheckBox>(panel, "_memory").Checked = true;
+            F<CheckBox>(panel, "_death").Checked = true;
+            F<ComboBox>(panel, "_schedule").SelectedIndex = 2;
+        }, scroll: 600);
         AllOn.Save(_database, null, () => true);
         Render("6-tab-saved-on.png", _ => { });
+        Render("6c-tab-saved-on-living.png", _ => { }, scroll: 600);
         Render("6b-tab-saved-on-xp.png", _ => { }, bottom: true);
         _stopped = false;
         Render("7-tab-server-running.png", _ => { });

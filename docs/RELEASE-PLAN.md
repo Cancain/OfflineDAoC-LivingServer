@@ -187,10 +187,13 @@ changes. The installer refuses it.
 gossip and invites. It also unlocks the corpus lines that are skipped today. After that, the
 living-world population work (M1).
 
-**Living Server backlog (2026-10-16):** Chris's next six "feel like 2003" ideas (grats and server
-firsts, death economy, frontier alarms, Camelot Herald, schedules and linkdeads, nemesis), checked
-against the code, with a suggested order: [LIVING-SERVER-BACKLOG.md](LIVING-SERVER-BACKLOG.md).
-Planning only.
+**Living Server (2026-10-16):** built on `feature/living-server`. It covers Chris's six "feel like
+2003" ideas (grats and server firsts, death economy, frontier alarms, Camelot Herald, schedules and
+linkdeads, nemesis) plus bot memory of you, and fixes from the Social Expansion audit.
+- Every part is off by default and has its own switch in the launcher's Social Expansion tab.
+- Automated tests pass. **Not yet checked in game.**
+- Docs: [LIVING-SERVER.md](LIVING-SERVER.md). Planning record:
+  [LIVING-SERVER-BACKLOG.md](LIVING-SERVER-BACKLOG.md).
 
 ## 3. Decisions from Chris (2026-10-12)
 

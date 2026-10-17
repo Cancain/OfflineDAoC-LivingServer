@@ -44,6 +44,7 @@ public static class AutonomousPopulationController
     {
         Interlocked.Increment(ref _loginGeneration);
         _startedUtc = DateTime.UtcNow;
+        AutonomousBotSchedule.NoteServerStarted(_startedUtc);
         OfflineWorldBotRecord[] previouslyOnline = DOLDB<OfflineWorldBotRecord>
             .SelectObjects(DB.Column("IsOnline").IsEqualTo(true))
             .ToArray();
@@ -99,7 +100,17 @@ public static class AutonomousPopulationController
 
             OfflineWorldBotRecord[] roster = _cachedRoster;
             int desired = AutonomousPopulationRamp.DesiredActiveCount(_cachedEnabled, roster.Length, _cachedRampMinutes, nowUtc - _startedUtc);
-            int missing = desired - AutonomousBotRegistry.Count - PendingSpawns.Count;
+            int online = AutonomousBotRegistry.Count;
+            // Living Server schedules (off by default): only bots scheduled online are logged in, and the
+            // count is of those, so bots still finishing a fight before logging out don't block the rest.
+            bool scheduled = AutonomousBotSchedule.Active;
+            if (scheduled)
+            {
+                OfflineWorldBotRecord[] wanted = roster.Where(record => AutonomousBotSchedule.WantsOnline(record, nowUtc)).ToArray();
+                desired = Math.Min(desired, wanted.Length);
+                online = wanted.Count(record => AutonomousBotRegistry.Contains(record.BotId));
+            }
+            int missing = desired - online - PendingSpawns.Count;
             _populationSatisfied = missing <= 0;
             if (missing <= 0)
                 return;
@@ -113,6 +124,7 @@ public static class AutonomousPopulationController
 
             List<OfflineWorldBotRecord> available = roster
                 .Where(record => !record.IsOnline && !AutonomousBotRegistry.Contains(record.BotId) && !PendingSpawns.ContainsKey(record.BotId))
+                .Where(record => !scheduled || AutonomousBotSchedule.WantsOnline(record, nowUtc))
                 .ToList();
 
             // Ten thousand actors require about eleven scheduled logins per
@@ -224,6 +236,7 @@ public static class AutonomousPopulationController
             record.ObjectiveProgress = "Entered world through staggered login queue";
             bot.MarkAutonomousStateDirty();
             AutonomousBotStatusPersistence.QueueLogin(bot);
+            AutonomousBotSchedule.OnLoggedIn(bot);
             Log.Info($"Autonomous character {record.Name} entered the live world from the staggered queue.");
         }
         catch (Exception exception)
