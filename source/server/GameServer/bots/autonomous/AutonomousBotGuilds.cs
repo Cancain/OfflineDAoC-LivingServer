@@ -106,7 +106,7 @@ public static class AutonomousBotGuilds
         _timer = null;
         _flushTimer?.Dispose();
         _flushTimer = null;
-        FlushWrites();
+        FlushWrites(wait: true);
     }
 
     #region Membership writes (batched, off the game loop; audit 2026-10-16)
@@ -121,10 +121,14 @@ public static class AutonomousBotGuilds
     private static int _flushing;
 
     /// <summary>Writes queued membership changes. A failed batch stays queued and is tried again.</summary>
-    public static void FlushWrites()
+    public static void FlushWrites(bool wait = false)
     {
-        if (Interlocked.Exchange(ref _flushing, 1) != 0)
-            return;
+        while (Interlocked.Exchange(ref _flushing, 1) != 0)
+        {
+            if (!wait)
+                return;
+            Thread.Sleep(20);
+        }
         try
         {
             OfflineBotGuildMemberRecord[] writes;
@@ -146,11 +150,18 @@ public static class AutonomousBotGuilds
                     if (!TryWrite(() => GameServer.Database.AddObject(chunk.Cast<DataObject>())))
                         failedWrites.AddRange(chunk.Where(row => !row.IsPersisted));
                 foreach (OfflineBotGuildMemberRecord[] chunk in writes.Where(row => row.IsPersisted).Chunk(WriteBatch))
+                {
+                    // SaveObject skips clean rows; a change made while an earlier save ran must still be written.
+                    foreach (OfflineBotGuildMemberRecord row in chunk)
+                        row.Dirty = true;
                     if (!TryWrite(() => GameServer.Database.SaveObject(chunk.Cast<DataObject>())))
                         failedWrites.AddRange(chunk);
+                }
                 foreach (OfflineBotGuildMemberRecord[] chunk in deletes.Where(row => row.IsPersisted).Chunk(WriteBatch))
                     if (!TryWrite(() => GameServer.Database.DeleteObject(chunk.Cast<DataObject>())))
                         failedDeletes.AddRange(chunk.Where(row => row.IsPersisted));
+                // A row deleted before its insert ran is retried until the insert lands (or it never existed).
+                failedDeletes.AddRange(deletes.Where(row => !row.IsPersisted && writes.Contains(row)));
             }
             if (failedWrites.Count > 0 || failedDeletes.Count > 0)
             {
@@ -454,8 +465,9 @@ public static class AutonomousBotGuilds
         if (MemberRows.Remove(botId, out OfflineBotGuildMemberRecord row))
         {
             PendingWrites.Remove(botId);
-            if (row.IsPersisted)
-                PendingDeletes.Add(row);
+            // Queued even before its first insert is written: FlushWrites deletes it once it exists, so a
+            // membership dropped mid-flush can't come back after a restart (review 2026-10-16).
+            PendingDeletes.Add(row);
         }
         Members.TryRemove(botId, out _);
     }

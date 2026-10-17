@@ -67,12 +67,17 @@ public sealed class LivingServerTable<TKey, TRow> where TRow : DataObject
     private readonly object _sync = new();
     private readonly Dictionary<TKey, TRow> _rows;
     private readonly Dictionary<TKey, TRow> _pending;
+    private readonly List<TRow> _deletes = new();
     private readonly Func<TRow, TKey> _keyOf;
     private readonly string _name;
     private int _flushing;
 
-    public LivingServerTable(string name, Func<TRow, TKey> keyOf, IEqualityComparer<TKey> comparer = null)
+    private readonly Func<IObjectDatabase> _database;
+
+    /// <param name="database">The database to write to (tests pass their own; the server's by default).</param>
+    public LivingServerTable(string name, Func<TRow, TKey> keyOf, IEqualityComparer<TKey> comparer = null, Func<IObjectDatabase> database = null)
     {
+        _database = database ?? (() => GameServer.Database);
         _name = name;
         _keyOf = keyOf;
         _rows = new Dictionary<TKey, TRow>(comparer);
@@ -115,8 +120,25 @@ public sealed class LivingServerTable<TKey, TRow> where TRow : DataObject
             if (!_rows.TryGetValue(key, out TRow row))
                 _rows[key] = row = create();
             change(row);
+            row.Dirty = true;
             _pending[key] = row;
             return row;
+        }
+    }
+
+    /// <summary>Removes every row matching the predicate (queued for deletion). Returns how many.</summary>
+    public int RemoveWhere(Func<TRow, bool> predicate)
+    {
+        lock (_sync)
+        {
+            var gone = _rows.Where(pair => predicate(pair.Value)).ToList();
+            foreach (var pair in gone)
+            {
+                _rows.Remove(pair.Key);
+                _pending.Remove(pair.Key);
+                _deletes.Add(pair.Value);
+            }
+            return gone.Count;
         }
     }
 
@@ -133,35 +155,63 @@ public sealed class LivingServerTable<TKey, TRow> where TRow : DataObject
         }
     }
 
-    public void Flush()
+    /// <summary>Writes queued rows. With <paramref name="wait"/> (shutdown) it waits for a running flush instead of skipping.</summary>
+    public void Flush(bool wait = false)
     {
-        if (Interlocked.Exchange(ref _flushing, 1) != 0)
-            return;
+        while (Interlocked.Exchange(ref _flushing, 1) != 0)
+        {
+            if (!wait)
+                return;
+            Thread.Sleep(20);
+        }
         try
         {
             KeyValuePair<TKey, TRow>[] writes;
+            TRow[] deletes;
             lock (_sync)
             {
-                if (_pending.Count == 0)
+                if (_pending.Count == 0 && _deletes.Count == 0)
                     return;
                 writes = _pending.ToArray();
+                deletes = _deletes.ToArray();
                 _pending.Clear();
+                _deletes.Clear();
             }
+            var failedDeletes = new List<TRow>();
             var failed = new List<KeyValuePair<TKey, TRow>>();
             lock (AutonomousBotStatusPersistence.DatabaseWriteLock)
             {
                 foreach (var chunk in writes.Where(pair => !pair.Value.IsPersisted).Chunk(WriteBatch))
-                    if (!TryWrite(() => GameServer.Database.AddObject(chunk.Select(pair => (DataObject)pair.Value))))
+                    if (!TryWrite(() => _database().AddObject(chunk.Select(pair => (DataObject)pair.Value))))
                         failed.AddRange(chunk.Where(pair => !pair.Value.IsPersisted));
                 foreach (var chunk in writes.Where(pair => pair.Value.IsPersisted).Chunk(WriteBatch))
-                    if (!TryWrite(() => GameServer.Database.SaveObject(chunk.Select(pair => (DataObject)pair.Value))))
+                {
+                    // SaveObject skips clean rows, and a save running while a row changes marks it clean
+                    // afterwards: every queued row is written as changed (review 2026-10-16).
+                    foreach (var pair in chunk)
+                        pair.Value.Dirty = true;
+                    if (!TryWrite(() => _database().SaveObject(chunk.Select(pair => (DataObject)pair.Value))))
                         failed.AddRange(chunk);
+                }
+                foreach (var chunk in deletes.Where(row => row.IsPersisted).Chunk(WriteBatch))
+                {
+                    foreach (TRow row in chunk)
+                        row.AllowDelete = true;
+                    if (!TryWrite(() => _database().DeleteObject(chunk.Cast<DataObject>())))
+                        failedDeletes.AddRange(chunk.Where(row => row.IsPersisted));
+                }
+                // A row removed while its first insert was being written is deleted on the next flush.
+                failedDeletes.AddRange(deletes.Where(row => !row.IsPersisted && writes.Any(pair => ReferenceEquals(pair.Value, row))));
             }
+            if (failedDeletes.Count > 0)
+                lock (_sync)
+                    _deletes.AddRange(failedDeletes);
             if (failed.Count > 0)
             {
                 lock (_sync)
                     foreach (var pair in failed)
-                        _pending.TryAdd(pair.Key, pair.Value);
+                        if (_rows.TryGetValue(pair.Key, out TRow current) && ReferenceEquals(current, pair.Value))
+                            _pending.TryAdd(pair.Key, pair.Value);
                 Log.Warn($"Living Server: {failed.Count} {_name} write(s) failed; retrying");
             }
         }

@@ -43,7 +43,8 @@ stopped; they are used at the next start. The server keys (category `bots`) are:
   - **Greets you** when you pass within about 700 units: at most one greeting every 3 minutes, and
     the same bot at most every 45 minutes. Groupmates don't greet.
   - Sometimes **thanks you for an old rez or a good group**, naming the place.
-  - **Answers you by name** when you talk to it. A cool bot gives you a short brush-off.
+  - **Answers you by name** (most of the time) when you talk near it, in `/faction`, or by its
+    name. A cool bot gives you a short brush-off.
   - Now and then (every 30–60 minutes per realm) a bot that likes you **mentions you in
     `/faction`**, never one standing next to you.
 - Memory is chat only. It never changes who groups with whom, and it never refuses you.
@@ -53,7 +54,8 @@ stopped; they are used at the next start. The server keys (category `bots`) are:
 ### Grats (`bot_living_grats`)
 When you or a bot gains a level:
 - 1–3 bots in the group say grats in `/group` (only when a real player is in the group).
-- 0–2 bots standing nearby say grats in `/say` (only when a real player is near).
+- Bots standing nearby say grats in `/say`: 0–2 for your dings, 0–1 for a bot's (only when a real
+  player is near).
 - At level 50, 1–3 bots of the realm cheer in `/faction`.
 
 Each character gets at most one grats chain every 20 seconds. This is separate from guild grats
@@ -65,7 +67,7 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
   - the first of each class to reach 50;
   - the first to each realm rank from 2 up.
 - **How it's announced:** everyone gets one line on screen and in the system window. Other realms
-  see "a Hibernian champion", not the name. In the achiever's realm, 1–2 bots cheer in `/faction`.
+  see "a Hibernian champion" (or "an Albion…", "a Midgard…"), not the name. In the achiever's realm, 1–2 bots cheer in `/faction`.
 - **Recorded:** in `offline_server_firsts`, and shown in the Camelot Herald.
 - **Turning it on in a played world:** titles someone already holds are marked "reached before
   records began" (no name, never announced). So the next character to get there isn't wrongly
@@ -75,8 +77,10 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
 ### Rezzes and corpse runs (`bot_living_death`)
 - **When a bot dies:**
   - If a real player of its realm who can rez is within about 2,500 units, the bot asks that
-    player for a rez by name, after a few seconds.
-  - The rez classes are Cleric, Friar, Healer, Shaman, Druid, Warden and Bard.
+    player for a rez by name, after a few seconds: in `/group` if you're grouped, in `/say` if
+    you're close, otherwise as a `/send`.
+  - "Can rez" means a Cleric, Friar, Healer, Shaman, Druid, Warden or Bard who has learned a
+    resurrection spell.
   - The bot then waits the long release timer (90 s) instead of 20 s, even if you aren't in its
     group.
 - **Releasing and being rezzed:**
@@ -88,9 +92,11 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
 - **Bots rez you:**
   - An autonomous gamebot that can rez, and isn't in your group, rezzes you when you lie dead
     within 1,500 units of it.
-  - You get the normal accept/decline box.
-  - It never rezzes during a fight (its own or its group's). Only one bot works on a corpse at a
-    time.
+  - You get the normal accept/decline box. If you decline, no bot offers again for 90 seconds.
+  - It never rezzes during a fight (its own or its group's), or with hostile monsters within about
+    700 units of you. Only one bot works on a corpse at a time.
+  - A bot on a siege job, holding a siege position, carrying a relic or in an RvR event force
+    doesn't come. A bot that can't reach you within 20 seconds gives up.
   - Groupmates already rezzed you before; that is unchanged.
 
 ### Frontier alarms (`bot_living_alarms`)
@@ -98,7 +104,7 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
   during its normal threat scan. It calls them in `/faction`, for example "inc 8+ mids at Caer
   Benowyc, healer, warrior, skald".
 - **What it says:**
-  - the head count is rough (exact up to 8, then 10, 15, 20);
+  - the head count is rough (exact below 10, then 10, 15, 20);
   - up to three classes;
   - the place is the nearest frontier keep within 6,000 units, or the zone.
 - **Limits:** at most one alarm per realm every 2 minutes, and one per place every 5 minutes. None
@@ -113,6 +119,8 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
     berserker is camping Caer Benowyc".
 - **Revenge:** when the bot later kills that enemy, it may gloat in `/faction`.
 - **Herald:** the Camelot Herald's **Most Wanted** lists the enemies with the most recorded kills.
+- **Size:** each bot remembers at most 8 killers (a new one replaces its least-deadly one), and
+  one-kill rows older than a week are forgotten at server start.
 
 ### Bot schedule (`bot_schedule_mode`)
 - `off` (default): every bot stays online, as before.
@@ -134,15 +142,20 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
   near you.
 - Scheduled-off bots aren't logged back in until their schedule says so. When they return, some
   say hello. Nobody greets during the first 10 minutes after the server starts.
+- Busy scheduled-off bots still count: the total online stays within 10% of the schedule's number
+  while they finish.
 
 ### Breaks and linkdeads (`bot_living_breaks`)
 - **Breaks:** an idle bot (the same rules as logging out) now and then says "brb" and logs off for
   5–25 minutes, about once per 4 hours online. When it comes back it says "back".
 - **Linkdeads:** a bot in a group with you rarely goes linkdead.
-  - How often: at most once per group every 45 minutes, about once an hour of grouping.
+  - How often: at most once per group every 45 minutes; on average about once every hour and a
+    half of grouping.
   - What happens: it stands still and does nothing for 30–90 seconds. Another bot in the group may
     say "X went ld", and the bot comes back with "sry ld".
-  - Never during a fight. Anything that attacks a linkdead bot wakes it at once.
+  - Never during a fight: it wakes at once if anyone in the group fights, if it's attacked, or if
+    the group breaks up. Bots on a stable route, a siege job, a relic or an RvR event force never
+    go linkdead.
 
 ## Camelot Herald
 
@@ -175,6 +188,7 @@ Automated (no running world):
   - schedule parsing, session lengths and online share, and how often a bot's state changes;
   - the clock curve and that clock mode keeps the same bots online;
   - mood rules, alarm head counts, race and realm words, first claims;
+  - tables save changes and deletions to a real SQLite file and load them back;
   - nemesis and alarm lines fill every slot; greetings follow mood;
   - this document lists every key.
 - **Server, `UT_AutonomousBotVoices`:**

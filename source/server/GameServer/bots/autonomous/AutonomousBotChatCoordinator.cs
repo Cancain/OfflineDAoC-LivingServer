@@ -287,7 +287,7 @@ public static class AutonomousBotChatCoordinator
             string response = hasKnowledge
                 ? knowledge
                 : directed
-                    ? GenerateDirectedReply(message)
+                    ? KnownOr(responder, player, message, () => GenerateDirectedReply(message))
                     : VoicedReply(responder, message, () => faction ? GenerateFactionReply(message) : GenerateLocalReply(responder, message), player);
             if (!TryAddDistinctResponse(scheduledResponses, response, out response))
                 continue;
@@ -345,8 +345,17 @@ public static class AutonomousBotChatCoordinator
     }
 
     /// <summary>A corpus reply for the line's intent in the responder's voice, else the old reply.</summary>
+    /// <summary>A reply by name from a bot that remembers the player (Living Server memory), else the fallback.</summary>
+    private static string KnownOr(GameBot responder, GamePlayer player, string incoming, Func<string> fallback) =>
+        AutonomousLivingServer.MemoryOn && Random.Shared.NextDouble() < 0.6 && AutonomousLivingServer.TryKnownReply(responder, player,
+            AutonomousBotVoices.IntentName(AutonomousChatIntentModel.Predict(incoming)), out string known)
+            ? known
+            : fallback();
+
     private static string VoicedReply(GameBot responder, string incoming, Func<string> fallback, GamePlayer player = null)
     {
+        if (!AutonomousBotVoices.Enabled && !AutonomousLivingServer.MemoryOn)
+            return fallback();
         string intent = AutonomousBotVoices.IntentName(AutonomousChatIntentModel.Predict(incoming));
         // A bot that remembers this player answers by name, or coolly after abuse (Living Server memory).
         if (player != null && Random.Shared.NextDouble() < 0.6 && AutonomousLivingServer.TryKnownReply(responder, player, intent, out string known))

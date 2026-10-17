@@ -161,7 +161,7 @@ public static partial class AutonomousLivingServer
             if (player?.Client == null)
                 continue;
             string name = player.Realm == who.Realm ? who.Name
-                : $"a {GlobalConstants.RealmToName(who.Realm)} {row.ClassName.ToLowerInvariant()}".Trim();
+                : $"{RealmAdjective(who.Realm)} {row.ClassName.ToLowerInvariant()}".Trim();
             player.Out.SendMessage($"Server first: {name} is the first on the server to reach {what}.",
                 eChatType.CT_ScreenCenterSmaller_And_CT_System, eChatLoc.CL_SystemWindow);
         }
@@ -184,6 +184,15 @@ public static partial class AutonomousLivingServer
         return true;
     }
 
+    /// <summary>"an Albion", "a Midgard", "a Hibernian" (as the game names realms' people).</summary>
+    public static string RealmAdjective(eRealm realm) => realm switch
+    {
+        eRealm.Albion => "an Albion",
+        eRealm.Midgard => "a Midgard",
+        eRealm.Hibernia => "a Hibernian",
+        _ => "a",
+    };
+
     /// <summary>
     /// When firsts are switched on in a world that already has level 50s or high realm ranks, those
     /// titles are marked as reached before records began (no name, never announced), so the next
@@ -204,11 +213,13 @@ public static partial class AutonomousLivingServer
             for (int r = FirstRealmRankTitle; r <= rank; r++)
                 reached.Add($"First to realm rank {r}");
         }
+        // Class titles use the class's display name, as live claims do (ClassOf), never the enum name.
+        string ClassName(int id, string fallback) => ScriptMgr.FindCharacterClass(id)?.Name ?? fallback;
         foreach (OfflineWorldBotRecord bot in GameServer.Database.SelectAllObjects<OfflineWorldBotRecord>())
             if (!bot.IsRetired)
-                Note(bot.Level, bot.ClassName, bot.RealmPoints);
+                Note(bot.Level, ClassName(bot.ClassId, bot.ClassName), bot.RealmPoints);
         foreach (DbCoreCharacter character in GameServer.Database.SelectAllObjects<DbCoreCharacter>())
-            Note(character.Level, ((eCharacterClass)character.Class).ToString(), character.RealmPoints);
+            Note(character.Level, ClassName(character.Class, null), character.RealmPoints);
         int added = 0;
         foreach (string title in reached)
             if (Firsts.TryAdd(title, new OfflineServerFirstRecord { Title = title }))
@@ -227,8 +238,8 @@ public static partial class AutonomousLivingServer
     public const long AlarmPlaceCooldownMs = 300_000;
     public const int AlarmMinimumEnemies = 3;
 
-    /// <summary>Rough head count as players called it ("3", "8", "15").</summary>
-    public static string AlarmSize(int count) => count <= 8 ? count.ToString() : (count / 5 * 5).ToString();
+    /// <summary>Rough head count as players called it: exact below 10, then 10, 15, 20...</summary>
+    public static string AlarmSize(int count) => count < 10 ? count.ToString() : (count / 5 * 5).ToString();
 
     /// <summary>A frontier bot saw enemies (called from its threat scan): warn the realm in /faction now and then.</summary>
     public static void ObserveEnemies(GameBot bot, IReadOnlyList<GameLiving> nearby)
@@ -309,9 +320,21 @@ public static partial class AutonomousLivingServer
         }
     }
 
+    public const int NemesisRowsPerBot = 8;
+
     private static void RecordKill(GameBot bot, GameLiving killer)
     {
         string place = FrontierPlaceOf(bot);
+        // Each bot keeps at most 8 killers: a new one replaces its oldest one-kill row (review 2026-10-16).
+        if (!Nemeses.TryGet((bot.DatabaseID, killer.Name), out _))
+        {
+            OfflineBotNemesisRecord[] mine = Nemeses.Where(row => row.BotId == bot.DatabaseID);
+            if (mine.Length >= NemesisRowsPerBot)
+            {
+                OfflineBotNemesisRecord oldest = mine.OrderBy(row => row.Kills).ThenBy(row => row.LastUtc, StringComparer.Ordinal).First();
+                Nemeses.RemoveWhere(row => ReferenceEquals(row, oldest));
+            }
+        }
         OfflineBotNemesisRecord row = Nemeses.Change((bot.DatabaseID, killer.Name), () => new OfflineBotNemesisRecord
         {
             BotId = bot.DatabaseID, KillerName = killer.Name,
@@ -372,7 +395,7 @@ public static partial class AutonomousLivingServer
             return null;
         return ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion)
             .Where(player => player.IsAlive && player.Realm == bot.Realm && player.ObjectState == GameObject.eObjectState.Active &&
-                             IsRezClass(player) && bot.IsWithinRadius(player, range))
+                             bot.IsWithinRadius(player, range) && CanRez(player))
             .OrderBy(bot.GetDistanceTo).FirstOrDefault();
     }
 
@@ -392,7 +415,15 @@ public static partial class AutonomousLivingServer
                     ["player"] = rezzer.Name, ["player_class"] = ClassOf(rezzer).ToLowerInvariant(),
                 };
                 if (AutonomousBotVoices.TryEventLine(bot, "rez_ask", out string ask, "player", slots, ["just_died", "player_nearby"], noRepeat: false))
-                    Speak(bot, grouped || bot.IsWithinRadius(rezzer, WorldMgr.SAY_DISTANCE) ? channel : Channel.Group, ask);
+                {
+                    // Grouped: /group. Close: /say. Farther away: a /send, as players did.
+                    if (grouped)
+                        Speak(bot, Channel.Group, ask);
+                    else if (bot.IsWithinRadius(rezzer, WorldMgr.SAY_DISTANCE))
+                        Speak(bot, Channel.Say, ask);
+                    else
+                        Tell(bot, rezzer, ask);
+                }
             }
             else if ((channel == Channel.Group || PlayerHears(bot)) && Random.Shared.NextDouble() < 0.4 &&
                      AutonomousBotVoices.TryEventLine(bot, "rez_ask", out string general, "general", flags: ["just_died"], noRepeat: false))
@@ -411,7 +442,9 @@ public static partial class AutonomousLivingServer
     {
         if (!DeathOn || !IsSpeaker(bot))
             return;
-        AskedAtDeath.TryRemove(bot.DatabaseID, out _);
+        // A failed release transfer retries every 3 s; the corpse line is said once per death.
+        if (!AskedAtDeath.TryRemove(bot.DatabaseID, out _))
+            return;
         Channel channel = GroupHasPlayer(bot.Group) ? Channel.Group : Channel.Say;
         if ((channel == Channel.Group || PlayerHears(bot)) && Random.Shared.NextDouble() < 0.6 &&
             AutonomousBotVoices.TryEventLine(bot, "corpse", out string line, flags: ["just_died"], noRepeat: false))

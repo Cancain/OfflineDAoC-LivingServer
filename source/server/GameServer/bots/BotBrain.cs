@@ -4729,44 +4729,80 @@ namespace DOL.AI.Brain
 
         // Living Server (bot_living_death): an autonomous gamebot that can rez raises a real player of its
         // realm lying dead within 1,500 units who is not in its group. The player still gets the normal
-        // accept/decline prompt. One bot per corpse at a time; never while it or its group is fighting.
+        // accept/decline prompt, and is offered at most once every 90 seconds by any bot (a decline is not
+        // answered with another box). Never while the bot or its group fights, never into hostile mobs, and
+        // never by a bot on a siege job, holding a siege position, carrying a relic or in an RvR event force.
+        // A corpse it can't reach within 20 seconds is skipped for 2 minutes (review 2026-10-16).
         private static readonly System.Collections.Concurrent.ConcurrentDictionary<GamePlayer, (long BotId, long Until)> PlayerRezClaims = new();
-        private long _nextPlayerRezCheck;
-        private GamePlayer _offeredRezTo;
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<GamePlayer, long> PlayerRezOffered = new();
         public const int PlayerRezSearchRadius = 1_500;
-
+        public const long PlayerRezOfferCooldownMs = 90_000;
+        public const long PlayerRezApproachMs = 20_000;
+        public const int PlayerRezHostileRadius = 700;
+        private long _nextPlayerRezCheck;
         private GamePlayer _rezTarget;
+        private long _rezTargetSince;
         private long _nextRezWalk;
+        private GamePlayer _rezSkipped;
+        private long _rezSkippedUntil;
 
         private bool IsRezzableCorpse(GameBot bot, GamePlayer player, long now) =>
             player != null && !player.IsAlive && player.Realm == bot.Realm && player.ObjectState == GameObject.eObjectState.Active &&
             player.CurrentRegion == bot.CurrentRegion && (bot.Group == null || player.Group != bot.Group) &&
             bot.IsWithinRadius(player, PlayerRezSearchRadius) && player.TempProperties.GetProperty<GameLiving>("RESURRECT_CASTER") == null &&
+            !(player == _rezSkipped && now < _rezSkippedUntil) &&
+            !(PlayerRezOffered.TryGetValue(player, out long offered) && now < offered) &&
             (!PlayerRezClaims.TryGetValue(player, out var claim) || claim.BotId == bot.DatabaseID || claim.Until < now);
+
+        private static bool HostilesNear(GameBot bot, GameLiving corpse) =>
+            corpse.GetNPCsInRadius(PlayerRezHostileRadius).Any(npc => npc != null && npc.IsAlive && npc is not GameBot &&
+                npc.Brain is IOldAggressiveBrain { AggroLevel: > 0 } && GameServer.ServerRules.IsAllowedToAttack(npc, bot, true));
+
+        private bool FreeToRezStrangers(GameBot bot) =>
+            !bot.IsOnStableMasterRoute && !bot.IsReturningAfterRelease && !BotSiegeRuntime.Assigned(bot) &&
+            !BotSiegeRuntime.HoldingPosition(bot) &&
+            bot.TempProperties.GetProperty<GameRelic>(GameRelic.PLAYER_CARRY_RELIC_WEAK) == null &&
+            string.IsNullOrEmpty(bot.TempProperties.GetProperty<string>("RvrEventForce"));
+
+        private void DropRezTarget(long now, bool skip)
+        {
+            if (skip && _rezTarget != null)
+            {
+                _rezSkipped = _rezTarget;
+                _rezSkippedUntil = now + 120_000;
+            }
+            if (_rezTarget != null && PlayerRezClaims.TryGetValue(_rezTarget, out var claim) && claim.BotId == BotBody?.DatabaseID)
+                PlayerRezClaims.TryRemove(_rezTarget, out _);
+            _rezTarget = null;
+        }
 
         private bool TryResurrectNearbyPlayer()
         {
             GameBot bot = BotBody;
+            long now = GameLoop.GameLoopTime;
             if (!AutonomousLivingServer.DeathOn || bot?.IsAutonomousWorldBot != true || bot.IsTemporaryGroupHelper ||
                 bot.IsPlayerLedGroup || !bot.IsAlive || bot.ResurrectionSpell == null || bot.CurrentRegion == null)
             {
-                _rezTarget = null;
+                if (_rezTarget != null)
+                    DropRezTarget(now, false);
                 return false;
             }
             if (bot.IsCasting)
                 return bot.castingComponent.SpellHandler?.Spell?.SpellType == eSpellType.Resurrect && bot.TargetObject is GamePlayer;
-            long now = GameLoop.GameLoopTime;
-            if (bot.InCombat || HasAggro || bot.IsCrowdControlled || bot.IsSilenced ||
+            if (bot.InCombat || HasAggro || bot.IsCrowdControlled || bot.IsSilenced || !FreeToRezStrangers(bot) ||
                 bot.Group != null && bot.Group.GetMembersInTheGroup().Any(member => member.IsAlive && member.InCombat))
             {
-                _rezTarget = null;
+                if (_rezTarget != null)
+                    DropRezTarget(now, false);
                 return false;
             }
             Spell resurrection = bot.ResurrectionSpell;
             GamePlayer corpse = _rezTarget;
             if (!IsRezzableCorpse(bot, corpse, now))
             {
-                _rezTarget = corpse = null;
+                if (_rezTarget != null)
+                    DropRezTarget(now, false);
+                corpse = null;
                 if (now < _nextPlayerRezCheck)
                     return false;
                 _nextPlayerRezCheck = now + 2_000;
@@ -4775,18 +4811,35 @@ namespace DOL.AI.Brain
                 if (PlayerRezClaims.Count > 8)
                     foreach (var stale in PlayerRezClaims.Where(pair => pair.Value.Until < now || pair.Key.IsAlive).Select(pair => pair.Key).ToArray())
                         PlayerRezClaims.TryRemove(stale, out _);
+                if (PlayerRezOffered.Count > 8)
+                    foreach (var stale in PlayerRezOffered.Where(pair => pair.Value < now).Select(pair => pair.Key).ToArray())
+                        PlayerRezOffered.TryRemove(stale, out _);
                 corpse = ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion)
-                    .Where(player => IsRezzableCorpse(bot, player, now)).OrderBy(Body.GetDistanceTo).FirstOrDefault();
+                    .Where(player => IsRezzableCorpse(bot, player, now) && !HostilesNear(bot, player))
+                    .OrderBy(Body.GetDistanceTo).FirstOrDefault();
                 if (corpse == null)
                     return false;
+                // One bot per corpse; the claim is taken atomically so two bots thinking at once can't both start.
+                if (!PlayerRezClaims.TryAdd(corpse, (bot.DatabaseID, now + 30_000)) &&
+                    !(PlayerRezClaims.TryGetValue(corpse, out var held) && held.BotId == bot.DatabaseID))
+                {
+                    if (!(PlayerRezClaims.TryGetValue(corpse, out var old) && old.Until < now &&
+                          PlayerRezClaims.TryUpdate(corpse, (bot.DatabaseID, now + 30_000), old)))
+                        return false;
+                }
                 _rezTarget = corpse;
-                PlayerRezClaims[corpse] = (bot.DatabaseID, now + 30_000);
+                _rezTargetSince = now;
             }
             if (!CheckHealSpell(resurrection))
                 return false;
             int range = bot.castingComponent.CalculateSpellRange(resurrection);
             if (!bot.IsWithinRadius(corpse, range) || !BotGroupSupport.HasCorpseLineOfSight(bot, corpse))
             {
+                if (now - _rezTargetSince > PlayerRezApproachMs || HostilesNear(bot, corpse))
+                {
+                    DropRezTarget(now, true);
+                    return false;
+                }
                 if (now >= _nextRezWalk || !bot.IsMoving)
                 {
                     _nextRezWalk = now + 3_000;
@@ -4797,7 +4850,10 @@ namespace DOL.AI.Brain
             }
             var handler = ScriptMgr.CreateSpellHandler(bot, resurrection, m_mobSpellLine);
             if (handler == null || bot.Mana < Math.Max(bot.PowerCost(resurrection), handler.PowerCost(corpse)))
+            {
+                DropRezTarget(now, true);
                 return false;
+            }
             GameObject previous = bot.TargetObject;
             bot.attackComponent.StopAttack();
             bot.StopFollowing();
@@ -4806,14 +4862,12 @@ namespace DOL.AI.Brain
             if (!bot.CastSpell(resurrection, m_mobSpellLine, false))
             {
                 bot.TargetObject = previous;
+                DropRezTarget(now, true);
                 return false;
             }
-            _rezTarget = null;
-            if (_offeredRezTo != corpse)
-            {
-                _offeredRezTo = corpse;
-                AutonomousLivingServer.OnOfferingRez(bot, corpse);
-            }
+            PlayerRezOffered[corpse] = now + PlayerRezOfferCooldownMs;
+            DropRezTarget(now, false);
+            AutonomousLivingServer.OnOfferingRez(bot, corpse);
             return true;
         }
 

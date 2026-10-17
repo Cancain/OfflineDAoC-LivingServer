@@ -37,8 +37,8 @@ public static class AutonomousBotSchedule
 
     public static Mode Parse(string value) => (value ?? string.Empty).Trim().ToLowerInvariant() switch
     {
-        "session" or "shaped" => Mode.Session,
-        "clock" or "real" or "realclock" => Mode.Clock,
+        "session" => Mode.Session,
+        "clock" => Mode.Clock,
         _ => Mode.Off,
     };
 
@@ -219,6 +219,9 @@ public static class AutonomousBotSchedule
             {
                 if (CanLogOut(bot) && !WantsOnline(bot.PersistentRecord, DateTime.UtcNow))
                 {
+                    // Only a bot that really left on a break says "back" when it returns.
+                    if (topic == "brb")
+                        ReturningFromBreak[bot.DatabaseID] = 0;
                     Log.Info($"LIVING_SERVER_LOGOUT bot=\"{bot.Name}\" id={bot.DatabaseID} reason={topic} mode={CurrentMode}");
                     bot.Delete();
                 }
@@ -238,10 +241,7 @@ public static class AutonomousBotSchedule
     private static void RollBreaks(DateTime nowUtc)
     {
         foreach (var expired in BreakUntil.Where(pair => pair.Value <= nowUtc).Select(pair => pair.Key).ToArray())
-        {
             BreakUntil.TryRemove(expired, out _);
-            ReturningFromBreak[expired] = 0;
-        }
         // About one break per bot every four hours online, 5–25 minutes long.
         foreach (GameBot bot in AutonomousBotRegistry.Snapshot())
         {
@@ -282,13 +282,13 @@ public static class AutonomousBotSchedule
     public const long LinkdeadGroupCooldownMs = 45 * 60_000;
 
     /// <summary>True while a bot is "linkdead": it stands still and does nothing (checked by the bot's brain).</summary>
-    public static bool IsFrozen(GameBot bot) => bot != null && Frozen.TryGetValue(bot.DatabaseID, out var entry) &&
-                                               entry.Until > GameLoop.GameLoopTime;
+    public static bool IsFrozen(GameBot bot) => bot != null && !Frozen.IsEmpty && Frozen.TryGetValue(bot.DatabaseID, out var entry) &&
+                                               ReferenceEquals(entry.Bot, bot) && entry.Until > GameLoop.GameLoopTime;
 
     /// <summary>Anything that hits a "linkdead" bot wakes it at once (its connection "comes back").</summary>
     public static void OnAttacked(GameBot bot)
     {
-        if (bot != null && Frozen.ContainsKey(bot.DatabaseID))
+        if (bot != null && Frozen.TryGetValue(bot.DatabaseID, out var entry) && ReferenceEquals(entry.Bot, bot))
             Unfreeze(bot.DatabaseID, true);
     }
 
@@ -303,7 +303,10 @@ public static class AutonomousBotSchedule
             if (members.Any(member => member.InCombat) || Random.Shared.NextDouble() >= 1.0 / 90)
                 continue;
             GameBot[] candidates = members.OfType<GameBot>().Where(bot => bot.IsAutonomousWorldBot && !bot.IsTemporaryGroupHelper &&
-                bot.IsAlive && !bot.IsCasting && !Frozen.ContainsKey(bot.DatabaseID)).ToArray();
+                bot.IsAlive && !bot.IsCasting && !bot.IsOnStableMasterRoute && !BotSiegeRuntime.Assigned(bot) &&
+                bot.TempProperties.GetProperty<GameRelic>(GameRelic.PLAYER_CARRY_RELIC_WEAK) == null &&
+                string.IsNullOrEmpty(bot.TempProperties.GetProperty<string>("RvrEventForce")) &&
+                !Frozen.ContainsKey(bot.DatabaseID)).ToArray();
             if (candidates.Length == 0)
                 continue;
             LastLinkdead[group] = now;
@@ -335,7 +338,9 @@ public static class AutonomousBotSchedule
             GameBot bot = entry.Value.Bot;
             if (bot.ObjectState != GameObject.eObjectState.Active || !bot.IsAlive)
                 Unfreeze(entry.Key, false);
-            else if (entry.Value.Until <= now)
+            // A fight anywhere in its group, or the group breaking up, "reconnects" it at once (review 2026-10-16).
+            else if (entry.Value.Until <= now || bot.InCombat || bot.Group == null ||
+                     bot.Group.GetMembersInTheGroup().Any(member => member.IsAlive && member.InCombat))
                 Unfreeze(entry.Key, true);
         }
     }

@@ -37,6 +37,7 @@ namespace DOL.GS.Tests
         [TestCase("", Schedule.Mode.Off)]
         [TestCase(null, Schedule.Mode.Off)]
         [TestCase("nonsense", Schedule.Mode.Off)]
+        [TestCase("realclock", Schedule.Mode.Off)]
         [TestCase("session", Schedule.Mode.Session)]
         [TestCase(" Session ", Schedule.Mode.Session)]
         [TestCase("clock", Schedule.Mode.Clock)]
@@ -155,7 +156,8 @@ namespace DOL.GS.Tests
 
         [TestCase(3, "3")]
         [TestCase(8, "8")]
-        [TestCase(9, "5")]
+        [TestCase(9, "9")]
+        [TestCase(10, "10")]
         [TestCase(14, "10")]
         [TestCase(23, "20")]
         public void AlarmsGiveARoughHeadCount(int count, string size) => Assert.That(Living.AlarmSize(count), Is.EqualTo(size));
@@ -185,6 +187,43 @@ namespace DOL.GS.Tests
                 nemesis.Change((7, "Brannoc"), () => new OfflineBotNemesisRecord { BotId = 7, KillerName = "Brannoc" }, r => r.Kills++);
             Assert.That(nemesis.Count, Is.EqualTo(1));
             Assert.That(nemesis.TryGet((7, "Brannoc"), out var killer) && killer.Kills == 3, Is.True);
+        }
+
+        [Test]
+        public void TablesWriteChangesDeletesAndReloadThemFromSqlite()
+        {
+            // Review 2026-10-16: rows were only ever inserted, never updated, because changed rows weren't dirty.
+            string folder = Path.Combine(Path.GetTempPath(), "living-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(folder);
+            try
+            {
+                var database = DOL.Database.ObjectDatabase.GetObjectDatabase(DOL.Database.Connection.EConnectionType.DATABASE_SQLITE,
+                    $"Data Source={Path.Combine(folder, "living.db")};Pooling=False");
+                database.RegisterDataObject(typeof(OfflineBotNemesisRecord));
+                LivingServerTable<(long, string), OfflineBotNemesisRecord> Table() =>
+                    new("test", r => (r.BotId, r.KillerName), null, () => database);
+                var table = Table();
+                OfflineBotNemesisRecord Create(long bot, string killer) => new() { BotId = bot, KillerName = killer };
+                table.Change((1, "Troll"), () => Create(1, "Troll"), r => r.Kills++);
+                table.Change((1, "Kobold"), () => Create(1, "Kobold"), r => r.Kills++);
+                table.Flush();
+                table.Change((1, "Troll"), () => Create(1, "Troll"), r => r.Kills++);
+                table.Change((1, "Troll"), () => Create(1, "Troll"), r => r.Revenges++);
+                table.Flush();
+                Assert.That(table.RemoveWhere(r => r.KillerName == "Kobold"), Is.EqualTo(1));
+                table.Flush(wait: true);
+
+                var reloaded = Table();
+                reloaded.Load(database.SelectAllObjects<OfflineBotNemesisRecord>());
+                Assert.That(reloaded.Count, Is.EqualTo(1), "the removed row is deleted");
+                Assert.That(reloaded.TryGet((1, "Troll"), out var troll), Is.True);
+                Assert.That((troll.Kills, troll.Revenges), Is.EqualTo((2, 1)), "changes after the first insert are saved");
+            }
+            finally
+            {
+                System.Data.SQLite.SQLiteConnection.ClearAllPools();
+                try { Directory.Delete(folder, true); } catch (IOException) { }
+            }
         }
 
         #endregion

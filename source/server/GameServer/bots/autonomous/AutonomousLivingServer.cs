@@ -65,6 +65,8 @@ public static partial class AutonomousLivingServer
         Load("server firsts", () => Firsts.Load(GameServer.Database.SelectAllObjects<OfflineServerFirstRecord>()));
         if (FirstsOn)
             Load("server firsts reached before records began", SeedFirsts);
+        // One-kill nemesis rows older than a week are forgotten, so the table stays small (review 2026-10-16).
+        Load("old nemesis rows", () => Nemeses.RemoveWhere(row => row.Kills <= 1 && IsOlderThan(row.LastUtc, TimeSpan.FromDays(7))));
         GameEventMgr.AddHandler(GamePlayerEvent.LevelUp, new DOLEventHandler(OnPlayerLevelUp));
         GameEventMgr.AddHandler(GamePlayerEvent.RRLevelUp, new DOLEventHandler(OnPlayerRealmRankUp));
         _flushTimer = new Timer(_ => FlushAll(), null, FlushIntervalMs, FlushIntervalMs);
@@ -81,15 +83,19 @@ public static partial class AutonomousLivingServer
         GameEventMgr.RemoveHandler(GamePlayerEvent.RRLevelUp, new DOLEventHandler(OnPlayerRealmRankUp));
         _flushTimer?.Dispose();
         _flushTimer = null;
-        FlushAll();
+        FlushAll(wait: true);
     }
 
-    public static void FlushAll()
+    public static void FlushAll(bool wait = false)
     {
-        Memories.Flush();
-        Nemeses.Flush();
-        Firsts.Flush();
+        Memories.Flush(wait);
+        Nemeses.Flush(wait);
+        Firsts.Flush(wait);
     }
+
+    internal static bool IsOlderThan(string utc, TimeSpan age) =>
+        !DateTime.TryParse(utc, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind,
+            out DateTime when) || DateTime.UtcNow - when.ToUniversalTime() > age;
 
     private static void Load(string what, Action load)
     {
@@ -246,6 +252,29 @@ public static partial class AutonomousLivingServer
         (int)eCharacterClass.Cleric or (int)eCharacterClass.Friar or (int)eCharacterClass.Healer or
         (int)eCharacterClass.Shaman or (int)eCharacterClass.Druid or (int)eCharacterClass.Warden or
         (int)eCharacterClass.Bard;
+
+    /// <summary>A real player of a rez class who has actually learned a resurrection spell.</summary>
+    public static bool CanRez(GamePlayer player)
+    {
+        if (!IsRezClass(player))
+            return false;
+        try
+        {
+            return player.GetAllUsableListSpells().Any(entry => entry.Item2.OfType<Spell>().Any(spell => spell.SpellType == eSpellType.Resurrect));
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>A private /send from a bot to a player (shown as "Name sends, ...").</summary>
+    internal static void Tell(GameBot bot, GamePlayer player, string text)
+    {
+        if (string.IsNullOrWhiteSpace(text) || !IsSpeaker(bot) || player?.Client == null)
+            return;
+        ChatUtil.SendSendMessage(player.Client, "Social.ReceiveMessage.Private.Sends", bot.Name, text);
+    }
 
     #endregion
 }

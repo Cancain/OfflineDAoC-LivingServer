@@ -111,6 +111,10 @@ public static class AutonomousPopulationController
                 online = wanted.Count(record => AutonomousBotRegistry.Contains(record.BotId));
             }
             int missing = desired - online - PendingSpawns.Count;
+            // Scheduled-off bots still finishing something (often a group) stay online and still count: the total
+            // online stays within 10% of the schedule's number while they finish (review 2026-10-16).
+            if (scheduled)
+                missing = Math.Min(missing, desired + desired / 10 - AutonomousBotRegistry.Count - PendingSpawns.Count);
             _populationSatisfied = missing <= 0;
             if (missing <= 0)
                 return;

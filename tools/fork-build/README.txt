@@ -11,6 +11,14 @@ these features, all OFF until you switch them on:
   - Bot guilds .................... docs\BOT-GUILDS.md
   - Bot personalities, voices
     and debates ................... docs\BOT-PERSONALITIES.md
+  - Living Server: bots remember
+    you, grats, server firsts,
+    rezzes, frontier alarms,
+    nemeses, bot schedules,
+    breaks and linkdeads .......... docs\LIVING-SERVER.md
+  - Camelot Herald (a news page;
+    button in the Social
+    Expansion tab) ................ docs\LIVING-SERVER.md
 
 With all of them off, the game should play exactly like the normal 0.36.
 
@@ -30,19 +38,20 @@ copy. It also puts three settings helpers in tools\claude-version and these docs
 docs\fork-build-<name>.
 
 Check: start the game as usual. The server log shows a line like
-  FORK_BUILD name=0.36-chris.1 commit=... bot_guilds=off xp_rate_by_level=off ... bot_personalities=off bot_voices=off
+  FORK_BUILD name=0.36-chris.2 commit=... bot_guilds=off xp_rate_by_level=off ... bot_voices=off living=off bot_schedule=off
 
 UNDO
 ----
 Close everything and double-click ROLLBACK.cmd. It puts back exactly the files the install
-replaced (server and launcher). Turn everything off in the tab first if you want the settings gone;
+replaced (server and launcher). Click ALL OFF in the tab and save first if you want the settings gone;
 the original server ignores them either way.
 
 SWITCHING FEATURES ON
 ---------------------
 Open the launcher as usual (START OFFLINE DAOC.cmd) and go to the Social Expansion tab. With the
 server stopped, tick what you want, pick the XP-by-level rates (Off, Suggested or Custom) and click
-Save settings. They apply the next time you start the server. "Turn everything off" puts it back.
+Save settings. They apply the next time you start the server. ALL OFF puts it back.
+The Living Server switches are only in the tab (no scripts).
 
 The same switches as scripts, for those who prefer a command line (server closed; Python 3):
   python tools\claude-version\set_xp_by_level.py --player "1-19:3;20-34:5;35-50:12" --bots "1-19:1.5;20-34:2.5;35-50:6" --apply
