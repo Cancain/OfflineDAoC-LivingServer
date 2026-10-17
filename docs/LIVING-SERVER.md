@@ -331,7 +331,7 @@ rather than my own reaction times.
   - **Target by name.** `/target <name>` now finds a same-realm bot nearby, for players too.
   - **The new client's target buttons.** See "Godot client gaps seen" above.
   - **A second `/stick` or `/follow`** on the same target now turns it off, as in the old client.
-    (Not yet checked in game.)
+    (Checked with FACE, which uses the same code: "now facing", then "no longer facing".)
   - **Guild gossip.** "we should get Claudecheck into a guild" was said while I was in a bot
     guild. It is now said only about a player with no guild; a starting guild counts as none.
     (Unit test only: gossip comes about once every 30–60 minutes.)
