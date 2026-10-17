@@ -44,6 +44,7 @@ public static class AutonomousPopulationController
     {
         Interlocked.Increment(ref _loginGeneration);
         _startedUtc = DateTime.UtcNow;
+        AutonomousBotSchedule.NoteServerStarted(_startedUtc);
         OfflineWorldBotRecord[] previouslyOnline = DOLDB<OfflineWorldBotRecord>
             .SelectObjects(DB.Column("IsOnline").IsEqualTo(true))
             .ToArray();
@@ -99,7 +100,25 @@ public static class AutonomousPopulationController
 
             OfflineWorldBotRecord[] roster = _cachedRoster;
             int desired = AutonomousPopulationRamp.DesiredActiveCount(_cachedEnabled, roster.Length, _cachedRampMinutes, nowUtc - _startedUtc);
-            int missing = desired - AutonomousBotRegistry.Count - PendingSpawns.Count;
+            int online = AutonomousBotRegistry.Count;
+            // Living Server schedules (off by default): only bots scheduled online are logged in, and the
+            // count is of those, so bots still finishing a fight before logging out don't block the rest.
+            bool scheduled = AutonomousBotSchedule.Active;
+            if (scheduled)
+            {
+                OfflineWorldBotRecord[] wanted = roster.Where(record => AutonomousBotSchedule.WantsOnline(record, nowUtc)).ToArray();
+                desired = Math.Min(desired, wanted.Length);
+                online = wanted.Count(record => AutonomousBotRegistry.Contains(record.BotId));
+            }
+            int missing = desired - online - PendingSpawns.Count;
+            // Scheduled-off bots still finishing something (often a group) stay online. For their first 15 minutes
+            // they count, so logins wait for them (10% slack); after that they no longer hold the schedule back.
+            if (scheduled)
+            {
+                missing = Math.Min(missing, desired + desired / 10 - online - AutonomousBotSchedule.RecentOverstays - PendingSpawns.Count);
+                // Hard ceiling: never more than a quarter above the schedule's number in total.
+                missing = Math.Min(missing, desired + desired / 4 - AutonomousBotRegistry.Count - PendingSpawns.Count);
+            }
             _populationSatisfied = missing <= 0;
             if (missing <= 0)
                 return;
@@ -113,6 +132,7 @@ public static class AutonomousPopulationController
 
             List<OfflineWorldBotRecord> available = roster
                 .Where(record => !record.IsOnline && !AutonomousBotRegistry.Contains(record.BotId) && !PendingSpawns.ContainsKey(record.BotId))
+                .Where(record => !scheduled || AutonomousBotSchedule.WantsOnline(record, nowUtc))
                 .ToList();
 
             // Ten thousand actors require about eleven scheduled logins per
@@ -224,6 +244,7 @@ public static class AutonomousPopulationController
             record.ObjectiveProgress = "Entered world through staggered login queue";
             bot.MarkAutonomousStateDirty();
             AutonomousBotStatusPersistence.QueueLogin(bot);
+            AutonomousBotSchedule.OnLoggedIn(bot);
             Log.Info($"Autonomous character {record.Name} entered the live world from the staggered queue.");
         }
         catch (Exception exception)
@@ -331,6 +352,9 @@ public static class AutonomousPopulationController
     }
 
     private static volatile bool _populationSatisfied;
+
+    /// <summary>The non-retired roster as last read by the control plane (read-only; empty before the first read).</summary>
+    internal static OfflineWorldBotRecord[] CachedRoster => _cachedRoster;
 
     private static void QueueOwnerCommands(bool repairOrphans)
     {

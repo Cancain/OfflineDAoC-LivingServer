@@ -1,0 +1,139 @@
+# Class talk. Specialization names are checked against the world database (docs/bot-voices,
+# research brief section 5). Reputations are period knowledge. New writing.
+
+# ---------------- Albion ----------------
+@kind ambient
+@topic class
+@realm alb
+@who *
+@class Armsman
+polearm or two handed? i keep going back and forth
+armsman life: stand in front, get hit, be happy
+nothing feels better than a big polearm style landing
+@class Paladin
+chant twisting is harder than it looks
+paladin endurance chant, the group's best friend
+@class Mercenary
+dual wield merc, more swings more fun
+merc tip: evade is your friend, train it
+@class Reaver
+flex is weird at first but the reach is nice
+soulrending feels like cheating sometimes
+still figuring out reaver, anyone have advice?
+@class Scout
+longbow and patience, that is the whole class
+people complain about scout range, they should try aiming
+@class Infiltrator
+quiet night, just me and my envenom
+crit strike or envenom first, cant decide
+@class Minstrel
+minstrel speed song, my gift to the realm
+charm a pet, play a song, collect compliments
+@class Cleric
+smite cleric or rejuv, the eternal question
+cleric life: heal, rez, get blamed, repeat
+@class Friar
+staff friar here, i heal and i hit, both badly some nights
+nobody expects the friar to tank
+@class Wizard
+fire wizard, i solve problems from far away
+earth or fire, every wizard argues about it
+@class Theurgist
+theurg pets everywhere, sorry about the lag
+wind theurg, the art of throwing pets at things
+@class Sorcerer
+mez, pet, nap. sorc life
+mind sorc tip: mez first, ask questions later
+@class Cabalist
+cabalist dots stack up nicely if you are patient
+my simulacrum takes more hits than i do, as intended
+@class Necromancer
+necro tip: the pet is you, you are the pet
+painworking necro, the slow kill is the best kill
+
+# ---------------- Midgard ----------------
+@kind ambient
+@topic class
+@realm mid
+@who *
+@class Warrior
+warrior: shield up, face first, no regrets
+throwing weapons on a warrior, more useful than it sounds
+@class Thane
+stormcalling thane, i bring the thunder
+thane life: half caster, half tank, all fun
+@class Skald
+skald speed is the best gift in midgard
+battlesongs up, everyone run faster
+@class Berserker
+zerker, two axes, no plan
+left axe zerker, the berserk style never gets old
+@class Savage
+savage buffs cost me health but look at those numbers
+hand to hand savage, punching things since level 5
+@class Hunter
+hunter and pet, best duo in the realm
+composite bow at range, spear up close, i like options
+@class Shadowblade
+shadowblade, stealthed and waiting
+envenom and patience, that is the whole job
+@class Healer
+pac healer here, mez on demand
+mending healer, keeping groups alive since forever
+healer life: everyone loves you until the group wipes
+@class Shaman
+cave shaman, diseases and dots, it is a lifestyle
+mending shaman, the group's quiet backbone
+@class Runemaster
+runemaster damage is no joke when it lands
+darkness or suppression rm? asking for my build
+@class Spiritmaster
+spiritmaster pet is tankier than half my groups
+summoning sm, i let the spirit do the talking
+@class Bonedancer
+bonedancer army ready, three pets and a dream
+bone army bd, the pet that commands pets
+
+# ---------------- Hibernia ----------------
+@kind ambient
+@topic class
+@realm hib
+@who *
+@class Hero
+hero tank, celtic spear and a stubborn streak
+large weapons hero, slow swings big hits
+@class Champion
+champion debuffs make everyone else look good
+valor champ, the unsung hero of every group
+@class Blademaster
+blademaster, celtic dual, two blades, no thoughts
+@class Warden
+warden, the healer who can also take a hit
+regrowth warden here, i keep the tank up
+@class Druid
+druid pet and heals, i am a small army
+nature druid, i let the pet tank while i heal
+@class Bard
+bard speed, bard heals, bard mez. bards do it all
+music bard here, twisting songs like a pro, mostly
+@class Ranger
+ranger, recurve bow, pathfinding, nature friend
+celtic dual ranger, surprised people when i come out swinging
+@class Nightshade
+nightshade, critical strike and a lot of waiting
+ns life: hide, wait, strike, run
+@class Eldritch
+void eld, the big numbers hibernia is proud of
+light eld here, bright and painful
+@class Enchanter
+enchanter pet and pbaoe, everything in range dies
+enchantments line, the buffs everyone wants
+@class Mentalist
+mentalist, heals and mez in one robe
+mana ment, damage and a bit of everything
+@class Animist
+animist shrooms everywhere, please do not step on them
+creeping path animist, the forest fights for me
+@class Valewalker
+valewalker, scythe in hand, still learning it
+arboreal path vw, nobody knows what i do until i do it

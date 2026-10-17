@@ -338,14 +338,27 @@ public static class AutonomousObjectiveAssignments
                     int needed = Math.Max(0, target.Battlegrounds - assignedBattleground);
                     return needed > 0 && CanTakeBattleground(bot) && Random.Shared.Next(needed + Math.Max(0, otherNeeded)) < needed;
                 }
-                foreach (GameBot bot in members.Where(bot => !groupOwned.Contains(bot) && !HasActiveRvrTenure(bot.PersistentRecord, utcNow) &&
-                                                              !HasActivePveAssignment(bot.PersistentRecord, utcNow) &&
-                                                              !IsRvrEligible(bot.PersistentRecord, utcNow)))
+                // With personalities on, a pool's open slots are planned together so the type decides WHO takes
+                // each goal (No-lifers and Daredevils to RvR, Socialites to groups...); the mix still decides how
+                // many (AutonomousBotPersonality.PlanGoals, review of goals 2026-10-17). Off: the old draw, unchanged.
+                eAutonomousObjectiveKind?[] Plan(GameBot[] pool, bool withRvr) =>
+                    AutonomousBotPersonality.Enabled
+                        ? AutonomousBotPersonality.PlanGoals(pool.Select(AutonomousBotPersonality.PlannerType).ToArray(),
+                            pool.Select(CanTakeBattleground).ToArray(), target.SoloPve - assignedSolo, target.GroupPve - assignedGroup,
+                            withRvr ? target.RvR - assignedRvr : 0, target.Battlegrounds - assignedBattleground, Random.Shared)
+                        : new eAutonomousObjectiveKind?[pool.Length];
+
+                GameBot[] pvePool = members.Where(bot => !groupOwned.Contains(bot) && !HasActiveRvrTenure(bot.PersistentRecord, utcNow) &&
+                                                         !HasActivePveAssignment(bot.PersistentRecord, utcNow) &&
+                                                         !IsRvrEligible(bot.PersistentRecord, utcNow)).ToArray();
+                eAutonomousObjectiveKind?[] pvePlan = Plan(pvePool, false);
+                foreach (int i in AutonomousBotPersonality.PlannedFirst(pvePlan))
                 {
-                    eAutonomousObjectiveKind kind = TakesBattleground(bot,
+                    GameBot bot = pvePool[i];
+                    eAutonomousObjectiveKind kind = pvePlan[i] ?? (TakesBattleground(bot,
                         Math.Max(0, target.SoloPve - assignedSolo) + Math.Max(0, target.GroupPve - assignedGroup))
                         ? eAutonomousObjectiveKind.Battleground
-                        : ChoosePveObjective(target, assignedSolo, assignedGroup);
+                        : ChoosePveObjective(target, assignedSolo, assignedGroup));
                     if (kind == eAutonomousObjectiveKind.Battleground)
                         assignedBattleground++;
                     else if (kind == eAutonomousObjectiveKind.SoloPve)
@@ -355,20 +368,25 @@ public static class AutonomousObjectiveAssignments
                     Assign(bot, kind, bucket.Key, _epoch);
                 }
 
-                foreach (GameBot bot in members.Where(bot => !groupOwned.Contains(bot) && !HasActiveRvrTenure(bot.PersistentRecord, utcNow) &&
-                                                              !HasActivePveAssignment(bot.PersistentRecord, utcNow) &&
-                                                              IsRvrEligible(bot.PersistentRecord, utcNow)))
+                GameBot[] rvrPool = members.Where(bot => !groupOwned.Contains(bot) && !HasActiveRvrTenure(bot.PersistentRecord, utcNow) &&
+                                                         !HasActivePveAssignment(bot.PersistentRecord, utcNow) &&
+                                                         IsRvrEligible(bot.PersistentRecord, utcNow)).ToArray();
+                eAutonomousObjectiveKind?[] rvrPlan = Plan(rvrPool, true);
+                foreach (int i in AutonomousBotPersonality.PlannedFirst(rvrPlan))
                 {
+                    GameBot bot = rvrPool[i];
                     eAutonomousObjectiveKind kind;
                     int rvrNeeded = Math.Max(0, target.RvR - assignedRvr);
                     int soloNeeded = Math.Max(0, target.SoloPve - assignedSolo);
                     int groupNeeded = Math.Max(0, target.GroupPve - assignedGroup);
-                    if (rvrNeeded > 0 && Random.Shared.Next(rvrNeeded + soloNeeded + groupNeeded) < rvrNeeded)
+                    if (rvrPlan[i] is { } planned)
+                        kind = planned;
+                    else if (rvrNeeded > 0 && Random.Shared.Next(rvrNeeded + soloNeeded + groupNeeded) < rvrNeeded)
                         kind = eAutonomousObjectiveKind.RvR;
                     else if (TakesBattleground(bot, soloNeeded + groupNeeded))
                         kind = eAutonomousObjectiveKind.Battleground;
                     else if (AutonomousBotGoalPolicy.IsConfigured && rvrNeeded + soloNeeded + groupNeeded == 0)
-                        kind = AutonomousBotGoalPolicy.Choose(bot.Level);
+                        kind = AutonomousBotPersonality.ChooseGoal(bot, () => AutonomousBotGoalPolicy.Choose(bot.Level));
                     else
                         kind = ChoosePveObjective(target, assignedSolo, assignedGroup);
 
@@ -417,7 +435,7 @@ public static class AutonomousObjectiveAssignments
             bot.PersistentRecord.ObjectiveRvrEligibleUtc = AutonomousBotGoalPolicy.IsConfigured ? string.Empty : PveCompletionRequired;
         if (TryBeginBetweenTaskServices(bot))
             return;
-        Assign(bot, AutonomousBotGoalPolicy.IsConfigured ? AutonomousBotGoalPolicy.Choose(bot.Level) :
+        Assign(bot, AutonomousBotGoalPolicy.IsConfigured ? AutonomousBotPersonality.ChooseGoal(bot, () => AutonomousBotGoalPolicy.Choose(bot.Level)) :
             bot.Level >= 50 && !leavingRvr ? RollLevelFiftyObjective() : eAutonomousObjectiveKind.SoloPve,
             (bot.Realm, bot.Level >= 50 ? 50 : bot.Level >= 20 ? 20 : 0), GameLoop.GameLoopTime);
         bot.PersistentRecord.CurrentCampId = string.Empty;
@@ -629,7 +647,7 @@ public static class AutonomousObjectiveAssignments
         // when completely full: otherwise the next task leaves loot on the ground.
         BetweenTaskPlan plan = RollBetweenTaskPlan(bot.HasSpendableAutonomousTrainingPoints,
             AutonomousBotEconomy.IsBackpackNearlyFull(bot), Random.Shared.NextDouble(), Random.Shared.NextDouble());
-        bool downtime = AutonomousTownDowntime.RollAtTaskBoundary(Random.Shared.NextDouble());
+        bool downtime = AutonomousBotPersonality.RollTownBreak(bot, Random.Shared.NextDouble());
         if (!plan.Train && !plan.Unload && !downtime) return false;
         OfflineWorldBotRecord record = bot.PersistentRecord;
         record.ObjectiveKind = eAutonomousObjectiveKind.SoloPve.ToString();
@@ -667,7 +685,7 @@ public static class AutonomousObjectiveAssignments
                 $"goal=\"{bot.PersistentRecord.CurrentGoal}\" activity=\"{bot.PersistentRecord.Activity}\" " +
                 $"assignment=\"{bot.PersistentRecord.ObjectiveAssignmentId}\"");
         bool pveRequired = bot.PersistentRecord.ObjectiveRvrEligibleUtc == PveCompletionRequired;
-        Assign(bot, AutonomousBotGoalPolicy.IsConfigured ? AutonomousBotGoalPolicy.Choose(bot.Level) :
+        Assign(bot, AutonomousBotGoalPolicy.IsConfigured ? AutonomousBotPersonality.ChooseGoal(bot, () => AutonomousBotGoalPolicy.Choose(bot.Level)) :
             bot.Level >= 50 && !pveRequired ? RollLevelFiftyObjective() : eAutonomousObjectiveKind.SoloPve,
             (bot.Realm, bot.Level >= 50 ? 50 : bot.Level >= 20 ? 20 : 0), GameLoop.GameLoopTime);
     }

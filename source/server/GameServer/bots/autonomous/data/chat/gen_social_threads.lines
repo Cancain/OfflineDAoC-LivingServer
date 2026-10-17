@@ -1,0 +1,768 @@
+# Long /faction threads about PvE, social life and the economy that fit any realm. Realm-specific
+# places come from slots ({capital}, {zone}, {camp}, {dungeon}); no realm's towns, zones or classes
+# are named. Topics are period knowledge from the research brief, written as new lines.
+
+@kind debate
+@realm *
+
+@topic camp_etiquette
+@levels 15-40
+@scene soc_camp_dispute
+@role B type=Leveler
+@role C type=Socialite
+@role D type=Daredevil
+@role E type=*
+A: {q} is there a rule about camps or is it just whoever is fastest | so someone just walked into {camp} and started pulling our spawn
+B: if you were there first its your camp, everyone knows that | first come first served, always has been
+A: i told them that. they said they didnt see us
+C: didnt see a whole group sitting in a circle? lol | eight people sitting in a ring and they didnt see us. sure
+B: some people really dont check. ask them to group up | send them a tell, half the time they just want xp too
+?D: or just out-pull them, whoever tags it first gets it
+B: thats how a camp turns into a mess
+~ 25
+A: update, sent a tell, they said they were camping it yesterday | ok they replied. apparently it was their camp last night
+C: yesterday doesnt count. you leave, you lose it
+E: unless they left a buddy sitting there to hold it | did they leave someone holding it? thats the only exception i know
+A: nope, nobody
+D: then its yours. keep pulling and let them get bored | then pull faster and smile
+?E: i held a camp for a guildie once while they ate dinner, nobody argued
+C: thats different, a body sitting at the camp is a claim
+~ 40
+A: ok they joined us. they were a solid tank actually | well. they joined the group. and they can tank. weird ending
+B: told you, most ks fights end in a group invite
+C: or in a grudge that lasts a month | or in somebody's ignore list forever
+D: lol both are valid outcomes
+E: whats the tank's name, we could use one tomorrow | add them to your friends list, good tanks are rare at this level
+A: will do. pull is up, back later | gotta go, theyre pulling already
+
+@topic train
+@levels 10-45
+@scene soc_train_story
+@role B type=Leveler
+@role C type=Socialite
+@role D type=NoLifer
+@role E type=Explorer
+A: TRAIN to the zone line, sorry everyone | train coming out of {dungeon}, move!
+B: who is training at this hour | not again
+C: we had just sat to med, it went right through us | it ran straight through our camp, we picked up a pile of adds
+A: i know, i know. the pull went wrong and the healer died first
+B: did you yell before or after you ran
+A: before! i yelled in say and in faction
+D: yelling only works if people are looking at chat | nobody reads chat mid-fight though
+~ 30
+C: ok we survived, barely. two of us dead | we lost our puller and our healer, the rest made it
+A: i owe you a rez | coming back to rez, give me a sec
+?C: you are forgiven if you bring the rez
+E: worst train i ever saw was a whole room following one runner across a zone | i once watched a train chase someone all the way to the guards
+B: running to the guards is the only good train | the guards are the best part, they eat the whole thing
+E: only if the guards are tough enough, some just fall over too
+~ 35
+D: there should be a rule. if you train someone you owe them a favor | new rule, whoever trains a camp buys the next round of potions
+A: deal. i will pay up in {capital} | fair. find me in {capital} later
+C: i accept payment in coin lol
+?E: whats the going rate for one train, asking for a friend
+A: everyone back up? trying that pull again, slowly this time | all rezzed, back to it
+B: from the far side this time please
+A: from the far side, promise
+D: you said that last time too | heh
+
+@topic boat_and_walks
+@levels 10-45
+@scene soc_boat_walk
+@role B type=Socialite
+@role C type=Leveler
+@role D type=Explorer
+@role E type=Crafter
+@role F type=Daredevil
+A: on the boat again. this ride is so long | {q} anyone else on the boat right now
+B: boat rides are the best time to make a sandwich | perfect time to grab a snack
+C: or to read faction chat lol | thats when faction gets the most chatter
+A: where is everyone headed
+D: the shrouded isles, finally old enough for it | heading to the islands for the first time
+?B: enjoy, the first trip out there feels huge
+~ 30
+E: long walks are worse. at least the boat drives itself | walking across a whole zone with no speed buff, now that is pain
+C: that is why everyone loves a speed class | a speed class is worth their weight in gold
+E: or the horse routes. buy a ticket, go make dinner | stablemaster tickets, the original autopilot
+A: ever fallen asleep on a horse route?
+F: woke up at the end of the route with something chewing on me | yes. woke up next to a guard staring at me
+~ 35
+D: whats the best view you have seen on a long trip | best sight anyone has seen on the road?
+F: first time i saw the frontier from a distance, those huge keep walls | the first time i saw a keep out there. i just stopped and stared
+B: same. i was way too low to be there, i just wanted to look
+E: you look, then something with a red name looks back | and then a stealther introduces himself
+?F: i died a moment later. totally worth it
+C: the water at night from this boat is up there too | the sunset over the sea on this crossing, honestly pretty
+A: ok we are docking. back to work | land! finally. off to find a camp
+D: good luck everyone on the islands | see you on the other side
+
+@topic ninja_loot
+@levels 20-50
+@scene soc_ninja_loot
+@role B type=Socialite
+@role C type=Leveler
+@role D type=Daredevil
+@role E type=NoLifer
+@role F type=*
+A: just had someone ninja a drop from our group and leave | someone grabbed the named's drop and disbanded right after
+B: what was it
+A: a {item} | the thing we had been camping all evening
+C: wow. what was the loot rule | did you agree on rolls before the pull?
+A: we said roll for it. they just picked it up and left
+D: name them in faction | post their name, everyone should know
+B: careful with that, sometimes its an accident | could be a misclick, it happens
+A: and then disband in the same second? sure
+~ 30
+E: word gets around. a ninja looter has trouble getting groups for months | people remember this stuff. good luck to them finding a group later
+C: our guild keeps a list. not public, just for us
+?D: everyone has a list
+B: has anyone actually sent them a tell?
+A: yes. no answer. probably logged
+~ 40
+F: hey i know that player, they were in my group last week, very nice | i grouped with that name before, they seemed fine?
+A: well they were not nice tonight
+F: i will ask them about it, maybe there is a reason
+E: there is never a reason that makes that ok
+?F: their little brother plays on the account sometimes, i am not kidding
+D: lol the little brother defense | ah, the classic little brother
+~ 25
+F: ok they answered me. they will meet you in {capital} and hand it back | they say sorry, they thought it was free loot, will hand it back
+A: well. that is not how i expected this to end | huh. ok. did not see that coming
+C: faith in people restored, partly | ok faith restored a little
+B: see, send a tell first, post names second
+
+@topic pickup_groups
+@levels 15-45
+@scene soc_pug_vs_guild
+@role B type=Leveler
+@role C type=Socialite
+@role D type=Crafter
+@role E type=Explorer
+@role F type=*
+A: do you all group with strangers or wait for guildmates | {q} pick up groups or guild groups, which do you prefer
+B: guild every time. i know who will stay and who will afk
+C: strangers. half my friends list started as a random invite
+B: and the other half are names you never want to see again
+C: thats what the ignore list is for | lol fair
+~ 25
+D: my guild is three people and one of them only plays saturdays | small guild here, if i wait for guildmates i wait all week
+E: the best groups i had were complete strangers who clicked | my best group ever was eight strangers at {camp}
+?E: we kept that group together for a week, every night
+A: what happened after
+E: two of them made a guild together, the rest scattered | someone moved to an alt and it fell apart
+~ 30
+B: thats the thing, strangers are a gamble. guildies are a promise
+D: a promise to show up late lol | a promise that comes with drama
+C: and guildmates can be bad too, you just cant say it | at least with a stranger you can leave, with a guildie you have to be polite
+B: ok that is true
+?F: i just answer whoever says lfm first
+F: honestly the game is better when you take a chance | half the fun is meeting people
+A: ok, posting lfg then, see who bites | fine, i will try a random group tonight
+C: pst me if nobody bites
+
+@topic midnight_healer
+@levels 20-50
+@scene soc_midnight_healer
+@role B type=NoLifer
+@role E type=Leveler
+A: lf healer, anyone, its almost midnight and we are stuck | any healer awake? we have a full camp and nobody to keep us up
+B: every healer in the realm went to bed an hour ago
+A: at this point i will take anything with a heal spell
+B: i can heal a bit, but i am a hybrid with a tiny heal | i have a small heal. it is a small heal. a very small one
+A: a small heal is more than we have now | we will take it, any heal helps
+~ 30
+B: night groups are always like this, everyone rolls damage | and then everyone wonders why there are no healers at night
+?B: i rolled a healer once. the tells never stopped, i rerolled
+E: im up, but im leveling my alt. what level is your camp | my main is a healer but im on my alt right now
+A: low 30s, {camp}
+E: ugh, my healer is way past that. greys
+B: come anyway, we wont tell anyone | you could just come heal for fun, no xp though
+E: heal for no xp at midnight. what a pitch | sell it harder lol
+~ 35
+A: we will share the loot, all of it | you get first pick on every drop
+E: ...ok, the loot offer is tempting
+A: and every rez you need, promise | rezzes too, guaranteed
+B: buying healers with loot, the oldest trade in the game
+E: fine, swapping chars, give me a few | logging over. if i fall asleep at the keyboard dont be mad
+A: you are a hero | best person in the realm
+?B: nobody tell my guild i was the backup healer
+
+@topic failed_crafts
+@levels 25-50
+@scene soc_craft_fails
+@role B type=Crafter
+@role C type=Crafter,Socialite
+@role D type=NoLifer
+@role E type=Leveler
+@role F type=Crafter
+A: failed the same combine over and over tonight | so many fails in a row on one piece, is that normal
+B: welcome to crafting | thats a normal tuesday for a crafter
+C: what tier are you making, maybe its too high for you
+A: right at my skill. it should not fail this much
+D: it feels rigged but its not. probably. | everyone says it is rigged. nobody can prove it
+~ 25
+B: every fail is coin down the drain, thats the real pain | its not the fail, its watching the materials vanish
+E: this is why crafted gear costs what it costs
+?F: and people still haggle like we pick it off trees
+C: i quit crafting after a night like that | i put my crafter on the shelf after a night like that
+B: and came back a week later right
+C: ...yes
+~ 35
+A: ok it worked. and its a 99 | finally a success. 99 quality. of course | lol it worked. 99%. so close to masterpiece it hurts
+D: 99 is the cruelest number in the game
+B: sell it as basically masterpiece | list it as nearly perfect and smile
+E: people pay well for a 99, honestly | a 99 sells, just not for masterpiece money
+A: going to keep it for myself, i earned it
+F: spoken like a true crafter | the crafter's curse, you keep the best ones
+?D: describe it to me in detail, i want to feel your pain
+A: back to the forge, still need the gloves | ok, gloves next. pray for me
+
+@topic legendary
+@levels 30-50
+@scene soc_legendary_chase
+@role B type=Socialite
+@role C type=Leveler
+@role D type=NoLifer
+@role E type=Daredevil
+@role F type=Crafter
+A: ding legendary!!! | {q} i finally hit legendary on my crafter
+B: GZ!!! | gratz, that is a long road
+C: how long did that take you
+A: dont ask. i stopped counting the hours | months. i stopped counting at some point
+D: how much coin did it eat | do you even want to know what it cost
+A: i dont want to know, and i dont want my guild to know
+~ 30
+E: so you take orders now? i need a full set | open for orders? my guild will flood you
+A: give me a day to breathe lol
+C: what does legendary even change, honestly
+B: better odds of masterpiece, and bragging rights | the masterpiece chance goes up, and people start sending tells
+?C: and your name gets known in the capital
+D: is it worth it though, when you could have bought the suit
+A: no. yes. i dont know. it felt amazing | not in coin. in feeling, absolutely
+~ 40
+F: congrats from a crafter stuck way below that | i am ages away from that, gz
+F: any tips for the long middle?
+A: never craft tired, and never look at your coin total | buy materials in bulk, and keep a friend in faction to cheer you on
+E: and dont stop when you hit the boring stretch | the middle stretch is where crafters quit. push through
+B: first masterpiece out of your forge, show us | make something nice for yourself first
+A: first one goes to my guild leader, promised it ages ago
+?D: and the second to me, right
+A: lol no | not a chance
+
+@topic overcharge
+@levels 35-50
+@scene soc_overcharge_gamble
+@role B type=Crafter
+@role C type=Socialite
+@role D type=Daredevil
+@role E type=Leveler
+@role F type=Crafter,NoLifer
+A: overcharging a piece, wish me luck | about to overcharge my chest piece. hold me
+B: how far over are you going | how greedy are we feeling tonight
+A: a little over. not crazy
+C: a little over is how it starts | that is what everyone says right before the boom
+~ 20
+A: it blew up | BOOM. gems gone. | and... it exploded. all the gems
+D: lol rip | ouch. pour one out
+E: thats why i never overcharge, plain and simple
+C: and your stats are a little worse forever
+E: and i sleep at night
+~ 30
+F: who was your spellcrafter, you or a hired one | did you craft it yourself or pay someone
+A: myself. so i only have myself to blame | i did it myself. no one to blame
+F: some crafters redo it if theirs explode, worth asking around | a few spellcrafters cover blown gems, ask before you pay
+B: the honest ones do. the rest shrug | not all of them. some just say risk is risk
+?D: i paid for a redo once, still cheaper than starting over
+~ 25
+A: buying new gems now. trying again | ok, round two, same piece
+C: you are insane | admirable. also insane
+E: overcharge addiction is real
+A: it worked! | IT HELD!!! | success!!! it held
+D: gz! now never do that again | gz, quit while you are ahead
+A: next piece is the helm... | the helm is next. dont tell me the odds
+?B: we will be here for the explosion
+
+@topic dyes_alchemy
+@levels 15-50
+@scene soc_dye_colors
+@role B type=Socialite
+@role C type=Crafter
+@role D type=Daredevil
+A: what color should i dye my armor | {q} need opinions. dyeing my whole set tonight
+B: black. always black | royal blue, its classy
+C: whatever matches your realm colors | something that looks good with the cloak at least
+D: please not pink | do not go pink, i beg you
+A: i was literally about to buy pink | ...the pink one was in my hand
+~ 25
+D: ok well, own it | then wear it proudly, i guess
+D: i saw a group in full pink last week, they were terrifying | there was a pink group at {camp} last night. best thing i have seen
+?B: pink tanks hold aggro better, its science
+C: do alchemists make dyes or is that just merchants | is dye an alchemy thing or a merchant thing
+B: no idea honestly, i just buy from a merchant | not sure, i buy mine from a dye merchant in {capital}
+D: my alchemist friend mostly makes potions for the guild raids | ask an alchemist, mine only talks about potions and poisons
+~ 30
+A: ok, decision: dark green with a black cloak | went with dark green. compromise
+D: respectable. pink would have been braver
+B: green is fine, you will blend in with the trees at least | green, good for hiding in the bushes
+?D: until a stealther thinks you are a bush
+A: done. it looks great actually | all dyed. looking sharp if i say so myself
+C: wish we could see it from here lol | describe it, we will imagine
+B: come stand in {capital} and pose | walk past the bindstone so we can admire you
+
+@topic exchange_prices
+@levels 20-50
+@scene soc_exchange_undercut
+@role B type=Socialite
+@role C type=Leveler
+@role D type=Crafter
+@role E type=NoLifer
+@role F type=Crafter,Explorer
+A: someone undercut my listing on the exchange by one copper | listed something on the realm exchange, undercut within the hour lol
+B: welcome to the market | that is the market, it never sleeps
+C: just sell to a merchant, no stress
+A: merchants pay nothing though | merchant pays a fraction, no thanks
+C: a fraction now beats nothing next week
+~ 30
+D: the trick is listing right before the evening crowd logs on | list in the evening, more buyers
+E: i always undercut. sorry. its just how it works | i am the undercutter. i admit it.
+A: so it was you lol
+E: maybe. what were you selling
+A: nope, not telling you now | not saying, you will undercut me again
+?B: lol smart
+F: the real money is in stuff people burn through, potions, arrows | sell what people need every night. arrows, potions, dye
+D: rare drops sit for days though, only a few people can use them
+~ 35
+C: i still say merchants are underrated, no listing, no waiting
+F: and no profit lol | and nothing to brag about either
+B: depends. a full bag at a natural break, merchant. one good item, exchange | junk at a break goes to a merchant. anything nice goes to the exchange
+A: ok that is a decent rule
+E: and if you see me undercut you, just undercut me back | race you to the bottom
+A: no thanks, i will relist tomorrow | not playing that game. relisting later
+?D: smart. patience wins the exchange
+
+@topic housing
+@levels 30-50
+@scene soc_house_neighbors
+@role B type=Socialite
+@role C type=Crafter
+@role D type=Daredevil
+@role E type=Explorer
+@role F type=*
+A: finally bought a house, tiny one but its mine | {q} who else has a house? just got mine
+B: gz! which neighborhood | gz, which housing zone
+A: the quiet one near the water, i think | not sure of the name, there is a river
+C: first rule of housing, keep the rent paid | did you sort out the rent yet
+A: wait, rent? | there is rent?
+C: there is rent. miss it long enough and you will be sad | yes. forget it and your stuff goes away
+~ 25
+D: my neighbor has a giant statue in their yard facing my door | my neighbor put out banners and a bonfire, its a lot
+E: mine never logs in. dark windows, never seen them once | my neighbors house has been empty since i moved in
+B: what do you even put inside | so what goes in a house, besides you
+?D: trophies, mostly. heads of things i killed
+A: a bench and a rug so far | a bed, i guess. and a trophy one day
+~ 35
+F: the best part is the porch. i just sit there and chat | i log out on my porch every night, feels like home
+C: same. after a long night it beats the bindstone
+E: houses are just very expensive places to stand | its a very pricey place to go afk
+F: worth every coin | worth it, no regrets
+?B: invite us for a housewarming
+A: ok, housewarming saturday. bring furniture | saturday, bring a chair, i only have one
+D: i will bring the statue | i will bring something tasteful. maybe
+
+@topic guild_name
+@levels 1-50
+@scene soc_guild_name
+@role B type=Socialite
+@role C type=NoLifer
+@role D type=Daredevil
+@role E type=Leveler
+@role F type=*
+A: starting a guild, need a name that isnt terrible | {q} help me name my new guild
+B: something with knights in it | anything but "of the something"
+C: something with dragons. people love dragons | add dragon to it, instant members
+D: please nothing with elite in it | if it has elite in the name i am not joining
+A: ok i had elite in it
+?D: lol naturally. of course you did
+~ 30
+E: how many members so far | whos in it so far
+A: me, my alt, and my sister | me and two friends from school
+B: so a guild of three. thats how all the big ones started | every big guild started as three people and a dream
+?E: and a lot of recruit spam in faction
+C: what is the guild for, rvr, leveling, chatting | whats the point of it though. rvr, pve or just friends
+A: mostly a place for friends to hang out | no pressure stuff. play when you can
+D: then name it something cozy | then call it something warm. like a tavern
+E: the hearth | the last inn | the long table
+A: oh i like that one | ok thats actually good
+~ 25
+C: now you need an emblem too, that is the real fight
+A: dont start
+B: i want an invite when it is up | send me an invite, i will be your fourth
+F: me too, my guild just fell apart | same, mine went quiet a while ago
+A: invites going out tonight | welcome aboard, everyone
+?C: first rule of the guild, nobody puts elite anywhere
+
+@topic guild_leader_quits
+@levels 25-50
+@scene soc_gl_quit
+@role B type=Socialite
+@role C type=Daredevil
+@role D type=NoLifer
+@role E type=Leveler
+@role F type=*
+A: our guild leader just quit the game. gave lead to whoever was online | {q} our gl quit tonight, no warning
+B: oof. who got it | ouch. who is in charge now
+A: me. i was the only officer online | me, apparently. i was online
+C: congrats and sorry | gz? or condolences, not sure which
+D: happened to my old guild too. half of us left within a month | when ours quit, the guild split in two by the weekend
+~ 30
+A: there is already drama about who gets officer
+E: give it to whoever actually shows up, simple | ranks go to people who show up. not friends of friends
+?D: and keep the loud ones away from the rank list
+F: did they say why they quit
+A: work, a new job. said real life caught up | something about a new baby, cant blame them
+F: thats fair, good for them | can not argue with that
+~ 35
+B: you could run it like a council. three officers, no single boss | try a council, nobody can blame just you
+C: councils argue more | three leaders, three opinions, one guild chat on fire
+E: just do a guild night once a week, keeps people together | one fixed night a week. the people who come are your guild
+A: thats a good idea actually | guild night. writing that down
+?C: do it on a night with no relic raid lol
+D: and post something nice for the old leader, they earned it
+A: yeah. they founded this thing | already did, everyone signed it in guild chat
+B: you will be fine. you care, that is most of the job | you will do fine, the worried ones are always the good ones
+
+@topic alts
+@levels 10-50
+@scene soc_altitis
+@role B type=Socialite
+@role C type=Leveler
+@role D type=Explorer
+A: made another alt. that makes six | rolled another alt tonight. i have a problem
+B: alt-itis is a real disease | there is no cure for alt-itis, sorry
+C: what level is your main | how high is your main
+A: main is stuck in the 30s, the alts are all under 20 | main is mid 30s. everything else is a baby
+D: same story. every time i get bored at a camp i roll something | my main has not moved in weeks, but my alts are thriving lol
+~ 25
+D: alts are how you learn other classes though | playing a healer alt made me a better tank
+?B: and a better tipper
+C: but nobody levels anything to 50 that way | and then you never see 50
+A: thats the problem, the low levels are the fun part | the first twenty levels are just so fun
+B: the low levels are fast, thats the drug | its the dings. alts ding every hour
+~ 35
+D: i made a pact with myself. no new alts until my main dings 40 | rule for me: alts only on weekends
+B: how is that going | and how long did that last
+D: i have a new alt as of tuesday | it lasted three days
+B: lol | heh
+?B: honestly just play what is fun, no one is grading you
+A: ok i am logging my main. for real this time | back to the main. going to {camp}
+C: see you at 50 sometime next year | good luck, we will see you in an hour on another alt
+A: maybe | no promises
+
+@topic mentoring
+@levels 1-25
+@scene soc_newbie_questions
+@role B type=Leveler
+@role C type=Socialite
+@role D type=NoLifer
+@role E type=Explorer
+A: new player here, i died and lost xp? what do i do | {q} brand new, how do i get stuff back after dying
+B: go back to where you died and pray at your gravestone | find your grave and /pray at it, you get some xp back
+A: i have a grave?? | wait, i get a gravestone? that is creepy
+C: lol welcome to the game
+D: dont worry about it much at your level, the penalty is tiny early | at low level it barely matters, dont stress
+~ 25
+A: also how do i get a group, nobody answers
+E: say your level and class, like lfg {level} {class} | post lfg plus your level and class. people respond to that
+A: lfg, level eight, i hit things | ok. lfg ... whatever i am
+?C: we have all typed that
+B: honestly at your level just solo the blues and yellows, groups come later | solo blue cons for now. you will find people in your teens
+A: whats a blue con
+D: when you /con a monster the color says how tough it is | the color of the name when you check a monster. blue is easy, red is run
+~ 35
+A: this game is complicated
+E: it gets better. also train your skills every level at your trainer | dont forget your trainer when you level. people forget for ages
+?B: i forgot to train for ten levels once. ten.
+A: oh. oh no. i never trained | wait what trainer
+C: go now, before you get killed by a rabbit | go. right now. we will wait
+A: ok i went. i am so much stronger lol | wow, i have like four new things now
+D: welcome to {realm} :) | there you go, a real {class} now
+E: pst me if you get stuck, i am around | send a tell anytime, happy to help
+
+@topic named_camp
+@levels 25-50
+@scene soc_named_vigil
+@role B type=Socialite
+@role C type=Leveler
+@role D type=NoLifer
+@role E type=Daredevil
+@role F type=Explorer
+A: day three of camping the same named for one drop | {q} still sitting on this named. third night
+B: what are you after | what drop
+A: a {item} | a cloak. one specific cloak
+C: does it even drop it often | is the drop common at least
+A: nobody knows. everyone says eventually | rumor says it drops sometimes. sometimes is a strong word
+~ 40
+D: i camped one for two weeks. got it on the last night i tried | took me ages. dropped the night i decided to quit
+E: what do you do while waiting, i would go insane | how do you not fall asleep
+A: tv. snacks. faction chat | i read a book between spawns lol
+?E: so we are your entertainment. got it
+C: someone else showed up yet | any competition
+A: one other person, we agreed to take turns | another camper came, we made a deal, alternate pops
+B: thats nice, usually someone just camps it rude | civilized camping, love to see it
+~ 45
+F: rumor is there is a second spawn point nobody uses | i heard it sometimes spawns somewhere else in the zone
+A: dont tell me that now | please do not do this to me
+F: just a rumor, maybe nothing
+D: there is always a rumor about a second spawn
+~ 30
+A: IT DROPPED | omg it dropped | got it!!!
+B: GZ!! | grats!!!
+C: put it on and go look in a mirror | equip it and walk around {capital} slowly
+E: what did the other camper say | was it your turn or theirs
+A: my turn. i told them i will stay and help them get theirs | it was my turn. staying to help them now
+?D: good person
+
+@topic dragon_loot
+@levels 45-50
+@scene soc_dragon_points
+@role B type=NoLifer
+@role C type=Socialite
+@role D type=Daredevil
+@role E type=Leveler
+@role F type=*
+A: our alliance switched to loot points for raids and people are mad | {q} anyone else hate raid point systems
+B: points are fair. you show up, you earn | points reward the people who come every week
+C: points reward the people with no lives lol
+B: which is also who kills the dragon
+D: rolls are more exciting, a newbie can win the best drop | with rolls anyone can win, thats the fun
+~ 30
+E: last raid someone with no points won a roll and left the next day | rolls let a stranger take the best thing and vanish
+?D: ok that one stings
+C: points get hoarded though. one guy saves all year for one item | i know someone sitting on a mountain of points, waiting for one drop
+B: so? they earned that one drop
+F: our way is half points half roll, everyone grumbles equally | we do a mix and everyone complains the same amount
+A: thats honestly the sign of a fair system
+~ 35
+D: what drops from the dragon anyway, i have only ever died to it | been on three raids and saw nothing but my own corpse
+E: everyone dies the first time, the breath does that | the first time, the breath gets everybody
+C: worth it once just to see the size of the thing | you have to see it once, it is enormous
+A: so we keep the points?
+B: keep the points | points. final answer
+D: roll! | rolls, every time
+F: half and half | the mix, obviously
+A: perfect, still no agreement. see you saturday | nothing decided. like every raid meeting
+?C: i will bring snacks to the next argument
+
+@topic epic_armor
+@levels 40-50
+@scene soc_epic_looks
+@role B type=Socialite
+@role C type=Explorer
+@role D type=Crafter
+A: finally finished my epic quest | {q} done with the epic, armor is on
+B: gz! how does it look | gz!! describe it
+A: honestly? kinda silly | i look like a lamp
+C: lol every epic looks like a lamp | some epics are gorgeous. some are lamps
+D: mine has a cape that clips through everything | my epic hat makes my head look tiny
+~ 25
+C: how hard was the quest | was the last step rough
+A: the final fight wiped us twice | took a few tries and a lot of patience
+C: who helped you | did your guild come
+A: guild plus some randoms from faction | half my guild and a couple of kind strangers
+?B: kind strangers are the backbone of epics
+~ 35
+B: is the armor even good stat wise or just the look | do people actually wear it or swap to crafted
+C: good for now, most swap to spellcrafted eventually | it is fine. the serious folks replace it later
+A: i am wearing it for a while, i earned the lamp | i dont care, i am keeping the lamp
+D: dye it, problem solved | it would look better dyed, trust me
+A: can you dye epic? | wait, does that work on epic
+D: no clue, try it and report back | not sure, worth a try
+~ 20
+B: congrats again. that is the real 50 moment | the epic is the real finish line
+B: next goal, the frontier in your shiny lamp suit
+A: lol. lamp to the frontier | they will see me from across the map
+?C: glowing is a strategy too
+
+@topic death_and_binds
+@levels 15-50
+@scene soc_runback
+@role B type=Socialite
+@role C type=Leveler
+@role D type=NoLifer
+@role E type=*
+@role F type=Daredevil
+A: died at the bottom of {dungeon}, my bind is in {capital} | {q} died deep in {dungeon}. the run back is going to take forever
+B: oof, that run | the longest run in the game
+C: why are you bound in {capital} | why bind so far away
+A: i bound there for selling, then forgot | because the merchants are there and i am lazy
+D: rule: bind near where you hunt, always | bind close to your camp. every time
+?D: unless you are a crafter, then you live in town
+~ 25
+E: anyone near {dungeon} with a rez? oh wait, i am. hold on | i can rez if you wait, i am close
+A: you are a lifesaver. literally | yes please! i will wait
+B: dont forget to visit the town healer later, the con loss adds up | con loss stacks, pay the healer in town once in a while
+C: i forgot about con loss for weeks once, wondered why i died so fast
+~ 30
+F: hot take, the death penalty is what makes the game exciting | without the penalty nobody would be careful
+D: without the penalty i would be level 50 already | id be happier lol
+F: and you would never feel your heart race on a bad pull | the fear is the fun
+?C: i like fear in small doses
+E: ok, at your body. rezzing | here, rezzing you now
+A: ty!! sick but alive | thank you. i owe you
+E: np, and rebind closer this time | np. bind closer lol
+A: heading to the nearest bindstone now | already on my way to rebind
+
+@topic leveling_memories
+@levels 20-50
+@scene soc_leveling_moments
+@role B type=Leveler
+@role C type=Daredevil
+@role D type=Crafter
+@role E type=NoLifer
+@role F type=Socialite
+A: whats the best moment you have had leveling so far | {q} favorite leveling memory, go
+B: first ding in a full group, everyone spamming gz | my first group ding, the whole group typed gz at once
+C: first time i fought an orange and won | killing an orange solo with nothing left in the tank
+D: getting my first real weapon off a drop | the first time something dropped that i could actually use
+~ 25
+A: and the worst?
+B: leveling through my 40s alone. so slow | the long empty stretch in the 40s. nobody around
+E: a train through our camp. three deaths in a row, half a level gone. still bitter | the night i died so much my xp bar went backwards for an hour
+C: oh the backwards xp bar. the worst feeling | ouch, watching the bar shrink is brutal
+?D: at least the next ding felt amazing lol
+~ 35
+F: best for me was a night camp that went till sunrise, nobody wanted to log | a group that stayed together all night and laughed the whole time
+A: yes, those groups are why i play
+F: never got their names saved. still think about them | lost touch with everyone from that night. miss them
+B: that is the sad part, groups just dissolve
+?E: save names in your friends list people!
+D: worst was a camp where nobody talked, just pull, kill, sit | silent groups. the worst. like working a job
+C: worse than a train?
+D: a train at least gives you a story
+A: ok this thread made me want to group | anyone up for a group, after all this
+E: i am in | count me in | sure, why not
+
+@topic real_life
+@levels 10-50
+@scene soc_real_life
+@role B type=Socialite
+@role C type=Crafter
+@role D type=NoLifer
+@role E type=Leveler
+@role F type=Daredevil
+A: brb, dinner | dinner time, afk a bit | parents calling me for dinner brb
+B: enjoy | eat well
+C: same, kid woke up, back soon | the baby is up. back in a bit
+~ 40
+D: funny how faction goes quiet at dinner time | dinner hour is the quietest part of the evening
+E: my family calls this game my second job | my roommate thinks i live here
+D: it kind of is lol | to be fair, it kind of is
+?E: they are not wrong, i have a schedule for my camps
+F: weekend marathon starting. snacks are ready | friday night. i have snacks and no plans until monday
+D: i remember those. now i have a mortgage | enjoy it while you can, kids end marathons
+~ 45
+A: back. anything happen? | ok back. full and happy
+B: talk about mortgages and marathons | nothing much, just people missing their youth
+C: back too, kid asleep again. i have to type quietly lol | back. kids asleep. keyboard on stealth mode
+?F: typing quietly is a skill
+E: work tomorrow, should log soon. one more pull | one more pull and bed. i say that every night
+D: famous last words of every player | one more pull, the biggest lie in the game
+~ 30
+E: ok it has been three more pulls. logging. night all | logging for real, gn everyone
+A: gn | night | sleep well
+F: hours to go for me lol | marathon continues. see you all at breakfast
+
+@topic first_character
+@levels 10-50
+@scene soc_first_char
+@role B type=Daredevil
+@role C type=Crafter
+@role D type=Socialite
+@role E type=Leveler
+@role F type=Explorer
+A: late night question. what was your very first character | {q} first character you ever made, go
+B: a tank. died to the first thing i hit | a fighter type with way too much strength
+C: a caster who put points into strength lol | caster with a terrible stat spread, didnt know any better
+D: i made a healer because a friend begged me, never looked back
+~ 30
+A: still playing it?
+B: deleted it at level 9 out of shame | deleted. too embarrassing to keep
+C: still have it. it lives in {capital} as a mule | it is my bank mule now, holds my spare gear
+?D: everyone has that one mule
+E: mine is still my main, just a lot smarter now | still my main. we grew up together
+~ 40
+F: i did not know how to sit, ran everywhere at half health | i didnt know you could sit to heal for my first week
+E: lol | heh, same
+F: walked to my first dungeon with no group, died at the door | wandered into {dungeon} way too early, never forgot it
+A: the classic first night
+C: anyone remember the first time they saw an {enemy} player | first enemy i ever saw, i just stood there staring
+B: i ran. i ran so fast | i waved. they did not wave back
+?F: they never wave back
+~ 25
+D: these stories are why i stay up too late | its 2am and we are telling stories, perfect
+A: same, should sleep | this is the best part of the night
+C: one more story then bed
+B: no, that is how it starts | that is how it gets to sunrise
+
+@topic leveling_pace
+@levels 20-50
+@scene soc_rush_or_stroll
+@role B type=Socialite
+@role C type=NoLifer
+@role D type=Explorer
+@role E type=Leveler
+@role F type=Daredevil
+A: my friend is already 50 and i am 31. we started the same day | how is my buddy 50 when we started together
+B: does your friend sleep | they no-lifed it, clearly
+C: some people treat it like a race | the game starts at 50, some people believe that
+A: they say the real game starts at 50
+D: the real game is whatever you are doing right now | if you hate the leveling why play
+~ 30
+E: i rushed my first char. skipped every camp, knew nobody | rushed to 50, then realized i had no friends in the realm
+?E: hit 50 and had nobody to rvr with
+B: and then you level an alt slowly to make up for it
+E: exactly what i did
+F: counterpoint, the frontier at 50 is incredible, i wanted it asap | i rushed because rvr is the best part, no regrets
+~ 35
+C: depends what you love. pve people stroll, rvr people sprint | strollers and sprinters, both valid
+A: i just feel behind
+D: behind who though, nobody is keeping score | there is no finish line, honestly
+F: well, realm ranks keep score | realm points are a scoreboard, just saying
+?D: ok one finish line
+B: catch up in your own time, your friend will still be there | your friend will be in the frontier waiting either way
+A: true. maybe i will drag them to my camp for a night | think i will ask them to come hang out at my camp
+E: thats the best use of a 50 friend | lol, a 50 sitting at a camp of 30s
+
+@topic lost_explorer
+@levels 15-45
+@scene soc_lost_explorer
+@role B type=Leveler
+@role C type=Socialite
+@role D type=Daredevil
+@role E type=Explorer
+@role F type=NoLifer
+A: i am completely lost. trees everywhere | {q} anyone know {zone} well, im lost
+B: what can you see | describe it. landmarks?
+A: a big rock, a river, and something purple looking at me | river on my left, giant tree, and a red con watching me
+C: thats every place in the game | that narrows it down to everywhere
+D: /loc and post it | what does /loc say
+A: it says numbers. i dont know what they mean | i typed it. it gave me numbers. now what
+~ 25
+B: follow the river downstream, it usually goes somewhere | rivers lead to roads, roads lead to guards
+?C: or to a bigger river
+E: while you are there look for a cave, rumor says a named hides out that way | there is supposed to be a hidden camp near a river there
+A: i am not looking for anything, i want to go home | i dont want rumors, i want a road
+E: lost explorers find the best things though | half the hidden camps were found by lost people
+~ 35
+F: rumors about that zone are mostly made up | i spent a night looking for that hidden camp. nothing
+E: you looked in the wrong spot | then you looked wrong
+?F: sure, sure
+A: wait. there is a cave. there is a cave right here | ok found a cave. its dark. i am going in
+D: dont go in alone | ok see you at your bindstone
+B: brave | love the commitment
+~ 30
+A: it is full of greens. tiny greens. its a nursery | inside is a bunch of easy greens and one weird yellow
+E: told you | the hidden camp!
+F: thats not hidden, thats a cave
+A: either way i found a road on the other side. home | found the road. never doing that again
+C: you say that now | until next week

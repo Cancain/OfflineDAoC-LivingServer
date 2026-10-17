@@ -50,7 +50,9 @@ QUEST_RESPAWN_SECONDS = 300
 
 # Personal or run-state files that are never part of a public world.
 EXCLUDED_DIRS = {"logs", "backups", "dxvk-staging", "deployment-backups", "keep-relic-reset-backups", "progress-backups",
-                 "screenshots", ".git", "testresults", "dumps"}
+                 "screenshots", ".git", "testresults", "dumps",
+                 # the Camelot Herald page names the player's characters (written by the launcher)
+                 "herald"}
 EXCLUDED_NAMES = {"account.txt", "rvr-world.json", "bot-goals.json", "bot-world.json", "bot-world.request", "bot-ai-delay.json",
                   "realm-events.request.json", "realm-events.result.json", "realm-event-records.sqlite3",
                   "realm-event-records.sqlite3-wal", "realm-event-records.sqlite3-shm", "errorlog.txt",
@@ -104,7 +106,8 @@ def copy_tree(source: Path, target: Path, keep=lambda rel: True) -> dict[str, st
 def check_runtime_files(runtime: Path):
     """Nothing personal, diagnostic or experimental ships; the navigation data does."""
     bad = [p.relative_to(runtime).as_posix() for p in runtime.rglob("*") if p.is_file() and (
-        p.name.lower() in FORBIDDEN_NAMES or p.name.lower().endswith(FORBIDDEN_SUFFIXES) or "before-" in p.name.lower())]
+        p.name.lower() in FORBIDDEN_NAMES or p.name.lower().endswith(FORBIDDEN_SUFFIXES) or "before-" in p.name.lower() or
+        "herald" in [part.lower() for part in p.relative_to(runtime).parts[:-1]])]
     assert not bad, f"files that must not ship: {bad[:20]}"
     missing = [name for name in REQUIRED_FILES if not (runtime / name).is_file()]
     assert not missing, f"required files missing: {missing}"
@@ -117,13 +120,23 @@ def clean_world(database: Path, policy: dict, defaults: dict) -> dict:
     tables = {row[0] for row in con.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     cleared = []
     extra = ["FactionAggroLevel"]   # per-character standings (clean_slate.py clears them too)
-    for table in policy["ProgressTables"] + policy["ClearTables"] + extra:
+    for table in policy["ProgressTables"] + policy.get("OptionalProgressTables", []) + policy["ClearTables"] + extra:
         if table in tables and table not in {"Guild", "GuildRank"}:
             con.execute(f'DELETE FROM "{table}"')
             cleared.append(table)
+    # Only the starting guilds are world data. Guilds made in play (by the player or by autonomous
+    # bots, docs/BOT-GUILDS.md) and their ranks never ship.
+    con.execute("DELETE FROM GuildRank WHERE GuildID NOT IN (SELECT GuildID FROM Guild WHERE IsStartingGuild=1)")
+    con.execute("DELETE FROM Guild WHERE IsStartingGuild<>1")
+    # Bot guilds ship off (server defaults); set_bot_guilds.py turns them on in a played install.
+    con.execute("DELETE FROM ServerProperty WHERE lower(`Key`) = 'bot_guilds_enabled' OR lower(`Key`) LIKE 'bot\\_guild\\_%' ESCAPE '\\'")
+    # Social Expansion switches ship off too (server defaults).
+    con.execute("DELETE FROM ServerProperty WHERE lower(`Key`) = 'bot_personalities_enabled' OR lower(`Key`) LIKE 'bot\\_voices\\_%' ESCAPE '\\'")
+    # Living Server switches and the bot schedule ship off (server defaults; docs/LIVING-SERVER.md).
+    con.execute("DELETE FROM ServerProperty WHERE lower(`Key`) = 'bot_schedule_mode' OR lower(`Key`) LIKE 'bot\\_living\\_%' ESCAPE '\\'")
     # Starting guild definitions and ranks are world data; their earned state is not.
     con.execute("UPDATE Guild SET RealmPoints=0,BountyPoints=0,Bank=0,MeritPoints=0,Webpage='',Email='',"
-                "Motd='',oMotd='',HaveGuildHouse=0,GuildHouseNumber=0")
+                "Motd='',oMotd='',HaveGuildHouse=0,GuildHouseNumber=0,AllianceID=''")
     con.execute("UPDATE DBHouse SET OwnerID='',GuildName='',GuildHouse=0,HasConsignment=0,KeptMoney=0,Model=0,Name='' "
                 "WHERE COALESCE(OwnerID,'')<>''")
     # The default frontier: every keep (frontier, battleground, portal) with its original owner and level and no claim,
@@ -138,6 +151,7 @@ def clean_world(database: Path, policy: dict, defaults: dict) -> dict:
         assert changed == 1, f"door {door_id}"
     con.execute("UPDATE Relic SET Realm=OriginalRealm,LastRealm=OriginalRealm WHERE OriginalRealm IN (1,2,3)")
     con.execute("UPDATE ServerProperty SET Value='1' WHERE lower(`Key`) IN ('xp_rate','bot_xp_rate')")
+    con.execute("UPDATE ServerProperty SET Value='' WHERE lower(`Key`) IN ('xp_rate_by_level','bot_xp_rate_by_level')")
     con.execute("UPDATE ServerProperty SET Value='True' WHERE lower(`Key`)='allow_auto_account_creation'")
     con.execute("INSERT OR REPLACE INTO offline_local_options(Key,Value) VALUES('MakeMeGM','false')")
     # Public zero-bot start: the player creates bots from the launcher buttons.
@@ -183,7 +197,16 @@ def set_edition(con: sqlite3.Connection, enabled: bool):
 
 def verify_clean(con: sqlite3.Connection, policy: dict, defaults: dict) -> dict:
     assert con.execute("PRAGMA quick_check").fetchone()[0] == "ok"
-    for table in policy["ProgressTables"] + policy["ClearTables"] + ["FactionAggroLevel"]:
+    assert con.execute("SELECT COUNT(*) FROM Guild WHERE IsStartingGuild<>1").fetchone()[0] == 0, "non-starting guilds"
+    assert con.execute("SELECT COUNT(*) FROM ServerProperty WHERE lower(`Key`) IN "
+                       "('bot_guilds_enabled') OR lower(`Key`) LIKE 'bot\\_guild\\_%' ESCAPE '\\'").fetchone()[0] == 0, "bot guild settings"
+    assert con.execute("SELECT COUNT(*) FROM ServerProperty WHERE lower(`Key`) = 'bot_personalities_enabled' "
+                       "OR lower(`Key`) LIKE 'bot\\_voices\\_%' ESCAPE '\\'").fetchone()[0] == 0, "social expansion settings"
+    assert con.execute("SELECT COUNT(*) FROM ServerProperty WHERE lower(`Key`) = 'bot_schedule_mode' "
+                       "OR lower(`Key`) LIKE 'bot\\_living\\_%' ESCAPE '\\'").fetchone()[0] == 0, "living server settings"
+    assert con.execute("SELECT COUNT(*) FROM GuildRank WHERE GuildID NOT IN "
+                       "(SELECT GuildID FROM Guild WHERE IsStartingGuild=1)").fetchone()[0] == 0, "orphan guild ranks"
+    for table in policy["ProgressTables"] + policy.get("OptionalProgressTables", []) + policy["ClearTables"] + ["FactionAggroLevel"]:
         if table in {"Guild", "GuildRank", "offline_local_options", "offline_runtime_status"}:
             continue
         exists = con.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone()[0]
@@ -197,6 +220,8 @@ def verify_clean(con: sqlite3.Connection, policy: dict, defaults: dict) -> dict:
     assert settings["StartupRampMinutes"] == "15", settings
     assert con.execute("SELECT Value FROM offline_local_options WHERE Key='MakeMeGM'").fetchone()[0] == "false"
     assert con.execute("SELECT Value FROM ServerProperty WHERE lower(`Key`)='allow_auto_account_creation'").fetchone()[0] == "True"
+    assert con.execute("SELECT COUNT(*) FROM ServerProperty WHERE lower(`Key`) IN ('xp_rate_by_level','bot_xp_rate_by_level') "
+                       "AND Value<>''").fetchone()[0] == 0, "XP rates by level must be off in a public package"
     keeps = {str(k): (realm, level, claim) for k, realm, level, claim in
              con.execute("SELECT KeepID,Realm,Level,COALESCE(ClaimedGuildName,'') FROM Keep")}
     assert set(keeps) == set(defaults["Keep"]), "the keep list differs from release-world-defaults.json"

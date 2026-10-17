@@ -16,6 +16,7 @@ public static class AutonomousBotChatCoordinator
     private static readonly Dictionary<ushort, long> LastLocalAmbient = new();
     private static readonly Dictionary<eRealm, long> LastFactionPlayerResponse = new();
     private static readonly Dictionary<ushort, long> LastLocalPlayerResponse = new();
+    private static readonly Dictionary<string, long> LastTellResponse = new(StringComparer.OrdinalIgnoreCase);
 
     private static readonly string[] FactionOpeners =
     [
@@ -44,7 +45,8 @@ public static class AutonomousBotChatCoordinator
         if (!Eligible(starter))
             return false;
 
-        bool factionAudience = HasFactionAudience(starter.Realm);
+        // A running debate scene owns the realm's /faction for its duration (AutonomousBotDebates).
+        bool factionAudience = HasFactionAudience(starter.Realm) && !AutonomousBotDebates.IsRunning(starter.Realm);
         bool localAudience = HasLocalAudience(starter);
         if (!factionAudience && !localAudience)
             return false;
@@ -81,6 +83,8 @@ public static class AutonomousBotChatCoordinator
         if (player == null || string.IsNullOrWhiteSpace(message))
             return;
         BroadcastFaction(player.Name, player.Realm, message);
+        if (AutonomousBotGuildSocial.TryAnswerGuildRequest(player, message, true))
+            return;
         lock (Sync)
         {
             if (LastFactionPlayerResponse.TryGetValue(player.Realm, out long last) && GameLoop.GameLoopTime - last < 12_000)
@@ -96,6 +100,8 @@ public static class AutonomousBotChatCoordinator
             return;
         if (AutonomousChatIntentModel.Predict(message) == eAutonomousChatIntent.IgnoreOutOfWorld)
             return;
+        if (AutonomousBotGuildSocial.TryAnswerGuildRequest(player, message, false))
+            return;
         lock (Sync)
         {
             if (LastLocalPlayerResponse.TryGetValue(player.CurrentRegionID, out long last) && GameLoop.GameLoopTime - last < 10_000)
@@ -103,6 +109,78 @@ public static class AutonomousBotChatCoordinator
             LastLocalPlayerResponse[player.CurrentRegionID] = GameLoop.GameLoopTime;
         }
         SchedulePlayerReplies(player, message, false);
+    }
+
+    public const int TellMinGapMs = 3_000;
+    public const int TellBusyRetryMs = 5_000;
+    public const int TellMaxWaitMs = 30_000;
+
+    /// <summary>
+    /// A player's /send to an autonomous gamebot (in-game check 2026-10-17: bots said "pst me" and "send me a tell",
+    /// but a tell to a bot answered "not in the game"). The bot answers with a /send after a typing pause, waiting
+    /// up to 30 s if it is fighting or casting. Players lead groups and bots join them, so a request to join is
+    /// answered with an invitation to invite the bot.
+    /// </summary>
+    public static void OnPlayerTell(GamePlayer player, GameBot bot, string message)
+    {
+        if (player == null || bot == null || string.IsNullOrWhiteSpace(message))
+            return;
+        lock (Sync)
+        {
+            string key = player.Name + "|" + bot.Name;
+            if (LastTellResponse.TryGetValue(key, out long last) && GameLoop.GameLoopTime - last < TellMinGapMs)
+                return;
+            LastTellResponse[key] = GameLoop.GameLoopTime;
+        }
+        eAutonomousChatIntent intent = AutonomousChatIntentModel.Predict(message);
+        if (intent == eAutonomousChatIntent.Abuse)
+            AutonomousLivingServer.RecordAbuse([bot], player);
+        string reply = AsksToJoinGroup(message)
+            ? JoinReply(bot, player, Random.Shared)
+            : AutonomousChatKnowledge.TryAnswer(player, message, out string knowledge)
+                ? knowledge
+                : KnownOr(bot, player, message, () => VoicedReply(bot, message, () => GenerateDirectedReply(message), player));
+        long asked = GameLoop.GameLoopTime;
+        _ = new ECSGameTimer(bot, _ =>
+        {
+            if (!AutonomousLivingServer.IsSpeaker(bot) || !bot.IsAlive || player.ObjectState != GameObject.eObjectState.Active)
+                return 0;
+            if (bot.InCombat || bot.IsCasting)
+                return GameLoop.GameLoopTime - asked < TellMaxWaitMs ? TellBusyRetryMs : 0;
+            AutonomousLivingServer.Tell(bot, player, reply);
+            return 0;
+        }, 2_500 + Random.Shared.Next(3_000));
+    }
+
+    /// <summary>"inv?", "can i join", "room for a cleric?" - not a guild request.</summary>
+    public static bool AsksToJoinGroup(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return false;
+        string text = " " + new string(message.ToLowerInvariant().Select(c => char.IsLetterOrDigit(c) ? c : ' ').ToArray()) + " ";
+        if (text.Contains(" guild ") || text.Contains(" ginvite "))
+            return false;
+        return new[] { " inv ", " invite ", " group ", " grp ", " join ", " lfg ", " room for ", " spot for " }
+            .Any(text.Contains);
+    }
+
+    public static string JoinReply(GameBot bot, GamePlayer player, Random random)
+    {
+        if (bot.PlayerGroupLeader != null && bot.PlayerGroupLeader != player)
+            return random.Next(2) == 0 ? "sorry, already grouped up with someone" : "cant right now, im in a group";
+        if (!BotGroupInvite.CloseEnoughToInviteByName(player, bot))
+        {
+            string where = Clean(bot.CurrentZone?.Description, "the other side of the realm");
+            if (bot.CurrentZone != null && bot.CurrentZone == player.CurrentZone)   // in-game check 2026-10-17: "im in Snowdonia" to a player in Snowdonia
+                return random.Next(2) == 0 ? $"im a ways off, other side of {where}. come find me and inv" : "sure, but im not close. meet up and inv me";
+            return random.Next(2) == 0 ? $"im out in {where}, invite me when you are closer" : $"sure, but im in {where}. meet up and inv me";
+        }
+        return random.Next(3) switch
+        {
+            0 => "sure, send me an invite",
+            1 => "inv me and ill come to you",
+            _ => "ok, invite me",
+        };
     }
 
     public static bool TryAdvertiseExchangeItem(GameBot seller, string exactItemName)
@@ -268,6 +346,9 @@ public static class AutonomousBotChatCoordinator
         bool directed = mentioned.Length > 0;
         if (directed)
             eligible = mentioned;
+        // Living Server memory: bots that heard an insult remember it (chat only).
+        if (intent == eAutonomousChatIntent.Abuse)
+            AutonomousLivingServer.RecordAbuse(directed ? mentioned : eligible.Where(bot => !faction).Take(1), player);
         int count = directed || hasKnowledge || intent is eAutonomousChatIntent.IgnoreOutOfWorld or eAutonomousChatIntent.Abuse
             ? Math.Min(1, eligible.Length)
             : RollResponseCount(eligible.Length);
@@ -279,8 +360,8 @@ public static class AutonomousBotChatCoordinator
             string response = hasKnowledge
                 ? knowledge
                 : directed
-                    ? GenerateDirectedReply(message)
-                    : faction ? GenerateFactionReply(message) : GenerateLocalReply(responder, message);
+                    ? KnownOr(responder, player, message, () => GenerateDirectedReply(message))
+                    : VoicedReply(responder, message, () => faction ? GenerateFactionReply(message) : GenerateLocalReply(responder, message), player);
             if (!TryAddDistinctResponse(scheduledResponses, response, out response))
                 continue;
             Schedule(responder, 1_300 + scheduledIndex++ * 1_800 + Random.Shared.Next(1_200), () =>
@@ -308,7 +389,8 @@ public static class AutonomousBotChatCoordinator
         for (int index = 0; index < count; index++)
         {
             GameBot responder = eligible[index];
-            string response = hasKnowledge ? knowledge : faction ? GenerateFactionReply(opening) : GenerateLocalReply(responder, opening);
+            string response = hasKnowledge ? knowledge
+                : VoicedReply(responder, opening, () => faction ? GenerateFactionReply(opening) : GenerateLocalReply(responder, opening));
             if (!TryAddDistinctResponse(scheduledResponses, response, out response))
                 continue;
             Schedule(responder, 1_700 + scheduledCount++ * 2_100 + Random.Shared.Next(1_300), () =>
@@ -333,6 +415,27 @@ public static class AutonomousBotChatCoordinator
                     starter.Say(closing);
             });
         }
+    }
+
+    /// <summary>A reply by name from a bot that remembers the player (Living Server memory), else the fallback.</summary>
+    private static string KnownOr(GameBot responder, GamePlayer player, string incoming, Func<string> fallback) =>
+        AutonomousLivingServer.MemoryOn && Random.Shared.NextDouble() < 0.6 && AutonomousLivingServer.TryKnownReply(responder, player,
+            AutonomousBotVoices.IntentName(AutonomousChatIntentModel.Predict(incoming)), out string known)
+            ? known
+            : fallback();
+
+    /// <summary>A corpus reply for the line's intent in the responder's voice (by name when it remembers the player), else the old reply.</summary>
+    private static string VoicedReply(GameBot responder, string incoming, Func<string> fallback, GamePlayer player = null)
+    {
+        if (!AutonomousBotVoices.Enabled && !AutonomousLivingServer.MemoryOn)
+            return fallback();
+        string intent = AutonomousBotVoices.IntentName(AutonomousChatIntentModel.Predict(incoming));
+        // A bot that remembers this player answers by name, or coolly after abuse (Living Server memory).
+        if (player != null && Random.Shared.NextDouble() < 0.6 && AutonomousLivingServer.TryKnownReply(responder, player, intent, out string known))
+            return known;
+        if (AutonomousBotVoices.Enabled && AutonomousBotVoices.TryLine(responder, "reply", out string voiced, intent))
+            return voiced;
+        return fallback();
     }
 
     private static void Schedule(GameBot speaker, int delay, Action action)
@@ -363,6 +466,11 @@ public static class AutonomousBotChatCoordinator
 
     private static string BuildAmbientOpening(GameBot starter, AutonomousBotChat.Context context, bool faction)
     {
+        // Bot voices first (corpus lines by personality, situation and style); the old lines are the fallback.
+        if (AutonomousBotVoices.Enabled &&
+            AutonomousBotVoices.TryLine(starter, AutonomousBotVoices.AmbientKind(starter, faction, Random.Shared), out string voiced))
+            return voiced;
+
         if (Random.Shared.NextDouble() < 0.18)
         {
             string activity = Clean(starter.PersistentRecord?.Activity, string.Empty);

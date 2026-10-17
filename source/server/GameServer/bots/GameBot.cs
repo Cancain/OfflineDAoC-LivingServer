@@ -501,6 +501,9 @@ namespace DOL.GS
             set => _guild = value;
         }
 
+        /// <summary>The bot's rank in its guild (set by <see cref="Guild.AddBotMember"/>), or null.</summary>
+        public DbGuildRank GuildRank { get; set; }
+
         #endregion
 
         #region IGamePlayer — Duel System
@@ -960,7 +963,12 @@ namespace DOL.GS
 
             base.ProcessDeath(killer);
             if (IsAutonomousWorldBot)
+            {
                 AutonomousBotStatusPersistence.Queue(this);
+                AutonomousBotGuildSocial.OnBotDeath(this);
+                AutonomousBotVoices.OnBotDeath(this);
+                AutonomousLivingServer.OnBotDied(this, killer);
+            }
             StartDeathRecoveryTimer();
         }
 
@@ -991,7 +999,8 @@ namespace DOL.GS
                 AutonomousBotGroupCoordinator.PveCorpseRecovery(this);
             if (groupDisposition == AutonomousBotGroupCoordinator.PveCorpseDisposition.HoldForResurrection)
                 return 3000;
-            bool resurrectionPossible = HasViableResurrector();
+            // Living Server: a real player of the realm who can rez, nearby but not grouped, also earns the long wait.
+            bool resurrectionPossible = HasViableResurrector() || AutonomousLivingServer.HasNearbyPlayerRezzer(this);
             long releaseDelay = resurrectionPossible ? 90_000 : 20_000;
             if (groupDisposition is not (AutonomousBotGroupCoordinator.PveCorpseDisposition.ReleaseAndDisband or
                 AutonomousBotGroupCoordinator.PveCorpseDisposition.ReleaseAndRejoin) &&
@@ -1094,6 +1103,8 @@ namespace DOL.GS
                 release = new Point3D(capital.X, capital.Y, capital.Z);
             }
             release ??= _deathLocation;
+            if (IsAutonomousWorldBot)
+                AutonomousLivingServer.OnBotReleasing(this);
             // Transfer the corpse first: a failed MoveTo must not revive the bot
             // at its killer or cause HandleDeathRecovery to discard its timer.
             if (!MoveTo(releaseRegion, release.X, release.Y, release.Z, Heading))
@@ -1136,6 +1147,8 @@ namespace DOL.GS
                 TryReturnTemporaryCompanionToLeader(true);
             Brain?.FSM?.SetCurrentState(eFSMStateType.FOLLOW);
             Brain?.Start();
+            if (IsAutonomousWorldBot && AutonomousLivingServer.OnBotResurrected(this, caster))
+                return;
             Say(Random.Shared.Next(3) switch
             {
                 0 => $"My thanks, {caster?.Name ?? "friend"}. I am ready to continue.",
@@ -1491,9 +1504,15 @@ namespace DOL.GS
         public TryPickUpResult TryAutoPickUpMoney(GameMoney money)
         {
             money.AssertLockAcquisition();
+            long share = AutonomousBotGuildEconomy.ShareAfterDues(this, money.Value, out long dues);
+            // The whole coin must fit in the purse before it is split, so returned dues can never be lost (audit 2026-10-16).
             if (!IsAutonomousWorldBot || IsTemporaryGroupHelper || DatabaseID <= 0 ||
-                !AutonomousBotEconomy.AddMoney(DatabaseID, money.Value))
+                PersistentRecord != null && PersistentRecord.MoneyCopper > long.MaxValue - money.Value ||
+                !AutonomousBotEconomy.AddMoney(DatabaseID, share))
                 return TryPickUpResult.DoesNotWant;
+            // Guild dues come out of the same real coin; a full bank leaves them with the bot.
+            if (!AutonomousBotGuildEconomy.DepositDues(this, dues))
+                AutonomousBotEconomy.AddMoney(DatabaseID, dues);
 
             money.RemoveFromWorld();
             AutonomousStuckWatchdog.MarkProgress(this, eAutonomousProgressKind.Loot);
@@ -1584,12 +1603,22 @@ namespace DOL.GS
             if (!IsAutonomousWorldBot || amount <= 0)
                 return;
             AutonomousRealmPoints += amount;
+            int previousRealmLevel = RealmLevel;
             RealmLevel = Math.Max(RealmLevel, AutonomousBotRealmPointRewards.RealmLevelFor(AutonomousRealmPoints));
             AutonomousStuckWatchdog.MarkProgress(this, eAutonomousProgressKind.RealmPoints);
             MarkAutonomousStateDirty();
+            if (RealmLevel != previousRealmLevel)
+                AutonomousLivingServer.OnBotRealmLevel(this, previousRealmLevel);
         }
 
         public override void GainRealmPoints(long amount) => GainRealmPoints(amount, true);
+
+        public override void EnemyKilled(GameLiving enemy)
+        {
+            base.EnemyKilled(enemy);
+            if (IsAutonomousWorldBot)
+                AutonomousLivingServer.OnBotKilled(this, enemy);
+        }
 
         public override void GainExperience(GainedExperienceEventArgs arguments, bool notify = true)
         {
@@ -1614,11 +1643,11 @@ namespace DOL.GS
                 {
                     long zoneBonus = baseExperience * CurrentZone.BonusExperience / 100;
                     if (zoneBonus > 0)
-                        experienceGained += ScaleAutonomousExperience(zoneBonus, false);
+                        experienceGained += ScaleAutonomousExperience(zoneBonus, false, Level);
                 }
 
                 baseExperience = ScaleAutonomousExperience(baseExperience,
-                    CurrentRegion?.IsRvR == true || CurrentZone?.IsRvR == true);
+                    CurrentRegion?.IsRvR == true || CurrentZone?.IsRvR == true, Level);
 
                 long itemExperienceBonus = GetModified(eProperty.XpPoints);
                 if (itemExperienceBonus != 0)
@@ -1654,6 +1683,13 @@ namespace DOL.GS
                 Mana = MaxMana;
                 Endurance = MaxEndurance;
                 AutonomousBotStatusPersistence.Queue(this, true);
+                if (IsAutonomousWorldBot)
+                {
+                    AutonomousBotGuildEconomy.OnBotLevelsGained(this, previousLevel);
+                    AutonomousBotGuildSocial.OnBotLevelUp(this);
+                    AutonomousBotVoices.OnBotLevelUp(this);
+                    AutonomousLivingServer.OnLevelUp(this, Level);
+                }
             }
             else
             {
@@ -1669,9 +1705,10 @@ namespace DOL.GS
             }
         }
 
-        private static long ScaleAutonomousExperience(long experience, bool isRvR)
+        private static long ScaleAutonomousExperience(long experience, bool isRvR, int level)
         {
-            double rate = ServerProperties.Properties.BOT_XP_RATE;
+            // bot_xp_rate, or the bot_xp_rate_by_level rate for this level when that setting is used.
+            double rate = LevelRangeXpRates.BotRate(level);
             if (isRvR)
                 rate *= ServerProperties.Properties.RvR_XP_RATE;
             return (long)(experience * rate);
@@ -2628,8 +2665,31 @@ namespace DOL.GS
         /// The ordinary RemoveFromWorld pet release is retained, allowing the
         /// pet manager to re-summon a legal pet in the destination region.
         /// </summary>
+        private long _deadMoveLoggedForDeath = -1;
+
+        public override bool MoveInRegion(ushort regionID, int x, int y, int z, ushort heading, bool forceMove)
+        {
+            LogDeadMove(regionID, x, y, z, "MoveInRegion");
+            return base.MoveInRegion(regionID, x, y, z, heading, forceMove);
+        }
+
+        private void LogDeadMove(ushort regionID, int x, int y, int z, string how)
+        {
+            if (!IsAutonomousWorldBot || IsAlive || _deadMoveLoggedForDeath == _deathTick || !log.IsInfoEnabled)
+                return;
+            _deadMoveLoggedForDeath = _deathTick;
+            string stack = string.Join(" <- ", new System.Diagnostics.StackTrace(2, false).GetFrames()
+                .Take(8).Select(frame => frame.GetMethod() is { } method ? $"{method.DeclaringType?.Name}.{method.Name}" : "?"));
+            log.Info($"LIVING_SERVER_DEAD_MOVE bot=\"{Name}\" id={DatabaseID} how={how} deadMs={GameLoop.GameLoopTime - _deathTick} " +
+                     $"from={CurrentRegionID}:{X},{Y},{Z} to={regionID}:{x},{y},{z} by={stack}");
+        }
+
         public override bool MoveTo(ushort regionID, int x, int y, int z, ushort heading)
         {
+            // In game 2026-10-17 dead gamebots were found near their bind within seconds of dying, still dead, so
+            // nobody could rez them. LogDeadMove says once per death who moves a dead gamebot (a normal release
+            // moves the corpse before reviving it, so it shows up here too, about 20 s or 90 s after the death).
+            LogDeadMove(regionID, x, y, z, "MoveTo");
             // Owner 2026-10-07: travelling the old frontiers, the pets of the player's /spawn and /raid companions died
             // on every move (the move removes the bot from the world, which released its pet) and their pet classes kept
             // re-summoning. Within a region a companion's pet now comes along and is placed behind it, as a player's pet
@@ -2787,6 +2847,7 @@ namespace DOL.GS
                 controlledBrain.OnOwnerAttacked(ad);
 
             BotBrain.NotifyNearbyGroupBots(this, ad);
+            AutonomousBotSchedule.OnAttacked(this);
             base.OnAttackedByEnemy(ad);
         }
 

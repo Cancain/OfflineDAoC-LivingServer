@@ -1,0 +1,81 @@
+# Talk inside a group at a camp (heard in /say near you when you group with bots).
+# New writing (see docs/bot-voices).
+
+@kind ambient
+@topic group
+@who *
+@needs in_group
+pull?
+ready when you are
+need a sec, sitting for power
+oom, give me a minute
+med break
+rez pls
+ty for the rez
+buffs dropping soon
+clean pull, ty
+sorry, my fault
+gj all
+good group tonight
+brb, door
+back
+anyone need power?
+loot is yours, i dont need it
+anyone need this drop?
+roll for it?
+grats on the drop
+one more pull then i need a break
+camp bonus is nice here
+xp is great tonight
+half a bubble per kill, love it
+who is main assist?
+stick on me, moving to the next room
+regroup at the entrance
+everyone here? pulling in 5
+@who Socialite
+best group i have had all week honestly
+anyone want to stay in touch after this?
+@who Daredevil
+pull two, we can take it
+lets try the room past the corner, i think we can do it
+@who Leveler
+keep the pulls coming, xp is great
+no breaks, we are on a roll
+@who NoLifer
+pull faster, the respawn is waiting for us
+@who Explorer
+anyone know what is past this room?
+
+# Said in the middle of a fight (audit 2026-10-16: these were idle chatter, which only runs out of combat).
+# No caller asks for @kind combat yet, so they are silent until combat chatter is built.
+@kind combat
+@topic group
+@who *
+@needs in_group
+inc
+inc, two of them
+add!
+pulling
+hp low, careful on the next one
+rebuffing, hold the pull
+nice pull
+that one had friends
+wipe incoming, run!
+run run run
+watch the pat
+pat coming from the left
+careful, that one is orange
+mez is on the caster
+mez broke!
+root is on, kill the other one
+stun up, go
+taunting, get it off the healer
+i have aggro, keep healing me
+assisting you
+target the caster first
+switching to the healer
+healer is oom, wait
+i got the adds
+kite it, kite it
+pet has aggro, all good
+group heal coming

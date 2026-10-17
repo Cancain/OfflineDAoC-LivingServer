@@ -1,0 +1,110 @@
+# Everyday leveling chatter, any realm. New writing for Offline DAoC (see docs/bot-voices).
+# A line is spoken in /say near you or in /faction. Slots are filled from the speaker's live task.
+
+@kind ambient
+@topic leveling
+@who *
+@levels 1-19
+anyone know where the good xp is for {level}s these days?
+first time out of {capital}, how do people find groups?
+ok {monster} hit way harder than the con said
+is it normal to run out of power this fast? asking for a friend
+just figured out what /stick does. game changer
+anyone else get lost on the way to {zone}? the roads all look the same
+got my first real weapon drop, feeling dangerous now
+what does grey con even mean, do i still get xp
+{monster} keeps adding on me, is there a trick to pulling them
+learning the hard way that blue con is not always easy
+is {zone} safe for a {level}?
+how long did 20 take everyone? feels like forever
+need a few more {monster} for my quest, anyone seen them?
+been soloing {monster} for an hour, slow but steady
+my trainer said to check back at {count} levels, what does that mean
+is it worth doing the town quests or just grind?
+does anyone else talk to every npc just in case
+just died to a {monster} i was sure i could take
+should i sell my old armor or keep it for later
+anyone know which merchant buys {item}?
+@who Explorer
+went wandering past {zone} and found a whole camp nobody uses
+there is a waterfall past the hills, worth the walk just to see it
+saw something huge walking the road near {zone}, ran the other way
+anyone ever been all the way to the edge of the map? what is out there
+@who Socialite
+hello everyone, new here, be nice :)
+@who Socialite
+@class Cleric,Friar,Healer,Shaman,Druid,Bard
+anyone want to duo? i talk a lot but i heal ok
+@class *
+@who Daredevil
+pulled a yellow and an orange at once, somehow lived
+who says you cant solo oranges at {level}
+@who Leveler
+3 bubbles from ding, staying up till i get it
+sticking to {monster} till {count} more levels, xp is steady
+
+@kind ambient
+@topic leveling
+@who *
+@levels 20-34
+the 20s feel slow, anyone else hit the wall around here?
+thinking of trying {dungeon}, anyone been at this level?
+camp check, anyone at {camp} right now?
+how is {zone} for a {level} {class}?
+tried soloing at {camp}, came back with a lot less health
+anyone else notice {monster} drop more coin than they used to
+spent half an hour looking for a group, gave up and soloed
+does anyone actually like the 20s or do we all just survive them
+ok who left a train on the road to {zone}
+need a break from {monster}, thinking about {dungeon} instead
+camp bonus at {camp} is nice right now, nobody has been there for a while
+anyone know if {monster} drop anything worth keeping?
+got two levels at {camp} tonight, best session in a week
+how do people level a {class} past 30 without losing their mind
+is it better to quest or grind in the 20s?
+@who Explorer
+finally made it to {zone}, the view from the ridge is something
+there is a cave near {zone} that nobody seems to camp
+found a quiet spot with {monster} and no competition, not telling where :)
+@who Daredevil
+pulled {count} at once and lived. healer may hate me
+{dungeon} was full of reds today. we went in anyway
+@who Leveler
+logged in early to beat the crowd to {camp}
+{count} more levels and i can finally train what i need
+@who NoLifer
+already mapped out my spec to 50, starting to plan the suit
+@who Socialite
+anyone want company at {camp}? i bring snacks and bad jokes
+
+@kind ambient
+@topic leveling
+@who *
+@levels 35-50
+the push from 40 to 50 is a real grind
+anyone running {dungeon} tonight?
+{camp} is still the best xp i have found at this level
+level 4x and still learning how to play this class properly
+starting to feel like 50 is actually reachable
+anyone else pick up a few last levels in the frontier?
+spent all night at {camp}, half a level. worth it though
+is it just me or do the 40s go faster than the 30s
+anyone know who camps {monster} at {camp}? want to take turns
+almost 50 and my gear is still a mess
+thinking about rerolling an alt once this one hits 50
+how does everyone fill the time at 50 besides the frontier?
+{dungeon} groups are hard to fill this late at night
+got a level from a single run of {dungeon}, nice group
+anybody up for a few hours at {camp}? need pull help
+@who Explorer
+went to {zone} just to look around, ended up staying for the xp
+heard there is a named that wanders near {camp}, anyone seen it?
+@who Daredevil
+three purples in {dungeon} and we did not wipe. legendary night
+@who NoLifer
+once i hit 50 it is straight to the frontier, no stops
+mapping out which realm abilities to buy first at 50
+@who Leveler
+2 levels to go, nobody talk to me until i ding
+@who Crafter
+taking a break from leveling to work on crafting, my bags thank me

@@ -20,8 +20,9 @@
 They join guilds and recruit you, each has its own personality, and they talk the way players did in
 2002–2003, down to the build arguments in /faction.
 
-> **Status: in testing, not released yet.** The first release is built for shadowofze's 0.36 / 0.36b
-> (released 2026-10-16). Watch this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases).
+> **Released: 0.36-chris.11 (2026-10-17)**, for shadowofze's 0.36 / 0.36b, with or without the 0.36c
+> new client. Download it from this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases);
+> what's in it is in [CHANGELOG-SOCIAL-EXPANSION.md](CHANGELOG-SOCIAL-EXPANSION.md).
 
 ## Why
 
@@ -36,7 +37,7 @@ Social Expansion makes them feel like a community, not just a population.
 |---|---|
 | **Bot guilds** | Each realm has its own bot guilds, a few big and many small, each with a purpose: leveling, social, RvR, raiding or crafting. Bots wear guild names, chat in /gu, group with guildmates, and recruit you when you ask "lf guild". Guilds claim and defend keeps, pay dues, earn merit, buy guild buffs and form alliances. You can also /ginvite bots into your own guild. |
 | **Bot personalities** | Every bot is one of six types: Leveler, Socialite, Daredevil, Explorer, Crafter or No-lifer. Each also has five traits (curiosity, risk, sociability, patience, chattiness). Personality tilts how a bot spends its time: who lingers in town, who chases orange cons, who goes looking for zones they haven't seen. Target any bot and type `/personality`. |
-| **Bot voices** | 842 lines written for the era and checked against period slang, chosen by realm, class, level, situation and personality. Each bot writes in one of five styles (plain, terse, chatty, proper or typo-prone). No line repeats in a realm within six hours. |
+| **Bot voices** | 979 lines written for the era and checked against period slang, chosen by realm, class, level, situation and personality. Each bot writes in one of five styles (plain, terse, chatty, proper or typo-prone). No line repeats in a realm within six hours. |
 | **/faction debates** | 296 multi-bot conversations: class and spec arguments, relic and keep alerts, dragon raids, Darkness Falls, buffbots, zergs, realm pride and more. A different cast plays one every 30–45 minutes while you're online. |
 | **XP by level range** | Separate player and bot XP rates for level bands. The suggested setting keeps levels 1–34 worth playing and compresses the 35–50 grind. |
 | **Living Server** | Bots remember you: they greet you by name, thank you for an old rez and stay cool if you insulted them. Dings get grats chains, and the first to 50 in each class is announced server-wide. Dead bots ask you for a rez, and passing bot healers rez you. Frontier bots call incoming enemy groups in /faction, and bots hold grudges against the enemies who keep killing them. Bots can log on and off on a schedule (by session or by your clock), take "brb" breaks and now and then go linkdead. Each part has its own switch. |
@@ -50,21 +51,23 @@ Social Expansion makes them feel like a community, not just a population.
   bots earning their armor and the other owner rules are untouched.
 - **Install and undo in one click.** The installer checks that your game is the right version,
   backs up every file it replaces, and verifies each copy. `ROLLBACK.cmd` puts the originals back.
-- **It's tested.** 2,887 automated server tests pass on the 0.36 build. In-game testing comes next.
+- **It's tested.** 2,911 automated server tests pass on the 0.36-chris.11 build, and every feature was
+  played in game with 300 bots per realm. A few parts haven't been seen in game yet (keep claims,
+  guild merit, linkdeads, nemesis chat lines, rezzing a bot); the changelog lists them.
 
-## How to get it (once released)
+## How to get it
 
-1. Install Offline DAoC 0.36b or 0.36 from [shadowofze's releases](https://github.com/shadowofze/OfflineDAoC/releases).
-2. Download the Social Expansion build from this repository's Releases and put its folder in your game folder.
+1. Install Offline DAoC 0.36b or 0.36 (or 0.36c) from [shadowofze's releases](https://github.com/shadowofze/OfflineDAoC/releases).
+2. Download the Social Expansion zip from this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases), unzip it and put its folder in your game folder.
 3. Close the game and server, then double-click `INSTALL.cmd`.
 4. Open the launcher as usual and switch features on in its **Social Expansion** tab (server stopped).
 
 ## Details
 
-- [Bot guilds: design and status](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.36-chris.2/docs/BOT-GUILDS.md)
-- [Bot personalities, voices and debates](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.36-chris.2/docs/BOT-PERSONALITIES.md)
-- [XP by level range](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.36-chris.2/docs/XP-BY-LEVEL-RANGE.md)
-- [Living Server and the Camelot Herald](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/release/0.36-chris.2/docs/LIVING-SERVER.md)
+- [Bot guilds: design and status](docs/BOT-GUILDS.md)
+- [Bot personalities, voices and debates](docs/BOT-PERSONALITIES.md)
+- [XP by level range](docs/XP-BY-LEVEL-RANGE.md)
+- [Living Server and the Camelot Herald](docs/LIVING-SERVER.md)
 
 ## Credits
 

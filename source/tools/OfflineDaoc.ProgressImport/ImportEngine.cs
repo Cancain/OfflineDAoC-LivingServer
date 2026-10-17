@@ -6,7 +6,9 @@ using System.Text.Json;
 
 namespace OfflineDaoc.ProgressImport;
 
-public sealed record Policy(string[] ProgressTables, string[] ClearTables);
+// OptionalProgressTables are carried like ProgressTables when both databases have them; a server
+// creates them on its first start, so an older or never-started database may lack them.
+public sealed record Policy(string[] ProgressTables, string[] ClearTables, string[]? OptionalProgressTables = null);
 
 /// <summary>What an old folder contains, shown before anything is changed.</summary>
 public sealed record ImportSummary(long Accounts, long Characters, long Bots, long InventoryItems)
@@ -246,9 +248,16 @@ public static class ImportEngine
                     if(Scalar(c,$"SELECT count(*) FROM old.{Q(unknown)}")>0)
                         notes.Add($"Not transferred: old table {unknown} is not used by {Release} ({Scalar(c,$"SELECT count(*) FROM old.{Q(unknown)}")} rows).");
                 Exec(c,"BEGIN IMMEDIATE");
-                foreach(string table in Rules.ProgressTables)
+                var optional=new HashSet<string>(Rules.OptionalProgressTables??Array.Empty<string>(),StringComparer.OrdinalIgnoreCase);
+                foreach(string table in Rules.ProgressTables.Concat(optional))
                 {
-                    if(!targetTables.Contains(table))throw new InvalidDataException($"New version is missing progress table {table}.");
+                    if(!targetTables.Contains(table))
+                    {
+                        if(!optional.Contains(table))throw new InvalidDataException($"New version is missing progress table {table}.");
+                        if(sourceTables.Contains(table)&&Scalar(c,$"SELECT count(*) FROM old.{Q(table)}")>0)
+                            notes.Add($"Not transferred: {table} ({Scalar(c,$"SELECT count(*) FROM old.{Q(table)}")} rows); start the new version's server once, then transfer again.");
+                        continue;
+                    }
                     Exec(c,$"DELETE FROM main.{Q(table)}");
                     if(!sourceTables.Contains(table))continue;
                     var oldColumns=Columns(c,table,"old");var newColumns=Columns(c,table);
@@ -296,7 +305,7 @@ public static class ImportEngine
                     set.Parameters.AddWithValue("@hash",HashPassword(password));set.Parameters.AddWithValue("@name",account);
                     if(set.ExecuteNonQuery()!=1)throw new InvalidDataException("Could not set the kept account's new password.");
                 }
-                Exec(c,"UPDATE Account SET PrivLevel=1; INSERT OR REPLACE INTO offline_local_options(Key,Value) VALUES('MakeMeGM','false'); UPDATE ServerProperty SET Value='1' WHERE lower(Key) IN ('xp_rate','bot_xp_rate'); UPDATE offline_world_bots SET IsOnline=0;");
+                Exec(c,"UPDATE Account SET PrivLevel=1; INSERT OR REPLACE INTO offline_local_options(Key,Value) VALUES('MakeMeGM','false'); UPDATE ServerProperty SET Value='1' WHERE lower(Key) IN ('xp_rate','bot_xp_rate'); UPDATE ServerProperty SET Value='' WHERE lower(Key) IN ('xp_rate_by_level','bot_xp_rate_by_level'); UPDATE offline_world_bots SET IsOnline=0;");
                 Exec(c,"UPDATE offline_population_settings SET Value=CAST((SELECT count(*) FROM offline_world_bots WHERE IsRetired=0) AS TEXT) WHERE Key='ActiveTarget'; UPDATE offline_population_settings SET Value='true' WHERE Key='PopulationEnabled';");
                 string Missing(string schema) => $"SELECT i.Inventory_ID FROM {schema}.Inventory i WHERE (COALESCE(i.UTemplate_Id,'')<>'' AND NOT EXISTS(SELECT 1 FROM {schema}.ItemUnique u WHERE u.Id_nb=i.UTemplate_Id)) OR (COALESCE(i.UTemplate_Id,'')='' AND COALESCE(i.ITemplate_Id,'')<>'' AND NOT EXISTS(SELECT 1 FROM {schema}.ItemTemplate t WHERE t.Id_nb=i.ITemplate_Id))";
                 existingMissing=Scalar(c,$"SELECT count(*) FROM ({Missing("old")})");

@@ -102,12 +102,23 @@ public static class AutonomousBotRegistry
         return bot != null;
     }
 
+    /// <summary>An online autonomous gamebot of the realm, by its exact name: /send, /invite and /target reach
+    /// bots as they reach players (in-game check 2026-10-17: "pst me" lines, but "/send Haralhelm" answered
+    /// "not in the game"). Companion bots and temporary helpers are not included.</summary>
+    public static bool TryGetOnline(string name, eRealm realm, out GameBot bot)
+    {
+        bot = TryGetByName(name, out GameBot found) && found.Realm == realm && found.IsAutonomousWorldBot &&
+              !found.IsTemporaryGroupHelper ? found : null;
+        return bot != null;
+    }
+
     public static void Register(GameBot bot)
     {
         if (bot?.IsAutonomousWorldBot == true && bot.DatabaseID > 0)
         {
             Active[bot.DatabaseID] = bot;
             _snapshot = new(-1, []);
+            AutonomousBotGuilds.OnBotOnline(bot);
         }
     }
 
@@ -117,6 +128,7 @@ public static class AutonomousBotRegistry
         {
             AutonomousGoalDiagnostics.End(bot, GoalAttemptEnd.Logout, "Bot left the active world; not a goal failure");
             Active.TryRemove(bot.DatabaseID, out _);
+            AutonomousBotGuilds.OnBotOffline(bot);
             _snapshot = new(-1, []);
             AutonomousBotEconomy.ForgetCachedDecision(bot.DatabaseID);
         }
