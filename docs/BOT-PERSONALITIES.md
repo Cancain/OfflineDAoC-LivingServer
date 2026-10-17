@@ -59,12 +59,34 @@ never bypassed.
 |---|---|---|
 | Town break at a task boundary | 15% for every bot | about 4–37.5% by type, scaled by sociability (the realm average is about 16–17%) |
 | Town break length | 15–30 minutes | ×0.7 (Leveler, NoLifer) to ×1.5 (Socialite), at least 5 minutes |
-| Goal (solo, group, RvR...) | one draw from the configured mix | a chance to **re-draw from the same mix** when the type dislikes the first goal; nothing is forced or banned |
+| Goal (solo, group, RvR...) | the allocator fills the mix's slots with bots in random order | the mix still decides **how many** bots get each goal; personality decides **who** (below) |
 | Dungeon or outdoors | the configured dungeon preference | 60% (Crafter) to 170% (Daredevil) of it; a group uses its leader's |
 | Which outdoor camp | weighted by live spawns | also weighted by taste: Daredevils like yellow and orange cons, Explorers like zones they haven't visited in 6 hours, Levelers like full camps. Every legal camp keeps at least 10% weight |
 | How often it chats | the normal rate | ×0.25 to ×1.56 by chattiness (the realm average stays about the same) |
 
 Zone memory is kept in memory only (32 zones per bot, forgotten when the server restarts).
+
+**Goals (changed 2026-10-17).** Before this change, personality only tilted goals when a Bot Goals file existed, and
+only for bots reassigned outside the allocator's pass, so it barely mattered. Now, each time the allocator hands out
+goals to the bots of a realm and level band, it plans the open slots together:
+- RvR goes to the bots that want it most compared with their other choices, then battlegrounds, then groups versus
+  solo.
+- It is a weighted draw, so nothing is forced or banned, and it works with or without a saved Bot Goals setting.
+- The mix's numbers are filled exactly (`AutonomousBotPersonality.PlanGoals`).
+
+In a test of 1,000 bots with a 40% solo, 40% group and 20% RvR mix:
+
+| Type | Solo | Group | RvR |
+|---|---|---|---|
+| Leveler | 62% | 31% | 6% |
+| Socialite | 1% | 88% | 12% |
+| Daredevil | 21% | 28% | 52% |
+| Explorer | 61% | 21% | 19% |
+| Crafter | 70% | 25% | 5% |
+| No-lifer | 3% | 47% | 50% |
+
+A bot given a new goal between passes (for example when its group breaks up) still uses the older re-draw rule, and
+only when a Bot Goals setting is saved.
 
 ## 3. Voices
 

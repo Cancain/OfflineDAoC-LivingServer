@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using P = DOL.GS.AutonomousBotPersonality;
@@ -143,6 +144,73 @@ namespace DOL.GS.Tests
             for (int zone = 0; zone < P.ZoneMemoryCapacity + 5; zone++)
                 P.RememberZoneAt(botId, $"Zone {zone}", now.AddMinutes(zone + 1));
             Assert.That(P.IsZoneFresh(botId, "Camelot Hills", now.AddMinutes(30)), Is.True, "The oldest zone is forgotten past capacity.");
+        }
+        [Test]
+        public void GoalAffinities_AreAllPositive_SoEverySlotCanStillBeFilled()
+        {
+            foreach (BotPersonalityType type in Enum.GetValues<BotPersonalityType>())
+            foreach (eAutonomousObjectiveKind kind in Enum.GetValues<eAutonomousObjectiveKind>())
+                Assert.That(P.GoalAffinity(type, kind), Is.GreaterThan(0), $"{type} {kind}");
+        }
+
+        private static BotPersonalityType?[] Population(int size)
+        {
+            var types = new BotPersonalityType?[size];
+            int index = 0;
+            for (int t = 0; t < P.TypeSharePercent.Length; t++)
+                for (int n = 0; n < P.TypeSharePercent[t] * size / 100; n++)
+                    types[index++] = (BotPersonalityType)t;
+            return types;
+        }
+
+        /// <summary>
+        /// The allocator with personalities (review of goals, 2026-10-17): the owner's mix still sets exactly how many
+        /// bots get each goal; personality decides who. RvR goes mostly to No-lifers and Daredevils, groups to
+        /// Socialites, and Crafters rarely see RvR.
+        /// </summary>
+        [Test]
+        public void PlanGoals_KeepsTheMixExactly_ButPersonalityDecidesWho()
+        {
+            var random = new Random(2026);
+            BotPersonalityType?[] types = Population(1000);
+            var plan = P.PlanGoals(types, new bool[1000], 400, 400, 200, 0, random);
+            Assert.That(plan.Count(k => k == eAutonomousObjectiveKind.SoloPve), Is.EqualTo(400));
+            Assert.That(plan.Count(k => k == eAutonomousObjectiveKind.GroupPve), Is.EqualTo(400));
+            Assert.That(plan.Count(k => k == eAutonomousObjectiveKind.RvR), Is.EqualTo(200));
+            double Rate(BotPersonalityType type, eAutonomousObjectiveKind kind) =>
+                (double)Enumerable.Range(0, 1000).Count(i => types[i] == type && plan[i] == kind) / types.Count(t => t == type);
+            TestContext.Out.WriteLine(string.Join("; ", Enum.GetValues<BotPersonalityType>().Select(type =>
+                $"{type}: solo {Rate(type, eAutonomousObjectiveKind.SoloPve):P0} group {Rate(type, eAutonomousObjectiveKind.GroupPve):P0} rvr {Rate(type, eAutonomousObjectiveKind.RvR):P0}")));
+            Assert.That(Rate(BotPersonalityType.NoLifer, eAutonomousObjectiveKind.RvR), Is.GreaterThan(0.45));
+            Assert.That(Rate(BotPersonalityType.Daredevil, eAutonomousObjectiveKind.RvR), Is.GreaterThan(0.45));
+            Assert.That(Rate(BotPersonalityType.Crafter, eAutonomousObjectiveKind.RvR), Is.LessThan(0.08));
+            Assert.That(Rate(BotPersonalityType.Socialite, eAutonomousObjectiveKind.GroupPve),
+                Is.GreaterThan(Rate(BotPersonalityType.Socialite, eAutonomousObjectiveKind.SoloPve) * 3));
+            Assert.That(Rate(BotPersonalityType.Leveler, eAutonomousObjectiveKind.SoloPve),
+                Is.GreaterThan(Rate(BotPersonalityType.Leveler, eAutonomousObjectiveKind.GroupPve)));
+        }
+
+        [Test]
+        public void PlanGoals_SharesASmallPoolInProportion_AndLeavesExtraBotsToTheUsualRule()
+        {
+            var random = new Random(7);
+            var small = P.PlanGoals(Population(100), new bool[100], 400, 400, 200, 0, random);
+            Assert.That(small.Count(k => k == eAutonomousObjectiveKind.SoloPve), Is.EqualTo(40));
+            Assert.That(small.Count(k => k == eAutonomousObjectiveKind.GroupPve), Is.EqualTo(40));
+            Assert.That(small.Count(k => k == eAutonomousObjectiveKind.RvR), Is.EqualTo(20));
+            var large = P.PlanGoals(Population(100), new bool[100], 10, 5, 5, 0, random);
+            Assert.That(large.Count(k => k == null), Is.EqualTo(80), "bots beyond the open slots keep the allocator's own rule");
+        }
+
+        [Test]
+        public void PlanGoals_GivesBattlegroundsOnlyToBotsThatCanGo_AndTreatsNoPersonalityAsNeutral()
+        {
+            var random = new Random(9);
+            var types = new BotPersonalityType?[50];
+            bool[] can = Enumerable.Range(0, 50).Select(i => i < 10).ToArray();
+            var plan = P.PlanGoals(types, can, 30, 10, 0, 25, random);
+            Assert.That(plan.Count(k => k == eAutonomousObjectiveKind.Battleground), Is.EqualTo(10), "only 10 bots fit a bracket");
+            Assert.That(Enumerable.Range(10, 40).All(i => plan[i] != eAutonomousObjectiveKind.Battleground), Is.True);
         }
     }
 }

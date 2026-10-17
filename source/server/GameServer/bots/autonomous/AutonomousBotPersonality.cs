@@ -142,6 +142,105 @@ public static class AutonomousBotPersonality
         _ => 0,
     };
 
+    /// <summary>
+    /// How much a type wants a goal (1 = no preference). The goal allocator uses it to decide WHO fills each open
+    /// slot of the owner's mix, never how many slots there are (review of goals, 2026-10-17): No-lifers and
+    /// Daredevils go to RvR first, Socialites to groups, Levelers and Crafters to their own camps, Crafters rarely
+    /// to RvR. Every value is above zero, so a slot no one else is free for is still filled.
+    /// </summary>
+    public static double GoalAffinity(BotPersonalityType type, eAutonomousObjectiveKind kind) => (type, kind) switch
+    {
+        (BotPersonalityType.Leveler, eAutonomousObjectiveKind.SoloPve) => 2.0,
+        (BotPersonalityType.Leveler, eAutonomousObjectiveKind.GroupPve) => 1.2,
+        (BotPersonalityType.Leveler, eAutonomousObjectiveKind.RvR) => 0.5,
+        (BotPersonalityType.Leveler, eAutonomousObjectiveKind.Battleground) => 0.7,
+        (BotPersonalityType.Socialite, eAutonomousObjectiveKind.SoloPve) => 0.4,
+        (BotPersonalityType.Socialite, eAutonomousObjectiveKind.GroupPve) => 2.5,
+        (BotPersonalityType.Socialite, eAutonomousObjectiveKind.RvR) => 1.0,
+        (BotPersonalityType.Socialite, eAutonomousObjectiveKind.Battleground) => 1.2,
+        (BotPersonalityType.Explorer, eAutonomousObjectiveKind.SoloPve) => 1.8,
+        (BotPersonalityType.Explorer, eAutonomousObjectiveKind.GroupPve) => 0.7,
+        (BotPersonalityType.Explorer, eAutonomousObjectiveKind.RvR) => 1.0,
+        (BotPersonalityType.Explorer, eAutonomousObjectiveKind.Battleground) => 1.0,
+        (BotPersonalityType.Daredevil, eAutonomousObjectiveKind.SoloPve) => 0.7,
+        (BotPersonalityType.Daredevil, eAutonomousObjectiveKind.GroupPve) => 1.0,
+        (BotPersonalityType.Daredevil, eAutonomousObjectiveKind.RvR) => 3.0,
+        (BotPersonalityType.Daredevil, eAutonomousObjectiveKind.Battleground) => 2.0,
+        (BotPersonalityType.Crafter, eAutonomousObjectiveKind.SoloPve) => 1.8,
+        (BotPersonalityType.Crafter, eAutonomousObjectiveKind.GroupPve) => 1.0,
+        (BotPersonalityType.Crafter, eAutonomousObjectiveKind.RvR) => 0.2,
+        (BotPersonalityType.Crafter, eAutonomousObjectiveKind.Battleground) => 0.4,
+        (BotPersonalityType.NoLifer, eAutonomousObjectiveKind.SoloPve) => 0.5,
+        (BotPersonalityType.NoLifer, eAutonomousObjectiveKind.GroupPve) => 1.5,
+        (BotPersonalityType.NoLifer, eAutonomousObjectiveKind.RvR) => 3.0,
+        (BotPersonalityType.NoLifer, eAutonomousObjectiveKind.Battleground) => 1.5,
+        _ => 1.0,
+    };
+
+    /// <summary>
+    /// Goals for a pool of bots that need one (the allocator's pass). The open slots of the owner's mix are filled
+    /// exactly (shared out in proportion when the pool is smaller than the open slots); personality only decides who
+    /// takes which: RvR goes to the bots that want it most relative to their other choices, then battlegrounds,
+    /// then groups versus solo. Still random (a weighted draw), never a fixed ranking. Types are null for bots
+    /// without a personality (weight 1). Bots beyond the open slots get null (the caller's usual over-quota rule).
+    /// </summary>
+    public static eAutonomousObjectiveKind?[] PlanGoals(BotPersonalityType?[] types, bool[] canBattleground, int solo, int group,
+        int rvr, int battleground, Random random)
+    {
+        int count = types.Length;
+        var plan = new eAutonomousObjectiveKind?[count];
+        int[] open = [Math.Max(0, solo), Math.Max(0, group), Math.Max(0, rvr), Math.Max(0, battleground)];
+        int battlegroundPool = canBattleground.Count(can => can);
+        open[3] = Math.Min(open[3], battlegroundPool);
+        int totalOpen = open.Sum();
+        if (totalOpen > count)
+        {
+            // Share the pool out in proportion to the open slots (largest remainder), as the old draw did on average.
+            double[] exact = open.Select(n => (double)n * count / totalOpen).ToArray();
+            int[] floor = exact.Select(x => (int)Math.Floor(x)).ToArray();
+            int left = count - floor.Sum();
+            foreach (int k in Enumerable.Range(0, 4).OrderByDescending(k => exact[k] - floor[k]).ThenBy(_ => random.Next()))
+            {
+                if (left == 0) break;
+                floor[k]++;
+                left--;
+            }
+            open = floor;
+        }
+        double A(int i, eAutonomousObjectiveKind kind) => types[i] is { } type ? GoalAffinity(type, kind) : 1.0;
+        var remaining = new List<int>(Enumerable.Range(0, count));
+        void Take(eAutonomousObjectiveKind kind, int slots, Func<int, bool> eligible, Func<int, double> weight)
+        {
+            if (slots <= 0)
+                return;
+            var chosen = remaining.Where(eligible)
+                .Select(i => (Index: i, Key: Math.Pow(random.NextDouble(), 1.0 / Math.Max(0.01, weight(i)))))
+                .OrderByDescending(entry => entry.Key).Take(slots).Select(entry => entry.Index).ToList();
+            foreach (int i in chosen)
+            {
+                plan[i] = kind;
+                remaining.Remove(i);
+            }
+        }
+        // Relative wish: how much more this bot wants the goal than the other goals still open to it.
+        double Relative(int i, eAutonomousObjectiveKind kind, params eAutonomousObjectiveKind[] others)
+        {
+            double[] alternatives = others.Select(other => A(i, other)).ToArray();
+            return A(i, kind) / (alternatives.Length == 0 ? 1.0 : alternatives.Average());
+        }
+        Take(eAutonomousObjectiveKind.RvR, open[2], _ => true,
+            i => Relative(i, eAutonomousObjectiveKind.RvR, eAutonomousObjectiveKind.SoloPve, eAutonomousObjectiveKind.GroupPve));
+        Take(eAutonomousObjectiveKind.Battleground, open[3], i => canBattleground[i],
+            i => Relative(i, eAutonomousObjectiveKind.Battleground, eAutonomousObjectiveKind.SoloPve, eAutonomousObjectiveKind.GroupPve));
+        Take(eAutonomousObjectiveKind.GroupPve, open[1], _ => true,
+            i => Relative(i, eAutonomousObjectiveKind.GroupPve, eAutonomousObjectiveKind.SoloPve));
+        Take(eAutonomousObjectiveKind.SoloPve, open[0], _ => true, _ => 1.0);
+        return plan;
+    }
+
+    /// <summary>The planner's type for a bot, or null when personalities don't apply to it.</summary>
+    public static BotPersonalityType? PlannerType(GameBot bot) => Applies(bot) ? For(bot).Type : null;
+
     /// <summary>Dungeon preference as a percentage of today's (100 = unchanged).</summary>
     public static int DungeonPreferencePercent(BotPersonality personality) => personality.Type switch
     {
