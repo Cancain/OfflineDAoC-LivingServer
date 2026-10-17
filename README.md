@@ -20,7 +20,7 @@
 They join guilds and recruit you, each has its own personality, and they talk the way players did in
 2002–2003, down to the build arguments in /faction.
 
-> **Released: 0.36-chris.11 (2026-10-17)**, for shadowofze's 0.36 / 0.36b, with or without the 0.36c
+> **Released: 0.36-se.1 (2026-10-17)**, for shadowofze's 0.36 / 0.36b, with or without the 0.36c
 > new client. Download it from this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases);
 > what's in it is in [CHANGELOG-SOCIAL-EXPANSION.md](CHANGELOG-SOCIAL-EXPANSION.md).
 
@@ -51,7 +51,7 @@ Social Expansion makes them feel like a community, not just a population.
   bots earning their armor and the other owner rules are untouched.
 - **Install and undo in one click.** The installer checks that your game is the right version,
   backs up every file it replaces, and verifies each copy. `ROLLBACK.cmd` puts the originals back.
-- **It's tested.** 2,911 automated server tests pass on the 0.36-chris.11 build, and every feature was
+- **It's tested.** 2,911 automated server tests pass on the 0.36-se.1 build, and every feature was
   played in game with 300 bots per realm. A few parts haven't been seen in game yet (keep claims,
   guild merit, linkdeads, nemesis chat lines, rezzing a bot); the changelog lists them.
 
