@@ -202,4 +202,81 @@ public class SocialExpansionSettingsTests
         Assert.That(rows["bot_guilds_enabled"], Is.EqualTo("False"));
         Assert.That(rows["xp_rate_by_level"], Is.EqualTo(""));
     }
+
+    /// <summary>
+    /// Renders the real launcher (Options, Bot Goals Setting and Social Expansion tabs) and the tab in several
+    /// states to PNG files in TestResults' work folder (ui-preview\), so the look can be checked against the
+    /// other settings screens. CI uploads them as an artifact.
+    /// </summary>
+    [Test] public void RendersPreviewsBesideTheOtherSettingsTabs()
+    {
+        string folder = Path.Combine(TestContext.CurrentContext.WorkDirectory, "ui-preview");
+        Directory.CreateDirectory(folder);
+        var launcher = Assembly.Load("OfflineDAoC");
+
+        using (var form = (Form)Activator.CreateInstance(launcher.GetType("OfflineDaoc.Launcher.MainForm")!)!)
+        {
+            form.ShowInTaskbar = false;
+            form.StartPosition = FormStartPosition.Manual;
+            form.Location = new Point(-20_000, -20_000);
+            form.Show();
+            Application.DoEvents();
+            TabControl tabs = All(form).OfType<TabControl>().First(t => t.TabPages.Cast<TabPage>().Any(p => p.Text == "Social Expansion"));
+            foreach (var (tab, file) in new[] { ("Options", "1-options.png"), ("Bot Goals Setting", "2-bot-goals.png"), ("Social Expansion", "3-social-expansion-in-launcher.png") })
+            {
+                tabs.SelectedTab = tabs.TabPages.Cast<TabPage>().First(p => p.Text == tab);
+                Application.DoEvents();
+                using var image = new Bitmap(form.Width, form.Height);
+                form.DrawToBitmap(image, new Rectangle(Point.Empty, image.Size));
+                image.Save(Path.Combine(folder, file));
+            }
+        }
+
+        var type = launcher.GetType("OfflineDaoc.Launcher.SocialExpansionSettingsControl")!;
+        void Render(string file, Action<Control> setup)
+        {
+            using var host = new Form { ShowInTaskbar = false, StartPosition = FormStartPosition.Manual, Location = new Point(-20_000, -20_000),
+                ClientSize = new Size(1180, 1060), BackColor = Color.FromArgb(35, 31, 26) };
+            var panel = (Control)Activator.CreateInstance(type, _database, (Func<bool>)(() => _stopped))!;
+            host.Controls.Add(panel);
+            host.Show();
+            setup(panel);
+            type.GetMethod("UpdateState")!.Invoke(panel, null);
+            Application.DoEvents();
+            using var image = new Bitmap(host.ClientSize.Width, host.ClientSize.Height);
+            panel.DrawToBitmap(image, new Rectangle(Point.Empty, image.Size));
+            image.Save(Path.Combine(folder, file));
+        }
+        T F<T>(Control panel, string name) => (T)type.GetField(name, Hidden)!.GetValue(panel)!;
+        void Xp(Control panel, string row, int mode, string? text = null)
+        {
+            var xp = type.GetField(row, Hidden)!.GetValue(panel)!;
+            ((ComboBox)xp.GetType().GetField("_mode", Hidden)!.GetValue(xp)!).SelectedIndex = mode;
+            if (text != null) ((TextBox)xp.GetType().GetField("_text", Hidden)!.GetValue(xp)!).Text = text;
+        }
+
+        Render("4-tab-all-off.png", _ => { });
+        Render("5-tab-editing.png", panel =>
+        {
+            F<CheckBox>(panel, "_guilds").Checked = true;
+            F<CheckBox>(panel, "_voices").Checked = true;
+            F<CheckBox>(panel, "_personalities").Checked = true;
+            Xp(panel, "_playerXp", 1);
+            Xp(panel, "_botXp", 2, "1-19:1.5;15-34:2.5");
+        });
+        AllOn.Save(_database, null, () => true);
+        Render("6-tab-saved-on.png", _ => { });
+        _stopped = false;
+        Render("7-tab-server-running.png", _ => { });
+        TestContext.Progress.WriteLine("UI previews: " + folder);
+    }
+
+    private static IEnumerable<Control> All(Control root)
+    {
+        foreach (Control child in root.Controls)
+        {
+            yield return child;
+            foreach (Control nested in All(child)) yield return nested;
+        }
+    }
 }

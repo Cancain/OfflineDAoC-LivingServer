@@ -87,6 +87,14 @@ jobs:
           summary=$(echo "$out" | grep -E "(Passed|Failed)!" | tail -n 1 || true)
           echo "::notice title=Social Expansion tab tests::${summary:-no summary line found}"
 
+      # Real renders of the launcher's settings tabs and the Social Expansion tab (RendersPreviewsBesideTheOtherSettingsTabs).
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: launcher-ui-preview
+          path: "**/ui-preview/*.png"
+          if-no-files-found: warn
+
       # Only after every server test passed: the installable server build (docs/RELEASE-PLAN.md).
       - name: Package the server build
         id: package
