@@ -14,7 +14,7 @@ namespace DOL.GS.Tests
     {
         // Slots the server fills (AutonomousBotVoices.SlotsFor and SharedSlots).
         private static readonly string[] KnownSlots =
-            ["me", "class", "level", "realm", "zone", "monster", "item", "count", "q", "keep", "frontier", "enemy", "capital", "dungeon", "camp"];
+            ["me", "class", "level", "realm", "zone", "monster", "item", "count", "q", "keep", "frontier", "enemy", "capital", "dungeon", "camp", "monsters"];
 
         // Slots that need bot memory of the player; general callers never fill them, so those lines are skipped
         // unless the Living Server memory or rez code passes them in.
@@ -258,7 +258,9 @@ namespace DOL.GS.Tests
                     VC.Line line = byId[id];
                     Assert.That(line.Realm, Is.AnyOf("*", "mid"), id);
                     Assert.That(12, Is.InRange(line.LevelLow, line.LevelHigh), id);
-                    Assert.That(line.Needs.All(need => need == "solo"), Is.True, id);
+                    // Only "solo" may be required; "!flag" needs are met by a speaker without that flag (0.36-se.4).
+                    Assert.That(line.Needs.Where(need => !need.StartsWith('!')).All(need => need == "solo"), Is.True, id);
+                    Assert.That(VC.NeedsMet(line.Needs, speaker.Flags), Is.True, id);
                     Assert.That(VC.ClassFits(line.Classes, "Healer"), Is.True, id);
                     Assert.That(text, Does.Not.Contain("{").And.Not.Contain("}"), id);
                     Assert.That(text.Length, Is.InRange(1, VC.MaxLength), id);
@@ -322,7 +324,9 @@ namespace DOL.GS.Tests
             for (int i = 0; i < 1500; i++)
                 recent.Use(eRealm.Hibernia, "line" + i, now.AddSeconds(i));
             Assert.That(recent.WasUsed(eRealm.Hibernia, "line0", now.AddHours(5)), Is.True, "the first of 1,500 lines is still held");
-            Assert.That(recent.WasUsed(eRealm.Hibernia, "line0", now.AddHours(6).AddSeconds(1)), Is.False);
+            // The window is three days since 0.36-se.4 (six hours before).
+            Assert.That(recent.WasUsed(eRealm.Hibernia, "line0", now.Add(VC.RecentLines.Window).AddHours(-1)), Is.True);
+            Assert.That(recent.WasUsed(eRealm.Hibernia, "line0", now.Add(VC.RecentLines.Window).AddSeconds(1)), Is.False);
             Assert.That(recent.WasUsed(eRealm.Albion, "line0", now), Is.False, "realms are separate");
             for (int i = 0; i < VC.RecentLines.Capacity + 10; i++)
                 recent.Use(eRealm.Midgard, "m" + i, now);

@@ -20,11 +20,25 @@ public enum eAutonomousChatIntent
     Help,
     Farewell,
     IgnoreOutOfWorld,
+    // 0.36-se.4: short chat players type (appended, so existing values keep their numbers)
+    Thanks,
+    Congrats,
+    Ding,
+    Laugh,
+    Away,
+    Back,
+    Rez,
+    Alarm,
+    ClassTalk,
+    BotCheck,
 }
 
 /// <summary>
-/// Tiny multinomial Naive Bayes classifier trained from embedded DAoC chat
-/// examples. It has no network, no generative model and no player-data training.
+/// Reads what a chat line is about. Short chat and common requests ("ty", "gz", "brb", "inc", "rez pls",
+/// "wts", "lfg", "are you a bot?") are matched by word rules first (0.36-se.4: the audit found "lol", "ty",
+/// "gz" and "inc" read as real-world talk, which /say then ignored). Anything else goes to a tiny
+/// multinomial Naive Bayes classifier trained from embedded DAoC chat examples, which now needs at least
+/// one word it knows. No network, no generative model and no player-data training.
 /// </summary>
 public static partial class AutonomousChatIntentModel
 {
@@ -65,7 +79,7 @@ public static partial class AutonomousChatIntentModel
         new(eAutonomousChatIntent.Help, "can anyone help me question confused how does this work"),
         new(eAutonomousChatIntent.Help, "need advice can somebody explain please help"),
         new(eAutonomousChatIntent.Help, "what should I do trainer skills equipment"),
-        new(eAutonomousChatIntent.Farewell, "bye goodbye later see you safe travels good night"),
+        new(eAutonomousChatIntent.Farewell, "bye goodbye farewell safe travels goodnight"),
         new(eAutonomousChatIntent.Farewell, "got to go farewell heading off take care"),
         new(eAutonomousChatIntent.IgnoreOutOfWorld, "politics president election congress democrat republican government"),
         new(eAutonomousChatIntent.IgnoreOutOfWorld, "current news real world country politician vote campaign"),
@@ -77,12 +91,62 @@ public static partial class AutonomousChatIntentModel
     {
         "politics", "political", "president", "election", "congress", "democrat", "republican", "government",
         "trump", "biden", "bitcoin", "crypto", "stock", "stocks", "football", "basketball", "netflix",
-        "twitter", "facebook", "instagram", "tiktok", "reddit", "headline", "headlines", "news",
+        "twitter", "facebook", "instagram", "tiktok", "reddit", "headline", "headlines", "news", "taxes", "yankees", "nfl", "nba",
+        "mlb", "nhl", "superbowl", "senate", "senator", "mortgage",
     };
 
-    private static readonly HashSet<string> HardAbuse = new(StringComparer.OrdinalIgnoreCase)
+    /// <summary>Insults; abuse needs one aimed at someone ("you idiot", "ur garbage"), so "dumb question" or "this camp
+    /// is garbage" is not an insult (0.36-se.4: insults are remembered by bots).</summary>
+    private static readonly HashSet<string> Insults = new(StringComparer.OrdinalIgnoreCase)
     {
-        "shit", "dumb", "idiot", "idiots", "moron", "morons", "garbage", "worthless", "pathetic",
+        "dumb", "idiot", "idiots", "moron", "morons", "garbage", "worthless", "pathetic", "loser", "losers", "stupid",
+        "dumbass", "trash", "ugly", "scrub", "scrubs", "noobs", "terrible", "awful", "useless",
+    };
+
+    private static readonly HashSet<string> Targets = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "you", "u", "ur", "your", "youre", "you're", "yall", "everyone", "everybody", "guys", "ppl", "people", "all",
+    };
+
+    /// <summary>Always abuse, whoever it is aimed at.</summary>
+    private static readonly HashSet<string> HardAbuse = new(StringComparer.OrdinalIgnoreCase)
+        { "stfu", "shutup", "idiot", "idiots", "moron", "morons", "l2p", "dumbass" };
+
+    /// <summary>Words that are insults only right after "you"/"ur" ("you are terrible", not "terrible lag for everyone").</summary>
+    private static readonly HashSet<string> WeakInsults = new(StringComparer.OrdinalIgnoreCase) { "trash", "awful", "terrible", "garbage", "ugly" };
+
+    private static bool IsAbuse(string[] words)
+    {
+        if (words.Any(HardAbuse.Contains) || AutonomousChatShortTalk.HasPhrase(words, "shut up", "learn to play", "go away", "get out of my",
+                "get lost", "fuck you", "f you", "screw you", "fuck off"))
+            return true;
+        if (!words.Any(Targets.Contains))
+            return false;
+        for (int i = 0; i < words.Length; i++)
+        {
+            if (!Insults.Contains(words[i]))
+                continue;
+            if (!WeakInsults.Contains(words[i]))
+                return true;
+            // "youre trash", "you are terrible", "ur so awful" (not "where do u sell trash loot")
+            static bool Target(string word) => word is "you" or "u" or "ur" or "youre" or "you're" or "yall";
+            if (i >= 1 && Target(words[i - 1]) ||
+                i >= 2 && Target(words[i - 2]) && words[i - 1] is "are" or "r" or "so" or "such" or "is" or "look" or "smell" ||
+                i >= 3 && Target(words[i - 3]) && words[i - 2] is "are" or "r" && words[i - 1] is "so" or "such" or "really" or "just")
+                return true;
+        }
+        return false;
+    }
+
+    /// <summary>Words that carry no topic; the classifier ignores them ("are" made "yellow cons are for warming up" read as abuse).</summary>
+    private static readonly HashSet<string> StopWords = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "a", "an", "the", "is", "are", "was", "were", "be", "been", "am", "i", "im", "i'm", "you", "u", "your", "ur", "we", "us",
+        "our", "they", "them", "their", "it", "its", "it's", "this", "that", "these", "those", "to", "of", "in", "on", "at", "for",
+        "with", "and", "or", "but", "so", "if", "then", "just", "too", "very", "do", "does", "did", "have", "has", "had", "my",
+        "me", "he", "she", "him", "her", "his", "what", "who", "how", "when", "why", "which", "there", "here", "up", "out", "all",
+        "any", "some", "not", "no", "yes", "can", "will", "would", "could", "should", "get", "got", "go", "going", "about", "as",
+        "by", "from", "into", "than", "like", "really", "still", "now", "one", "good", "ok", "okay",
     };
 
     private static readonly IReadOnlyDictionary<eAutonomousChatIntent, HashSet<string>> StrongGameSignals =
@@ -99,17 +163,25 @@ public static partial class AutonomousChatIntentModel
     public static eAutonomousChatIntent Predict(string text)
     {
         string[] tokens = Tokens(text).ToArray();
-        if (tokens.Length == 0)
-            return eAutonomousChatIntent.Unknown;
+        string[] words = Words(text);
+        if (words.Length == 0)
+            return AutonomousChatShortTalk.TryRead(text, words, out eAutonomousChatIntent symbols) ? symbols : eAutonomousChatIntent.Unknown;
         if (tokens.Any(HardOutOfWorld.Contains))
             return eAutonomousChatIntent.IgnoreOutOfWorld;
-        if (tokens.Any(HardAbuse.Contains))
+        if (IsAbuse(words))
             return eAutonomousChatIntent.Abuse;
+        if (AutonomousChatShortTalk.TryRead(text, words, out eAutonomousChatIntent shortTalk))
+            return shortTalk;
         foreach ((eAutonomousChatIntent intent, HashSet<string> signals) in StrongGameSignals)
         {
             if (tokens.Any(signals.Contains))
                 return intent;
         }
+        // The classifier decides only from words it was trained on: with none, every intent scores alike and the
+        // tie went to the intent with the most examples (real-world talk), which /say ignores (audit 2026-10-18).
+        tokens = tokens.Where(token => !StopWords.Contains(token) && Trained.Vocabulary.Contains(token)).ToArray();
+        if (tokens.Length == 0)
+            return eAutonomousChatIntent.Unknown;
 
         eAutonomousChatIntent bestIntent = eAutonomousChatIntent.Unknown;
         double best = double.NegativeInfinity;
@@ -133,7 +205,11 @@ public static partial class AutonomousChatIntentModel
                 runnerUp = score;
             }
         }
-        return best - runnerUp < 0.18 ? eAutonomousChatIntent.Unknown : bestIntent;
+        // Real-world talk is decided by the hard word list alone: /say ignores it, so a guess must not silence a player
+        // (0.36-se.4; "lol are you even real" read as real-world talk from the word "real").
+        // Abuse too: bots remember an insult, so it must come from the word rules, not a guess ("terrible lag for everyone").
+        return best - runnerUp < 0.18 || bestIntent is eAutonomousChatIntent.IgnoreOutOfWorld or eAutonomousChatIntent.Abuse
+            ? eAutonomousChatIntent.Unknown : bestIntent;
     }
 
     private static Model Train()
@@ -161,6 +237,15 @@ public static partial class AutonomousChatIntentModel
     private static IEnumerable<string> Tokens(string text) => TokenRegex().Matches(text?.ToLowerInvariant() ?? string.Empty).Cast<Match>()
         .Select(match => match.Value)
         .Where(token => token.Length > 1);
+
+    /// <summary>Every word, one letter long too ("k", "r", "u"), with digits ("lf2m", "20").</summary>
+    internal static string[] Words(string text) => WordRegex().Matches(text?.ToLowerInvariant() ?? string.Empty).Cast<Match>()
+        .Select(match => match.Value.Trim('\''))
+        .Where(word => word.Length > 0)
+        .ToArray();
+
+    [GeneratedRegex("[a-z0-9']+")]
+    private static partial Regex WordRegex();
 
     [GeneratedRegex("[a-z']+")]
     private static partial Regex TokenRegex();
