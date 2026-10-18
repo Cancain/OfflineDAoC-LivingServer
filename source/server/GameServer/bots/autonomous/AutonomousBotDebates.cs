@@ -207,6 +207,7 @@ public static class AutonomousBotDebates
         }
         _timer = new Timer(_ =>
         {
+            FlushHeard();
             // One tick at a time on the game loop; skip when the previous one hasn't run yet.
             if (!Enabled || Interlocked.Exchange(ref _posted, 1) != 0)
                 return;
@@ -219,6 +220,7 @@ public static class AutonomousBotDebates
     {
         _timer?.Dispose();
         _timer = null;
+        FlushHeard(wait: true);
     }
 
     private static void TickOnGameLoop(int unused)
@@ -424,32 +426,112 @@ public static class AutonomousBotDebates
             if (!heard.Add(sceneId))
                 return;
         }
-        try
+        HeardWrites.Add(new OfflineBotSceneHeardRecord
         {
-            GameServer.Database.AddObject(new OfflineBotSceneHeardRecord
-            {
-                HeardKey = $"{(int)realm}:{sceneId}", Realm = (int)realm, SceneId = sceneId, HeardUtc = DateTime.UtcNow.ToString("O"),
-            });
-        }
-        catch (Exception exception)
-        {
-            Log.Warn($"Bot debates: could not save heard scene {sceneId}", exception);
-        }
+            HeardKey = $"{(int)realm}:{sceneId}", Realm = (int)realm, SceneId = sceneId, HeardUtc = DateTime.UtcNow.ToString("O"),
+        });
     }
 
     private static void ResetHeard(eRealm realm, HashSet<string> heard)
     {
         lock (heard)
             heard.Clear();
+        HeardWrites.Reset((int)realm);
+    }
+
+    #endregion
+
+    #region Heard-scene writes (off the game loop, under the shared write lock; audit 2026-10-17)
+
+    /// <summary>
+    /// Heard-scene changes waiting to be written. Marking and resetting happen on the game loop; the rows were
+    /// written there too, outside the shared database write lock, and a reset read the whole table and deleted
+    /// its rows one by one inside a tick. Now the debates timer writes them: per realm reset, one select and one
+    /// batched delete, then one batched insert, all under <see cref="AutonomousBotStatusPersistence.DatabaseWriteLock"/>.
+    /// </summary>
+    public sealed class HeardWriteQueue
+    {
+        private readonly object _sync = new();
+        private readonly List<OfflineBotSceneHeardRecord> _adds = new();
+        private readonly HashSet<int> _resets = new();
+
+        public void Add(OfflineBotSceneHeardRecord row)
+        {
+            lock (_sync)
+                _adds.Add(row);
+        }
+
+        /// <summary>A reset drops the realm's rows not yet written (the delete would remove them anyway).</summary>
+        public void Reset(int realm)
+        {
+            lock (_sync)
+            {
+                _adds.RemoveAll(row => row.Realm == realm);
+                _resets.Add(realm);
+            }
+        }
+
+        /// <summary>Takes what is queued: the realms to clear first, then the rows to insert (all queued after those resets).</summary>
+        public (int[] Resets, OfflineBotSceneHeardRecord[] Adds) Take()
+        {
+            lock (_sync)
+            {
+                var taken = (_resets.OrderBy(realm => realm).ToArray(), _adds.ToArray());
+                _resets.Clear();
+                _adds.Clear();
+                return taken;
+            }
+        }
+    }
+
+    private static readonly HeardWriteQueue HeardWrites = new();
+    private static int _flushingHeard;
+
+    /// <summary>Writes queued heard-scene changes (debates timer thread; at shutdown with <paramref name="wait"/>).</summary>
+    public static void FlushHeard(bool wait = false)
+    {
+        while (Interlocked.Exchange(ref _flushingHeard, 1) != 0)
+        {
+            if (!wait)
+                return;
+            Thread.Sleep(20);
+        }
         try
         {
-            foreach (OfflineBotSceneHeardRecord row in GameServer.Database.SelectAllObjects<OfflineBotSceneHeardRecord>()
-                         .Where(row => row.Realm == (int)realm).ToArray())
-                GameServer.Database.DeleteObject(row);
+            (int[] resets, OfflineBotSceneHeardRecord[] adds) = HeardWrites.Take();
+            if (resets.Length == 0 && adds.Length == 0)
+                return;
+            lock (AutonomousBotStatusPersistence.DatabaseWriteLock)
+            {
+                foreach (int realm in resets)
+                {
+                    try
+                    {
+                        var rows = DOLDB<OfflineBotSceneHeardRecord>.SelectObjects(DB.Column("Realm").IsEqualTo(realm));
+                        if (rows.Count > 0)
+                            GameServer.Database.DeleteObject(rows.Cast<DataObject>());
+                    }
+                    catch (Exception exception)
+                    {
+                        Log.Warn($"Bot debates: could not reset heard scenes for {(eRealm)realm}", exception);
+                    }
+                }
+                if (adds.Length > 0)
+                {
+                    try
+                    {
+                        GameServer.Database.AddObject(adds.Cast<DataObject>());
+                    }
+                    catch (Exception exception)
+                    {
+                        Log.Warn($"Bot debates: could not save {adds.Length} heard scene(s)", exception);
+                    }
+                }
+            }
         }
-        catch (Exception exception)
+        finally
         {
-            Log.Warn($"Bot debates: could not reset heard scenes for {realm}", exception);
+            Volatile.Write(ref _flushingHeard, 0);
         }
     }
 
