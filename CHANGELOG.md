@@ -6,7 +6,160 @@ The newest version is first. For the full detail of every earlier update, see
 ## 0.37 / 0.37b (not released yet)
 
 Changes made after 0.36 are listed here as they are made, and will be in the 0.37 / 0.37b download. Until then,
-0.36 / 0.36b / 0.36c is the latest release. Nothing has been added yet.
+0.36 / 0.36b / 0.36c is the latest release.
+
+**Bots and raids**
+- Automatic raid rallies give their army time to arrive. A rally used to fail if its army was not staged within 90
+  minutes of opening, counting the time spent gathering at the hub town: the Tuscaran Glacier rally needed 84 minutes
+  to gather at Hagall and had six left for the trip. A slow hub now sets out after 30 minutes once 120 have arrived
+  (late arrivals follow on), and after leaving the hub the army always has at least 45 minutes to stage.
+- Raiders on their way to a rally are no longer sent back to their capital by the stuck-bot check. During the
+  Cuuldurach rally it sent over 300 of them to Tir na Nog, and only 13 reached the dragon.
+- Bots that end up on a small cut-off patch of ground step back onto real ground at once, instead of failing route
+  after route first. In Vindsaul Faste this happened to bots heading for the stables almost every day, and it also
+  dropped members from raid parties. A walled-off ridge in the south-east of Lough Derg that bots got stuck on during
+  the Cuuldurach rally is now treated the same way.
+- Bots using the teleporter in Vale of Mularn no longer stand inside the bindstone next to it.
+- Siege and battle announcements read properly. They named the target twice, for example "Our army has laid siege
+  to the keep keep Caer Sursbrooke!"; now it is "Our army has laid siege to Caer Sursbrooke!" (and "the relic
+  keep Dun Dagda" for relic keeps).
+- Animist bots plant their mushrooms only during a fight, and never in a city or town. They used to plant one
+  whenever they stood still between fights, so towns filled up with them.
+- Siege armies attack together. The first bot of a marching army to reach a keep used to start the battle on its own
+  (Caer Berkstead's siege began with one attacker there); now the battle starts once most of the army has arrived.
+- Bots killed while attacking an enemy keep wait longer for a healer in their group to raise them, and if they
+  release, they come back at their realm's muster point for that frontier, as their frontier teleporter would
+  bring them, instead of in their capital. At Dun Dagda the Midgard relic army went from
+  121 bots at the keep to none in an hour while every fallen attacker walked back from Jordheim.
+- Darkness Falls raid members who cannot join their realm's route from where they stand wait half a minute before
+  trying again. Over a hundred of them retried it on every turn, which made players rubberband.
+- Less lag during the Darkness Falls raids. Raiders on their way to a boss with no route to their spot (Prince
+  Abdin) searched for one on every turn, a search that takes up to five seconds, because the raid's spot moves a
+  little whenever the raid advances. A failed search now counts for every spot near it for a minute, for all
+  raiders at once.
+- Less lag from bots trying to sell loot to merchants they can't reach. Bots picked Kel and Kuz, the giant merchants
+  on top of the hill at Grimspound in Dartmoor, which they have no way up to. They searched for a way there every
+  turn for 20 minutes or more. A bot that can't reach a merchant now chooses another one, and once two bots have
+  failed, every bot skips that merchant for half an hour.
+- Less lag at keep sieges. Pets and group members whose way was blocked by a closed keep door looked for a way
+  around it twice a second. When there is no way around, they now wait a few seconds before looking again.
+- Town teleporter trips fail less often. A bot that planned a teleporter trip and then joined a group, or got a new
+  task, kept walking to the teleporter for its old plan; that was a quarter of the failed trips.
+- Galladoria: the Earthmenders keep their wounds while raiders are in their room, and they fight back. Each one
+  healed to full half a minute after the primals pulled the raid away, and because they never attacked, raiders
+  busy with the primals never turned on them, so every Earthmender was given up in turn.
+- Caer Sidi: raids no longer get stuck clearing Lich Lord Sanguis's blood mages after he is dead. They kept
+  appearing, and the raid fought them for 40 minutes instead of moving on to Apocalypse.
+- Caer Sidi: the Skeletal Sacristan stops walking while he is being hit and walks on 10 seconds after the last
+  blow. A raid of 300 chased him round his room for 40 minutes without catching him.
+- Battleground assaults go for the keep lord, in through a broken main gate. In all four battlegrounds the gates
+  fell and the guards died for hours while every lord stayed untouched: the attackers waited in the courtyard, and
+  the ones heading upstairs to the lord stopped at a small side door that can't be broken.
+- Groups on their way to a hunting ground no longer freeze in front of a monster on the road. Only the group's
+  leader watched the road ahead and only its puller was allowed to start a fight, so when the two were different
+  bots the whole group stood still, sometimes for an hour and a half, until its task ran out. The puller now takes
+  the monster on, and a group that can't get ready to fight it within about a minute goes around it or walks on.
+- Bot groups travel as one pack, the way your companions follow you. Each member used to walk to a spot just
+  ahead of its leader, stop there and wait a few seconds for its next decision, so a travelling group moved in
+  stops and starts. Members now keep their place around the leader continuously while it walks, save their
+  ordinary buffs for when the group stops, and carry on as soon as a cast ends.
+- Less lag: fewer route checks for bots waiting to board a horse in town, and less memory churn from pets and bots
+  checking their abilities and skill timers.
+
+**Quests**
+- Every classic quest can now be started by talking to its giver. In 20 of them one line of the giver's
+  conversation was missing, so the giver showed a quest marker but nothing you could click led to the quest (Aegan
+  in Mularn only said "You have learned much since I spoke to you last."). The missing lines are back, word for
+  word from the period quest walkthroughs. The broken quests were:
+  - Evenings Empty Blessing: Aegan, Mularn (Midgard, levels 15 to 50)
+  - Lover's Circle: Sugnhild, Huginfell (Midgard, levels 15 to 50)
+  - Better Off Buried: Gudlor, Huginfell (Midgard, levels 27 to 50)
+  - Uncle Thulin: Achae Smith, Fort Gwyntell (Albion, levels 25 to 50)
+  - Cleric Mulgrut: Hugh Gallen, Prydwen Keep (Albion, levels 5 to 50). He also names Mulgrut's son, Durren, again;
+    he used to say your name instead.
+  - Tale of Druids: Vadri Pade, the Magic Shoppe in Camelot (Albion, levels 10 to 50). This quest has a copy for
+    every Albion class, 15 in all, and every one was broken.
+- Quest markers update when you level up. A quest giver whose quest opens at your new level shows its marker
+  straight away; it used to show nothing until you logged out and back in (Troya in Howth at level 2, for example).
+- Fjall (the Healer and Shaman epic step "Search out Fjall and his fellows") is back in the fenrir fort in Yggdra
+  Forest, in the first hut on the right as you come in through the gate, as the period guides describe. He stood for
+  good, alone, outside Vindsaul Faste among the gate guards. Now four fenrir friends keep him company, and every so
+  often the group runs south of the lake to the Vindsaul gate and back. The quest's map marker points to the hut.
+- Guards fight a quest monster that wanders far from its home, as the Vindsaul gate guards fought Fjall and his
+  friends. Quest monsters that live among guards, such as the thieves inside Camelot, are still left to you.
+
+**The new client (0.36c)**
+- The Magic tab lists each specialization's spells by level, lowest first, as the original client does. They were
+  grouped by specialization but mixed by spell type.
+- Stable rides seat you on your mount. On horses you jittered beside and behind the horse, and on flying routes
+  (gryphons, amphiteres) the mount jumped between positions and turned wildly during the flight.
+- The Cabalist's simulacrums look as they do in the original client: smooth, marble-tinted stone with their belt,
+  face and muscles. They were drawn grainy, with their detail texture stretched and repeated over the body.
+- Ghostly NPCs (Spiritmaster pets, frost spectres, the spectral snake, forest skrats) no longer flicker between dark
+  and bright white, even when several of them move about together, and they keep their colours under the ghostly look.
+- Half Ogre, Frostalf and Shar NPCs (Elizabeth the Smith in Mularn and every other NPC of those races) are drawn as
+  their races in their outfits, like every other race. They were one old model with a single skin over every part.
+- The release window when you die has the original client's four choices: release (to your bind point), release to
+  the city, to your house, and to your bind, with the countdown bar. There was a single release button.
+- Monsters stand, fly and hover at their proper height. Low-flying giant cicadas, skadedjur and terror birds were
+  sunk halfway into the ground, hovering monsters such as cold lights sat on the ground, and a flying monster's body
+  stayed in the air when it died; it now falls to the ground.
+- The training window (at a trainer or with /train) previews what each specialization teaches, as the original
+  client does: click a specialization and a panel beside the window lists its spells, styles and abilities with
+  their icons and the level each comes at, the ones you know dimmed and the next level's in gold.
+- Combat styles leave their colored trail behind the weapon the way the original client draws it: one smooth streak
+  that follows the swing as it happens. It was drawn late and choppy, as a few separate copies of the weapon.
+- Delling Crater's entrance to Tuscaran Glacier works again: walking into it zones you in. The new client was missing
+  that zone-in spot.
+- Tuscaran Glacier's ice is far less shiny, closer to the original client's: its reflection no longer covers the
+  blue ice in a white glare.
+- Ground-target spells work: an Animist's turrets no longer fail with "Your ground target is not in view." The new
+  client kept telling the server your ground target was out of sight.
+- The group window's DISBAND removes the member you have targeted (clicked in the world, on their name in the group
+  window, or with the group-target keys) instead of breaking up the whole group; with no group member targeted you
+  leave the group, as before.
+- Binding a key in the options keeps the key list where it was (it jumped back to the top) and shows which action
+  the key was taken from.
+- The UI SCALE slider resizes the interface when you let go of it; it resized under the mouse while dragging.
+- Click and drag on the character screens turns the character again (right drag zooms on the customize screen).
+- Combat style trails no longer flood the game with errors when the weapon disappears mid-swing (a companion
+  vanishing, a weapon swap): one two-minute fight logged over 12,000 errors, which also cost frame rate.
+- Reflective surfaces no longer show white streaks fanning out from one point and swinging with the camera (seen on
+  Tuscaran Glacier's floor): the reflection is now worked out per corner of each triangle, as the original client did.
+- Flying monsters (Dyranapur, Lydsyg, the giant cicadas) have their names and click areas up with their flying
+  bodies; their names were drawn on the floor beneath them.
+- Found while testing (server, not changed): Dyranapur and Lydsyg in Iarnvidiur's Lair heal to full and walk back to
+  their spawn every 1.5 seconds whenever no one they will attack is near them, so a group of companions alone can't
+  bring them down. A fight against Dyranapur with a full companion group ran smoothly in the new client (no slowdown,
+  steady memory); the reported crash there wasn't reproduced, because the boss never cast its Black Plague.
+  A two-minute simulation of that fight (Black Plague landing on a full group of eight every second, plus the
+  boss's Lifedrain) didn't crash or slow down the new client either; memory levelled off. It did show a few
+  single-frame hitches of up to two seconds whose cause isn't known yet.
+- The small group window's names line up with the power gems and health bars; they sat a little higher.
+- Fewer hitches in busy fights: a spell effect's files now load in the background, starting as soon as the cast
+  begins, instead of freezing the game for up to a second and a half the first time each effect appeared (most often
+  with companions or gamebots casting). An effect that isn't ready yet shows a moment later.
+- A character that dies mid-cast plays its death instead of standing frozen in its cast until its body sinks (seen
+  with a Bonedancer companion's boneknitters after /disband); its glowing hands go out at once.
+- Invisible gamebots and pets: the new client now asks the server for any character it hears about but was never
+  sent, as the original client does, so they appear. The server can mark a character as already shown to you without
+  ever sending it, and the new client never asked for it, so those characters fought and moved with no body or name.
+- F12 writes a report of nearby characters that aren't drawn and why (bot_report.log in the game's save folder), to
+  help track down any that still go missing. The key can be changed under Options > CONTROLS > Misc.
+- Riding a stable master's horse: your horse gallops (its hoof sounds were missing), and it no longer sinks into the
+  ground going over hills (seen from Huginfell to Raumarik).
+- Monsters that borrow another creature's animations no longer float while fighting or swimming: their animations
+  keep the heights from the original client's files (428 monster models redone). The windswept wraith, mummy hags,
+  liches and gray spectres crouch on the ground in combat, as the original client shows them.
+- Options > AUDIO has separate SOUND EFFECTS (spells, melee, monster and character noises, footsteps, doors) and
+  AMBIENCE (the zone's own background sounds) volume sliders; they were one slider.
+- Pets and monsters (dread commanders, boneguards ...) put their weapons away as soon as the server says their fight
+  is over, as in the original client, instead of holding them out for several more seconds.
+- Gamebots and companions swim at the surface with you; they were drawn well under the water with only their names
+  on top.
+- Savages' claw and fang greaves sit on the forearms the way the original client draws them: the right-hand one no
+  longer floats off the hand, the off-hand one faces the right way, and a Savage with a greave in each hand shows
+  both (the left one was dropped). Moon claws and other fist weapons were already right and are unchanged.
 
 ## 0.36 / 0.36b / 0.36c — 2026-10-16
 

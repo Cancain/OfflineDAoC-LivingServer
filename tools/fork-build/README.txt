@@ -1,5 +1,5 @@
-OFFLINE DAOC - FORK SERVER BUILD (chris4aker/OfflineDAoC)
-=========================================================
+OFFLINE DAOC - SOCIAL EXPANSION (github.com/chris4aker/OfflineDAoC-SocialExpansion)
+==================================================================================
 
 This is a build for Offline DAoC 0.36 / 0.36b, the "Social Expansion". It replaces the server
 (GameServer.dll) and the launcher (OfflineDAoC.exe, which gets a Social Expansion tab), and adds
@@ -20,7 +20,14 @@ these features, all OFF until you switch them on:
     button in the Social
     Expansion tab) ................ docs\LIVING-SERVER.md
 
-With all of them off, the game should play exactly like the normal 0.36.
+Always on, even with every switch off (docs\KNOWN-ISSUES.md):
+  - talking to bots by name: /send <bot> gets an answer, /invite <name> and /target <name> work
+    on nearby bots
+  - a dead bot's corpse stays where it fell until it releases (all bots, companions included)
+  - a bot that dies 3 times on the way to its group's meetup stops waiting for it
+Everything else plays like the normal 0.36 while its switch is off.
+
+Known issues and what hasn't been tested in game yet: docs\KNOWN-ISSUES.md
 
 NEW CLIENT (0.36c): the new client runs the same server, so this build applies to it too.
 It was tested in game with the new client; the original client wasn't tried. The new client's
@@ -40,13 +47,23 @@ copy. It also puts three settings helpers in tools\claude-version and these docs
 docs\fork-build-<name>.
 
 Check: start the game as usual. The server log shows a line like
-  FORK_BUILD name=0.36-se.1 commit=... bot_guilds=off xp_rate_by_level=off ... bot_voices=off living=off bot_schedule=off
+  FORK_BUILD name=0.36-se.2 commit=... bot_guilds=off xp_rate_by_level=off ... bot_voices=off living=off bot_schedule=off
 
 UNDO
 ----
-Close everything and double-click ROLLBACK.cmd. It puts back exactly the files the install
-replaced (server and launcher). Click ALL OFF in the tab and save first if you want the settings gone;
-the original server ignores them either way.
+Turning a feature off: untick it in the Social Expansion tab (or ALL OFF), Save settings, restart
+the server.
+
+If you used bot guilds: turning them off keeps their guilds, alliances and claimed keeps in your
+world. To remove them (server and game closed; Python 3), in your game folder:
+  python tools\claude-version\set_bot_guilds.py --purge
+  python tools\claude-version\set_bot_guilds.py --purge --apply
+The first shows what it would change; the second does it, after backing up the database.
+Your characters in a bot guild go back to their realm's starting guild; your own guilds stay.
+
+Uninstalling: close everything and double-click ROLLBACK.cmd. It puts back exactly the files the
+install replaced (server and launcher). If you installed more than one build, run it once per
+build. The new database tables and settings stay; the original server ignores them.
 
 SWITCHING FEATURES ON
 ---------------------

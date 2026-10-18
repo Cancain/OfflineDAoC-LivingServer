@@ -1,0 +1,17 @@
+{
+  "Version": "0.36",
+  "Title": "Offline DAoC 0.36 (classic classes only)",
+  "Mode": "edition",
+  "BaseVersion": "0.36b",
+  "EditionFolder": "0.36-no-custom-class",
+  "EditionFiles": [
+    {
+      "Path": "runtime\\data\\opendaoc.sqlite3.db",
+      "SHA256": "4fdb7ca498500e8a8bc7f861b3a758d0e77d8636911d04cc7ad6d28002b85d0f"
+    },
+    {
+      "Path": "runtime\\client-opendaoc\\app\\game.dll",
+      "SHA256": "f55ed6b068e22ce8e1106871c2fad6ee10c18390bbb8b5dc772219ad8c8b83bb"
+    }
+  ]
+}

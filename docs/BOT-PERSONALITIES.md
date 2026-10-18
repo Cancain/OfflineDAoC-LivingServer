@@ -5,7 +5,8 @@ go looking for trouble, and each one writes in its own style. These are the "Soc
 features, alongside [BOT-GUILDS.md](BOT-GUILDS.md).
 
 They affect only **autonomous gamebots**. Companion bots (`/spawn`, `/raid`) and real players keep
-today's behavior. Every part ships **off**. With all of it off, bots behave exactly as in stock 0.36.
+today's behavior. Every part ships **off**. With all of it off, bots behave as in stock 0.36, apart
+from the always-on changes listed in [KNOWN-ISSUES.md](KNOWN-ISSUES.md).
 
 ## 1. Switches
 
@@ -95,8 +96,8 @@ Personality doesn't choose goals in two cases:
 ## 3. Voices
 
 When voices are on, a bot's chat comes from the corpus in
-`source/server/GameServer/bots/autonomous/data/chat/` (842 lines and 296 scenes, written for
-2002–2003; see [bot-voices/DESIGN.md](bot-voices/DESIGN.md)). The corpus is built into
+`source/server/GameServer/bots/autonomous/data/chat/` (979 lines and 296 scenes, written for
+2002–2003; see [bot-voices/DESIGN.md](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/blob/main/docs/bot-voices/DESIGN.md)). The corpus is built into
 `GameServer.dll`. Nothing is generated freely.
 
 **Choosing a line:**
@@ -119,9 +120,10 @@ typo-prone 5%.
 
 When no corpus line fits, the bot uses its old line.
 
-**Not done yet:** lines that name you, a place you met or your class (`{player}`, `{place}`,
-`{player_class}`) need bot memory of the player. Those lines are skipped for now. The greet,
-thanks, gossip and grudge lines are in the corpus but not used yet.
+**Lines that name you,** a place you met or your class (`{player}`, `{place}`, `{player_class}`) need
+bot memory of the player. They're used by the Living Server's "Bots remember you" part (greetings,
+thanks, gossip, grudges; see [LIVING-SERVER.md](LIVING-SERVER.md)); with that part off they're
+skipped.
 
 ## 4. Debates and long threads
 

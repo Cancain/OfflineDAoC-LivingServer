@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using DOL.Events;
 using DOL.GS.Keeps;
 using DOL.GS.ServerProperties;
 using DOL.Logging;
@@ -31,6 +33,20 @@ public static class AutonomousBotVoices
     public static VC Corpus => Loaded.Value;
 
     public static bool Enabled => Properties.BOT_VOICES_ENABLED && Corpus != null;
+
+    /// <summary>
+    /// Parses the 1.27 MB corpus at start-up, off the game loop, when bot voices or any Living Server part is on.
+    /// Audit 2026-10-17: it loaded lazily on a game-loop thread the first time a line or /personality needed it.
+    /// A caller that needs it before the preload finishes waits for that one load (Lazy is thread-safe).
+    /// </summary>
+    [GameServerStartedEvent]
+    public static void OnServerStarted(DOLEvent e, object sender, EventArgs args)
+    {
+        if (Properties.BOT_VOICES_ENABLED || AutonomousLivingServer.AnyOn)
+            Preload();
+    }
+
+    public static void Preload() => ThreadPool.QueueUserWorkItem(_ => _ = Loaded.Value);
 
     private static VC Load()
     {

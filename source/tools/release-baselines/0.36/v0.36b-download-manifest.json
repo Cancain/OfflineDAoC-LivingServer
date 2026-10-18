@@ -1,0 +1,24 @@
+{
+  "Version": "0.36b",
+  "Title": "Offline DAoC 0.36b (with the Sluaghbinder)",
+  "RootFolder": "OfflineDAoC-v0.36b",
+  "ArchiveSHA256": "fc7772c11f309cdd16ddbb4a610864dbc294b82c4a336ccdbf866cb5c5ae6469",
+  "ArchiveBytes": 5103650363,
+  "Parts": [
+    {
+      "Name": "OfflineDAoC-v0.36b.zip.001",
+      "Bytes": 1900000000,
+      "SHA256": "90d56a536af3e389a7073fbf140ab9f801e744488726e9ad716b896598d80b1f"
+    },
+    {
+      "Name": "OfflineDAoC-v0.36b.zip.002",
+      "Bytes": 1900000000,
+      "SHA256": "ba6ffa2b8912dd75602f612544db79b6c0770b2463dd1d75fcb7a2ddec9928e0"
+    },
+    {
+      "Name": "OfflineDAoC-v0.36b.zip.003",
+      "Bytes": 1303650363,
+      "SHA256": "6c9c1c870a19eb60e4cbcabe77a5bb9e1fc0173143b65a4ab85157497a39a992"
+    }
+  ]
+}

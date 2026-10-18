@@ -383,7 +383,10 @@ public static class AutonomousBotGuildSocial
                 AutonomousBotChatCoordinator.BroadcastFaction(officer.Name, officer.Realm, offer);
             else
                 officer.Say(offer);
-            SendInviteDialog(player, officer, chosen);
+            // ECS timers run off the client thread; the player's dialog state belongs to the client service, as in
+            // TryOfferNearby (audit 2026-10-17).
+            ClientService.Instance.Post(static state => SendInviteDialog(state.Player, state.Officer, state.Guild),
+                (Player: player, Officer: officer, Guild: chosen));
             return 0;
         }, 2_000 + Random.Shared.Next(2_000));
         return true;

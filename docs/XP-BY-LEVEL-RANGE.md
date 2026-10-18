@@ -53,9 +53,8 @@ These come from the Living World plan (model v4):
 The easy way is the launcher's **Social Expansion** tab (with the server stopped; it applies at the next start): pick **Off**, the **suggested** rates or **custom** ranges, for
 you and for bots. It checks the ranges by the server's own rules before it saves.
 
-The helper script does the same from a command line. It is in this fork, not in shadowofze's downloads. Copy
-`tools/claude-version/set_xp_by_level.py` into your playable folder's `tools\claude-version\` first,
-along with a server build that has these settings.
+The helper script does the same from a command line. The Social Expansion installer puts it in your playable
+folder's `tools\claude-version\`.
 
 **Close the server, launcher and game first.** Then, from the playable folder:
 
@@ -86,9 +85,8 @@ applies outside your ranges.
 - **Automated tests:**
   - `UT_LevelRangeXpRates` covers parsing and the range lookup;
   - `UT_BotXpRateSeparation` covers bot scaling, including RvR zones;
-  - on GitHub's Windows build (2026-10-11): 47 of 47 of these pass on their own, and the full
-    server suite passes (2,674 of 2,674, without the 47 test classes that need installed game
-    files).
+  - they run in the full server suite on every build (2,911 of 2,911 passed for 0.36-se.1; the 47
+    test classes that need installed game files can't run on GitHub).
 - **In-game check (2026-10-17, build 0.36-chris.8, Godot client):** the suggested rates were set
   in the launcher, with both flat rates at 1×. Each kill was measured with `/xpstats verbose` as
   (XP received − camp, guild and outpost bonuses) ÷ base XP:

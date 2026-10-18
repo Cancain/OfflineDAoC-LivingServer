@@ -222,11 +222,7 @@ public static class AutonomousBotGuilds
                     continue;
                 BotGuildCharter charter = Enum.TryParse(row.Charter, out BotGuildCharter parsed) ? parsed : BotGuildCharter.Leveling;
                 BotGuilds[row.GuildId] = new BotGuildInfo(row.GuildId, (eRealm)row.Realm, charter, row.Ordinal);
-                // Guilds founded before dues existed get their charter's dues once.
-                Guild loaded = GuildMgr.GetGuildByGuildID(row.GuildId);
-                ApplyMemberRankRights(loaded);
-                if (!loaded.IsGuildDuesOn() && AutonomousBotGuildEconomy.DefaultDuesPercent(charter) > 0)
-                    AutonomousBotGuildEconomy.SetCharterDues(loaded, charter);
+                ApplyStartupRewrites(GuildMgr.GetGuildByGuildID(row.GuildId), charter, Enabled);
             }
             foreach (OfflineBotGuildMemberRecord row in GameServer.Database.SelectAllObjects<OfflineBotGuildMemberRecord>())
             {
@@ -236,6 +232,21 @@ public static class AutonomousBotGuilds
         }
         if (Log.IsInfoEnabled)
             Log.Info($"Bot guilds: loaded {BotGuilds.Count} bot guilds and {Members.Count} memberships (enabled: {Enabled}).");
+    }
+
+    /// <summary>
+    /// The startup rewrites of a saved bot guild: its member ranks' chat rights and, for guilds founded
+    /// before dues existed, its charter's dues once. Only while bot guilds are on: with them off (or
+    /// after a rollback) the saved guilds are left exactly as they are (audit 2026-10-17). True when applied.
+    /// </summary>
+    public static bool ApplyStartupRewrites(Guild guild, BotGuildCharter charter, bool enabled)
+    {
+        if (!enabled || guild == null)
+            return false;
+        ApplyMemberRankRights(guild);
+        if (!guild.IsGuildDuesOn() && AutonomousBotGuildEconomy.DefaultDuesPercent(charter) > 0)
+            AutonomousBotGuildEconomy.SetCharterDues(guild, charter);
+        return true;
     }
 
     private static void OnTimer(object state)
@@ -388,6 +399,7 @@ public static class AutonomousBotGuilds
         }
 
         string[] titles = AutonomousBotGuildPlanner.RankTitles(charter);
+        var retitled = new List<DataObject>();
         for (int rank = 0; rank < titles.Length; rank++)
         {
             DbGuildRank dbRank = guild.GetRankByID(rank);
@@ -395,8 +407,13 @@ public static class AutonomousBotGuilds
                 continue;
             dbRank.Title = titles[rank];
             dbRank.Dirty = true;
-            GameServer.Database.SaveObject(dbRank);
+            retitled.Add(dbRank);
         }
+        // Audit 2026-10-17: these writes ran outside the shared database write lock that the batched bot writers
+        // hold, so they could interleave with a status or membership batch. The rank titles are one batched save.
+        if (retitled.Count > 0)
+            lock (AutonomousBotStatusPersistence.DatabaseWriteLock)
+                GameServer.Database.SaveObject(retitled);
 
         AutonomousBotGuildEconomy.SetCharterDues(guild, charter);
         ApplyMemberRankRights(guild);
@@ -405,7 +422,8 @@ public static class AutonomousBotGuilds
         {
             GuildId = guild.GuildID, Realm = (int)realm, Charter = charter.ToString(), Ordinal = ordinal, CreatedUtc = nowUtc,
         };
-        GameServer.Database.AddObject(row);
+        lock (AutonomousBotStatusPersistence.DatabaseWriteLock)
+            GameServer.Database.AddObject(row);
         var info = new BotGuildInfo(guild.GuildID, realm, charter, ordinal);
         BotGuilds[guild.GuildID] = info;
         if (Log.IsInfoEnabled)

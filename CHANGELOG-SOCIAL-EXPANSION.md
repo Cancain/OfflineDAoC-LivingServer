@@ -3,11 +3,50 @@
 What this fork adds to shadowofze's Offline DAoC. The base game's own changes are in
 [CHANGELOG.md](CHANGELOG.md). The newest version is first.
 
+## 0.36-se.2 — 2026-10-17
+
+Fixes from an audit of the first release. Same game versions as before (0.36 / 0.36b, with or
+without 0.36c). Install it over 0.36-se.1 or a clean game.
+
+**Docs said too much**
+- "With everything off it plays exactly like 0.36" wasn't true. Talking to bots by name and two
+  bot fixes are always on; the README, the zip's README.txt and the docs now say so.
+- New [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md): what's always on, what hasn't been seen in game
+  yet, and known problems. The zip ships it instead of the internal release plan.
+- The README now has **Getting started** (make bots first, which switches to try, where to check)
+  and **Undo and uninstall**. It also says plainly that testing used the 0.36c new client only.
+
+**Removing bot guilds**
+- `python tools\claude-version\set_bot_guilds.py --purge --apply` (server and game closed) removes
+  the guilds bots formed: it releases keeps they claimed, ends alliances they led, moves your
+  characters in a bot guild back to the starting guild and deletes the bot guilds. It backs up the
+  database first, refuses while the game is running, and changes nothing on a second run. Without
+  `--apply` it only shows what it would do.
+- With bot guilds off, the server no longer rewrites bot guilds' ranks and dues at every start.
+
+**Fixes**
+- `/invite <name>` no longer pulls a bot out of a siege, a relic run, a realm event or a realm raid,
+  or off a stable route; you're told why.
+- The log line on every bot death (with a stack trace) is now written only when the Living Server's
+  rez part is on, and the stack trace only for moves other than the bot's own release.
+- Founding a bot guild and recording heard debates now write to the database under the shared
+  write lock, and the debate history is written in batches off the game loop.
+- A bot guild's invite box is shown from the right thread.
+- The voice lines load at server start (in the background) instead of the first time a bot speaks.
+- Bot memory and nemesis rows for deleted characters are removed at start, and old one-kill
+  nemesis rows every 6 hours instead of only at start.
+
+**Tested**
+- **Automated:** the full server suite on CI, plus 8 Python tests for the purge. The purge was
+  also run on a copy of a played database (15 bot guilds, 3 alliances, one character moved back).
+- **In game:** not yet. These changes haven't been played.
+
 ## 0.36-se.1 — 2026-10-17
 
 The first release, for Offline DAoC **0.36 / 0.36b** (with or without the 0.36c new client). It
 replaces the server (`GameServer.dll`) and the launcher (which gets a **Social Expansion** tab).
-Every feature starts **switched off**: with all of them off, the game plays like the normal 0.36.
+Every feature starts **switched off**. (Corrected in 0.36-se.2: talking to bots by name and the
+two base-game bot fixes below are always on.)
 
 **Features**
 - **Bot guilds.** Each realm's bots form guilds with a purpose (leveling, social, RvR, raiding,

@@ -29,6 +29,7 @@ jobs:
         run: |
           python tools/bot-voices/build_corpus.py --verify
           python tools/bot-voices/check_runtime_names.py
+          python -m unittest discover -s tools/claude-version/tests -v
 
       - name: Create local server config (build only needs it to exist)
         shell: bash
@@ -121,7 +122,7 @@ jobs:
           Copy-Item "$built/GameServer.dll", "$built/GameServer.pdb" $dir
           Copy-Item tools/fork-build/INSTALL.cmd, tools/fork-build/ROLLBACK.cmd, tools/fork-build/install-server-build.ps1, tools/fork-build/rollback-server-build.ps1, tools/fork-build/fork-build-common.ps1, tools/fork-build/README.txt $dir
           Copy-Item tools/claude-version/set_bot_guilds.py, tools/claude-version/set_bot_social.py, tools/claude-version/set_xp_by_level.py "$dir/tools/claude-version"
-          Copy-Item docs/BOT-GUILDS.md, docs/BOT-PERSONALITIES.md, docs/XP-BY-LEVEL-RANGE.md, docs/LIVING-SERVER.md, docs/RELEASE-PLAN.md "$dir/docs"
+          Copy-Item docs/BOT-GUILDS.md, docs/BOT-PERSONALITIES.md, docs/XP-BY-LEVEL-RANGE.md, docs/LIVING-SERVER.md, docs/KNOWN-ISSUES.md "$dir/docs"
           $launcher = "source/tools/OfflineDaoc.Launcher/bin/Release/net10.0-windows"
           New-Item -ItemType Directory -Path "$dir/launcher" -Force | Out-Null
           $launcherInfo = @()
