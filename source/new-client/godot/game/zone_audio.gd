@@ -39,7 +39,9 @@ var stats := {}                            # debug: region name -> {played, full
 
 
 static func ensure_buses() -> void:
-	for bus_name in ["Ambient", "Music"]:
+	# Effects (owner 2026-10-17: their own volume, apart from the zone's ambience): spells, melee, creature voices,
+	# footsteps, doors, the server's sounds - CharacterSounds, ServerWorld, ZoneDoor; Ambient keeps the zone's own
+	for bus_name in ["Ambient", "Music", "Effects"]:
 		if AudioServer.get_bus_index(bus_name) < 0:
 			AudioServer.add_bus()
 			var i := AudioServer.bus_count - 1

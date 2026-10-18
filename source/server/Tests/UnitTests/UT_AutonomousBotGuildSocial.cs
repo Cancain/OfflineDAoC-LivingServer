@@ -109,11 +109,11 @@ namespace DOL.GS.Tests
         {
             Assert.Multiple(() =>
             {
-                Assert.That(AutonomousBotGuilds.GuildmateRank(true, "g1", "g1"), Is.Zero);
-                Assert.That(AutonomousBotGuilds.GuildmateRank(true, "g1", "g2"), Is.EqualTo(1));
-                Assert.That(AutonomousBotGuilds.GuildmateRank(true, null, null), Is.EqualTo(1), "Two guildless bots aren't guildmates.");
-                Assert.That(AutonomousBotGuilds.GuildmateRank(true, "", ""), Is.EqualTo(1));
-                Assert.That(AutonomousBotGuilds.GuildmateRank(false, "g1", "g1"), Is.EqualTo(1), "Off keeps today's ordering.");
+                Assert.That(AutonomousBotRealmGuilds.GuildmateRank(true, "g1", "g1"), Is.Zero);
+                Assert.That(AutonomousBotRealmGuilds.GuildmateRank(true, "g1", "g2"), Is.EqualTo(1));
+                Assert.That(AutonomousBotRealmGuilds.GuildmateRank(true, null, null), Is.EqualTo(1), "Two guildless bots aren't guildmates.");
+                Assert.That(AutonomousBotRealmGuilds.GuildmateRank(true, "", ""), Is.EqualTo(1));
+                Assert.That(AutonomousBotRealmGuilds.GuildmateRank(false, "g1", "g1"), Is.EqualTo(1), "Off keeps today's ordering.");
             });
         }
 

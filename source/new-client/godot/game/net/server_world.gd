@@ -96,6 +96,9 @@ func _on_world(kind: String, d: Dictionary) -> void:
 		"move": _move(d)
 		"remove": _remove(int(d.oid), true, int(d.get("type", 1)))
 		"equipment": _equip(d)
+		"emblem_dialog":                                  # the guild emblem picker (EmblemDialogue)
+			if viewer and viewer.ui and viewer.ui.has_method("open_emblem_picker"):
+				viewer.ui.open_emblem_picker(_my_emblem())
 		"message": _message(d)
 		"status": _status(d)
 		"combat": _combat(d)
@@ -177,7 +180,7 @@ func _sound_effect(d: Dictionary) -> void:
 	else:
 		p = AudioStreamPlayer.new()
 	p.stream = _sound_streams[file]
-	p.bus = "Ambient"
+	p.bus = "Effects"
 	p.pitch_scale = randf_range(float(row.rate[0]), float(row.rate[1]))
 	p.volume_db = linear_to_db(maxf(gain, 0.001))
 	add_child(p)
@@ -186,6 +189,133 @@ func _sound_effect(d: Dictionary) -> void:
 
 
 # ---------------------------------------------------------------- the living
+
+# ---------------------------------------------------------------- the F12 report (owner 2026-10-17)
+## Owner 2026-10-17: some gamebots (druids, hunters, bonedancers) and pets are not drawn at all - no body, no name. F12
+## (Keybinds "bot_report") appends a report to user://bot_report.log: every living the client holds near you and why
+## it is or isn't drawn, the object ids the server still talks about that the client no longer holds (and why each
+## was dropped), and the recent drops. Nothing in the game changes.
+var _ever := {}                              # oid -> [name, model, msec created]
+var _unknown := {}                           # oid -> {"update": n, "combat": n, "last": msec, "pos": Vector3}
+var _dropped := {}                           # oid -> [name, why, msec, had a view, parked]
+
+
+## A living the server talks about that this client never had created: asked for (CreateObjectRequest), at most every
+## 3 s an id - the server's broadcast updates can mark a living as sent without its create, and only an update ever
+## came (owner 2026-10-17: invisible gamebots and pets, "hidden forever").
+var _asked := {}                             # oid -> msec last asked
+
+
+func _request_object(oid: int) -> void:
+	if oid <= 0 or oid == Server.me_oid or door_oids.has(oid) or objects.has(oid):
+		return
+	var now := Time.get_ticks_msec()
+	if now - int(_asked.get(oid, -100000)) < 3000:
+		return
+	_asked[oid] = now
+	if Server.client and Server.client.has_method("RequestObject"):    # (the C# side built: tools/build_csharp.ps1)
+		Server.client.call("RequestObject", oid)
+
+
+func _note_unknown(oid: int, what: String, pos: Vector3) -> void:
+	var u: Dictionary = _unknown.get(oid, {"update": 0, "combat": 0, "last": 0, "pos": Vector3.INF})
+	u[what] = int(u.get(what, 0)) + 1
+	u["last"] = Time.get_ticks_msec()
+	if pos != Vector3.INF:
+		u["pos"] = pos
+	_unknown[oid] = u
+
+
+func write_bot_report(from: Vector3) -> String:
+	var now := Time.get_ticks_msec()
+	var out := PackedStringArray()
+	out.append("==== %s  you at %s (zone %d) ====" % [Time.get_datetime_string_from_system(), str(from.snapped(Vector3.ONE)),
+			_current_zone()])
+	var problems := PackedStringArray()
+	var fine := PackedStringArray()
+	for oid in by_oid:
+		var st: NpcState = by_oid[oid]
+		var d := Vector2(st.pos.x - from.x, st.pos.z - from.z).length()
+		if d > 100.0:
+			continue
+		var v = st.view
+		var valid := v != null and is_instance_valid(v)
+		var act = active.get(st.index)
+		var why := PackedStringArray()
+		if st.info.has("missing") or (not st.info.has("gltf") and not st.info.has("race") and not st.info.has("object_model")
+				and not st.info.has("effects")):
+			why.append("NO MODEL for model %s in the client's tables (%s)" % [st.spawn.get("model", "?"), st.info.get("name", "")])
+		if v == null:
+			if act != null and is_instance_valid(act):
+				why.append("view slot %d is held by another view (%s)" % [st.index, (act as Npc).spawn.get("name", "?")])
+			elif d > VIEW_RANGE:
+				why.append("beyond the view range")
+			elif st.prep_since > 0:
+				why.append("view waiting for its files %d ms" % (now - st.prep_since))
+			else:
+				why.append("no view built")
+		elif not valid:
+			why.append("its view was freed but is still referenced")
+		else:
+			var n := v as Npc
+			if not n.visible:
+				why.append("view HIDDEN (alive=%s corpse_left=%.0f stealthed=%s process=%d)" % [st.alive, st.corpse_left,
+						st.stealthed, n.process_mode])
+			if not n.is_inside_tree():
+				why.append("view not in the scene")
+			if act != v:
+				why.append("view not in the active list (slot %d: %s)" % [st.index, "empty" if act == null else "another"])
+			if n.model == null and not n.info.has("effects"):
+				why.append("view has no model")
+			elif n.model and not (n.model as Node3D).visible:
+				why.append("view's model hidden")
+			if n.global_position.distance_to(st.pos) > 3.0:
+				why.append("view %.0f m from where the server has it" % n.global_position.distance_to(st.pos))
+		if not st.alive:
+			why.append("dead (health %.0f%%)" % (st.health * 100.0))
+		var line := "%6d %-22s lvl%-2d model %-5s %5.0f m  seen %4.1f s ago  %s" % [oid, String(st.spawn.get("name", "")),
+				st.level, str(st.spawn.get("model", "")), d, (now - st.seen_at) / 1000.0,
+				("race %s" % st.info.race) if st.info.has("race") else String(st.info.get("gltf", "")).get_file()]
+		if why.is_empty():
+			fine.append(line)
+		else:
+			problems.append(line + "\n         -> " + "; ".join(why))
+	out.append("-- livings within 100 m with a problem: %d" % problems.size())
+	out.append_array(problems)
+	out.append("-- the server talks about these, the client doesn't hold them (no body, no name):")
+	var n_unknown := 0
+	for oid in _unknown:
+		var u: Dictionary = _unknown[oid]
+		if now - int(u.last) > 120000:
+			continue
+		n_unknown += 1
+		var who: Array = _ever.get(oid, ["(never created on this client)", 0, 0])
+		var dr: Array = _dropped.get(oid, [])
+		var at: Vector3 = u.pos
+		var dropped_text := "never (the server never created it for this client)"
+		if not dr.is_empty():
+			dropped_text = "%s, %.0f s ago%s" % [dr[1], (now - int(dr[2])) / 1000.0,
+					", had a view" if dr[3] else ", never had a view"]
+		out.append("%6d %-22s model %-5d updates %d combat %d, last %4.1f s ago%s  dropped: %s" % [oid, String(who[0]),
+				int(who[1]), int(u.get("update", 0)), int(u.get("combat", 0)), (now - int(u.last)) / 1000.0,
+				("  %.0f m away" % Vector2(at.x - from.x, at.z - from.z).length()) if at != Vector3.INF else "",
+				dropped_text])
+	out.append("-- drawn fine within 100 m: %d" % fine.size())
+	out.append_array(fine)
+	out.append("-- dropped in the last 5 minutes:")
+	for oid in _dropped:
+		var dr: Array = _dropped[oid]
+		if now - int(dr[2]) < 300000:
+			out.append("%6d %-22s %s, %.0f s ago" % [oid, String(dr[0]), dr[1], (now - int(dr[2])) / 1000.0])
+	var path := "user://bot_report.log"
+	var f := FileAccess.open(path, FileAccess.READ_WRITE if FileAccess.file_exists(path) else FileAccess.WRITE)
+	if f:
+		f.seek_end()
+		f.store_string("\n".join(out) + "\n\n")
+		f.close()
+	return "Character report written: %d problems near you, %d the server talks about but this client doesn't hold (bot_report.log)." % [
+			problems.size(), n_unknown]
+
 
 func _model_info(model: int) -> Dictionary:
 	var info: Dictionary = models.get(str(model), {})
@@ -207,6 +337,8 @@ func _model_info(model: int) -> Dictionary:
 func _add_npc(d: Dictionary) -> void:
 	var oid := int(d.oid)
 	_mark_seen(oid)
+	_ever[oid] = [String(d.name), int(d.model), Time.get_ticks_msec()]          # (the F12 report: who an oid was)
+	_unknown.erase(oid)
 	# the server sends a living again when you target it (PlayerTargetHandler -> UpdateObjectForPlayer) and when it
 	# changes: the same model is updated in place - the view, your target and its name stay
 	var old: NpcState = by_oid.get(oid)
@@ -263,7 +395,7 @@ func _park(oid: int, st: NpcState) -> void:
 	v.visible = false
 	v.process_mode = Node.PROCESS_MODE_DISABLED              # (its click box leaves the physics world with it)
 	_parked[oid] = [v, String(st.spawn.get("model", "")), int(st.spawn.get("size", 50)), int(st.spawn.get("flags", 0)),
-			String(st.spawn.get("name", "")), String(st.spawn.get("guild", "")), Time.get_ticks_msec()]
+			String(st.spawn.get("name", "")), String(st.spawn.get("guild", "")), Time.get_ticks_msec(), st]
 	while _parked.size() > PARK_MAX:                         # the longest parked goes
 		var oldest := -1
 		for k in _parked:
@@ -293,9 +425,32 @@ func _unpark(oid: int, st: NpcState) -> void:
 	active[st.index] = v
 
 
+## An update for a living we let go while the server still has it in view (the server creates a living once, then
+## only updates it: dropped here - no word of it for STALE_MS - it never came back; owner 2026-10-16: a gamebot fighting
+## next to you with no body and no name): its parked view and state come back as they were.
+func _revive_parked(oid: int) -> NpcState:
+	var p: Array = _parked.get(oid, [])
+	if p.size() < 8 or not (p[7] is NpcState) or not is_instance_valid(p[0]):
+		return null
+	var st := p[7] as NpcState
+	st.index = states.size()
+	states.append(st)
+	by_oid[oid] = st
+	st.seen_at = Time.get_ticks_msec()
+	_mover[st] = {"speed": 0.0, "dest": null, "target": 0, "flying": false, "sy": st.pos.y}
+	st.view = null
+	_unpark(oid, st)                                           # (its view back, or a new one built if it can't be)
+	if st.view and is_instance_valid(st.view):
+		(st.view as Node3D).visible = true
+		(st.view as Node).process_mode = Node.PROCESS_MODE_INHERIT
+	return st
+
+
 func _drop_parked(oid: int) -> void:
 	var p: Array = _parked.get(oid, [])
 	_parked.erase(oid)
+	if not p.is_empty() and _dropped.has(oid):
+		_dropped[oid][1] = String(_dropped[oid][1]) + "; its parked view let go"
 	if not p.is_empty() and is_instance_valid(p[0]):
 		(p[0] as Node).queue_free()
 
@@ -358,6 +513,10 @@ func _move(d: Dictionary) -> void:
 		return
 	var st: NpcState = by_oid.get(int(d.oid))
 	if st == null:
+		st = _revive_parked(int(d.oid))
+	if st == null:
+		_note_unknown(int(d.oid), "update", _zone_pos(int(d.zone), int(d.x), int(d.y), int(d.z)))
+		_request_object(int(d.oid))
 		return
 	var p := _zone_pos(int(d.zone), int(d.x), int(d.y), int(d.z))
 	if p == Vector3.INF:
@@ -366,18 +525,35 @@ func _move(d: Dictionary) -> void:
 	var mv: Dictionary = _mover.get(st, {})
 	mv["srv_pos"] = p                                           # where the server has it (a rider: checked by _seat_riders)
 	mv["srv_at"] = st.seen_at
-	mv["flying"] = (int(d.flags) & 0x20) != 0
+	mv["flying"] = (int(d.flags) & 0x20) != 0 and st.alive    # (a dead flier lies on the ground)
 	mv["water"] = (int(d.flags) & 0x10) != 0                    # the server's "underwater" (npc.IsUnderwater)
 	mv["sy"] = p.y                                              # the server's Z: every height is found from it (_ground)
 	mv["speed"] = float(int(d.speed))                           # (before _ground: a mover goes on the ground)
 	_mover[st] = mv
-	if st.pos.distance_to(p) > SNAP_M or float(d.speed) == 0.0:
+	var ridden := _ridden(st)
+	# a ridden steed at 37 m/s is a few metres off the server's place at every update: snapping it there (SNAP_M) made
+	# the mount and its rider jump; it eases back instead, unless it is really lost (two seconds' travel)
+	var snap := maxf(SNAP_M, float(int(d.speed)) * 0.025 * 2.0) if ridden else SNAP_M
+	if st.pos.distance_to(p) > snap or float(d.speed) == 0.0:
 		st.pos = p
 	else:
-		st.pos = st.pos.lerp(p, 0.5)                            # close: ease into the server's place
-	_ground(st)
-	st.yaw = Server.yaw_of(int(d.heading))
+		st.pos = st.pos.lerp(p, 0.25 if ridden else 0.5)       # close: ease into the server's place
+	if not (ridden and String(st.info.get("figure", "")).to_lower() in FLIER_FIGURES):
+		_ground(st)
+	if not ridden:
+		st.yaw = Server.yaw_of(int(d.heading))
+	else:                                                       # (turned smoothly by _move_ridden, never flipped)
+		st.yaw = lerp_angle(st.yaw, Server.yaw_of(int(d.heading)), 0.5)
 	mv["target"] = int(d.target)
+	# the server's attack state (ObjectUpdate's target: > 0 while it attacks - PacketLib168, "enables the NPC's attack
+	# state"): once a living's updates have carried a target, one without ends its fight at once, as the old client
+	# put the weapons away (owner 2026-10-17: dread commanders, boneguards kept them out several seconds after - the
+	# 6 s after its last blow ran on). One whose updates never carry a target keeps that 6 s (a bot bard's drum)
+	if int(d.target) != 0:
+		mv["saw_target"] = true
+	elif bool(mv.get("saw_target", false)):
+		mv["saw_target"] = false
+		st.combat_until = 0
 	mv["dest"] = null
 	if int(d.tx) != 0 or int(d.ty) != 0:
 		var dp := _zone_pos(int(d.tzone), int(d.tx), int(d.ty), int(d.tz))
@@ -397,6 +573,11 @@ func _set_health(st: NpcState, pct: int) -> void:
 	if was and not st.alive:
 		st.mode = NpcState.Mode.DEAD
 		st.corpse_left = 1e9                                    # the body stays until the server removes it
+		_interrupt(int(st.spawn.get("oid", 0)), false)          # its cast's hand glows go with it (no fizzle)
+		var mv: Dictionary = _mover.get(st, {})
+		if bool(mv.get("flying", false)):                       # a flier's body comes down to the ground (owner
+			mv["flying"] = false                                 # 2026-10-16: dead fliers hung in the air)
+			_ground(st)
 		if st.view:
 			(st.view as Npc).play_death(true)
 	elif not was and st.alive:
@@ -422,7 +603,11 @@ func _ground(st: NpcState) -> void:
 		var f := floor_at(at)
 		if f <= w:
 			st.swimming = true
-			st.pos.y = w - Player.SWIM_FLOAT if ref > w - 1.5 else ref
+			# a character (a race figure: players, gamebots, companions) swims at the surface wherever the server has it
+			# - 1.65 has no diving (owner 2026-10-17: companions following you over a lake walked its bed, drawn far
+			# below you and the gamebots); a creature the server keeps deep down (a water beetle) stays at its depth
+			var character := st.info.has("race")
+			st.pos.y = w - Player.SWIM_FLOAT if character or ref > w - 1.5 else ref
 			return
 	st.swimming = false
 	# the drawn surface under the server's Z: the ground, or a building floor / porch / bridge just below it (the
@@ -440,7 +625,7 @@ func _ground(st: NpcState) -> void:
 
 ## kind: the server's RemoveObject type - 0 a dead NPC (its body stays a while: Npc.make_corpse), 1 a living NPC,
 ## 2 a player.
-func _remove(oid: int, park := true, kind := 1) -> void:
+func _remove(oid: int, park := true, kind := 1, why := "") -> void:
 	if door_oids.has(oid):
 		doors.erase(door_oids[oid])
 		door_oids.erase(oid)
@@ -451,6 +636,9 @@ func _remove(oid: int, park := true, kind := 1) -> void:
 	if objects.has(oid):
 		var o: Node3D = objects[oid]
 		objects.erase(oid)
+		if target_object == oid:                              # (a gravestone prayed at, loot picked up)
+			target_object = 0
+			PlayerData.set_target({})
 		if is_instance_valid(o):
 			o.queue_free()
 		return
@@ -463,6 +651,8 @@ func _remove(oid: int, park := true, kind := 1) -> void:
 															# mode on it ends (owner 2026-10-14)
 	by_oid.erase(oid)
 	_mover.erase(st)
+	_dropped[oid] = [String(st.spawn.get("name", "")), why if why != "" else ("server removed it (type %d)" % kind),
+			Time.get_ticks_msec(), st.view != null and is_instance_valid(st.view), park and st.alive and st.view != null]
 	if st.view:
 		if st.view == target:
 			clear_target()
@@ -488,7 +678,7 @@ func _equip(d: Dictionary) -> void:
 	var rows := []
 	for it in d.get("items", []):
 		rows.append({"slot": int(it.slot), "model": int(it.model), "color": int(it.get("color", 0)),
-				"effect": int(it.get("effect", 0))})
+				"effect": int(it.get("effect", 0)), "emblem": int(it.get("emblem", 0))})   # (a cloak / shield's guild emblem)
 	var st: NpcState = by_oid.get(oid)
 	var gear := {"hood": (int(d.get("hood", 0)) & 1) != 0, "cloak_hidden": (int(d.get("hidden", 0)) & 1) != 0,
 			"helm_hidden": (int(d.get("hidden", 0)) & 2) != 0}
@@ -585,7 +775,7 @@ func _drop_stale(delta: float) -> void:
 		if st.alive and now - st.seen_at > STALE_MS and int(oid) != pet_oid:
 			gone.append(int(oid))
 	for oid in gone:
-		_remove(oid, true, 1)
+		_remove(oid, true, 1, "no word from the server for %d s (stale drop)" % (STALE_MS / 1000))
 
 
 func _physics_body(delta: float) -> void:
@@ -607,6 +797,9 @@ func _physics_body(delta: float) -> void:
 			continue
 		var step := speed * 0.025 * delta
 		var dest = mv.dest
+		if _ridden(s):
+			_move_ridden(s, mv, step, delta)
+			continue
 		if dest is Vector3:
 			var to: Vector3 = dest - s.pos
 			to.y = 0.0
@@ -625,6 +818,40 @@ func _physics_body(delta: float) -> void:
 	_seat_riders()
 
 
+## A ridden steed between the server's updates (owner 2026-10-17: stable horses jittered beside their riders, flights
+## turned wildly): it never stops at its next path point - it runs on along its way until the server says it stopped -
+## and never turns back toward a point it has already passed (that flipped it round); it turns smoothly. A flying
+## mount (its figure a gryphon, amphitere or dragonfly) flies at the server's height, eased; a horse runs on the ground.
+const FLIER_FIGURES := ["gryphon", "amphitere", "dragonfly", "dfly"]
+
+
+func _move_ridden(s: NpcState, mv: Dictionary, step: float, delta: float) -> void:
+	var dest = mv.dest
+	var aim := s.yaw
+	if dest is Vector3:
+		var to: Vector3 = dest - s.pos
+		to.y = 0.0
+		var ahead := Vector3(sin(s.yaw), 0.0, cos(s.yaw))
+		if to.length() > step and to.normalized().dot(ahead) > 0.0:
+			aim = atan2(to.x, to.z)                            # still ahead: steer for it
+	s.yaw = lerp_angle(s.yaw, aim, minf(1.0, delta * 6.0))
+	s.pos += Vector3(sin(s.yaw), 0.0, cos(s.yaw)) * step
+	if String(s.info.get("figure", "")).to_lower() in FLIER_FIGURES:
+		s.pos.y = lerpf(s.pos.y, float(mv.get("sy", s.pos.y)), minf(1.0, delta * 4.0))
+	else:
+		_ground(s)
+		# over a rise the server's straight line between route points runs under the hill (owner 2026-10-17: Huginfell
+		# to Raumarik, the horse sank into the slopes): a ridden walker stays on the land, where _ground only pulled
+		# one down from a line in the air
+		var grid := _grid_at(s.pos)
+		if grid > -INF and s.pos.y < grid - 0.3:
+			var f := floor_at(Vector3(s.pos.x, grid, s.pos.z))
+			s.pos.y = f if f > -INF and f >= grid - 0.3 else grid
+	_gallop(s)
+	s.mode = NpcState.Mode.WALK
+	s.running = true
+
+
 ## The old server's con table (npcs.json "con"); without it the level difference.
 func con_level(player_level: int, npc_level: int) -> int:
 	if _con.is_empty() or player_level < 0 or player_level >= _con.size():
@@ -641,6 +868,7 @@ func select(n: Npc) -> void:
 	if n == null or not n.state.alive:
 		return
 	target = n
+	target_object = 0
 	var nm := String(n.spawn.name)
 	var lower := nm.length() > 0 and nm[0] == nm[0].to_lower()
 	if not _server_chose_target:                           # the server already said "You target ..."
@@ -653,6 +881,7 @@ func select(n: Npc) -> void:
 
 func clear_target() -> void:
 	target_door = 0
+	target_object = 0
 	super.clear_target()
 	if Server.client and Server.playing:
 		Server.client.call("Target", 0, 0)
@@ -700,7 +929,7 @@ func _message(d: Dictionary) -> void:
 ## The server's social-window lines (CT_SocialInterface - the old client filled its social window with them; they were
 ## printed raw: 'N,0,0,1 day,"The forces of Hibernia have captured Caer Benowyc!"'): /friend window's friends
 ## ("TF" clears, "F,place,name,level,class,"zone or last played"") and /news ("N,type,place,when,"text"") as lists in
-## the information window; the guild window's lines are left out (no guild window).
+## the information window; the guild roster's ("TE" / "E", the alliance "TA" / "A") go to the guild window.
 var _social_title := ""
 var _social_lines: Array = []
 var _social_due := false
@@ -711,6 +940,10 @@ func _social(text: String) -> void:
 	if f.is_empty():
 		return
 	match String(f[0]):
+		"TE", "E", "TA", "A":                            # the guild window's roster (/gc who window ...)
+			if viewer and viewer.ui and viewer.ui.get("guild_window"):
+				viewer.ui.guild_window.receive(f)
+			return
 		"TF":
 			_social_title = "FRIENDS"
 			_social_lines = []
@@ -797,6 +1030,10 @@ const BOTH_DUAL := 0x3E82                       # ... both weapons (BothDualWeap
 
 
 func _combat(d: Dictionary) -> void:
+	for k in ["attacker", "defender"]:
+		if int(d.get(k, 0)) > 0 and int(d[k]) != Server.me_oid and not by_oid.has(int(d[k])):
+			_note_unknown(int(d[k]), "combat", Vector3.INF)
+			_request_object(int(d[k]))
 	var a := _view_of(int(d.attacker))
 	# a bow drawn / loosed (AttackAction's ranged attack): the archer's bow clips, not a melee swing (owner 2026-10-15:
 	# the bone archers swung a sword at range); the arrow's hit (a bow as the weapon) swings nothing either
@@ -843,6 +1080,21 @@ func _combat(d: Dictionary) -> void:
 	elif a is Player and int(d.attacker) == Server.me_oid:
 		if not styled or (a as Player).play_style(style_anim) == "":
 			(a as Player).swing((a as Player).weapon_stance(), hand)
+	if styled and not spell and a is Node3D:
+		# the style's coloured afterimages along the swing (styles.csv: StyleTrail - the offline game's own trail)
+		var body: Node = (a as Npc).model if a is Npc else (a.get("_model") if a is Player else null)
+		var trail: Variant = StyleTrail.of_row(int(d.style))
+		# timed to the swing playing: styles.csv's Buildup / Duration are the client's own swing's (400 of 1000 ms);
+		# ours plays its clip at its own length and speed, and the trail lagged behind it - "really delayed" (owner
+		# 2026-10-17). The same share of the swing, stretched to the clip that is actually playing
+		var ap: AnimationPlayer = (a as Npc).anim if a is Npc else (a.get("_anim") as AnimationPlayer)
+		if trail is Dictionary and ap and ap.current_animation != "":
+			var secs := ap.current_animation_length / maxf(absf(ap.get_playing_speed()), 0.01)
+			var full := maxf(float(trail.ms), 1.0)
+			if secs > 0.05:
+				trail["buildup"] = float(trail.buildup) * secs * 1000.0 / full
+				trail["ms"] = secs * 1000.0
+		StyleTrail.play((a as Node3D).get_parent(), StyleTrail.held(body), trail)
 	var v := _view_of(int(d.defender))
 	var result := int(d.result)
 	var kind: String = {1: "parry", 2: "block", 3: "evade"}.get(result, "")
@@ -944,6 +1196,7 @@ func _cast(d: Dictionary) -> void:
 	var oid := int(d.caster)
 	var v := _view_of(oid)
 	var ce := int(d.spell)
+	SpellFx.prefetch(ce)                                          # its effects load now, on a worker, not as it lands
 	_late_cast.erase(oid)
 	if v == null:
 		if by_oid.has(oid) and int(d.get("time", 0)) > 0:
@@ -1253,24 +1506,78 @@ func _add_object(d: Dictionary) -> void:
 	objects[oid] = holder
 
 
-## A left click on a ground object asks the server to pick it up. True when the click hit one.
+var target_object := 0                       # the targeted ground object's id (loot, a gravestone, a relic)
+
+
+## A left click on a ground object targets it, as the client did - picking it up is the Get Item key (get_object),
+## a separate action in game.dll's key list ("Get", beside "Nearest Loot"). Owner 2026-10-17: a click on your own
+## gravestone asked the server to pick it up ("too far away to pick up" / "You can't get that!") instead of targeting
+## it for /pray (GamePlayer.Pray: the target must be your gravestone). True when the click hit one.
 func click_object(cam: Camera3D, screen_pos: Vector2) -> bool:
 	var from := cam.project_ray_origin(screen_pos)
 	var q := PhysicsRayQueryParameters3D.create(from, from + cam.project_ray_normal(screen_pos) * 60.0, OBJECT_PICK)
 	var hit := get_world_3d().direct_space_state.intersect_ray(q)
 	if hit.is_empty() or not hit.collider.has_meta("server_object"):
 		return false
-	var oid := int(hit.collider.get_meta("server_object"))
-	var r := Server.to_region(_current_zone(), player.global_position)
-	# the server picks up what you have targeted (PlayerPickUpRequestHandler); a relic is taken with a use
-	# (GameRelic.Interact -> TryPickup: carried to your realm's pad), not picked up (owner 2026-10-14: relic raids)
-	Server.client.call("Target", oid, 0x8000 | 0x6000)
-	var holder: Node3D = objects.get(oid)
-	if holder and int(holder.get_meta("model", 0)) in RELIC_MODELS:
-		Server.client.call("Interact", oid, int(r.x), int(r.y))
-	else:
-		Server.client.call("PickUp", int(r.x), int(r.y), oid)
+	_target_ground(int(hit.collider.get_meta("server_object")))
 	return true
+
+
+func _target_ground(oid: int) -> void:
+	var holder: Node3D = objects.get(oid)
+	target = null
+	target_door = 0
+	target_object = oid
+	var nm := String(holder.get_meta("name", "")) if holder else ""
+	PlayerData.set_target({"name": nm, "level": 0, "con_color": Color.WHITE, "health": 1.0})
+	Server.client.call("Target", oid, 0x8000 | 0x6000)          # (the server's examine bit names it in chat)
+
+
+const LOOT_RANGE := 1500 * 0.025                 # game.dll 0x4375c4: Nearest Loot's radius, 1500 units
+
+
+## The Nearest Loot key (keyboard.dat F7 / - / H): the nearest ground object within 1500 units targeted, as game.dll
+## 0x4375c4 -> 0x43646f mode 3: any ground object but a gravestone (0x43e2ff: its name holding "'s Grave"), else
+## "No lootable object in range." (owner 2026-10-17).
+func target_nearest_loot() -> void:
+	var best := 0
+	var best_d := LOOT_RANGE
+	for oid in objects:
+		var h: Node3D = objects[oid]
+		if not is_instance_valid(h) or String(h.get_meta("name", "")).contains("'s Grave"):
+			continue
+		var d := h.global_position.distance_to(player.global_position)
+		if d <= best_d:
+			best = int(oid)
+			best_d = d
+	if best == 0:
+		PlayerData.message.emit("No lootable object in range.", "system")
+	else:
+		_target_ground(best)
+
+
+## The Get Item key: the targeted ground object picked up - the server picks up what you have targeted
+## (PlayerPickUpRequestHandler) and answers itself (too far, can't get that). A relic is taken with a use
+## (GameRelic.Interact -> TryPickup: carried to your realm's pad), not picked up (owner 2026-10-14: relic raids).
+func get_object() -> void:
+	if Server.client == null:
+		return
+	var r := Server.to_region(_current_zone(), player.global_position)
+	var holder: Node3D = objects.get(target_object)
+	if holder and int(holder.get_meta("model", 0)) in RELIC_MODELS:
+		Server.client.call("Interact", target_object, int(r.x), int(r.y))
+	else:
+		Server.client.call("PickUp", int(r.x), int(r.y), target_object)
+
+
+## Your guild's emblem as you wear it (your cloak's or shield's - the server sends the guild's emblem on them), else 0:
+## the picker starts from it.
+func _my_emblem() -> int:
+	for slot in [26, 11]:
+		var it: Dictionary = PlayerData.item_at(slot)
+		if int(it.get("emblem", 0)) > 0:
+			return int(it.emblem)
+	return 0
 
 
 func _target_oid() -> int:
@@ -1375,6 +1682,7 @@ func request_door(door: ZoneDoor) -> void:
 	if not info.is_empty():
 		if target:
 			target = null
+		target_object = 0
 		target_door = int(info.oid)
 		PlayerData.set_target({"name": String(info.name) if String(info.name) != "" else "door", "level": 0,
 				"con_color": Color.WHITE, "health": float(info.health) / 100.0})
@@ -1440,6 +1748,8 @@ func _riding(d: Dictionary) -> void:
 	if int(d.rider) == Server.me_oid:                          # you, on a stable master's horse (or off it)
 		if viewer:
 			viewer.call("_server_mount", int(d.steed) if int(d.mount) != 0 else 0)
+		if int(d.mount) == 0:
+			_gallop_off()                                       # (down: its hooves quiet again)
 		return
 	var rider: NpcState = by_oid.get(int(d.rider))
 	if int(d.mount) == 0:
@@ -1483,12 +1793,64 @@ func _seat_riders() -> void:
 
 
 ## A steed's saddle: its model's saddle node, else 1.3 m up its back.
+## The seat comes from the steed's own place this tick (its state, which its view is drawn at) and the saddle's offset
+## in the steed's space - not the saddle node's world position: that is the view's place from the frame before, read
+## while the view is moved on its animation thread; at a stable steed's 37 m/s the rider sat a body length beside or
+## behind the horse and jittered (owner 2026-10-17).
+var _saddle_off := {}                         # steed object id -> the saddle's last offset in that steed's space
+
+
 func seat_of(steed: NpcState) -> Vector3:
-	if steed.view and is_instance_valid(steed.view):
+	# measured on this very steed every frame, relative to its own view (the stable sizes each mount to its rider's
+	# race - an offset kept per model came from a companion's differently sized mount and sat the rider off the
+	# saddle, owner 2026-10-17), then put on the steed's place this tick
+	var key := steed.index
+	for oid in by_oid:
+		if by_oid[oid] == steed:
+			key = int(oid)
+			break
+	if steed.view and is_instance_valid(steed.view) and steed.view.is_inside_tree():
 		var sn := steed.view.find_child("saddle*", true, false) as Node3D
 		if sn:
-			return sn.global_position
-	return steed.pos + Vector3(0, 1.3, 0)
+			var off: Vector3 = (steed.view as Node3D).global_transform.affine_inverse() * sn.global_position
+			if off.y > 0.3:                               # (a saddle not yet posed sits at the root: keep the last)
+				_saddle_off[key] = off
+	var o: Vector3 = _saddle_off.get(key, Vector3(0, 1.3, 0))
+	return steed.pos + Basis(Vector3.UP, steed.yaw) * o
+
+
+## A steed someone rides (yours, or a rider the server named): it runs a stable route at a fixed 1500 units/s.
+## Your own steed's hooves (the client's sheet: horse set 41, "also player mount", move_dirt g_Gallop_OnDirt): its
+## view's footsteps on while you ride it, off once you are down or on another (NPC views are built without footsteps).
+var _gallop_view: Npc = null
+
+
+func _gallop(s: NpcState) -> void:
+	var mine: bool = viewer != null and int(viewer.get("_server_steed")) != 0 and by_oid.get(int(viewer.get("_server_steed"))) == s
+	var v: Npc = s.view as Npc if mine and s.view and is_instance_valid(s.view) else null
+	if v == _gallop_view:
+		return
+	if v == null and not mine:
+		return
+	_gallop_off()
+	if v and v.sounds:
+		v.sounds.set_steps(true)
+		_gallop_view = v
+
+
+func _gallop_off() -> void:
+	if _gallop_view and is_instance_valid(_gallop_view) and _gallop_view.sounds:
+		_gallop_view.sounds.set_steps(false)
+	_gallop_view = null
+
+
+func _ridden(st: NpcState) -> bool:
+	if viewer and int(viewer.get("_server_steed")) != 0 and by_oid.get(int(viewer.get("_server_steed"))) == st:
+		return true
+	for r in _riders:
+		if by_oid.get(_riders[r]) == st:
+			return true
+	return false
 
 
 ## A raid window slot clicked: target that member (its view if drawn, else straight on the server).

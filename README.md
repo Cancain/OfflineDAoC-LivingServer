@@ -20,7 +20,8 @@
 They join guilds and recruit you, each has its own personality, and they talk the way players did in
 2002–2003, down to the build arguments in /faction.
 
-> **Latest release: 0.36-se.4**, for shadowofze's 0.36 / 0.36b, with or without the 0.36c new client.
+> **Latest release: 0.37-se.1**, for shadowofze's 0.37 / 0.37b, with or without the 0.37c new client. It has
+> everything in 0.36-se.4. Still on 0.36? Use 0.36-se.4 (under Releases), or update the game (see below).
 > Download it from this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases).
 > Every change is in [CHANGELOG-SOCIAL-EXPANSION.md](CHANGELOG-SOCIAL-EXPANSION.md); known problems and
 > what hasn't been tested are in [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md).
@@ -36,7 +37,7 @@ Social Expansion makes them feel like a community, not just a population.
 
 | Feature | What you'll see |
 |---|---|
-| **Bot guilds** | Each realm has its own bot guilds, a few big and many small, each with a purpose: leveling, social, RvR, raiding or crafting. Bots wear guild names, chat in /gu, group with guildmates, and recruit you when you ask "lf guild". Guilds claim and defend keeps, pay dues, earn merit, buy guild buffs and form alliances. You can also /ginvite bots into your own guild. |
+| **Bot guilds** | Each realm has its own bot guilds, a few big and many small, each with a purpose: leveling, social, RvR, raiding or crafting. Bots wear guild names, chat in /gu, group with guildmates, and recruit you when you ask "lf guild". Guilds claim and defend keeps, pay dues, earn merit, buy guild buffs and form alliances. (Inviting a bot into your own guild is part of the game itself since 0.37; a member of a bot guild answers for itself first.) |
 | **Bot personalities** | Every bot is one of six types: Leveler, Socialite, Daredevil, Explorer, Crafter or No-lifer. Each also has five traits (curiosity, risk, sociability, patience, chattiness). Personality tilts how a bot spends its time: who lingers in town, who chases orange cons, who goes looking for zones they haven't seen. Target any bot and type `/personality`. |
 | **Bot voices** | 2,296 lines written for the era, chosen by realm, class, level, situation, place, time of day and personality. Bots answer what you actually said ("ty" → "np", "ding" → "gz", "where is the scout trainer" → the trainer), answer each other in kind (a boast gets "show off", a question an answer), and talk in /group when they're in your group, answering what you say there. Each bot writes in one of five styles (plain, terse, chatty, proper or typo-prone), and a few regulars talk more than the rest. No line repeats in a realm within three days, across restarts too. |
 | **/faction debates** | 296 multi-bot conversations: class and spec arguments, relic and keep alerts, dragon raids, Darkness Falls, buffbots, zergs, realm pride and more. A different cast plays one every 30–45 minutes while you're online. |
@@ -53,23 +54,32 @@ Social Expansion makes them feel like a community, not just a population.
   base game's bots (a dead bot's corpse stays where it fell until it releases, and a bot that dies
   three times on the way to its group's meetup stops trying), and bots reading short chat better
   when they answer you ("ty", "lol", "inc"; place answers worded like a player). Everything else
-  plays like the normal 0.36.
+  plays like the normal 0.37.
 - **It never breaks the base game's rules.** Real loot, the Realm Exchange, stablemaster routes,
   bots earning their armor and the other owner rules are untouched.
 - **The install can be undone.** The installer checks that your game is the right version, backs
   up every file it replaces and verifies each copy; `ROLLBACK.cmd` puts the original files back.
   Bot guilds leave guilds, alliances and keep claims in your world, so remove them first if you
   used them (see [Undo and uninstall](#undo-and-uninstall)).
-- **How it's tested:** 2,900+ automated server tests pass on every build, and every feature was
-  played in game with 300 bots per realm, on the 0.36c new client. The original game client wasn't
-  tried, and a few parts haven't been seen in game yet: see [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md).
+- **How it's tested:** 3,000+ automated server tests pass on every build. The features were played in
+  game with 300 bots per realm on the 0.36c new client (0.36-se.1 to se.3), and the bot chat of se.4 was
+  tested live with a scripted player. The original game client wasn't tried, and a few parts haven't been
+  seen in game yet: see [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md).
 
 ## How to get it
 
-1. Install Offline DAoC 0.36 or 0.36b (or 0.36c) from [shadowofze's releases](https://github.com/shadowofze/OfflineDAoC/releases).
+1. Install Offline DAoC 0.37 or 0.37b (or 0.37c) from [shadowofze's releases](https://github.com/shadowofze/OfflineDAoC/releases),
+   or update your 0.36 game to it (below).
 2. Download the Social Expansion zip from this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases), unzip it and put its folder in your game folder.
 3. Close the game and server, then double-click `INSTALL.cmd` in that folder.
 4. Open the launcher as usual. It now has a **Social Expansion** tab.
+
+**Already playing 0.36 with the Social Expansion?** The 0.37 update only applies to the game's own files,
+so put them back first: put the 0.37-se.1 folder in your game folder and double-click
+`PREPARE-FOR-UPDATE.cmd` (it restores the released 0.36 server and launcher from the installer's backups
+and checks each one). Then update the game to 0.37 with its downloader (choice 1, Update), and run this
+build's `INSTALL.cmd`. Your saves, bot guilds, bot memory and settings stay as they were. If you install
+0.37 fresh instead and bring your progress over, see the package's README.txt for the one extra step.
 
 ## Getting started
 
@@ -85,7 +95,7 @@ A fresh world has no bots yet, and most of these features need some.
    the first /faction debate comes 5–10 minutes after the server starts (while you're online),
    frontier alarms need bots in the frontier, and guilds form once enough bots are online.
 4. **Check it's running.** The server log (`runtime\server\logs\server.log`) has a line starting
-   `FORK_BUILD name=0.36-se.4` that lists which features are on.
+   `FORK_BUILD name=0.37-se.1` that lists which features are on.
 
 ## Undo and uninstall
 
@@ -134,20 +144,24 @@ It is a community project built on the open-source [OpenDAoC](https://github.com
 server. The customizations were developed with AI tools (Codex, then Claude) and directed and
 play-tested by the project owner. It is not an official DAoC product and is not for sale.
 
-## Current release: 0.36
+## Current release: 0.37
 
-0.36 carries on from 0.35: bot raids that finish Darkness Falls, Summoner's Hall and Tuscaran Glacier, smarter
-keep, relic and battleground armies, bots that find the long way around, a fixed memory leak, classic quests with
-their item rewards and period experience, and more. It also brings **a new game client**. Read
-[what's new in 0.36](docs/RELEASE-0.36.md), or every change in the [changelog](CHANGELOG.md).
+0.37 carries on from 0.36: you can form your own guild and bring gamebots into it, bot armies attack together and
+raise their fallen at sieges, groups travel as one pack, raids get further in Caer Sidi and Galladoria, there is far
+less lag on a busy server, and the new client gets many fixes. Read [what's new in 0.37](docs/RELEASE-0.37.md), or
+every change in the [changelog](CHANGELOG.md).
+
+**0.37 is an update.** If you already play 0.36, 0.36b or 0.36c, you only download the update (much smaller than the
+game) and your account, characters, bots and settings stay as they are. If you are new, the same file installs the
+complete game for you.
 
 There are three editions. They are the same game on the same server:
 
 | Edition | What it is | Download |
 |---|---|---|
-| **0.36b** | The original DAoC client, with the custom Hibernian class, the **Sluaghbinder** (a pet-summoning undead binder), for players and bots. | [v0.36b release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36b) |
-| **0.36** (recommended) | The original DAoC client with the classic Classic + SI class list only. There are no Sluaghbinder players or bots. | [v0.36 release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36) |
-| **0.36c** (BETA) | The game with **two clients**: the original one and a **new client** built in Godot 4. Both play the same account, characters, bots and world, so you can switch whenever you like. It works with 0.36b and with 0.36: the installer asks which one you want. | [v0.36c release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36c) |
+| **0.37** (recommended) | The original DAoC client with the classic Classic + SI class list only. There are no Sluaghbinder players or bots. | [v0.37 release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.37) |
+| **0.37b** | The original DAoC client, with the custom Hibernian class, the **Sluaghbinder** (a pet-summoning undead binder), for players and bots. | [v0.37b release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.37b) |
+| **0.37c** (BETA) | The game with **two clients**: the original one and a **new client** built in Godot 4. Both play the same account, characters, bots and world, so you can switch whenever you like. It works with 0.37 and with 0.37b. | [v0.37c release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.37c) |
 
 **Handy commands:** [QUICK COMMANDS.txt](QUICK%20COMMANDS.txt) lists the in-game commands and launcher shortcuts: teleport to a bot (`/tele`), find monsters of a level (`/mobs`), add 10 or 100 bots at once (Shift or Ctrl + click), and more. Every command is in [ALL SERVER COMMANDS.txt](ALL%20SERVER%20COMMANDS.txt), and both files are in your game folder too.
 
@@ -156,27 +170,32 @@ There are three editions. They are the same game on the same server:
 1. **Check the requirements:**
    - A 64-bit Windows 10 or 11 PC with a CPU that supports AVX2.
    - 16 GB RAM recommended.
-   - Free disk space: about **20 GB** for 0.36b or 0.36, about **60 GB** while 0.36c installs.
+   - Free disk space for a new install: about **20 GB** for 0.37 or 0.37b, about **60 GB** while 0.37c installs.
    - For the original client: the Windows **.NET Framework 3.5** feature. [How to turn it on](docs/PLAY.md#before-you-start).
-   - For the new client (0.36c): a graphics card that supports Vulkan or DirectX 12, with current drivers.
+   - For the new client (0.37c): a graphics card that supports Vulkan or DirectX 12, with current drivers.
 2. **Get the downloader:** open the release page of your edition (links above) and download its one zip file:
-   `Download-OfflineDAoC-v0.36b.zip`, `Download-OfflineDAoC-v0.36.zip` or `Download-OfflineDAoC-v0.36c.zip`.
-   Put it in a new, empty folder with a short path, for example `C:\Games\OfflineDAoC`.
+   `Download-OfflineDAoC-v0.37.zip`, `Download-OfflineDAoC-v0.37b.zip` or `Download-OfflineDAoC-v0.37c.zip`.
+   Put it in a folder with a short path, for example `C:\Games\OfflineDAoC`.
 3. **Unzip it:** right-click the zip, choose **Extract All…**, and open the extracted folder.
-4. **Run it:** double-click `DOWNLOAD-AND-PLAY-v0.36b.cmd` (or `-v0.36` / `-v0.36c`). If Windows asks, choose
-   **Run** (or **More info → Run anyway**). It downloads the game in parts, checks every part, and unpacks it into
-   a new folder next to it. It never overwrites an existing game. If it stops, run it again: it continues.
-5. **Play:** open the new `playable-v0.36…` folder and double-click **START OFFLINE DAOC.cmd**
-   (in 0.36c, **START OFFLINE DAOC - NEW CLIENT.cmd** plays with the new client).
+4. **Run it:** double-click `GET-OFFLINE-DAOC-v0.37.cmd` (or `-v0.37b` / `-v0.37c`). If Windows asks, choose
+   **Run** (or **More info → Run anyway**). It asks one question:
+   - **1 = Update my game** (you have 0.36, 0.36b or 0.36c): close the game, choose your game folder, and only the
+     update is downloaded and applied. Everything it replaces is backed up first. If you have the new client, it is
+     updated too.
+   - **2 = New install** (you don't have the game yet): it downloads the complete game in checked parts into a new
+     `playable-v0.37…` folder next to it, then updates it. If it stops, run it again: it continues.
+5. **Play:** open your game folder and double-click **START OFFLINE DAOC.cmd** (in 0.37c,
+   **START OFFLINE DAOC - NEW CLIENT.cmd** plays with the new client). The launcher shows **VERSION 0.37** (or 0.37b /
+   0.37c).
    1. Click **START SERVER** and wait until it says **RUNNING**.
    2. Click **ENTER REALM**.
    3. Your own local account is created automatically the first time.
 6. **Create your bots** with the bot buttons in the launcher. Every new install starts with an empty world and
    default settings. [QUICK COMMANDS.txt](QUICK%20COMMANDS.txt) has the shortcuts and in-game commands.
 
-**Already have 0.36b or 0.36 and want the new client?** Download `Download-OfflineDAoC-v0.36c.zip`, unzip it,
-double-click `ADD-NEW-CLIENT-TO-0.36-OR-0.36b.cmd` and choose your game folder. Your saves stay as they are, and both
-clients play them. On a 0.36 game the new client offers the classic classes only, like the original client.
+**Want the new client too?** Run `GET-OFFLINE-DAOC-v0.37c.cmd` from the v0.37c release and choose **1 = Update my
+game**: if your game doesn't have the new client yet, it offers to add it. Your saves stay as they are, and both
+clients play them.
 
 The full walkthrough, with troubleshooting, is in [docs/PLAY.md](docs/PLAY.md). The new client has its own guide:
 [docs/NEW-CLIENT.md](docs/NEW-CLIENT.md).
@@ -186,19 +205,24 @@ The full walkthrough, with troubleshooting, is in [docs/PLAY.md](docs/PLAY.md). 
 
 ## Already playing an older version?
 
-Your characters, account, items, money, houses **and bots** can come with you. Every 0.36 folder
-includes **IMPORT PROGRESS FROM OLD OFFLINE DAOC.cmd**:
+**0.36, 0.36b or 0.36c:** just update (step 4, choice 1). Nothing else is needed.
+
+**0.35 or older:** install 0.37 (choice 2), then bring your characters, account, items, money, houses **and bots**
+over with **IMPORT PROGRESS FROM OLD OFFLINE DAOC.cmd** in the new folder:
 1. Close the old and the new game.
 2. Run the import tool from the new folder.
 3. Pick your old folder.
 
 The tool never changes your old folder, and it backs up the new one first. It works with v0.3,
-v0.31, v0.31b, v0.32, v0.32b, v0.33, v0.33b, v0.34, v0.34b, v0.35, v0.35b and the "new class test" builds. In
-0.36c, both clients then have your progress. See [docs/TRANSFER-PROGRESS.md](docs/TRANSFER-PROGRESS.md).
+v0.31, v0.31b, v0.32, v0.32b, v0.33, v0.33b, v0.34, v0.34b, v0.35, v0.35b, v0.36, v0.36b and the "new class test"
+builds. In 0.37c, both clients then have your progress. See [docs/TRANSFER-PROGRESS.md](docs/TRANSFER-PROGRESS.md).
 
 ## Older versions
 
 Every earlier release is still available and unchanged:
+- [v0.36](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36),
+  [v0.36b](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36b) and
+  [v0.36c](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36c): the full downloads 0.37 updates.
 - [v0.35](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.35) and
   [v0.35b](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.35b).
 - [v0.34](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.34) and
@@ -213,7 +237,7 @@ Every earlier release is still available and unchanged:
 
 Their download helpers are in [older-versions/](older-versions/), and their notes are in
 [docs/history/](docs/history/). Each release's source code stays on its own branch and tag (for
-example `release/v0.35-claude-takeover-iii` and `v0.35b`), so older code is always there to compare.
+example `release/v0.36` and `v0.36b`), so older code is always there to compare.
 
 ## For developers and AI assistants
 

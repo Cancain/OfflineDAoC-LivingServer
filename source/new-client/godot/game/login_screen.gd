@@ -30,7 +30,7 @@ var _host_check := 0.0
 
 
 func _ready() -> void:
-	get_window().title = "Offline DAoC Rebuilt v0.36c"            # the root window keeps it (window_set_title alone was reset to the project name)
+	get_window().title = "Offline DAoC Rebuilt v0.37c"            # the root window keeps it (window_set_title alone was reset to the project name)
 	var args := OS.get_cmdline_user_args()
 	for a in args:
 		if a.trim_prefix("--").split("=")[0] in SKIP_FLAGS:

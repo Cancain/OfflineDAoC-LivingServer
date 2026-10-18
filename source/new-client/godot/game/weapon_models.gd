@@ -173,7 +173,10 @@ static func dye(w: Node3D, color: int) -> void:
 				mi.set_surface_override_material(i, s)
 
 
-static func make(model: int, drawn := false) -> Node3D:
+## left: hung on a left-hand bone (Bip01 L Held / L Shield) - gripped by its NIF's HELD2 node when it has one, as the
+## client (game.dll 0x47296a; weapons.json "held2", pipeline/add_weapon_held2.py): the claw greaves' HELD2 is turned
+## 180 degrees, so the off-hand claw faces the same way as the main hand's (owner 2026-10-17, the Savage)
+static func make(model: int, drawn := false, left := false) -> Node3D:
 	var i := info(model)
 	if i.is_empty():
 		return null
@@ -189,7 +192,11 @@ static func make(model: int, drawn := false) -> Node3D:
 	for c in w.find_children("collision*", "", true, false):
 		c.queue_free()                                    # the NIF's collidee shapes: not part of the held model
 	w.transform = TO_NIF
-	if i.has("held"):
+	if left and i.has("held2"):
+		var h2: Array = i.held2
+		w.transform = Transform3D(Basis(Vector3(h2[0], h2[1], h2[2]), Vector3(h2[3], h2[4], h2[5]), Vector3(h2[6], h2[7], h2[8])),
+				Vector3(h2[9], h2[10], h2[11])) * TO_NIF
+	elif i.has("held"):
 		# a mesh turned inside its NIF ('item' node) that its grip turns back - weapons.json "held" (nif_static.
 		# held_frame; owner 2026-10-13: the Bonedancer commander's axe hung rolled 90 degrees on its hip)
 		var h: Array = i.held
@@ -206,6 +213,20 @@ static func make(model: int, drawn := false) -> Node3D:
 			if ap.has_animation(want):
 				ap.play(want)
 	return holder
+
+
+## A shield's guild emblem (owner 2026-10-17, the server's gamebot guilds): an emblem shield (weapons.json "emblem" = its
+## surface texture, pipeline/build_weapons.py) drawn as the client - Emblems.shield_material. 0: as it is.
+static func set_emblem(holder: Node3D, model: int, emblem: int) -> void:
+	var surface := String(info(model).get("emblem", ""))
+	if emblem <= 0 or surface == "" or holder == null:
+		return
+	var m := Emblems.shield_material("%s/textures/x4plus/%s.png" % [DIR, surface], emblem)
+	for mi in holder.find_children("*", "MeshInstance3D", true, false):
+		var mesh := (mi as MeshInstance3D).mesh
+		if mesh:
+			for i in mesh.get_surface_count():
+				(mi as MeshInstance3D).set_surface_override_material(i, m)
 
 
 ## A weapon's effect (an item's effect number: spweapons.csv -> its effect NIF, pipeline/build_weapon_effects.py -

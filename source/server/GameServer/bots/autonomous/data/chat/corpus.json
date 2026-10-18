@@ -15378,7 +15378,7 @@
    "intent": "",
    "mood": "",
    "weight": 1.0,
-   "invites": "ask_howareyou",
+   "invites": "ask_plans",
    "text": "what is everyone doing tonight?",
    "id": "519d8517d7ba"
   },
@@ -36809,6 +36809,379 @@
    ],
    "text": "best thing this week? this group honestly",
    "id": "ee3b35a1a1b4"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "not much, you?",
+   "id": "7416790daf9d"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "just messing around",
+   "id": "26b7105b9ac4"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "outdoors"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "the usual, killing stuff",
+   "id": "f136c416d214"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "at_camp"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "camping {camp}",
+   "id": "8b2f127d64da"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "at_camp"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "xp in {camp}, its decent",
+   "id": "2d8b83283145"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "at_camp"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "farming {monsters} in {camp}",
+   "id": "2949c1b6e14d"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "traveling"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "heading to {destination}",
+   "id": "bb5f676863b7"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "traveling"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "on my way to {destination}, long run",
+   "id": "1571f93e6817"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_capital"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "in town, sorting my bags",
+   "id": "10eeffc24969"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_capital"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "standing around in {zone} lol",
+   "id": "8d89702dc761"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "bag_full"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "selling, bags are full",
+   "id": "d4b6c55cd8f7"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group",
+    "outdoors"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "grouping, xp is good",
+   "id": "c1ed95669b18"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_rvr"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "rvr, its busy out here",
+   "id": "610cb61ce45f"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "running back after a death lol",
+   "id": "3921d928fc8f"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_leveled"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "just dinged {level}!",
+   "id": "53a9525fb4d1"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "talking to all of you :)",
+   "id": "bf7745f6ec5d"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "outdoors"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_doing"
+   ],
+   "text": "grinding, what else",
+   "id": "008e042324c6"
   },
   {
    "kind": "reply",

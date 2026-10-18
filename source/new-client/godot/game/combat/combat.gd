@@ -87,6 +87,7 @@ func setup(p: Player, n: NpcManager) -> void:
 			player.refresh_gear())
 	PlayerData.hook(self, PlayerData.inventory_changed, func(): player.refresh_gear())
 	PlayerData.release_requested.connect(release)
+	PlayerData.release_to.connect(func(_kind: String): release())   # (offline has only the bind point to go to)
 	PlayerData.pray_requested.connect(pray)
 	PlayerData.leveled_up.connect(func(_lv): SpellFx.emote(8007, player, player.sounds))   # emote LvlUp
 	PlayerData.sit_requested.connect(sit)

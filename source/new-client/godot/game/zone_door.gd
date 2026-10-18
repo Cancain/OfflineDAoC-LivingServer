@@ -130,7 +130,7 @@ func _sound(which: String) -> void:
 		_streams[file] = AudioStreamWAV.load_from_file(ProjectSettings.globalize_path("res://content/sounds".path_join(file)))
 	var p := AudioStreamPlayer3D.new()
 	p.stream = _streams[file]
-	p.bus = "Ambient"
+	p.bus = "Effects"
 	p.attenuation_model = AudioStreamPlayer3D.ATTENUATION_DISABLED
 	p.pitch_scale = randf_range(float(row.rate[0]), float(row.rate[1]))
 	var gain := randf_range(float(row.vol[0]), float(row.vol[1]))

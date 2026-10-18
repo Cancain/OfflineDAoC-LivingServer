@@ -49,6 +49,12 @@ func _ready() -> void:
 	# "Modifier - None", Quickbar 2 "Modifier - Alt", Quickbar 3 "Modifier - Ctrl"; keyboard.dat AltModifier /
 	# CtrlModifier): bar 1 on 1-0, bar 2 on Alt+1-0, bar 3 on Ctrl+1-0. Shift+1-0 picks quickbar 1's bank (patch
 	# 1.54: "/qbar 2 switches to your second quickbar, the same as pressing Shift-2"). All rebindable.
+	# the unseen-characters report (owner 2026-10-17: invisible gamebots / pets): F12, free in every preset
+	actions.append({"id": "bot_report", "label": "Report Unseen Characters (log)", "category": "Misc",
+			"presets": {"rpg": ["F12"], "fps": ["F12"], "mmo": ["F12"]}})
+	# the guild window (owner 2026-10-17, a roster window beyond 1.65 - GuildWindow): Shift+G, free in every preset
+	actions.append({"id": "show_guild", "label": "Guild Window", "category": "Show",
+			"presets": {"rpg": ["Shift+G"], "fps": ["Shift+G"], "mmo": ["Shift+G"]}})
 	categories.append("Quickbars")
 	for bar in range(1, QUICKBARS + 1):
 		for slot in range(1, QUICKBAR_SLOTS + 1):

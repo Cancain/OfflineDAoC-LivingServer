@@ -31,7 +31,7 @@ OPENER_KINDS = {'ambient', 'lfg', 'trade', 'rvr', 'camp', 'group', 'guild'}
 # What an opener invites; replies say what they answer (@answers). "ask_<topic>" is a specific question that
 # falls back to the "ask" replies; "none" gets no reply.
 INVITES = {'none', 'chat', 'joke', 'boast', 'complaint', 'news', 'lfg', 'trade', 'ask', 'ask_where', 'ask_advice',
-           'ask_opinion', 'ask_anyone', 'ask_howareyou', 'ask_permission', 'ask_choice'}
+           'ask_opinion', 'ask_anyone', 'ask_howareyou', 'ask_permission', 'ask_choice', 'ask_doing', 'ask_plans'}
 INVITE_RE = re.compile(r'(none|chat|joke|boast|complaint|news|lfg|trade|ask(_[a-z0-9]+)*)')
 TYPES = {'Leveler', 'Crafter', 'Socialite', 'Explorer', 'Daredevil', 'NoLifer'}
 REALMS = {'alb', 'mid', 'hib'}
@@ -165,6 +165,11 @@ def fresh_tags():
                 intent='', mood='', weight=1.0, invites='', answers=[])
 
 
+DOING_RE = re.compile(r"\bwhat (is|are|r) (every(one|body)|you|u|yall|you (all|guys)|u guys)( all)? (up to|doing)\b|"
+                      r"\bwhats (every(one|body)|you|u) (up to|doing)\b|\bwhat (you|u) (up to|doing)\b|\bwyd\b")
+LATER_RE = re.compile(r"\b(tonight|later|tomorrow|this weekend|after)\b")
+
+
 def infer_invites(text, kind):
     """What an opener without @invites invites: questions by their shape, otherwise a light reaction."""
     t = SLOT_RE.sub('x', text.lower()).strip()
@@ -174,7 +179,7 @@ def infer_invites(text, kind):
         t = t[:t.rfind('?') + 1]
     if t.endswith('?'):
         if re.search(r"^((hey|hi|hello|heya|so|ok|yo|evening|morning)( all| everyone| guys| guildies| folks)?[ ,!]+|just got (home|on|back|in)[ ,]+)?(how (is|are|r) (every|you|u|ya|yall|things|it)|hows (every|it|things)|how goes|"
-                     r"what did i miss|whats new|whats up|what is everyone (up to|doing))", t):
+                     r"what did i miss|whats new|whats up)", t):
             return 'ask_howareyou'
         if re.search(r"\b(mind if i|ok if i|okay if i|is it ok if)\b", t):
             return 'ask_permission'
@@ -197,6 +202,10 @@ def infer_invites(text, kind):
             return 'ask_xp'
         if re.search(r"\bwhat (are|r) we (doing|up to)\b", t):
             return 'ask_plans'
+        # "what is everyone up to?": what each is doing now ("camping x", "heading to y"), or, with "tonight" or
+        # "later", their plans. Before 0.37-se.1 it read as "how is everyone?" and drew "not bad, and you?".
+        if DOING_RE.search(t):
+            return 'ask_plans' if LATER_RE.search(t) else 'ask_doing'
         # "castle excalibur still ours?", "how much do merchants pay for x?": what someone may know
         if re.search(r"\b(still ours|still holding|ours right now|did we lose|how much do (merchants|vendors) pay)\b", t):
             return 'ask_know'

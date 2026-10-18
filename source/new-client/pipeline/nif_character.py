@@ -398,11 +398,11 @@ def build(model, parts, clips, out_path, texture_uri):
             d.g['nodes'][0]['children'].append(len(d.g['nodes']) - 1)
 
     report = {}
-    # a figure that borrows another figure's animation set (the necromancer's shade uses a walking set: Bip01 keyed
-    # 0-10 units up while the shade's own skeleton hovers at 50) keeps its own height: a clip whose first root height
-    # is far from the figure's rest height is moved onto it (owner 2026-10-11: the shade was stuck in the ground);
-    # figures whose sets match (every normal monster) are left alone
-    rest_z = float(node_trs(by_name['Bip01'])[0][2]) if 'Bip01' in by_name else None
+    # every clip keeps the body height its .kfa gives, as the client draws it (owner 2026-10-17: praying mantids floated
+    # 1.1 m - their idle crouches the body to 40 units while the model's rest pose stands it at 68). This used to move
+    # a clip whose root height was far from the rest height onto it - written for the necromancer's shade, whose
+    # hover is its monsters.csv float height (applied by the game) - and it misplaced ~40 figures: mantids and lying
+    # corpses lifted, cicadas, dragonflies, gryphon / amphitere mounts, terror birds and harpies pulled into the ground
     for anim_name, (kfa, speed, *rest) in clips.items():
         try:
             if kfa == EMBEDDED_CLIP:                       # the model's own keyframes (siege catapult / trebuchet)
@@ -415,12 +415,6 @@ def build(model, parts, clips, out_path, texture_uri):
                 raise
             report[anim_name] = {'file': kfa, 'failed': f'{type(e).__name__}: {e}'}
             continue
-        if rest_z is not None and 'pos' in tracks.get('Bip01', {}):
-            t_, v_ = tracks['Bip01']['pos']
-            if len(v_) and abs(rest_z - float(v_[0][2])) > 0.3 * max(abs(rest_z), 1.0):
-                v_ = v_.copy()
-                v_[:, 2] += rest_z - float(v_[0][2])
-                tracks['Bip01']['pos'] = (t_, v_)
         stretch = 1.0 / speed if speed > 0 else 1.0           # play at the client's rate
         channels, samplers = [], []
         matched = 0
@@ -581,6 +575,13 @@ def build_cata(skeleton, part_list, clips, out_path, texture_uri):
                 attrs = {'POSITION': d.acc(pos, 5126, 'VEC3', 34962, True), 'NORMAL': d.acc(nrm, 5126, 'VEC3', 34962),
                          'TEXCOORD_0': d.acc(uv, 5126, 'VEC2', 34962), 'JOINTS_0': d.acc(joints, 5123, 'VEC4', 34962),
                          'WEIGHTS_0': d.acc(weights, 5126, 'VEC4', 34962)}
+                if uv_set and len(uvs) > 1:
+                    # a part drawn on another set ('@1': the cloaks) keeps the rest in order as TEXCOORD_1 / _2 - a cloak's
+                    # set 0 (the guild emblem's pattern bands) and set 2 (its emblem patch): Godot's UV2 and CUSTOM0
+                    # (Fig3Figure's cloak emblem; owner 2026-10-17)
+                    others = [i for i in range(len(uvs)) if i != k and len(uvs[i]) == len(v)][:2]
+                    for n_, i in enumerate(others, start=1):
+                        attrs[f'TEXCOORD_{n_}'] = d.acc(np.asarray(uvs[i], np.float32)[:, :2], 5126, 'VEC2', 34962)
                 mname = nif_name.rsplit('.', 1)[0]
                 prim = {'attributes': attrs, 'indices': d.acc(tri.reshape(-1), 5125, 'SCALAR', 34963),
                         'material': len(d.g['materials']) - 1}

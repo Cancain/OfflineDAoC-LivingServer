@@ -3,6 +3,48 @@
 What this fork adds to shadowofze's Offline DAoC. The base game's own changes are in
 [CHANGELOG.md](CHANGELOG.md). The newest version is first.
 
+## 0.37-se.1 — 2026-10-18
+
+The Social Expansion on shadowofze's **0.37 / 0.37b** (with or without the 0.37c new client), with everything in
+0.36-se.4. 0.36-se.4 stays the build for 0.36.
+
+**Moving from 0.36**
+- 0.37 is an update to a 0.36 game, and it applies only to the game's own files. `PREPARE-FOR-UPDATE.cmd`
+  (new, in this build's folder) puts the released 0.36 server and launcher back from the installer's backups,
+  whatever was installed over them, and checks each one. Then update the game, then run `INSTALL.cmd`. Your saves,
+  bot guilds, bot memory and settings stay in place.
+- If you install 0.37 fresh and bring your progress over instead, the game's transfer leaves out the Social
+  Expansion's tables. `python tools\claude-version\carry_social_tables.py --from <old game folder> --apply` copies
+  them (it backs up first and refuses until the game's own transfer is done).
+
+**Guilds: the base game's and ours together**
+- 0.37 lets you invite gamebots into your own guild (they show your guild name and emblem, and talk in your guild
+  chat, but don't count for merit, keep claims or buffs). That is now the one way bots join a player's guild. With bot
+  guilds on, a member of a bot guild answers your /ginvite for itself (a leader or officer stays, a busy bot or one far
+  from your level says so) and leaves its bot guild when it joins yours.
+- Bot-run guilds are unchanged. Their members now also wear their guild's emblem on cloak and shield (0.37's emblem
+  code).
+- A bot's answer to your /ginvite is said aloud when you are near, and otherwise sent to you (/send), since you can
+  invite by name from anywhere.
+- With bot voices on, bots in your own guild talk from the voices corpus too: their lines are answered in kind, and
+  your /gu gets answers like /faction and /group. With voices off they keep 0.37's own lines.
+
+**Bot chat**
+- "what are you up to?", "wyd", "whats everyone doing?" are answered with what the bot is doing (camping its camp,
+  heading somewhere, selling with full bags, standing around in town...), and "what is everyone up to tonight?" with
+  plans. Before, they read as "how are you?" or as nothing ("lol what").
+- Developers: our class `AutonomousBotGuilds` is now `AutonomousBotRealmGuilds`, because 0.37 added its own
+  `AutonomousBotGuilds`. Database tables are unchanged.
+
+**Tested**
+- **Automated:** the full server suite on the merged code (3,176 tests), the installer tests with five new ones for
+  `PREPARE-FOR-UPDATE`, and seven tests for `carry_social_tables.py`.
+- **Live, scripted:** the merged server on a copy of a played save (cloud workspace, Linux), with a scripted player
+  that typed in /gu and /faction and used /gc invite and /gc remove. A se.4 membership in a player guild moved to
+  0.37's table at start; a bot guild member joined (and said goodbye to its bot guild), an officer and a level 50
+  said no, an unguilded bot joined, /gc remove worked, guildmates answered /gu, and no new server errors.
+- **In game:** not played yet on 0.37.
+
 ## 0.36-se.4 — 2026-10-18
 
 Bot chat, reworked so the world feels alive and answers you. Same game versions as before (0.36 /

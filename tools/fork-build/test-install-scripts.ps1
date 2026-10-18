@@ -122,6 +122,40 @@ $plainInstall = Run 'install-server-build.ps1' @('-GameFolder', $plain)
 Check ($plainInstall.Code -eq 0 -and (Sha (Join-Path $plain 'runtime\OfflineDAoC.dll')) -eq $info['launcher/OfflineDAoC.dll'] -and
        !(Test-Path (Join-Path $plain 'new-client'))) "install without the new client`n$($plainInstall.Output)"
 
+# Back to the release before an Offline DAoC update, whatever was installed over it: an install, a copy by hand on
+# top, a forced install on top of that (the owner's PC, 2026-10-18). -ToRelease finds the released copies in the backups.
+$chain = Join-Path $work 'chain'
+New-FakeGame $chain $base -NewClient
+$releasedDll = Sha (Join-Path $chain 'runtime\server\GameServer.dll')
+$releasedLauncher = Sha (Join-Path $chain 'runtime\OfflineDAoC.dll')
+$releasedClient = Sha (Join-Path $chain 'new-client\runtime\OfflineDAoC.dll')
+$null = Run 'install-server-build.ps1' @('-GameFolder', $chain)
+foreach ($folder in @('runtime\server', 'runtime\server\lib', 'runtime\server\win-x64')) {
+    [IO.File]::WriteAllText((Join-Path $chain "$folder\GameServer.dll"), 'a build copied in by hand')
+}
+$forced = Run 'install-server-build.ps1' @('-GameFolder', $chain, '-Force')
+Check ($forced.Code -eq 0) "a forced install over a copy by hand`n$($forced.Output)"
+$dryRelease = Run 'rollback-server-build.ps1' @('-GameFolder', $chain, '-ToRelease', '-DryRun')
+Check ($dryRelease.Code -eq 0 -and (Sha (Join-Path $chain 'runtime\server\GameServer.dll')) -eq $info['GameServer.dll']) "-ToRelease -DryRun changes nothing`n$($dryRelease.Output)"
+$toRelease = Run 'rollback-server-build.ps1' @('-GameFolder', $chain, '-ToRelease')
+$allBack = $true
+foreach ($folder in @('runtime\server', 'runtime\server\lib', 'runtime\server\win-x64')) {
+    if ((Sha (Join-Path $chain "$folder\GameServer.dll")) -ne $releasedDll) { $allBack = $false }
+}
+Check ($toRelease.Code -eq 0 -and $allBack -and (Sha (Join-Path $chain 'runtime\OfflineDAoC.dll')) -eq $releasedLauncher -and
+       (Sha (Join-Path $chain 'new-client\runtime\OfflineDAoC.dll')) -eq $releasedClient) "-ToRelease puts the released server and launchers back`n$($toRelease.Output)"
+$nothingLeft = Run 'rollback-server-build.ps1' @('-GameFolder', $chain)
+Check ($nothingLeft.Code -ne 0) 'after -ToRelease no install is left to undo'
+$reinstall = Run 'install-server-build.ps1' @('-GameFolder', $chain)
+Check ($reinstall.Code -eq 0 -and (Sha (Join-Path $chain 'runtime\server\GameServer.dll')) -eq $info['GameServer.dll']) "install works again after -ToRelease`n$($reinstall.Output)"
+
+# -ToRelease with no released copy anywhere: refused, nothing changed.
+$lost = Join-Path $work 'lost'
+New-FakeGame $lost $base
+[IO.File]::WriteAllText((Join-Path $lost 'runtime\OfflineDAoC.dll'), 'a launcher with no backup')
+$noCopy = Run 'rollback-server-build.ps1' @('-GameFolder', $lost, '-ToRelease')
+Check ($noCopy.Code -ne 0 -and [IO.File]::ReadAllText((Join-Path $lost 'runtime\OfflineDAoC.dll')) -eq 'a launcher with no backup') "-ToRelease without a released copy is refused`n$($noCopy.Output)"
+
 # No game: refused.
 $none = Run 'install-server-build.ps1' @('-GameFolder', (Join-Path $work 'missing'))
 Check ($none.Code -ne 0) 'a missing game folder is refused'

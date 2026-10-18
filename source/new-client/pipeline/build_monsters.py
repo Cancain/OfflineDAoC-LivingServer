@@ -91,12 +91,15 @@ RACE_FIGURES = {'hceltm': 'cel_m', 'hceltf': 'cel_f', 'helfm': 'elf_m', 'helff':
                 # Valkyn NPCs (the vetted DB uses them - Hrodny, Myrkwood's Bonedancer trainer, the Valkyn shopkeepers):
                 # their race figure, so their outfits dress them (owner 2026-10-11: her texture was wrong)
                 'nvalkynf_2': 'val_f', 'nvalkynm_2': 'val_m',
-                # Albion / Midgard (the 1.65 races; Half Ogre, Frostalf and Shar are later)
+                # Albion / Midgard (the 1.65 races)
                 'britonm1': 'bri_m', 'bcommonm': 'bri_m', 'bcommonf': 'bri_f', 'bavalonm': 'ava_m', 'bavalonf': 'ava_f',
                 'bhilandm': 'hig_m', 'bhilandf': 'hig_f', 'bsaracenm': 'sar_m', 'bsaracenf': 'sar_f',
                 'binconnum_2': 'inc_m', 'binconnuf_2': 'inc_f', 'nvikingm': 'nor_m', 'nvikingf': 'nor_f',
                 'ndwarfm': 'dwa_m', 'ndwarff': 'dwa_f', 'nkoboldm': 'kob_m', 'nkoboldf': 'kob_f',
-                'ntrollm': 'tro_m', 'ntrollf': 'tro_f'}
+                'ntrollm': 'tro_m', 'ntrollf': 'tro_f',
+                # the later races (build_races.py builds their Catacombs figures; owner 2026-10-16: Elizabeth <Smith>)
+                'bhalfogrem': 'hal_m', 'bhalfogref': 'hal_f', 'nsvartalfm': 'fro_m', 'nsvartalff': 'fro_f',
+                'hsharm': 'sha_m', 'hsharf': 'sha_f'}
 
 
 def table(name):
@@ -504,6 +507,14 @@ def main():
             print(model, mr[1], 'MISSING', entry['missing'])
             continue
         looks = part_looks(mr, skins, skinned_parts(nif_name))
+        if fig.lower() == 'cabalpet':
+            # the Cabalist's simulacrums: the marble and giantdark.tga sit on different UV sets (the marble tiles on
+            # the first, giantdark covers the body once on the second) - baked on one UV set the marble came out
+            # stretched and grainy. Written here as giantdark alone, then pipeline/bake_cabalpet.py lays the marble
+            # in on its own coordinates (owner 2026-10-17: the old client's amber simulacrum is tan-tinted stone)
+            for lk in looks.values():
+                if lk['dark']:
+                    lk['base'], lk['dark'] = lk['dark'], None
         tex = body_tex(looks, body)
         key = look_key(fig, tex, looks)
         entry['gltf'] = f'res://content/monsters/{key}/model.gltf'
@@ -512,6 +523,10 @@ def main():
             d = OUT / key
             (d / 'textures/original').mkdir(parents=True, exist_ok=True)
             parts = {p: lk['tex'] for p, lk in looks.items()}
+            if fig.lower() == 'cabalpet':
+                # giantdark sits on the mesh's second UV set (0..1 over the body); the first is the marble's tiling
+                # one (-1.5..2.5) - on it giantdark repeated all over (owner 2026-10-16)
+                parts = {f'{p}@1': t for p, t in parts.items()}
             # (an anim set the client doesn't list - set 0 on some later models: no clips, the figure stands)
             try:
                 files = nc.clip_files(int(nr[3]), tuple(CLIPS)) if nr[3].strip().isdigit() else {}
@@ -556,6 +571,9 @@ def main():
                 out_meta[model] = entry
                 continue
             write_look_textures(model, looks, idx, d)
+            if fig.lower() == 'cabalpet':
+                import bake_cabalpet                       # the marble on its own UV set (see above)
+                bake_cabalpet.main()
             add_look_maps(d / 'model.gltf', looks, 'textures/original')
             built[key] = {k: v['seconds'] for k, v in report.items() if 'seconds' in v} if isinstance(report, dict) else {}
             failed = sorted(k for k, v in report.items() if 'failed' in v) if isinstance(report, dict) else []

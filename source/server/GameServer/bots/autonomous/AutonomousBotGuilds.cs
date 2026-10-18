@@ -3,685 +3,397 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using DOL.Database;
 using DOL.Database.Attributes;
 using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.ServerProperties;
 using DOL.Logging;
 
-namespace DOL.GS;
-
-/// <summary>Marks a guild as run by autonomous gamebots.</summary>
-[DataTable(TableName = "offline_bot_guilds")]
-public sealed class OfflineBotGuildRecord : DataObject
+namespace DOL.GS
 {
-    [DataElement(AllowDbNull = false, Unique = true, Varchar = 64)] public string GuildId { get; set; } = string.Empty;
-    [DataElement(AllowDbNull = false)] public int Realm { get; set; }
-    [DataElement(AllowDbNull = false, Varchar = 32)] public string Charter { get; set; } = string.Empty;
-    [DataElement(AllowDbNull = false)] public int Ordinal { get; set; }
-    [DataElement(AllowDbNull = false)] public long FounderBotId { get; set; }
-    [DataElement(AllowDbNull = false)] public string CreatedUtc { get; set; } = string.Empty;
-}
-
-/// <summary>One row per guilded autonomous gamebot, in a bot guild or a player's guild.</summary>
-[DataTable(TableName = "offline_bot_guild_members")]
-public sealed class OfflineBotGuildMemberRecord : DataObject
-{
-    /// <summary>A copy for a detached save: the copy is written while the live row may keep changing.</summary>
-    public OfflineBotGuildMemberRecord CopyForSave() => (OfflineBotGuildMemberRecord)MemberwiseClone();
-
-    [PrimaryKey] public long BotId { get; set; }
-    [DataElement(AllowDbNull = false, Index = true, Varchar = 64)] public string GuildId { get; set; } = string.Empty;
-    [DataElement(AllowDbNull = false)] public int RankLevel { get; set; } = AutonomousBotGuildPlanner.LowestRank;
-    [DataElement(AllowDbNull = false)] public string JoinedUtc { get; set; } = string.Empty;
-}
-
-/// <summary>
-/// Autonomous gamebots in guilds (docs/BOT-GUILDS.md). Forms realm bot guilds, binds members as
-/// they log in, lists them in the guild window and handles /ginvite and /gc remove on bots.
-/// Writes only its own two tables plus new Guild/GuildRank rows, never the bots' own records.
-/// </summary>
-public static class AutonomousBotGuilds
-{
-    public sealed record Membership(long BotId, string GuildId, int RankLevel);
-
-    public sealed record BotGuildInfo(string GuildId, eRealm Realm, BotGuildCharter Charter, int Ordinal);
-
-    public readonly record struct BotSummary(string Name, int Level, int ClassId, eRealm Realm);
-
-    public const int FirstReconcileDelayMs = 90_000;
-    public const int ReconcileIntervalMs = 600_000;
-
-    private static readonly Logger Log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
-    private static readonly object Sync = new();
-    private static readonly object BindSync = new();
-    private static readonly ConcurrentDictionary<long, Membership> Members = new();
-    private static readonly ConcurrentDictionary<string, BotGuildInfo> BotGuilds = new(StringComparer.Ordinal);
-    private static readonly ConcurrentDictionary<long, BotSummary> Summaries = new();
-    private static readonly Dictionary<long, OfflineBotGuildMemberRecord> MemberRows = new();
-    private static readonly ConcurrentDictionary<(eRealm Realm, int Ordinal), byte> PendingCreations = new();
-    private static Timer _timer;
-    private static int _reconciling;
-    private static int _followUpRequested;
-
-    /// <summary>Delay of the pass that fills guilds founded by the previous pass.</summary>
-    public const int FollowUpReconcileDelayMs = 30_000;
-
-    public static bool Enabled => Properties.BOT_GUILDS_ENABLED;
-
-    public static bool IsBotGuild(Guild guild) => guild != null && BotGuilds.ContainsKey(guild.GuildID);
-
-    public static bool TryGetBotGuild(string guildId, out BotGuildInfo info) =>
-        BotGuilds.TryGetValue(guildId ?? string.Empty, out info);
-
-    public static bool TryGetMembership(long botId, out Membership membership) => Members.TryGetValue(botId, out membership);
-
-    /// <summary>0 when the candidate is in the leader's guild (bot guilds on), else 1. Used to order group candidates.</summary>
-    public static int GuildmateRank(GameBot leader, GameBot candidate) =>
-        GuildmateRank(Enabled, leader?.Guild?.GuildID, candidate?.Guild?.GuildID);
-
-    public static int GuildmateRank(bool enabled, string leaderGuildId, string candidateGuildId) =>
-        enabled && !string.IsNullOrEmpty(leaderGuildId) && string.Equals(leaderGuildId, candidateGuildId, StringComparison.Ordinal) ? 0 : 1;
-
-    #region Server lifecycle
-
-    [GameServerStartedEvent]
-    public static void OnServerStarted(DOLEvent e, object sender, EventArgs args)
+    /// <summary>
+    /// A gamebot's guild membership (owner 2026-10-16/17): a player invites a gamebot into the player's guild; it shows
+    /// in the guild list and social window, carries the guild name under its name (own realm only, enemies keep seeing
+    /// its realm rank title), wears the guild emblem on cloak and shield (everyone sees the emblem), and talks in guild
+    /// chat. /spawn companions never join: they only show their owner's guild name and emblem while with the owner.
+    /// Membership is kept here, not on the bot's IGamePlayer Guild, so guild realm points, merit, keep claims and guild
+    /// buffs never see a bot. A bot removed from the launcher's roster leaves its guild.
+    /// </summary>
+    public static class AutonomousBotGuilds
     {
-        try
+        private static readonly Logger Log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public const string ViewPrefix = "bot:";
+        public const int MemberRank = 9;
+
+        private static readonly ConcurrentDictionary<long, OfflineWorldBotGuildRecord> Members = new();
+
+        public static string ViewId(long botId) => ViewPrefix + botId;
+
+        public static bool IsBotView(string internalId) => internalId?.StartsWith(ViewPrefix, StringComparison.Ordinal) == true;
+
+        /// <summary>The guild a gamebot belongs to, or null.</summary>
+        public static Guild GuildOf(long botId) =>
+            Members.TryGetValue(botId, out var record) ? GuildMgr.GetGuildByGuildID(record.GuildID) : null;
+
+        /// <summary>The guild whose name and emblem a bot shows: its own guild (gamebot) or its owner's (companion).</summary>
+        public static Guild ShownGuild(GameBot bot)
         {
-            LoadState();
+            if (bot == null) return null;
+            // Social Expansion: a member of a bot-run guild (AutonomousBotRealmGuilds) shows that guild.
+            if (bot.IsAutonomousWorldBot) return GuildOf(bot.DatabaseID) ?? bot.Guild;
+            return bot.Owner?.Guild;
         }
-        catch (Exception exception)
+
+        /// <summary>The cloak or shield texture a bot shows: its shown guild's emblem, otherwise the item's own.</summary>
+        public static int Texture(GameLiving living, DbInventoryItem item)
         {
-            Log.Error("Bot guilds: could not load saved guilds and memberships", exception);
+            int own = item.Emblem != 0 ? item.Emblem : item.Color;
+            if (living is not GameBot bot || !CarriesEmblem(item)) return own;
+            int emblem = ShownGuild(bot)?.Emblem ?? 0;
+            return emblem != 0 ? emblem : own;
         }
-        _timer = new Timer(OnTimer, null, FirstReconcileDelayMs, ReconcileIntervalMs);
-        _flushTimer = new Timer(_ => FlushWrites(), null, FlushIntervalMs, FlushIntervalMs);
-    }
 
-    [GameServerStoppedEvent]
-    public static void OnServerStopped(DOLEvent e, object sender, EventArgs args)
-    {
-        _timer?.Dispose();
-        _timer = null;
-        _flushTimer?.Dispose();
-        _flushTimer = null;
-        FlushWrites(wait: true);
-    }
+        /// <summary>A cloak, or a real shield in the left hand (never a weapon).</summary>
+        public static bool CarriesEmblem(DbInventoryItem item) =>
+            item != null && (item.SlotPosition == (int)eInventorySlot.Cloak ||
+                             item.SlotPosition == (int)eInventorySlot.LeftHandWeapon && item.Object_Type == (int)eObjectType.Shield);
 
-    #region Membership writes (batched, off the game loop; audit 2026-10-16)
+        public static IEnumerable<long> MembersOf(Guild guild) =>
+            guild == null ? [] : Members.Values.Where(m => m.GuildID == guild.GuildID).Select(m => m.BotId).ToArray();
 
-    public const int FlushIntervalMs = 5_000;
-    private const int WriteBatch = 16;
-    private static Timer _flushTimer;
-    // Rows to insert or update, and rows to delete, written by FlushWrites in batches under the shared
-    // database write lock, as the bot status writer does. Callers of SetMembership/DeleteMembership hold Sync.
-    private static readonly Dictionary<long, OfflineBotGuildMemberRecord> PendingWrites = new();
-    private static readonly List<OfflineBotGuildMemberRecord> PendingDeletes = new();
-    private static int _flushing;
-
-    /// <summary>Writes queued membership changes. A failed batch stays queued and is tried again.</summary>
-    public static void FlushWrites(bool wait = false)
-    {
-        while (Interlocked.Exchange(ref _flushing, 1) != 0)
+        [GameServerStartedEvent]
+        public static void OnServerStarted(DOLEvent e, object sender, EventArgs args)
         {
-            if (!wait)
-                return;
-            Thread.Sleep(20);
-        }
-        try
-        {
-            // Copies are written, not the live rows, so a rank change made while a save runs is never marked
-            // as saved: the live row only takes the copy's state as its baseline (review 2026-10-16).
-            (OfflineBotGuildMemberRecord Live, OfflineBotGuildMemberRecord Copy)[] writes;
-            OfflineBotGuildMemberRecord[] deletes;
-            lock (Sync)
+            try
             {
-                writes = PendingWrites.Values.Select(row => (row, row.CopyForSave())).ToArray();
-                foreach (var write in writes)
-                    write.Item2.Dirty = true;
-                deletes = PendingDeletes.ToArray();
-                PendingWrites.Clear();
-                PendingDeletes.Clear();
+                Load();
             }
-            if (writes.Length == 0 && deletes.Length == 0)
-                return;
-            var failedWrites = new List<OfflineBotGuildMemberRecord>();
-            var failedDeletes = new List<OfflineBotGuildMemberRecord>();
-            lock (AutonomousBotStatusPersistence.DatabaseWriteLock)
+            catch (Exception exception)
             {
-                foreach (var chunk in writes.Where(write => !write.Copy.IsPersisted).Chunk(WriteBatch))
-                    if (!TryWrite(() => GameServer.Database.AddObject(chunk.Select(write => (DataObject)write.Copy))))
-                        failedWrites.AddRange(chunk.Where(write => !write.Copy.IsPersisted).Select(write => write.Live));
-                foreach (var chunk in writes.Where(write => write.Copy.IsPersisted).Chunk(WriteBatch))
-                    if (!TryWrite(() => GameServer.Database.SaveObject(chunk.Select(write => (DataObject)write.Copy))))
-                        failedWrites.AddRange(chunk.Where(write => write.Copy.Dirty).Select(write => write.Live));
-                foreach (OfflineBotGuildMemberRecord[] chunk in deletes.Where(row => row.IsPersisted).Chunk(WriteBatch))
-                    if (!TryWrite(() => GameServer.Database.DeleteObject(chunk.Cast<DataObject>())))
-                        failedDeletes.AddRange(chunk.Where(row => row.IsPersisted));
+                Log.Error("Could not load gamebot guild memberships", exception);
             }
-            lock (Sync)
-            {
-                foreach (var write in writes)
-                {
-                    if (!write.Copy.IsPersisted || write.Copy.Dirty)
-                        continue;
-                    write.Live.IsPersisted = true;
-                    try
-                    {
-                        write.Live.AcceptPersistenceBaseline(write.Copy);
-                    }
-                    catch (ArgumentException)
-                    {
-                        write.Live.Dirty = true;   // no baseline: the next save writes every column
-                    }
-                }
-                // A row changed again since the snapshot is already queued in its newer state.
-                foreach (OfflineBotGuildMemberRecord row in failedWrites)
-                    if (MemberRows.TryGetValue(row.BotId, out var current) && ReferenceEquals(current, row))
-                        PendingWrites.TryAdd(row.BotId, row);
-                PendingDeletes.AddRange(failedDeletes);
-            }
-            if (failedWrites.Count > 0 || failedDeletes.Count > 0)
-                Log.Warn($"Bot guilds: {failedWrites.Count} membership write(s) and {failedDeletes.Count} delete(s) failed; retrying");
+            _chatTimer?.Dispose();
+            _chatTimer = new System.Threading.Timer(_ => NpcService.Instance.Post<int>(_ => AmbientGuildChat(), 0), null, 60_000, 60_000);
         }
-        finally
-        {
-            Volatile.Write(ref _flushing, 0);
-        }
-    }
 
-    private static bool TryWrite(Func<bool> write)
-    {
-        try
+        [GameServerStoppedEvent]
+        public static void OnServerStopped(DOLEvent e, object sender, EventArgs args)
         {
-            return write();
+            _chatTimer?.Dispose();
+            _chatTimer = null;
         }
-        catch (Exception exception)
-        {
-            Log.Error("Bot guilds: membership write failed", exception);
-            return false;
-        }
-    }
 
-    #endregion
-
-    private static void LoadState()
-    {
-        lock (Sync)
+        private static void Load()
         {
-            BotGuilds.Clear();
             Members.Clear();
-            MemberRows.Clear();
-            foreach (OfflineBotGuildRecord row in GameServer.Database.SelectAllObjects<OfflineBotGuildRecord>())
+            var records = DOLDB<OfflineWorldBotGuildRecord>.SelectAllObjects();
+            var stale = new List<OfflineWorldBotGuildRecord>();
+            foreach (OfflineWorldBotGuildRecord record in records)
             {
-                if (GuildMgr.GetGuildByGuildID(row.GuildId) == null)
+                OfflineWorldBotRecord bot = DOLDB<OfflineWorldBotRecord>.SelectObject(DB.Column("BotId").IsEqualTo(record.BotId));
+                Guild guild = GuildMgr.GetGuildByGuildID(record.GuildID);
+                if (bot == null || bot.IsRetired || guild == null || (int)guild.Realm != bot.Realm)
+                {
+                    stale.Add(record);
                     continue;
-                BotGuildCharter charter = Enum.TryParse(row.Charter, out BotGuildCharter parsed) ? parsed : BotGuildCharter.Leveling;
-                BotGuilds[row.GuildId] = new BotGuildInfo(row.GuildId, (eRealm)row.Realm, charter, row.Ordinal);
-                ApplyStartupRewrites(GuildMgr.GetGuildByGuildID(row.GuildId), charter, Enabled);
+                }
+                record.BotName = bot.Name;
+                Members[record.BotId] = record;
+                GuildMgr.AddBotToGuildMemberViews(guild, ViewFor(record, bot, null));
             }
-            foreach (OfflineBotGuildMemberRecord row in GameServer.Database.SelectAllObjects<OfflineBotGuildMemberRecord>())
-            {
-                MemberRows[row.BotId] = row;
-                Members[row.BotId] = new Membership(row.BotId, row.GuildId, row.RankLevel);
-            }
-        }
-        if (Log.IsInfoEnabled)
-            Log.Info($"Bot guilds: loaded {BotGuilds.Count} bot guilds and {Members.Count} memberships (enabled: {Enabled}).");
-    }
-
-    /// <summary>
-    /// The startup rewrites of a saved bot guild: its member ranks' chat rights and, for guilds founded
-    /// before dues existed, its charter's dues once. Only while bot guilds are on: with them off (or
-    /// after a rollback) the saved guilds are left exactly as they are (audit 2026-10-17). True when applied.
-    /// </summary>
-    public static bool ApplyStartupRewrites(Guild guild, BotGuildCharter charter, bool enabled)
-    {
-        if (!enabled || guild == null)
-            return false;
-        ApplyMemberRankRights(guild);
-        if (!guild.IsGuildDuesOn() && AutonomousBotGuildEconomy.DefaultDuesPercent(charter) > 0)
-            AutonomousBotGuildEconomy.SetCharterDues(guild, charter);
-        return true;
-    }
-
-    private static void OnTimer(object state)
-    {
-        if (!Enabled || Interlocked.Exchange(ref _reconciling, 1) != 0)
-            return;
-        try
-        {
-            Reconcile(AutonomousPopulationController.CachedRoster);
-        }
-        catch (Exception exception)
-        {
-            Log.Error("Bot guilds: reconcile failed", exception);
-        }
-        finally
-        {
-            Volatile.Write(ref _reconciling, 0);
-        }
-        if (Interlocked.Exchange(ref _followUpRequested, 0) != 0)
-            _timer?.Change(FollowUpReconcileDelayMs, ReconcileIntervalMs);
-    }
-
-    #endregion
-
-    #region Formation
-
-    /// <summary>
-    /// Forms guilds and places unguilded bots for every realm, then posts binding of changed live
-    /// bots to the game loop. <paramref name="roster"/> is the non-retired roster.
-    /// </summary>
-    public static void Reconcile(IReadOnlyList<OfflineWorldBotRecord> roster)
-    {
-        if (roster == null || roster.Count == 0)
-            return;
-
-        double share = Properties.BOT_GUILD_SHARE;
-        int minLevel = Math.Max(1, Properties.BOT_GUILD_MIN_LEVEL);
-        var changed = new HashSet<long>();
-        var nowUtc = DateTime.UtcNow.ToString("O");
-
-        foreach (OfflineWorldBotRecord record in roster)
-            Summaries[record.BotId] = new BotSummary(record.Name, record.Level, record.ClassId, (eRealm)record.Realm);
-
-        lock (Sync)
-        {
-            // Drop memberships of bots that are gone or retired, and of guilds that no longer exist.
-            var live = roster.Select(record => record.BotId).ToHashSet();
-            foreach (Membership membership in Members.Values.ToArray())
-            {
-                if (live.Contains(membership.BotId) && GuildMgr.GetGuildByGuildID(membership.GuildId) != null)
-                    continue;
-                DeleteMembership(membership.BotId);
-                if (!live.Contains(membership.BotId))
-                    Summaries.TryRemove(membership.BotId, out _);
-                changed.Add(membership.BotId);
-            }
-
-            foreach (eRealm realm in new[] { eRealm.Albion, eRealm.Midgard, eRealm.Hibernia })
-                ReconcileRealm(realm, roster, share, minLevel, nowUtc, changed);
+            if (stale.Count > 0)
+                GameServer.Database.DeleteObject(stale);
+            Log.Info($"BOT_GUILDS loaded members={Members.Count} removedStale={stale.Count}");
         }
 
-        FlushWrites();
-        if (changed.Count > 0)
-            NpcService.Instance.Post(RebindLiveBots, changed.ToArray());
-        if (AutonomousBotGuildAlliances.Enabled)
-            NpcService.Instance.Post(AutonomousBotGuildAlliances.ReconcileAll, 0);
-    }
-
-    private static void ReconcileRealm(eRealm realm, IReadOnlyList<OfflineWorldBotRecord> roster, double share, int minLevel,
-        string nowUtc, HashSet<long> changed)
-    {
-        // Bots in a player's guild are the player's business; formation never touches them.
-        List<OfflineWorldBotRecord> eligible = roster
-            .Where(record => (eRealm)record.Realm == realm && !record.IsRetired && record.Level >= minLevel)
-            .Where(record => !Members.TryGetValue(record.BotId, out Membership m) || BotGuilds.ContainsKey(m.GuildId))
-            .ToList();
-        int memberTarget = AutonomousBotGuildPlanner.MemberTarget(eligible.Count, share);
-        int desired = AutonomousBotGuildPlanner.DesiredGuildCount(memberTarget);
-
-        List<BotGuildInfo> guilds = BotGuilds.Values.Where(info => info.Realm == realm).OrderBy(info => info.Ordinal).ToList();
-        int nextOrdinal = guilds.Count == 0 ? 0 : guilds.Max(info => info.Ordinal) + 1;
-        // New guilds are founded on the game loop (GuildMgr, Guild timers); this pass places members only
-        // in guilds that already exist, and a follow-up pass 30 seconds later fills the new ones.
-        for (int missing = desired - guilds.Count; missing > 0; missing--)
+        private static GuildMgr.GuildMemberView ViewFor(OfflineWorldBotGuildRecord record, OfflineWorldBotRecord stored, GameBot live)
         {
-            int ordinal = nextOrdinal++;
-            if (PendingCreations.TryAdd((realm, ordinal), 0))
-            {
-                NpcService.Instance.Post(CreateBotGuildOnGameLoop, (realm, ordinal, nowUtc));
-                Interlocked.Exchange(ref _followUpRequested, 1);
-            }
-        }
-        if (guilds.Count == 0)
-            return;
-
-        var realmGuildIds = guilds.Select(info => info.GuildId).ToHashSet(StringComparer.Ordinal);
-        var counts = Members.Values.Where(m => realmGuildIds.Contains(m.GuildId))
-            .GroupBy(m => m.GuildId).ToDictionary(g => g.Key, g => g.Count(), StringComparer.Ordinal);
-        int[] targets = AutonomousBotGuildPlanner.TargetSizes(guilds.Count, Math.Max(memberTarget, counts.Values.Sum()));
-        var slots = guilds.Select((info, index) => new AutonomousBotGuildPlanner.GuildSlot(
-            info.GuildId, info.Charter, info.Ordinal, targets[index], counts.GetValueOrDefault(info.GuildId))).ToList();
-
-        int placedNow = slots.Sum(slot => slot.Count);
-        var unplaced = eligible.Where(record => !Members.ContainsKey(record.BotId))
-            .Select(record => new AutonomousBotGuildPlanner.Candidate(record.BotId, record.Level));
-        foreach (AutonomousBotGuildPlanner.Placement placement in AutonomousBotGuildPlanner.Place(unplaced, slots, memberTarget - placedNow))
-        {
-            SetMembership(placement.BotId, placement.GuildId, AutonomousBotGuildPlanner.LowestRank, nowUtc);
-            changed.Add(placement.BotId);
+            var view = new GuildMgr.GuildMemberView(ViewId(record.BotId), live?.Name ?? stored?.Name ?? record.BotName,
+                (live?.Level ?? stored?.Level ?? 1).ToString(), (live?.CharacterClass?.ID ?? stored?.ClassId ?? 0).ToString(),
+                MemberRank.ToString(), "0", stored?.LastSavedUtc is { Length: >= 10 } saved ? saved[..10] : "Offline",
+                string.Empty, GuildMgr.GetGuildByGuildID(record.GuildID)?.Name);
+            if (live != null) Refresh(view, live);
+            return view;
         }
 
-        var levels = roster.ToDictionary(record => record.BotId, record => record.Level);
-        foreach (BotGuildInfo guild in guilds)
+        /// <summary>Brings a bot's social-window entry up to date (online: level, group, zone; offline: kept).</summary>
+        public static void Refresh(GuildMgr.GuildMemberView view)
         {
-            var members = Members.Values.Where(m => m.GuildId == guild.GuildId)
-                .Select(m => new AutonomousBotGuildPlanner.Member(m.BotId, levels.GetValueOrDefault(m.BotId), m.RankLevel)).ToList();
-            foreach ((long botId, int rank) in AutonomousBotGuildPlanner.RankChanges(members))
-            {
-                SetMembership(botId, guild.GuildId, rank, null);
-                changed.Add(botId);
-            }
+            if (view == null || !IsBotView(view.InternalID)) return;
+            if (long.TryParse(view.InternalID[ViewPrefix.Length..], out long botId) &&
+                AutonomousBotRegistry.TryGet(botId, out GameBot bot) && bot.ObjectState == GameObject.eObjectState.Active)
+                Refresh(view, bot);
+            else
+                view.GroupSize = "0";
         }
-    }
 
-    private static void CreateBotGuildOnGameLoop((eRealm Realm, int Ordinal, string NowUtc) request)
-    {
-        try
+        private static void Refresh(GuildMgr.GuildMemberView view, GameBot bot)
         {
-            CreateBotGuild(request.Realm, request.Ordinal, request.NowUtc);
+            view.Level = bot.Level.ToString();
+            view.ClassID = (bot.CharacterClass?.ID ?? 0).ToString();
+            view.Rank = MemberRank.ToString();
+            view.GroupSize = bot.Group == null ? "1" : bot.Group.MemberCount.ToString();
+            view.ZoneOrOnline = bot.CurrentZone?.Description ?? "Online";
         }
-        catch (Exception exception)
-        {
-            Log.Error($"Bot guilds: could not found guild {request.Ordinal} for {request.Realm}", exception);
-        }
-        finally
-        {
-            PendingCreations.TryRemove((request.Realm, request.Ordinal), out _);
-        }
-    }
 
-    private static BotGuildInfo CreateBotGuild(eRealm realm, int ordinal, string nowUtc)
-    {
-        BotGuildCharter charter = AutonomousBotGuildPlanner.CharterFor(ordinal);
-        string name = AutonomousBotGuildPlanner.NameFor(realm, charter, ordinal, GuildMgr.DoesGuildExist);
-        Guild guild = GuildMgr.CreateGuild(realm, name);
-        if (guild == null)
+        /// <summary>The live gamebot members of these guilds (social window, online-only list).</summary>
+        public static IEnumerable<GameBot> OnlineMembers(Guild guild)
         {
-            Log.Warn($"Bot guilds: could not create guild \"{name}\" for {realm}");
+            foreach (long botId in MembersOf(guild))
+                if (AutonomousBotRegistry.TryGet(botId, out GameBot bot) && bot.ObjectState == GameObject.eObjectState.Active)
+                    yield return bot;
+        }
+
+        /// <summary>A member of <paramref name="guild"/> by name (for /gc remove).</summary>
+        public static OfflineWorldBotGuildRecord FindMember(Guild guild, string name) =>
+            guild == null || string.IsNullOrWhiteSpace(name) ? null :
+            Members.Values.FirstOrDefault(m => m.GuildID == guild.GuildID && string.Equals(m.BotName, name.Trim(), StringComparison.OrdinalIgnoreCase));
+
+        /// <summary>Why <paramref name="bot"/> cannot join the inviter's guild, or null when it can.</summary>
+        public static string JoinRefusal(GamePlayer inviter, GameBot bot)
+        {
+            Guild guild = inviter?.Guild;
+            if (guild == null) return "You are not in a guild.";
+            if (bot == null || !bot.IsAlive) return "That character cannot be invited.";
+            if (!bot.IsAutonomousWorldBot)
+                return $"{bot.Name} is a temporary companion and cannot join a guild; companions already wear your guild's name and emblem while they are with you.";
+            if (bot.Realm != guild.Realm) return "You can only invite characters of your own realm.";
+            if (Members.TryGetValue(bot.DatabaseID, out var record))
+                return record.GuildID == guild.GuildID ? $"{bot.Name} is already in your guild." : $"{bot.Name} is already in a guild.";
             return null;
         }
 
-        string[] titles = AutonomousBotGuildPlanner.RankTitles(charter);
-        var retitled = new List<DataObject>();
-        for (int rank = 0; rank < titles.Length; rank++)
+        public static bool Join(GamePlayer inviter, GameBot bot)
         {
-            DbGuildRank dbRank = guild.GetRankByID(rank);
-            if (dbRank == null)
-                continue;
-            dbRank.Title = titles[rank];
-            dbRank.Dirty = true;
-            retitled.Add(dbRank);
-        }
-        // Audit 2026-10-17: these writes ran outside the shared database write lock that the batched bot writers
-        // hold, so they could interleave with a status or membership batch. The rank titles are one batched save.
-        if (retitled.Count > 0)
-            lock (AutonomousBotStatusPersistence.DatabaseWriteLock)
-                GameServer.Database.SaveObject(retitled);
-
-        AutonomousBotGuildEconomy.SetCharterDues(guild, charter);
-        ApplyMemberRankRights(guild);
-
-        var row = new OfflineBotGuildRecord
-        {
-            GuildId = guild.GuildID, Realm = (int)realm, Charter = charter.ToString(), Ordinal = ordinal, CreatedUtc = nowUtc,
-        };
-        lock (AutonomousBotStatusPersistence.DatabaseWriteLock)
-            GameServer.Database.AddObject(row);
-        var info = new BotGuildInfo(guild.GuildID, realm, charter, ordinal);
-        BotGuilds[guild.GuildID] = info;
-        if (Log.IsInfoEnabled)
-            Log.Info($"Bot guilds: founded {charter} guild \"{name}\" in {realm}");
-        return info;
-    }
-
-    /// <summary>The rank a player joins a bot guild at: 8, the lowest rank that may speak in guild chat.</summary>
-    public const int PlayerJoinRank = 8;
-
-    /// <summary>
-    /// Ranks 7 and 8 of a bot guild also hear alliance chat (by default only ranks 0-6 do), so a
-    /// player who joins hears the realm alliance. Saves only what changed.
-    /// </summary>
-    public static void ApplyMemberRankRights(Guild guild)
-    {
-        if (guild == null)
-            return;
-        for (int level = 7; level <= PlayerJoinRank; level++)
-        {
-            DbGuildRank rank = guild.GetRankByID(level);
-            if (rank == null || rank.AcHear && rank.GcHear && rank.GcSpeak)
-                continue;
-            rank.AcHear = true;
-            rank.GcHear = true;
-            rank.GcSpeak = true;
-            rank.Dirty = true;
-            GameServer.Database.SaveObject(rank);
-        }
-    }
-
-    /// <summary>A guild was deleted (/gc purge): its bot memberships and bot-guild marker go with it.</summary>
-    public static void ForgetGuild(string guildId)
-    {
-        if (string.IsNullOrEmpty(guildId))
-            return;
-        lock (Sync)
-        {
-            foreach (Membership membership in Members.Values.Where(m => m.GuildId == guildId).ToArray())
-                DeleteMembership(membership.BotId);
-            BotGuilds.TryRemove(guildId, out _);
-        }
-    }
-
-    // Callers hold Sync.
-    private static void SetMembership(long botId, string guildId, int rank, string joinedUtc)
-    {
-        if (!MemberRows.TryGetValue(botId, out OfflineBotGuildMemberRecord row))
-        {
-            row = new OfflineBotGuildMemberRecord { BotId = botId, GuildId = guildId, RankLevel = rank, JoinedUtc = joinedUtc ?? DateTime.UtcNow.ToString("O") };
-            MemberRows[botId] = row;
-        }
-        else
-        {
-            if (row.GuildId != guildId)
-                row.JoinedUtc = joinedUtc ?? DateTime.UtcNow.ToString("O");
-            row.GuildId = guildId;
-            row.RankLevel = rank;
-            row.Dirty = true;
-        }
-        // Written in batches by FlushWrites (a failed insert stays queued instead of being forgotten).
-        PendingWrites[botId] = row;
-        Members[botId] = new Membership(botId, guildId, rank);
-    }
-
-    // Callers hold Sync.
-    private static void DeleteMembership(long botId)
-    {
-        if (MemberRows.Remove(botId, out OfflineBotGuildMemberRecord row))
-        {
-            PendingWrites.Remove(botId);
-            // Queued even before its first insert is written: FlushWrites deletes it once it exists, so a
-            // membership dropped mid-flush can't come back after a restart (review 2026-10-16).
-            PendingDeletes.Add(row);
-        }
-        Members.TryRemove(botId, out _);
-    }
-
-    private static void RebindLiveBots(long[] botIds)
-    {
-        foreach (long botId in botIds)
-        {
-            if (AutonomousBotRegistry.TryGet(botId, out GameBot bot) && bot.ObjectState == GameObject.eObjectState.Active)
-                Bind(bot);
-        }
-    }
-
-    #endregion
-
-    #region Live bots
-
-    public static void OnBotOnline(GameBot bot)
-    {
-        if (bot == null || !Enabled)
-            return;
-        Bind(bot);
-    }
-
-    public static void OnBotOffline(GameBot bot)
-    {
-        if (bot?.Guild != null)
-            bot.Guild.RemoveBotMember(bot);
-    }
-
-    /// <summary>Makes a live bot's guild fields match its saved membership (or no guild).</summary>
-    public static void Bind(GameBot bot)
-    {
-        if (bot == null)
-            return;
-        Guild target = null;
-        DbGuildRank rank = null;
-        if (Enabled && Members.TryGetValue(bot.DatabaseID, out Membership membership))
-        {
-            target = GuildMgr.GetGuildByGuildID(membership.GuildId);
-            rank = target?.GetRankByID(membership.RankLevel) ?? target?.GetRankByID(AutonomousBotGuildPlanner.LowestRank);
-        }
-
-        // Posted game-loop actions run in parallel, so a login and a rebind of the same bot can overlap.
-        lock (BindSync)
-        {
-            if (bot.Guild != null && (bot.Guild != target || target == null))
-                bot.Guild.RemoveBotMember(bot);
-            if (target != null && rank != null)
-                target.AddBotMember(bot, rank);
-        }
-    }
-
-    #endregion
-
-    #region Player commands
-
-    /// <summary>
-    /// /ginvite on an autonomous gamebot. Returns false when bots can't be invited (setting off, or
-    /// not an autonomous bot), so the caller shows its usual "can't invite" message.
-    /// </summary>
-    public static bool TryInvite(GamePlayer inviter, GameBot bot)
-    {
-        if (!Enabled || inviter?.Guild == null || bot == null || !bot.IsAutonomousWorldBot || bot.DatabaseID <= 0)
-            return false;
-
-        Guild guild = inviter.Guild;
-        Members.TryGetValue(bot.DatabaseID, out Membership current);
-        bool inBotGuild = current != null && BotGuilds.ContainsKey(current.GuildId);
-        if (current != null && current.GuildId == guild.GuildID)
-        {
-            inviter.Out.SendMessage($"{bot.Name} is already in {guild.Name}.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            Guild guild = inviter?.Guild;
+            if (JoinRefusal(inviter, bot) != null) return false;
+            var record = new OfflineWorldBotGuildRecord
+            {
+                BotId = bot.DatabaseID,
+                GuildID = guild.GuildID,
+                BotName = bot.Name,
+                JoinedUtc = DateTime.UtcNow.ToString("O"),
+                InvitedBy = inviter.Name,
+            };
+            if (!GameServer.Database.AddObject(record)) return false;
+            Members[bot.DatabaseID] = record;
+            GuildMgr.AddBotToGuildMemberViews(guild, ViewFor(record, null, bot));
+            Present(bot);
+            guild.SendMessageToGuildMembers($"{bot.Name} has joined the guild!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
+            Log.Info($"BOT_GUILD_JOIN bot={bot.Name} id={bot.DatabaseID} guild=\"{guild.Name}\" invitedBy={inviter.Name}");
+            new ECSGameTimer(bot, _ =>
+            {
+                if (GuildOf(bot.DatabaseID) == guild && bot.IsAlive)
+                    SpeakInGuild(bot, guild, Pick(JoinLines));
+                return 0;
+            }, 2_500);
             return true;
         }
 
-        AutonomousBotGuildPlanner.InviteAnswer answer = AutonomousBotGuildPlanner.AnswerInvite(
-            bot.Realm == guild.Realm, bot.IsAlive, bot.InCombat, current != null && !inBotGuild,
-            inBotGuild ? current.RankLevel : -1, bot.Level, inviter.Level);
-
-        string botGuildName = inBotGuild ? GuildMgr.GetGuildByGuildID(current.GuildId)?.Name : null;
-        switch (answer)
+        /// <summary>Removes a gamebot from its guild (booted, roster deletion, retirement, guild disbanded).</summary>
+        public static bool Remove(long botId, string by, bool announce = true)
         {
-            case AutonomousBotGuildPlanner.InviteAnswer.WrongRealm:
-                return false;
-            case AutonomousBotGuildPlanner.InviteAnswer.Dead:
-                inviter.Out.SendMessage($"{bot.Name} is dead and can't answer.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return true;
-            case AutonomousBotGuildPlanner.InviteAnswer.Busy:
-                bot.Say("not now, kinda busy here");
-                return true;
-            case AutonomousBotGuildPlanner.InviteAnswer.AlreadyInPlayerGuild:
-                inviter.Out.SendMessage($"{bot.Name} is already in a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return true;
-            case AutonomousBotGuildPlanner.InviteAnswer.LeadsOwnGuild:
-                bot.Say(current.RankLevel == 0
-                    ? $"thanks {inviter.Name}, but i run {botGuildName}, cant leave them"
-                    : $"ty for the offer, but im an officer in {botGuildName}");
-                return true;
-            case AutonomousBotGuildPlanner.InviteAnswer.LevelGap:
-                bot.Say(bot.Level > inviter.Level
-                    ? "appreciate it, but id be out of your range for groups"
-                    : "ty but im a bit low for you guys, maybe later");
-                return true;
-        }
-
-        DbGuildRank rank = guild.GetRankByID(AutonomousBotGuildPlanner.LowestRank);
-        if (rank == null)
-            return false;
-        lock (Sync)
-            SetMembership(bot.DatabaseID, guild.GuildID, rank.RankLevel, null);
-        Summaries[bot.DatabaseID] = new BotSummary(bot.Name, bot.Level, bot.CharacterClass?.ID ?? 0, bot.Realm);
-        Bind(bot);
-
-        bot.Say(inBotGuild ? $"sure, im in. sorry {botGuildName}, see you around" : $"sure, glad to join {guild.Name}!");
-        guild.SendMessageToGuildMembers($"{bot.Name} has joined the guild!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
-        return true;
-    }
-
-    /// <summary>/gc remove for a bot member of the remover's guild. False when no bot member has that name.</summary>
-    public static bool TryRemove(GamePlayer remover, string name)
-    {
-        if (!Enabled || remover?.Guild == null || string.IsNullOrWhiteSpace(name))
-            return false;
-
-        Guild guild = remover.Guild;
-        Membership target = Members.Values.FirstOrDefault(m => m.GuildId == guild.GuildID &&
-            string.Equals(NameOf(m.BotId), name.Trim(), StringComparison.OrdinalIgnoreCase));
-        if (target == null)
-            return false;
-
-        string botName = NameOf(target.BotId);
-        lock (Sync)
-            DeleteMembership(target.BotId);
-        if (AutonomousBotRegistry.TryGet(target.BotId, out GameBot bot))
-            Bind(bot);
-        guild.SendMessageToGuildMembers($"{remover.Name} removed {botName} from the guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        return true;
-    }
-
-    /// <summary>Adds the guild's bot members to a guild window (social window) member list.</summary>
-    public static void AppendMemberViews(Guild guild, Dictionary<string, GuildMgr.GuildMemberView> views)
-    {
-        if (!Enabled || guild == null || views == null)
-            return;
-
-        foreach (Membership membership in Members.Values)
-        {
-            if (membership.GuildId != guild.GuildID)
-                continue;
-            string id = AutonomousBotEconomy.GetOwnerId(membership.BotId);
-            if (AutonomousBotRegistry.TryGet(membership.BotId, out GameBot bot) && bot.ObjectState == GameObject.eObjectState.Active)
+            if (!Members.TryRemove(botId, out var record)) return false;
+            Guild guild = GuildMgr.GetGuildByGuildID(record.GuildID);
+            try
             {
-                views[id] = new GuildMgr.GuildMemberView(id, bot.Name, bot.Level.ToString(), (bot.CharacterClass?.ID ?? 0).ToString(),
-                    membership.RankLevel.ToString(), bot.Group != null ? bot.Group.MemberCount.ToString() : "1",
-                    bot.CurrentZone?.Description ?? "Online", string.Empty, guild.Name);
+                GameServer.Database.DeleteObject(record);
             }
-            else if (Summaries.TryGetValue(membership.BotId, out BotSummary summary))
+            catch (Exception exception)
             {
-                views[id] = new GuildMgr.GuildMemberView(id, summary.Name, summary.Level.ToString(), summary.ClassId.ToString(),
-                    membership.RankLevel.ToString(), "0", "Offline", string.Empty, guild.Name);
+                Log.Error($"Could not delete the guild membership of bot {botId}", exception);
+            }
+            if (guild != null)
+            {
+                GuildMgr.RemoveBotFromGuildMemberViews(guild, ViewId(botId));
+                if (announce)
+                    guild.SendMessageToGuildMembers(string.IsNullOrEmpty(by)
+                        ? $"{record.BotName} has left the guild."
+                        : $"{by} removed {record.BotName} from the guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+            if (AutonomousBotRegistry.TryGet(botId, out GameBot bot))
+                Present(bot);
+            Log.Info($"BOT_GUILD_REMOVE bot={record.BotName} id={botId} guild=\"{guild?.Name}\" by={by}");
+            return true;
+        }
+
+        /// <summary>Removes every member whose bot is no longer on the roster (launcher deletion or retirement).</summary>
+        public static int Reconcile(IReadOnlyCollection<long> rosterBotIds)
+        {
+            if (rosterBotIds == null || Members.IsEmpty) return 0;
+            var keep = rosterBotIds as ISet<long> ?? new HashSet<long>(rosterBotIds);
+            int removed = 0;
+            foreach (long botId in Members.Keys.ToArray())
+                if (!keep.Contains(botId) && Remove(botId, null))
+                    removed++;
+            return removed;
+        }
+
+        /// <summary>Every member of a disbanded guild leaves it.</summary>
+        public static void OnGuildDeleted(Guild guild)
+        {
+            foreach (long botId in MembersOf(guild))
+                Remove(botId, null, announce: false);
+        }
+
+        /// <summary>Name or emblem of a guild changed: its gamebots and its online players' companions show it.</summary>
+        public static void OnGuildAppearanceChanged(Guild guild)
+        {
+            if (guild == null) return;
+            foreach (GameBot bot in OnlineMembers(guild))
+                Present(bot);
+            foreach (GamePlayer player in guild.GetListOfOnlineMembers())
+                PresentCompanions(player);
+        }
+
+        /// <summary>The owner joined, left or was removed from a guild: its companions follow.</summary>
+        public static void PresentCompanions(GamePlayer owner)
+        {
+            if (owner == null) return;
+            foreach (GameBot companion in BotManager.GetBotsForOwner(owner).ToArray())
+                if (!companion.IsAutonomousWorldBot)
+                    Present(companion);
+        }
+
+        /// <summary>Applies a bot's shown guild name and emblem; nearby players see it at once.</summary>
+        public static void Present(GameBot bot)
+        {
+            if (bot == null) return;
+            string name = ShownGuild(bot)?.Name ?? string.Empty;
+            if (!string.Equals(bot.GuildName ?? string.Empty, name, StringComparison.Ordinal))
+                bot.GuildName = name; // re-sends the bot to nearby players when it is in the world
+            if (bot.ObjectState == GameObject.eObjectState.Active)
+                bot.BroadcastLivingEquipmentUpdate();
+        }
+
+        /// <summary>The guild name before the bot enters the world (no broadcast needed).</summary>
+        public static string GuildNameFor(GameBot bot) => ShownGuild(bot)?.Name ?? string.Empty;
+
+        #region Guild chat
+
+        private static System.Threading.Timer _chatTimer;
+        private static readonly ConcurrentDictionary<string, long> LastGuildChat = new();
+        private static readonly ConcurrentDictionary<string, long> LastGuildReply = new();
+
+        private static readonly string[] JoinLines =
+        [
+            "Glad to be here. Thanks for the invite!", "Happy to ride with this guild.", "Thanks for having me, everyone.",
+            "Proud to wear the colors. Call on me anytime.",
+        ];
+
+        private static readonly string[] GuildOpeners =
+        [
+            "Evening, guild. Anyone out hunting?", "Good hunting to all of you today.", "Does anyone need a hand with anything?",
+            "Anyone want to group up later?", "Just checking in. All well with everyone?", "The roads have been busy today.",
+            "Anyone heading to the frontier tonight?", "If anyone needs company for a dungeon, let me know.",
+            "Nice to see the guild active today.", "Remember to train when you level, everyone.", "Stay safe out there, guild.",
+            "Found a decent camp earlier. Anyone hunting nearby?",
+        ];
+
+        private static readonly string[] GuildReplies =
+        [
+            "Doing well, thanks.", "Out hunting myself right now.", "I could join a bit later.", "Same here, all quiet.",
+            "Good to hear from you.", "Count me in if a group forms.", "Busy for now, but I will check back.",
+            "Safe travels.", "Sounds good to me.", "Let me know where you end up.",
+        ];
+
+        private static string Pick(string[] lines) => lines[Random.Shared.Next(lines.Length)];
+
+        /// <summary>A guild message in the same format players use (/gu).</summary>
+        public static void SpeakInGuild(GameBot bot, Guild guild, string message)
+        {
+            if (bot == null || guild == null || string.IsNullOrWhiteSpace(message)) return;
+            guild.SendMessageToGuildMembers($"[Guild] {bot.Name}: \"{message.Trim()}\"", eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+        }
+
+        private static bool CanTalk(GameBot bot) =>
+            bot is { IsAlive: true, InCombat: false, IsCasting: false } && bot.ObjectState == GameObject.eObjectState.Active;
+
+        /// <summary>Now and then a gamebot member opens a line in its guild's chat when a player of the guild is online.</summary>
+        private static void AmbientGuildChat()
+        {
+            long now = GameLoop.GameLoopTime;
+            foreach (string guildId in Members.Values.Select(m => m.GuildID).Distinct().ToArray())
+            {
+                Guild guild = GuildMgr.GetGuildByGuildID(guildId);
+                if (guild == null || guild.GetListOfOnlineMembers().Count == 0) continue;
+                if (LastGuildChat.TryGetValue(guildId, out long last) && now - last < 240_000) continue;
+                if (Random.Shared.NextDouble() > 0.35) continue;
+                GameBot[] talkers = OnlineMembers(guild).Where(CanTalk).ToArray();
+                if (talkers.Length == 0) continue;
+                LastGuildChat[guildId] = now;
+                GameBot starter = talkers[Random.Shared.Next(talkers.Length)];
+                // Social Expansion: with bot voices on, a corpus line, answered in kind (AutonomousBotGuildSocial).
+                string opener = AutonomousBotGuildSocial.VoicedPlayerGuildOpener(starter, out string invites);
+                SpeakInGuild(starter, guild, opener ?? Pick(GuildOpeners));
+                ScheduleReplies(guild, starter, null, opener == null ? Random.Shared.Next(0, 3)
+                    : AutonomousBotChatCoordinator.BotReplyCount(invites, Math.Min(2, talkers.Length - 1), Random.Shared), opener, invites);
             }
         }
-    }
 
-    /// <summary>Lines for /gc who: the guild's online bot members.</summary>
-    public static List<string> WhoLines(Guild guild)
-    {
-        var lines = new List<string>();
-        if (!Enabled || guild == null)
-            return lines;
-        foreach (GameBot bot in guild.GetOnlineBotMembers().OrderBy(b => b.Name, StringComparer.OrdinalIgnoreCase))
+        /// <summary>A player spoke in guild chat: gamebot members may answer (one directed answer when named).</summary>
+        public static void OnPlayerGuildChat(GamePlayer player, string message)
         {
-            string rank = bot.GuildRank?.Title ?? bot.GuildRank?.RankLevel.ToString() ?? "?";
-            lines.Add($"{bot.Name} <{rank}> the Level {bot.Level} {bot.CharacterClass?.Name ?? "adventurer"} in {bot.CurrentZone?.Description ?? "(null)"}");
+            Guild guild = player?.Guild;
+            if (guild == null || string.IsNullOrWhiteSpace(message) || !Members.Values.Any(m => m.GuildID == guild.GuildID)) return;
+            long now = GameLoop.GameLoopTime;
+            if (LastGuildReply.TryGetValue(guild.GuildID, out long last) && now - last < 10_000) return;
+            LastGuildReply[guild.GuildID] = now;
+            GameBot[] talkers = OnlineMembers(guild).Where(CanTalk).ToArray();
+            GameBot named = talkers.FirstOrDefault(bot => AutonomousBotChatCoordinator.ContainsMention(message, bot.Name));
+            if (named != null)
+            {
+                ScheduleReply(named, guild, AutonomousBotGuildSocial.VoicedPlayerGuildReply(named, player, message) ??
+                    AutonomousBotChatCoordinator.GenerateFactionReply(message), 1_400);
+                return;
+            }
+            ScheduleReplies(guild, null, message, AutonomousBotChatCoordinator.RollResponseCount(Math.Min(2, talkers.Length)), player: player);
         }
-        return lines;
+
+        private static void ScheduleReplies(Guild guild, GameBot starter, string incoming, int count, string opener = null,
+            string invites = null, GamePlayer player = null)
+        {
+            GameBot[] talkers = OnlineMembers(guild).Where(bot => bot != starter && CanTalk(bot))
+                .OrderBy(_ => Random.Shared.Next()).Take(count).ToArray();
+            var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            for (int index = 0; index < talkers.Length; index++)
+            {
+                // Social Expansion: with bot voices on, corpus answers (AutonomousBotGuildSocial); else the base game's lines.
+                string reply = incoming != null
+                    ? AutonomousBotGuildSocial.VoicedPlayerGuildReply(talkers[index], player, incoming) ??
+                      AutonomousBotChatCoordinator.GenerateFactionReply(incoming)
+                    : opener != null
+                        ? AutonomousBotGuildSocial.VoicedPlayerGuildAnswer(talkers[index], opener, invites)
+                        : Pick(GuildReplies);
+                if (reply == null) continue;
+                if (!used.Add(reply)) continue;
+                ScheduleReply(talkers[index], guild, reply, 1_800 + index * 2_000 + Random.Shared.Next(1_200));
+            }
+        }
+
+        private static void ScheduleReply(GameBot bot, Guild guild, string reply, int delay)
+        {
+            new ECSGameTimer(bot, _ =>
+            {
+                if (CanTalk(bot) && GuildOf(bot.DatabaseID) == guild)
+                    SpeakInGuild(bot, guild, reply);
+                return 0;
+            }, delay);
+        }
+
+        #endregion
     }
 
-    private static string NameOf(long botId)
+    /// <summary>One gamebot's guild membership (<see cref="AutonomousBotGuilds"/>). A separate table so the launcher's
+    /// roster table is untouched; a bot that leaves the roster is removed from here.</summary>
+    [DataTable(TableName = "offline_world_bot_guild")]
+    public sealed class OfflineWorldBotGuildRecord : DataObject
     {
-        if (AutonomousBotRegistry.TryGet(botId, out GameBot bot))
-            return bot.Name;
-        return Summaries.TryGetValue(botId, out BotSummary summary) ? summary.Name : string.Empty;
+        [PrimaryKey] public long BotId { get; set; }
+        [DataElement(AllowDbNull = false, Index = true)] public string GuildID { get; set; } = string.Empty;
+        [DataElement(AllowDbNull = false)] public string BotName { get; set; } = string.Empty;
+        [DataElement(AllowDbNull = false)] public string JoinedUtc { get; set; } = string.Empty;
+        [DataElement(AllowDbNull = false)] public string InvitedBy { get; set; } = string.Empty;
     }
-
-    #endregion
 }

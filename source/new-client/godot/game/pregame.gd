@@ -117,6 +117,9 @@ func _ready() -> void:
 	add_child(_layer)
 	_root = Control.new()
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	# clicks on no button / panel pass through to the drag (left: turn the character, right: zoom) - as a full-screen
+	# STOP it took every click and the drag never started (a player report 2026-10-17)
+	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.theme = _make_theme()
 	_layer.add_child(_root)
 	_menu = GameMenu.new()
@@ -798,6 +801,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			_zoom = clampf(_zoom + (-0.08 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 0.08), 0.45, 2.0)
 			_place_camera()
 	elif event is InputEventMouseMotion and _drag != 0:
+		if not Input.is_mouse_button_pressed(_drag):       # let go over a button (the GUI took the release)
+			_drag = 0
+			return
 		if _drag == MOUSE_BUTTON_LEFT:
 			_yaw += event.relative.x * 0.01
 		elif _drag == MOUSE_BUTTON_RIGHT and screen == "customize":

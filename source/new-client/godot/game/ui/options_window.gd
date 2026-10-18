@@ -13,7 +13,7 @@ const PAGE_NAMES := ["VIDEO", "AUDIO", "CONTROLS", "INTERFACE", "CHAT", "WINDOWS
 const RESOLUTIONS := [Vector2i(1280, 720), Vector2i(1366, 768), Vector2i(1600, 900), Vector2i(1920, 1080),
 		Vector2i(2560, 1080), Vector2i(2560, 1440), Vector2i(3440, 1440), Vector2i(3840, 2160)]
 const FPS_CAPS := [0, 30, 60, 75, 90, 120, 144, 165, 240, -1]   # 0 = monitor refresh (vsync), -1 = unlimited
-const VOLUMES := [["Master", "MASTER VOLUME"], ["Ambient", "SOUND EFFECTS + AMBIENCE"], ["Music", "MUSIC"]]
+const VOLUMES := [["Master", "MASTER VOLUME"], ["Effects", "SOUND EFFECTS"], ["Ambient", "AMBIENCE"], ["Music", "MUSIC"]]
 
 signal movement_changed(mode: String)
 
@@ -399,7 +399,7 @@ func _gfx_slider(caption: String, key: String, lo: float, hi: float, step: float
 func _audio() -> void:
 	_heading("VOLUME")
 	for v in VOLUMES:
-		_row(v[1], _slider(float(settings.get_value("audio", String(v[0]).to_lower(), 100)), 0, 100, 1, func(x: float):
+		_row(v[1], _slider(_volume(String(v[0])), 0, 100, 1, func(x: float):
 			_save("audio", String(v[0]).to_lower(), x)
 			_apply_volumes()))
 
@@ -470,10 +470,19 @@ func _controls() -> void:
 
 func _interface() -> void:
 	_heading("INTERFACE")
-	_row("UI SCALE", _slider(float(settings.get_value("interface", "ui_scale", 1.0)), 0.6, 1.6, 0.05, func(x: float):
+	# the scale applies when the slider is let go (a wheel or key step at once): applied while dragging, the whole
+	# interface - this window and its slider too - grew and shrank under the mouse (a player report 2026-10-17)
+	var dragging := [false]
+	var scale_slider := _slider(float(settings.get_value("interface", "ui_scale", 1.0)), 0.6, 1.6, 0.05, func(x: float):
 		_save("interface", "ui_scale", x)
-		if ui:
-			ui.set_ui_scale(x)))
+		if ui and not dragging[0]:
+			ui.set_ui_scale(x))
+	scale_slider.drag_started.connect(func(): dragging[0] = true)
+	scale_slider.drag_ended.connect(func(_changed: bool):
+		dragging[0] = false
+		if ui and is_instance_valid(scale_slider):
+			ui.set_ui_scale(scale_slider.value))
+	_row("UI SCALE", scale_slider)
 	_hint("THE INTERFACE KEEPS ITS SIZE ON SCREEN AT ANY RESOLUTION; UI SCALE MAKES ALL OF IT BIGGER OR SMALLER.")
 	_heading("LOOT")
 	_row("AUTO LOOT", _toggle(Loot.autoloot(), func(on: bool): Loot.set_autoloot(on)))
@@ -616,7 +625,17 @@ func _input(event: InputEvent) -> void:
 	var stolen := Keybinds.bind(id, slot, binding)
 	_status.text = "%s = %s%s" % [Keybinds.label_of(id).to_upper(), binding.to_upper(),
 			("   (TAKEN FROM %s)" % stolen.to_upper()) if stolen != "" else ""]
-	show_page.call_deferred("controls")
+	_reshow_controls.call_deferred(_scroll.scroll_vertical, _status.text)
+
+
+## The controls page drawn again with the new keys, where you were in it and with the binding's message kept (a player
+## report 2026-10-17: every key bound jumped the list back to the top, and the rebuild wiped "TAKEN FROM ...").
+func _reshow_controls(at: int, message: String) -> void:
+	show_page("controls")
+	_status.text = message
+	await get_tree().process_frame                         # the rows laid out: the scroll range is back
+	if is_instance_valid(_scroll) and page == "controls":
+		_scroll.scroll_vertical = at
 
 
 func capturing() -> bool:
@@ -633,11 +652,17 @@ func _apply_window(mode: String, res) -> void:
 	BootSettings.apply_display(mode, res)                 # one place for the window rules (game/ui/boot_settings.gd)
 
 
+## A bus's saved volume; sound effects start at the old shared "effects + ambience" level until set on their own.
+func _volume(bus: String) -> float:
+	var fallback = settings.get_value("audio", "ambient", 100) if bus == "Effects" else 100
+	return float(settings.get_value("audio", bus.to_lower(), fallback))
+
+
 func _apply_volumes() -> void:
 	for v in VOLUMES:
 		var i := AudioServer.get_bus_index(v[0])
 		if i >= 0:
-			var x := float(settings.get_value("audio", String(v[0]).to_lower(), 100))
+			var x := _volume(String(v[0]))
 			AudioServer.set_bus_volume_db(i, linear_to_db(maxf(x / 100.0, 0.0001)))
 
 

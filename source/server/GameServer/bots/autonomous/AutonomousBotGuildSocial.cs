@@ -37,7 +37,7 @@ public static class AutonomousBotGuildSocial
     private static readonly Dictionary<string, DateTime> LastNearbyOffer = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, long> LastTooLowAnswer = new(StringComparer.Ordinal);
 
-    public static bool Enabled => AutonomousBotGuilds.Enabled && Properties.BOT_GUILD_SOCIAL;
+    public static bool Enabled => AutonomousBotRealmGuilds.Enabled && Properties.BOT_GUILD_SOCIAL;
 
     private static bool InvitesEnabled => Enabled && Properties.BOT_GUILD_RECRUIT_PLAYER;
 
@@ -305,6 +305,43 @@ public static class AutonomousBotGuildSocial
     /// An idle guild line from the corpus (kind "guild", by charter, with the no-repeat window), or null. The
     /// audit (2026-10-18) found a 12-member guild said about 34 idle lines in 3 hours and only 11 distinct ones.
     /// </summary>
+    #region Gamebots in a player's guild (the base game's AutonomousBotGuilds, 0.37)
+
+    /// <summary>With bot voices on, a corpus guild line for a gamebot in a player's guild, and what it invites; else null
+    /// (the base game keeps its own lines).</summary>
+    public static string VoicedPlayerGuildOpener(GameBot bot, out string invites)
+    {
+        invites = null;
+        if (!AutonomousBotVoices.Enabled || bot == null)
+            return null;
+        VC.Picked picked = CorpusIdle(bot, BotGuildCharter.Social);
+        if (picked == null)
+            return null;
+        invites = picked.Line.Invites;
+        return picked.Text;
+    }
+
+    /// <summary>With bot voices on, a guildmate's answer of the kind a guild line invites; else null.</summary>
+    public static string VoicedPlayerGuildAnswer(GameBot bot, string opener, string invites)
+    {
+        if (!AutonomousBotVoices.Enabled || bot == null || string.IsNullOrEmpty(invites))
+            return null;
+        foreach (string answers in VC.AnswerChain(invites))
+            if (AutonomousBotVoices.TryLine(bot, "reply", out VC.Picked reply, answers: answers,
+                    filter: line => AutonomousChatShortTalk.ReplyFits(opener, line.Text)))
+                return reply.Text;
+        return null;
+    }
+
+    /// <summary>With bot voices on, a gamebot's answer to a player's /gu line (as /faction and /group answer); else null.</summary>
+    public static string VoicedPlayerGuildReply(GameBot bot, GamePlayer player, string message) =>
+        AutonomousBotVoices.Enabled && bot != null && player != null
+            ? AutonomousChatKnowledge.TryAnswer(player, message, out string knowledge) ? knowledge
+                : AutonomousBotChatCoordinator.ReplyToPlayer(bot, player, message)
+            : null;
+
+    #endregion
+
     private static VC.Picked CorpusIdle(GameBot bot, BotGuildCharter charter)
     {
         string own = charter.ToString().ToLowerInvariant();
@@ -324,7 +361,7 @@ public static class AutonomousBotGuildSocial
         if (!Enabled || !Eligible(bot) || bot.Guild == null)
             return false;
         Guild guild = bot.Guild;
-        bool botGuild = AutonomousBotGuilds.TryGetBotGuild(guild.GuildID, out AutonomousBotGuilds.BotGuildInfo info);
+        bool botGuild = AutonomousBotRealmGuilds.TryGetBotGuild(guild.GuildID, out AutonomousBotRealmGuilds.BotGuildInfo info);
         bool officer = botGuild && bot.GuildRank != null && bot.GuildRank.RankLevel <= 1;
         if (botGuild && bot.GuildRank?.RankLevel == 0)
             AutonomousBotGuildEconomy.TryBuyBuff(bot, info.Charter);
@@ -417,7 +454,7 @@ public static class AutonomousBotGuildSocial
                 .FirstOrDefault();
             if (speaker != null)
                 speakerByGuild[guild.GuildID] = speaker;
-            AutonomousBotGuilds.TryGetBotGuild(guild.GuildID, out AutonomousBotGuilds.BotGuildInfo info);
+            AutonomousBotRealmGuilds.TryGetBotGuild(guild.GuildID, out AutonomousBotRealmGuilds.BotGuildInfo info);
             choices.Add(new GuildChoice(guild.GuildID, info?.Charter ?? BotGuildCharter.Social, guild.GetOnlineBotMembers().Length, speaker != null));
         }
         string chosenId = ChooseGuildForPlayer(choices, player.Level, openGuildId);
@@ -502,7 +539,7 @@ public static class AutonomousBotGuildSocial
 
     #region Recruiting and invites
 
-    private static bool TryRecruit(GameBot officer, Guild guild, AutonomousBotGuilds.BotGuildInfo info)
+    private static bool TryRecruit(GameBot officer, Guild guild, AutonomousBotRealmGuilds.BotGuildInfo info)
     {
         eRealm realm = officer.Realm;
         int minLevel = Math.Max(1, Properties.BOT_GUILD_MIN_LEVEL);
@@ -577,7 +614,7 @@ public static class AutonomousBotGuildSocial
                 answering.Out.SendMessage("You are still in a guild, you'll have to leave it first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            DbGuildRank joinRank = target.GetRankByID(AutonomousBotGuilds.PlayerJoinRank) ?? target.GetRankByID(AutonomousBotGuildPlanner.LowestRank);
+            DbGuildRank joinRank = target.GetRankByID(AutonomousBotRealmGuilds.PlayerJoinRank) ?? target.GetRankByID(AutonomousBotGuildPlanner.LowestRank);
             if (answering.Realm != target.Realm || joinRank == null)
                 return;
             // A new character starts in its realm's starting guild; accepting a bot guild's invite moves it
@@ -613,7 +650,7 @@ public static class AutonomousBotGuildSocial
     {
         foreach (Guild guild in GuildMgr.GetGuilds())
         {
-            if (guild.Realm == realm && AutonomousBotGuilds.IsBotGuild(guild))
+            if (guild.Realm == realm && AutonomousBotRealmGuilds.IsBotGuild(guild))
                 yield return guild;
         }
     }

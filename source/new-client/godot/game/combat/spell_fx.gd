@@ -50,6 +50,9 @@ static func _instance(path: String) -> NifScene:
 		if is_instance_valid(p):
 			(p as NifScene).restart()
 			return p
+	if not NifScene.is_loaded(path):                   # never loaded: a worker loads it - nothing now (see _play)
+		NifScene.prefetch(path)
+		return null
 	var c := NifScene.copy_of(path)
 	if c == null:
 		return null
@@ -103,6 +106,23 @@ static func _live_count() -> int:
 ## Behind the loading screen: every effect the zone's monsters and your own spells can show is parsed and its
 ## textures loaded now, so the first cast of each doesn't stall the game (owner 2026-10-10: a long ~1 fps stretch
 ## when a crowd started casting). Returns how many effect models were made ready.
+## A spell's effect files loading in the background as its cast begins (the cast time is their head start): its
+## gathering glows, cast effects, bolt, hit and resist.
+static func prefetch(client_effect: int) -> void:
+	var e := effect(client_effect)
+	if e.is_empty():
+		return
+	var fx: Dictionary = data().get("fx", {})
+	var ids: Array = (e.get("gather", []) as Array) + (e.get("cast_fx", []) as Array)
+	for k in ["projectile", "target", "resist", "buildup"]:
+		if int(e.get(k, 0)) > 0:
+			ids.append(int(e[k]))
+	for id in ids:
+		var f: Dictionary = fx.get(str(id), {})
+		if not f.is_empty():
+			NifScene.prefetch(String(f.nif))
+
+
 static func preload_effects(client_effects: Array) -> int:
 	var paths := {}
 	var fx: Dictionary = data().get("fx", {})
@@ -243,6 +263,8 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 			return null
 	var node: Node3D = _instance(String(f.nif))
 	if node == null:
+		if not keep and NifScene.loading(String(f.nif)):
+			_play_when_loaded(fx_id, on, height, target, String(f.nif))   # a moment late, not a frozen frame
 		return null
 	_live[node.get_instance_id()] = node
 	var bone := String(f.get("node", ""))
@@ -286,6 +308,16 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 		var secs := float(f.get("duration_s", 3.0))
 		on.get_tree().create_timer(secs if secs > 0.0 else 3.0).timeout.connect(func(): release(node))
 	return node
+
+
+## An effect whose files were still loading: played once they are in (up to 3 s), if its character is still there.
+static func _play_when_loaded(fx_id: int, on: Node3D, height: float, target: Node3D, path: String) -> void:
+	var tree := on.get_tree()
+	var until := Time.get_ticks_msec() + 3000
+	while NifScene.loading(path) and Time.get_ticks_msec() < until:
+		await tree.process_frame
+	if NifScene.is_loaded(path) and is_instance_valid(on) and on.is_inside_tree():
+		_play(fx_id, on, height, false, target if is_instance_valid(target) else null)
 
 
 static func sound(snd: CharacterSounds, set_id: int, event: String) -> void:

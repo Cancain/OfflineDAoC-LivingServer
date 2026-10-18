@@ -282,6 +282,19 @@ public partial class DaocClient : Node
 		Send(0xC7, w);
 	}
 
+	// CreateObjectRequestHandler (0xBE; 1.126+ reads a little-endian id): the client asks for a living or object it
+	// got an update for but never had created - the server's broadcast updates (ClientService.UpdateObjectForPlayers /
+	// UpdateNpcForPlayers) mark a living as sent to everyone in range without its create, so its create never came and
+	// it was never drawn (owner 2026-10-17: invisible gamebots - the F12 report showed 355 updates for one never
+	// created). The original client asked for such an id this way.
+	public void RequestObject(int id)
+	{
+		var w = new Writer();
+		w.ShortLE((ushort)id);
+		w.Short(0);
+		Send(0xBE, w);
+	}
+
 	// PlayerRegionChangeRequestHandler (1.126+): walking into a zone exit (its ZonePoint id).
 	public void ZonePoint(int id)
 	{
@@ -475,6 +488,15 @@ public partial class DaocClient : Node
 
 	// PlayerTrainWindowHandler: the trainer window wherever you are (the client's own /train; the server answers with
 	// SendTrainerWindow when you may train there - ALLOW_TRAIN_ANYWHERE).
+	// EmblemDialogReponseHandler: the guild emblem chosen in the picker (primary colour, secondary, pattern, logo) - the
+	// server takes it from the guild leader only.
+	public void EmblemChoice(int primary, int secondary, int pattern, int logo)
+	{
+		var w = new Writer();
+		w.Byte((byte)(primary & 0x0F)); w.Byte((byte)(secondary & 0x07)); w.Byte((byte)(pattern & 0x03)); w.Byte((byte)(logo & 0xFF));
+		Send(0xE2, w);
+	}
+
 	public void TrainWindow()
 	{
 		Send(0x7B, new Writer());
@@ -779,6 +801,9 @@ public partial class DaocClient : Node
 				d["kind"] = "remove";
 				d["oid"] = r.Short(); d["type"] = r.Short();
 				return d;
+			case 0xE2:                                    // EmblemDialogue (168): the guild emblem picker opens (the emblemer,
+				d["kind"] = "emblem_dialog";              // /gc emblem) - four empty bytes
+				return d;
 			case 0xE1:                                    // ObjectDelete
 				d["kind"] = "remove";
 				d["oid"] = r.Short(); d["type"] = 9;
@@ -803,11 +828,21 @@ public partial class DaocClient : Node
 				var items = new Godot.Collections.Array();
 				for (int i = 0; i < n && r.Left > 0; i++)
 				{
-					int slot = r.Byte() & 0x7F;
+					int slotByte = r.Byte();
+					int slot = slotByte & 0x7F;
 					int model = r.Short();
 					var it = new Godot.Collections.Dictionary { ["slot"] = slot, ["model"] = model & 0x1FFF };
 					if (slot > 13 || slot < 10) it["extension"] = (int)r.Byte();
-					if ((model & 0x8000) != 0) it["color"] = r.Short();
+					if ((model & 0x8000) != 0)
+					{
+						// a 16-bit texture: a cloak's or shield's guild emblem (logo << 9 | pattern << 7 | colours; the slot's
+						// 0x80 = the logo's 0x10000 bit, the second half of insignia.csv) - else a dye (owner 2026-10-17)
+						int tex = r.Short();
+						if (tex > 0xFF && (slot == 26 || slot == 11))
+							it["emblem"] = tex | ((slotByte & 0x80) != 0 ? 0x10000 : 0);
+						else
+							it["color"] = tex;
+					}
 					else if ((model & 0x4000) != 0) it["color"] = (int)r.Byte();
 					if ((model & 0x2000) != 0) it["effect"] = r.Short();
 					items.Add(it);
@@ -1261,6 +1296,52 @@ public partial class DaocClient : Node
 					}
 					d["specs"] = list;
 				}
+				else if (tcode == 4)
+				{
+					// the trainer's skill names, one packet a specialization: its start in the running list, then each
+					// name in the order code 3 lists them (spells, styles, abilities by the level they come at)
+					d["kind"] = "trainer_names";
+					d["start"] = (int)r.Byte();
+					var names = new Godot.Collections.Array();
+					for (int i = 0; i < tcount && r.Left > 0; i++) names.Add(r.Pascal());
+					d["names"] = names;
+				}
+				else if (tcode == 3)
+				{
+					// what each specialization gives and at which level (the old client's "New Styles and Skills"):
+					// an unknown byte, 49 bytes of points by level 2..50, then per specialization its place, how many
+					// it gives, its autotrain level and 8 bytes each - level, icon, skill page (2 style, 3 spell, 4
+					// song, 5 ability), two style-opening bytes, id. The server stops near 2 KB, so the last lists can
+					// be cut short (the counts stay whole - the names' running places follow them)
+					d["kind"] = "trainer_skills";
+					r.Byte();
+					r.Skip(49);
+					var specs = new Godot.Collections.Array();
+					for (int s = 0; s < tcount && r.Left >= 3; s++)
+					{
+						var e = new Godot.Collections.Dictionary();
+						e["index"] = (int)r.Byte();
+						int n = r.Byte();
+						e["count"] = n;
+						e["autotrain"] = (int)r.Byte();
+						var skills = new Godot.Collections.Array();
+						for (int i = 0; i < n && r.Left >= 8; i++)
+						{
+							var k = new Godot.Collections.Dictionary();
+							k["level"] = (int)r.Byte();
+							k["icon"] = r.Short();
+							k["page"] = (int)r.Byte();
+							k["open_type"] = (int)r.Byte();
+							k["open_value"] = (int)r.Byte();
+							k["id"] = r.Short();
+							skills.Add(k);
+						}
+						e["skills"] = skills;
+						specs.Add(e);
+						if (skills.Count < n) break;   // cut short: the rest never came
+					}
+					d["specs"] = specs;
+				}
 				else
 					d["kind"] = "trainer_more";
 				return d;
@@ -1396,8 +1477,14 @@ public partial class DaocClient : Node
 		it["bonus_level"] = (int)r.Byte();
 		it["model"] = r.Short();
 		it["extension"] = (int)r.Byte();
-		it["color"] = r.Short();
+		int tex = r.Short();
 		int flag = r.Byte();
+		// the item's guild emblem (an emblemed cloak / shield: PacketLib1124 writes it in the colour's place, flag 0x01 =
+		// the logo's 0x10000 bit) or its dye
+		if (tex > 0xFF)
+			it["emblem"] = tex | ((flag & 0x01) != 0 ? 0x10000 : 0);
+		else
+			it["color"] = tex;
 		if ((flag & 0x08) != 0) { it["spell1_icon"] = r.Short(); it["spell1"] = r.Pascal(); }
 		if ((flag & 0x10) != 0) { it["spell2_icon"] = r.Short(); it["spell2"] = r.Pascal(); }
 		it["effect"] = r.Short();

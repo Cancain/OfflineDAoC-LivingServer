@@ -20,7 +20,7 @@ public static class AutonomousBotGuildAlliances
 
     private static readonly Logger Log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
 
-    public static bool Enabled => AutonomousBotGuilds.Enabled && Properties.BOT_GUILD_ALLIANCES;
+    public static bool Enabled => AutonomousBotRealmGuilds.Enabled && Properties.BOT_GUILD_ALLIANCES;
 
     #region Pure rules (tested)
 
@@ -77,11 +77,11 @@ public static class AutonomousBotGuildAlliances
 
     private static void ReconcileRealm(eRealm realm)
     {
-        List<(Guild Guild, AutonomousBotGuilds.BotGuildInfo Info)> botGuilds = GuildMgr.GetGuilds()
-            .Where(guild => guild.Realm == realm && AutonomousBotGuilds.TryGetBotGuild(guild.GuildID, out _))
+        List<(Guild Guild, AutonomousBotRealmGuilds.BotGuildInfo Info)> botGuilds = GuildMgr.GetGuilds()
+            .Where(guild => guild.Realm == realm && AutonomousBotRealmGuilds.TryGetBotGuild(guild.GuildID, out _))
             .Select(guild =>
             {
-                AutonomousBotGuilds.TryGetBotGuild(guild.GuildID, out AutonomousBotGuilds.BotGuildInfo info);
+                AutonomousBotRealmGuilds.TryGetBotGuild(guild.GuildID, out AutonomousBotRealmGuilds.BotGuildInfo info);
                 return (guild, info);
             })
             .ToList();
@@ -89,8 +89,8 @@ public static class AutonomousBotGuildAlliances
         // The realm's bot alliance: one led by a bot guild whose guilds are all bot guilds.
         Alliance existing = botGuilds.Select(entry => entry.Guild.alliance)
             .FirstOrDefault(alliance => alliance?.DbAlliance != null &&
-                                        alliance.Guilds.All(AutonomousBotGuilds.IsBotGuild) &&
-                                        AutonomousBotGuilds.IsBotGuild(GuildMgr.GetGuildByGuildID(alliance.DbAlliance.LeaderGuildID)));
+                                        alliance.Guilds.All(AutonomousBotRealmGuilds.IsBotGuild) &&
+                                        AutonomousBotRealmGuilds.IsBotGuild(GuildMgr.GetGuildByGuildID(alliance.DbAlliance.LeaderGuildID)));
         var candidates = botGuilds.Select(entry => new Candidate(entry.Guild.GuildID, entry.Info.Charter, entry.Info.Ordinal,
             entry.Guild.alliance != null)).ToList();
         (string leaderId, List<string> toAdd) = Plan(candidates, existing?.DbAlliance.LeaderGuildID, existing?.Guilds.Count ?? 0);

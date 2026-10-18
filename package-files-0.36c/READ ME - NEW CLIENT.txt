@@ -1,6 +1,6 @@
-OFFLINE DAOC 0.36c - THE NEW CLIENT
+OFFLINE DAOC 0.37c - THE NEW CLIENT
 
-This folder is Offline DAoC 0.36b or 0.36 with a second, brand-new game
+This folder is Offline DAoC 0.37b or 0.37 with a second, brand-new game
 client added (in the new-client folder). Both clients play the SAME game: the same server,
 the same account, the same characters, the same bots and the same world.
 Play a character with one client today and with the other tomorrow.
@@ -33,7 +33,7 @@ THE NEW CLIENT IN SHORT
 - WoW-style movement: hold the right mouse button to steer, A/D turn,
   Q/E strafe.
 - Options, keybinds and graphics settings are in its own menus.
-- On a 0.36 game (classic classes only) it offers the classic classes only,
+- On a 0.37 game (classic classes only) it offers the classic classes only,
   like the original client there.
 - It is new: if something looks or behaves differently from the original
   client, please report it on the GitHub page (Bug reports).

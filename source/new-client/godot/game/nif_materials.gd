@@ -10,6 +10,7 @@ extends RefCounted
 const SLOTS := ["base", "dark", "detail", "decal", "glow", "gloss", "tex1", "tex2", "env"]
 
 var texture_set := "x4plus"
+var env_strength := 1.0          # how strong the environment-map reflections are (zone_loader: Tuscaran Glacier)
 var use_material_light := false     # pregame scenes: keep the material's ambient darkness (spec mat_light), as the client
 var _folders := {}                  # texture set name -> folder with <name>.png
 var _shaders := {}                  # variant key -> Shader
@@ -54,6 +55,8 @@ func material(spec: Dictionary) -> ShaderMaterial:
 		if has:
 			mat.set_shader_parameter(slot + "_uv", int(slots[slot].uv))
 			mat.set_shader_parameter(slot + "_wrap", bool(slots[slot].get("wrap", true)))
+	if slots.has("env"):
+		mat.set_shader_parameter("env_strength", env_strength)
 	var tint: Array = spec.get("tint", [1, 1, 1])
 	var emissive: Array = spec.get("emissive", [0, 0, 0])
 	var k := 1.0
@@ -98,12 +101,24 @@ func _bind_textures(mat: ShaderMaterial) -> void:
 		mat.set_shader_parameter(slot + "_tex", texture(String(slots[slot].tex)))
 
 
+func _path(tex_name: String) -> String:
+	var path := String(_folders[texture_set]).path_join(tex_name + ".png")
+	if not FileAccess.file_exists(path) and _folders.has("original"):
+		path = String(_folders["original"]).path_join(tex_name + ".png")   # not upscaled yet: use the client's own
+	return path
+
+
+## The texture's picture read from its file (null if none) - never Texture2D.get_image(), which reads the texture
+## back from the GPU: on the seamless-zone worker that broke the frame being drawn ("open draw list"), and every
+## texture made after it drew black / pink (owner 2026-10-17: black skeletons and horses, pink forge smoke).
+func image(tex_name: String) -> Image:
+	return Image.load_from_file(_path(tex_name)) if FileAccess.file_exists(_path(tex_name)) else null
+
+
 func texture(tex_name: String) -> Texture2D:
 	var key := "%s/%s" % [texture_set, tex_name]
 	if not _textures.has(key):
-		var path := String(_folders[texture_set]).path_join(tex_name + ".png")
-		if not FileAccess.file_exists(path) and _folders.has("original"):
-			path = String(_folders["original"]).path_join(tex_name + ".png")   # not upscaled yet: use the client's own
+		var path := _path(tex_name)
 		var img := Image.load_from_file(path)
 		if img == null:
 			push_warning("missing texture " + path)
@@ -199,6 +214,7 @@ uniform sampler2D glow_tex : source_color, filter_linear_mipmap_anisotropic, rep
 uniform sampler2D gloss_tex : filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D env_tex : source_color, filter_linear_mipmap, repeat_enable;   // NiTextureEffect sphere map
 uniform bool has_env;
+uniform float env_strength = 1.0;
 uniform sampler2D tex1_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D tex2_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform bool has_tex1; uniform bool has_tex2; uniform int tex1_uv; uniform int tex2_uv;
@@ -232,6 +248,7 @@ varying vec2 uv_a;
 varying vec2 uv_b;
 varying vec2 uv_c;
 varying vec2 uv_d;
+varying vec2 env_sm;               // the sphere map coordinate, per vertex as the client made it
 
 void vertex() {
 	if (billboard == 1) {
@@ -263,6 +280,17 @@ void vertex() {
 	uv_b = UV2;
 	uv_c = CUSTOM0.xy;
 	uv_d = CUSTOM0.zw;
+	if (has_env) {
+		// the client's sphere-mapped environment map: NetImmerse's fixed function made the coordinate per VERTEX
+		// (the camera-space reflection) and the card blended it across the triangle. Per pixel it hits the sphere
+		// map's pole at grazing angles - white streaks fanning from a point on Tuscaran Glacier's floor that swung
+		// with the camera (owner 2026-10-17)
+		vec3 vp = (MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+		vec3 vn = normalize((MODELVIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+		vec3 r = reflect(normalize(vp), vn);
+		float sm = max(2.0 * sqrt(r.x * r.x + r.y * r.y + (r.z + 1.0) * (r.z + 1.0)), 1e-4);
+		env_sm = vec2(r.x / sm + 0.5, 0.5 - r.y / sm);
+	}
 }
 
 // a clamped layer (the NIF's CLAMP_S_CLAMP_T): its coordinates held half a texel - at the mip level drawn - inside
@@ -316,9 +344,14 @@ void fragment() {
 	if (has_env) {
 		// the client's sphere-mapped environment map (NiTextureEffect): the view reflection's sphere-map coordinate,
 		// added over the surface (the glassy shields, potions, slime blobs - owner 2026-10-11: missing)
-		vec3 r = reflect(normalize(VERTEX), normalize(NORMAL));
-		float sm = 2.0 * sqrt(r.x * r.x + r.y * r.y + (r.z + 1.0) * (r.z + 1.0));
-		EMISSION += texture(env_tex, vec2(r.x / sm + 0.5, 0.5 - r.y / sm)).rgb;
+		vec3 env = texture(env_tex, env_sm).rgb;
+		// a gloss map says how reflective each spot is (NetImmerse: the environment map scaled by the gloss map) -
+		// the client multiplied in its gamma space, so the raw gloss bytes count squared-ish here in linear. Unscaled,
+		// Tuscaran Glacier's ice (icymap over icesheetnoalpha) drowned its own blue sheet in a moving white glare
+		// (owner 2026-10-17: "the old client is reflective too but its nowhere near what ours is")
+		if (has_gloss)
+			env *= pow(texture(gloss_tex, pick(gloss_uv, gloss_wrap, vec2(textureSize(gloss_tex, 0)))).rgb, vec3(2.2));
+		EMISSION += env * env_strength;
 	}
 	ROUGHNESS = 0.9;
 	SPECULAR = has_gloss ? texture(gloss_tex, pick(gloss_uv, gloss_wrap, vec2(textureSize(gloss_tex, 0)))).r * 0.8 : specular_amount;

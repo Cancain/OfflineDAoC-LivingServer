@@ -1,7 +1,7 @@
 # Installs this fork server build into an Offline DAoC game folder (docs/RELEASE-PLAN.md).
 #
 #   INSTALL.cmd                                  (finds the game folder this build sits in)
-#   INSTALL.cmd -GameFolder "C:\Games\OfflineDAoC\playable-v0.36b"
+#   INSTALL.cmd -GameFolder "C:\Games\OfflineDAoC\playable-v0.37b"
 #   INSTALL.cmd -DryRun                          (checks everything, changes nothing)
 #
 # Safe by design:
@@ -11,7 +11,7 @@
 # - replaces only a GameServer.dll that is the original release file or a fork build this script
 #   installed; anything else is refused unless -Force;
 # - the same for the launcher (OfflineDAoC.exe and its files, with the Social Expansion tab) in runtime\
-#   and, on 0.36c, in new-client\runtime\ (checked against new-client\PACKAGE MANIFEST.sha256);
+#   and, on 0.37c, in new-client\runtime\ (checked against new-client\PACKAGE MANIFEST.sha256);
 # - backs up every file it replaces under runtime\server\deployment-backups\fork-build-<time>\ and
 #   verifies every copy by SHA-256. ROLLBACK.cmd restores the backup.
 param(

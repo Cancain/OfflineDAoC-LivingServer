@@ -21,7 +21,7 @@ public static class AutonomousBotGuildEconomy
 
     private static readonly Logger Log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
 
-    public static bool Enabled => AutonomousBotGuilds.Enabled && Properties.BOT_GUILD_ECONOMY;
+    public static bool Enabled => AutonomousBotRealmGuilds.Enabled && Properties.BOT_GUILD_ECONOMY;
 
     #region Pure rules (tested)
 
@@ -130,7 +130,7 @@ public static class AutonomousBotGuildEconomy
     public static bool TryBuyBuff(GameBot leader, BotGuildCharter charter)
     {
         Guild guild = leader?.Guild;
-        if (!Enabled || guild == null || leader.GuildRank?.RankLevel != 0 || !AutonomousBotGuilds.IsBotGuild(guild))
+        if (!Enabled || guild == null || leader.GuildRank?.RankLevel != 0 || !AutonomousBotRealmGuilds.IsBotGuild(guild))
             return false;
         lock (guild)
         {

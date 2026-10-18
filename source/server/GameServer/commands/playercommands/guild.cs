@@ -121,6 +121,45 @@ namespace DOL.GS.Commands
 			}
 		}
 
+		/// <summary>A player forms a guild alone at a guild registrar (the solo form of /gc form), as its leader.</summary>
+		private void FormGuildAlone(GamePlayer player, string guildname)
+		{
+			if (player.Guild != null)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.AlreadyInGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			if (guildname.Length > 30)
+			{
+				player.Out.SendMessage("Sorry, your guild name is too long.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			if (!IsValidGuildName(guildname))
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.InvalidLetters"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			if (GuildMgr.DoesGuildExist(guildname))
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.GuildExists"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			if (player.GetCurrentMoney() < GuildFormCost)
+			{
+				player.Out.SendMessage("It cost 1 gold piece to create a guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			Guild newGuild = GuildMgr.CreateGuild(player.Realm, guildname, player);
+			if (newGuild == null)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.UnableToCreateLead", guildname, player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			newGuild.AddPlayer(player, newGuild.GetRankByID(0));
+			player.RemoveMoney(GuildFormCost);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.GuildCreated", guildname, player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+		}
+
 		/// <summary>
 		/// method to handle /gc commands from a client
 		/// </summary>
@@ -331,14 +370,32 @@ namespace DOL.GS.Commands
 							obj = ClientService.Instance.GetPlayerByExactName(args[2]);
 						}
 
+						// A gamebot joins at once; a /spawn companion is refused (it is temporary and only wears the
+						// owner's guild name and emblem). AutonomousBotGuilds.
 						if (obj == null)
 						{
-							// An autonomous gamebot, targeted or by name, answers for itself (docs/BOT-GUILDS.md).
 							GameBot invitedBot = args.Length > 2
-								? (AutonomousBotRegistry.TryGetByName(args[2], out GameBot namedBot) ? namedBot : null)
+								? (AutonomousBotRegistry.TryGetByName(args[2], out GameBot namedBot) ? namedBot : BotManager.GetBotByName(client.Player, args[2]))
 								: client.Player.TargetObject as GameBot;
-							if (invitedBot != null && AutonomousBotGuilds.TryInvite(client.Player, invitedBot))
-								return;
+							if (invitedBot != null)
+							{
+								// Social Expansion: a member of a bot guild answers for itself first; a leader or officer stays
+								// with its guild (docs/BOT-GUILDS.md).
+								if (AutonomousBotRealmGuilds.RefusesPlayerGuild(client.Player, invitedBot))
+									return;
+								string refusal = AutonomousBotGuilds.JoinRefusal(client.Player, invitedBot);
+								if (refusal != null)
+								{
+									client.Out.SendMessage(refusal, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								string leftGuild = AutonomousBotRealmGuilds.BotGuildNameOf(invitedBot);
+								if (!AutonomousBotGuilds.Join(client.Player, invitedBot))
+									client.Out.SendMessage($"{invitedBot.Name} could not join the guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								else
+									AutonomousBotRealmGuilds.LeaveForPlayerGuild(invitedBot, leftGuild, client.Player);
+								break;
+							}
 						}
 
 						if (obj == null)
@@ -408,11 +465,22 @@ namespace DOL.GS.Commands
 							obj = ClientService.Instance.GetPlayerByExactName(playername);
 							obj ??= DOLDB<DbCoreCharacter>.SelectObject(DB.Column("Name").IsEqualTo(playername));
 						}
+						// A gamebot member is removed by name (or target): it leaves the list and drops the emblem.
+						if (obj == null)
+						{
+							string botName = playername == string.Empty ? (client.Player.TargetObject as GameBot)?.Name : playername;
+							OfflineWorldBotGuildRecord botMember = AutonomousBotGuilds.FindMember(client.Player.Guild, botName);
+							if (botMember != null)
+							{
+								AutonomousBotGuilds.Remove(botMember.BotId, client.Player.Name);
+								break;
+							}
+						}
 						if (obj == null)
 						{
 							// A bot member is not a character row (docs/BOT-GUILDS.md).
 							string botName = playername == string.Empty ? (client.Player.TargetObject as GameBot)?.Name : playername;
-							if (AutonomousBotGuilds.TryRemove(client.Player, botName))
+							if (AutonomousBotRealmGuilds.TryRemove(client.Player, botName))
 								return;
 						}
 						if (obj == null)
@@ -1065,10 +1133,14 @@ namespace DOL.GS.Commands
 							return;
 						}
 						#endregion
-						#region No group Check
-						if (group == null)
+						#region Solo form (offline server)
+						// The only player on an offline server could never form a guild: forming needs every other
+						// player of the group to accept, and bots in the group count as members but cannot answer.
+						// Alone, or with only bots in the group, the player forms the guild at the registrar for the
+						// same fee (owner 2026-10-17). Groups with other players keep the accept dialog.
+						if (group == null || group.GetPlayersInTheGroup().All(member => member == client.Player))
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.FormNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							FormGuildAlone(client.Player, string.Join(" ", args, 2, args.Length - 2));
 							return;
 						}
 						#endregion
@@ -1521,7 +1593,7 @@ namespace DOL.GS.Commands
 							}
 						}
 						// Online autonomous gamebot members (docs/BOT-GUILDS.md).
-						List<string> botLines = AutonomousBotGuilds.WhoLines(client.Player.Guild);
+						List<string> botLines = AutonomousBotRealmGuilds.WhoLines(client.Player.Guild);
 						foreach (string botLine in botLines)
 						{
 							if (startInd + ind > startInd + WhoCommandHandler.MAX_LIST_SIZE)
@@ -2969,6 +3041,18 @@ namespace DOL.GS.Commands
 
 				sortedWindowList = new(onlinePlayers.Count);
 
+				// Gamebot members that are in the world are online too (AutonomousBotGuilds).
+				foreach (Guild guild in guildsToProcess)
+				{
+					foreach (GameBot bot in AutonomousBotGuilds.OnlineMembers(guild))
+					{
+						if (!allGuildMembers.TryGetValue(AutonomousBotGuilds.ViewId(bot.DatabaseID), out GuildMgr.GuildMemberView botDisplay))
+							continue;
+						AutonomousBotGuilds.Refresh(botDisplay);
+						sortedWindowList.TryAdd($"{botDisplay[sortColumn]}_{botDisplay.InternalID}", botDisplay);
+					}
+				}
+
 				foreach (GamePlayer player in onlinePlayers)
 				{
 					if (allGuildMembers.TryGetValue(player.InternalID, out GuildMgr.GuildMemberView memberDisplay))
@@ -3005,6 +3089,8 @@ namespace DOL.GS.Commands
 					// Update member view if the player is found in the online map.
 					if (onlinePlayersMap.TryGetValue(memberDisplay.InternalID, out GamePlayer member))
 						memberDisplay.UpdateMember(member);
+					else if (AutonomousBotGuilds.IsBotView(memberDisplay.InternalID))
+						AutonomousBotGuilds.Refresh(memberDisplay);
 					else
 						memberDisplay.GroupSize = "0";
 

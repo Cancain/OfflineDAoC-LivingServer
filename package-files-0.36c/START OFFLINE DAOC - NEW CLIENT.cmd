@@ -1,11 +1,11 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-rem Offline DAoC 0.36c - the new client. It plays the same game as START OFFLINE DAOC.cmd: same server,
+rem Offline DAoC 0.37c - the new client. It plays the same game as START OFFLINE DAOC.cmd: same server,
 rem same account, same characters, same bots. Run one launcher at a time.
 if not exist "%~dp0runtime\OfflineDAoC.exe" (
-  echo The new client belongs inside an Offline DAoC 0.36b or 0.36 game folder, next to START OFFLINE DAOC.cmd.
-  echo Use DOWNLOAD-AND-PLAY-v0.36c.cmd from the 0.36c release page to install it.
+  echo The new client belongs inside an Offline DAoC game folder, next to START OFFLINE DAOC.cmd.
+  echo Use GET-OFFLINE-DAOC-v0.37c.cmd from the 0.37c release page to install it.
   pause
   exit /b 1
 )
@@ -20,7 +20,7 @@ exit /b 0
 
 :incomplete
 echo The new client is not fully installed yet.
-echo Run DOWNLOAD-AND-PLAY-v0.36c.cmd or ADD-NEW-CLIENT-TO-0.36-OR-0.36b.cmd again
+echo Run GET-OFFLINE-DAOC-v0.37c.cmd (or the file you used) again
 echo (the one you used): it finishes the download where it stopped.
 pause
 exit /b 1

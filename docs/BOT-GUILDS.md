@@ -110,14 +110,19 @@ Protectors, Tir na Nog Adventurers).
 - **Guild window and `/gc who`:**
   - list bot members with level, class and zone (or "Offline");
   - for a bot guild, you see its members only if you're in it.
-- **`/ginvite` on a bot** (targeted or by name), into your guild. The bot accepts if it is:
-  - of your realm and alive;
-  - not in combat;
-  - not a leader or officer of its own bot guild;
-  - within 10 levels of you.
+- **`/ginvite` on a bot** (targeted or by name), into your guild. Since 0.37 this is the base game's
+  feature (`AutonomousBotGuilds`, upstream): any gamebot of your realm joins at once, shows your guild's
+  name and emblem, and talks in your guild chat, but never counts for merit, realm points, keep claims or
+  buffs. With bot guilds on, a member of a bot guild answers for itself first (`AutonomousBotRealmGuilds`,
+  this code, renamed from `AutonomousBotGuilds` in the 0.37 merge). It answers in /say when you are near
+  and by /send when you are not, and declines if it is:
+  - in combat;
+  - a leader or officer of its own bot guild;
+  - more than 10 levels from you.
 
-  It then leaves its bot guild, joins yours at your guild's lowest rank, and says so. If it
-  declines, it says why in /say.
+  Otherwise it joins your guild, leaves its bot guild, and says goodbye to it. Memberships this code kept
+  for bots in players' guilds before 0.37 move to the base game's table at the first start. Checked live (scripted
+  player, 2026-10-18): the move, a join, an officer's and a level 50's refusal, and `/gc remove`.
 - **`/gc remove <name>`** works on bot members of your guild.
 - **Formation leaves bots in your guild alone.**
 
@@ -343,7 +348,8 @@ alliances) only runs in a real server.
     starting guild (Clan Cotswold in Albion). `TryAnswerGuildRequest` and recruiting skipped any
     player with `Guild != null`, so out of the box "lf guild" got no bot guild answer. It
     worked only after `/gc quit`. **Fixed in 0.36-chris.9**, below.
-  - **Not checked:** keep claims (6) and `/ginvite` and `/gc remove` on a bot (8).
+  - **Not checked:** keep claims (6). `/ginvite` and `/gc remove` on a bot (8) were checked later, on 0.37-se.1
+    (section 3.4).
   - **Only one guild formed.** Midgard and Hibernia, with 8 bots each, got none. With a small
     roster, this feature shows little outside the biggest realm.
 - **Second check (2026-10-17, build 0.36-chris.9, 300 bots per realm: 150 at level 1, 150 at level 50):**

@@ -2,10 +2,10 @@
 # Windows PowerShell 5.1 compatible.
 
 $Script:ServerFolders = @('runtime/server', 'runtime/server/lib', 'runtime/server/win-x64')
-# The launcher (its Social Expansion tab): the game's own copy, and the 0.36c new client's copy when present.
+# The launcher (its Social Expansion tab): the game's own copy, and the 0.37c new client's copy when present.
 $Script:LauncherFolders = @('runtime', 'new-client/runtime')
 $Script:LauncherFiles = @('OfflineDAoC.dll', 'OfflineDAoC.exe', 'OfflineDAoC.pdb', 'OfflineDAoC.deps.json', 'OfflineDAoC.runtimeconfig.json')
-# Also the 0.36c new client and its launcher, which share the game's runtime.
+# Also the 0.37c new client and its launcher, which share the game's runtime.
 $Script:ProcessNames = @('CoreServer', 'DOLServer', 'OfflineDAoC', 'game', 'camelot', 'connect', 'Godot_v4.7.2-stable_mono_win64')
 
 function Stop-WithMessage([string]$Message) {
@@ -56,7 +56,7 @@ function Find-GameFolder([string]$Given, [string]$BuildDir) {
         Stop-WithMessage ("More than one game folder found. Run again with -GameFolder and one of:`n  " + ($found -join "`n  "))
     }
     Stop-WithMessage ("Can't find the game. Put this build's folder inside your Offline DAoC folder (the one with " +
-        "START OFFLINE DAOC.cmd), or run INSTALL.cmd -GameFolder ""C:\path\to\playable-v0.36b"".")
+        "START OFFLINE DAOC.cmd), or run INSTALL.cmd -GameFolder ""C:\path\to\playable-v0.37b"".")
 }
 
 function Assert-GameClosed {
@@ -72,7 +72,7 @@ function Read-PackageManifest([string]$Game) {
     return Read-ManifestFile (Join-Path $Game 'PACKAGE MANIFEST.sha256')
 }
 
-# The same for any manifest file (0.36c's new client has its own: new-client\PACKAGE MANIFEST.sha256).
+# The same for any manifest file (0.37c's new client has its own: new-client\PACKAGE MANIFEST.sha256).
 function Read-ManifestFile([string]$path) {
     if (!(Test-Path -LiteralPath $path)) { return $null }
     $manifest = @{}

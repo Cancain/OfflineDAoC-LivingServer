@@ -6,7 +6,7 @@ extends CanvasLayer
 const SETTINGS_PATH := "user://settings.cfg"
 const FPS_CAPS := [0, 30, 60, 75, 90, 120, 144, 165, 240, -1]   # 0 = monitor refresh (vsync), -1 = unlimited
 
-const VOLUMES := [["Master", "Volume"], ["Ambient", "Ambience + effects"], ["Music", "Music"]]
+const VOLUMES := [["Master", "Volume"], ["Effects", "Sound effects"], ["Ambient", "Ambience"], ["Music", "Music"]]
 
 signal movement_changed(mode: String)
 
@@ -118,7 +118,8 @@ func _on_fps(index: int) -> void:
 
 
 func volume(bus: String) -> float:
-	return float(settings.get_value("audio", bus.to_lower(), 100))
+	var fallback = settings.get_value("audio", "ambient", 100) if bus == "Effects" else 100
+	return float(settings.get_value("audio", bus.to_lower(), fallback))
 
 
 func apply_volumes() -> void:

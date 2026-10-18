@@ -1,7 +1,7 @@
 OFFLINE DAOC - SOCIAL EXPANSION (github.com/chris4aker/OfflineDAoC-SocialExpansion)
 ==================================================================================
 
-This is a build for Offline DAoC 0.36 / 0.36b, the "Social Expansion". It replaces the server
+This is a build for Offline DAoC 0.37 / 0.37b, the "Social Expansion". It replaces the server
 (GameServer.dll) and the launcher (OfflineDAoC.exe, which gets a Social Expansion tab), and adds
 these features, all OFF until you switch them on:
 
@@ -26,29 +26,42 @@ Always on, even with every switch off (docs\KNOWN-ISSUES.md):
   - a dead bot's corpse stays where it fell until it releases (all bots, companions included)
   - a bot that dies 3 times on the way to its group's meetup stops waiting for it
   - bots read short chat ("ty", "lol", "inc") and answer place and trainer questions like a player
-Everything else plays like the normal 0.36 while its switch is off.
+Everything else plays like the normal 0.37 while its switch is off.
 
 Known issues and what hasn't been tested in game yet: docs\KNOWN-ISSUES.md
 
-NEW CLIENT (0.36c): the new client runs the same server, so this build applies to it too.
+NEW CLIENT (0.37c): the new client runs the same server, so this build applies to it too.
 It was tested in game with the new client; the original client wasn't tried. The new client's
 own fixes from this release (target window buttons, /target <name>, the /stick toggle) are in
 the source code only: this build doesn't change any new-client files.
 
 INSTALL
 -------
+Coming from 0.36 with an earlier Social Expansion build installed? The 0.37 update applies only to
+the released 0.36 files, and it tells the game's version by the launcher, so:
+  1. Put this folder in the game folder and double-click PREPARE-FOR-UPDATE.cmd here. It puts the
+     released 0.36 server and launcher back from the installer's backups and checks each one.
+  2. Update the game to 0.37 with its downloader (choose 1, Update). Your saves stay where they are,
+     Social Expansion tables and settings included.
+  3. Double-click INSTALL.cmd in this folder.
+This build refuses a 0.36 game.
+If you installed 0.37 fresh instead and brought your progress over, the game's transfer leaves out
+the Social Expansion's own tables (bot guilds, bot memory, heard lines). Before turning bot guilds
+on, copy them from the old game folder:
+  python tools\claude-version\carry_social_tables.py --from "C:\path\to\old\game" --apply
+
 1. Close the server, the launcher and the game.
 2. Put this folder INSIDE your Offline DAoC game folder (the folder with START OFFLINE DAOC.cmd).
 3. Double-click INSTALL.cmd. If Windows warns about an unknown app: More info -> Run anyway.
 
-The installer checks that the game is 0.36 / 0.36b (with or without the 0.36c new client; its
+The installer checks that the game is 0.37 / 0.37b (with or without the 0.37c new client; its
 launcher in new-client\runtime is replaced too), refuses while anything is running, backs up
 every file it replaces (runtime\server\deployment-backups\fork-build-<time>) and checks every
 copy. It also puts three settings helpers in tools\claude-version and these docs in
 docs\fork-build-<name>.
 
 Check: start the game as usual. The server log shows a line like
-  FORK_BUILD name=0.36-se.4 commit=... bot_guilds=off xp_rate_by_level=off ... bot_voices=off living=off bot_schedule=off
+  FORK_BUILD name=0.37-se.1 commit=... bot_guilds=off xp_rate_by_level=off ... bot_voices=off living=off bot_schedule=off
 
 UNDO
 ----

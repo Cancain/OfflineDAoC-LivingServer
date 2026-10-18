@@ -50,7 +50,7 @@ var _save_left := 5.0
 
 
 func _ready() -> void:
-	get_window().title = "Offline DAoC Rebuilt v0.36c"            # the root window keeps it (window_set_title alone was reset to the project name)
+	get_window().title = "Offline DAoC Rebuilt v0.37c"            # the root window keeps it (window_set_title alone was reset to the project name)
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		args[kv[0]] = kv[1] if kv.size() > 1 else ""
@@ -184,11 +184,13 @@ func _ready() -> void:
 		ui.item_dropped_on_world.connect(_on_item_dropped)   # an item dragged out: onto an NPC (give) or the ground
 		ui.npc_dialog.keyword.connect(_server_keyword)     # a [keyword] in an NPC's words: whispered to it
 		PlayerData.release_requested.connect(_server_release)   # the death window's RELEASE: the server's /release
+		PlayerData.release_to.connect(_server_release_to)       # its CITY / HOUSE / BIND buttons: /release city ...
 		PlayerData.invite_requested.connect(_server_invite)     # the group page's buttons: /invite, /disband
 		PlayerData.disband_requested.connect(_server_disband)
 		PlayerData.pet_order.connect(_server_pet)               # the pet window's commands: PetWindowHandler
 		ui.raid_target.connect(sw.target_oid)                  # a raid window member clicked
 		PlayerData.hook(self, PlayerData.member_clicked, func(row: Dictionary):   # a group page / mini group row clicked
+			_member_pick = {} if bool(row.get("me", false)) else row          # (DISBAND then removes that member)
 			sw.target_oid(Server.me_oid if bool(row.get("me", false)) else int(row.get("oid", 0))))
 		PlayerData.dismount_requested.connect(_server_dismount)  # jump / /dismount while riding
 		PlayerData.delve.connect(_server_item_info)             # an item's / skill's information: the server's delve
@@ -759,7 +761,7 @@ func _input(event: InputEvent) -> void:
 				elif loot and loot.click(_click_from):
 					pass                                         # picked up something lying on the ground
 				elif npcs is ServerWorld and (npcs as ServerWorld).click_object(player.camera, _click_from):
-					pass                                         # the server's: something on the ground, picked up
+					pass                                         # the server's: something on the ground, targeted
 				elif not _click_door(_click_from) and npcs:
 					WorldLink.clear_bot_target()
 					npcs.clear_target()
@@ -787,6 +789,10 @@ func _input(event: InputEvent) -> void:
 		_rclick_moved += event.relative.length() if _rclick_down else 0.0
 	elif Keybinds.pressed(event, "attack_mode") and not player._ui_typing():
 		_toggle_attack()
+	elif Keybinds.pressed(event, "get_item") and npcs is ServerWorld and not player._ui_typing():
+		(npcs as ServerWorld).get_object()                      # Get Item (G): pick up the targeted ground object
+	elif Keybinds.pressed(event, "target_loot") and npcs is ServerWorld and not player._ui_typing():
+		(npcs as ServerWorld).target_nearest_loot()             # Nearest Loot (F7): target the closest ground object
 	elif Keybinds.pressed(event, "sit") and Server.active and not player._ui_typing():
 		_server_sit(not player.sitting)                    # the Sit/Stand key (the game's own: Abilities)
 		# handled here: Abilities' own Sit key (_unhandled_input) saw it too and stood you straight back up (owner
@@ -797,6 +803,10 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()              # (not Abilities' offline sprint as well)
 	elif Keybinds.pressed(event, "ground_target") and Server.active and npcs is ServerWorld and not player._ui_typing():
 		_server_ground_target(get_viewport().get_mouse_position())
+	elif Keybinds.pressed(event, "bot_report") and Server.active and npcs is ServerWorld and not player._ui_typing():
+		# the unseen-characters report (owner 2026-10-17): why nearby gamebots / pets aren't drawn, to bot_report.log
+		PlayerData.message.emit((npcs as ServerWorld).write_bot_report(player.global_position), "system")
+		get_viewport().set_input_as_handled()
 	elif Keybinds.pressed(event, "ground_target") and combat and combat.casting and not player._ui_typing():
 		combat.casting.set_ground_target(player.camera, get_viewport().get_mouse_position())
 		if combat.casting.ground_target != null:
@@ -1062,7 +1072,11 @@ func _server_ground_target(screen_pos: Vector2) -> void:
 		return
 	var r := Server.to_region((npcs as ServerWorld)._current_zone(), hit.position)
 	Server.client.call("GroundTarget", int(r.x), int(r.y), int(r.z), 0x100)
+	_server_gt = hit.position
 	show_ground_target(hit.position)
+
+
+var _server_gt := Vector3.INF                    # your ground target on the server (for the position packets' flag)
 
 
 ## The ground target marker (pipeline/build_gtarget.py; owner 2026-10-14: "yellow and black with a black dot in the
@@ -1295,6 +1309,11 @@ func _send_position(delta: float) -> void:
 	var action := 0
 	if npcs is ServerWorld and (npcs as ServerWorld).target_in_view(player.global_position):
 		action |= 0x30
+	# GROUNT_TARGET_IN_VIEW 0x08: your ground target in sight. Sent as 0, every update cleared the server's
+	# GroundTargetInView, so an Animist's turret failed "Your ground target is not in view." at the end of its cast
+	# (player reports 2026-10-17; the cast's own packet sets it, the next position update took it away)
+	if _server_gt != Vector3.INF and npcs is ServerWorld and (npcs as ServerWorld).sees(player.global_position, _server_gt):
+		action |= 0x08
 	var moved := _last_sent.is_empty() or p.distance_to(_last_sent.get("p", p)) > 0.05 \
 			or heading != int(_last_sent.get("h", -1)) or speed != float(_last_sent.get("s", -1.0)) or _fall_speed > 0.0 \
 			or action != int(_last_sent.get("a", -1))
@@ -1383,6 +1402,11 @@ func _server_release() -> void:
 	Server.command("/release")
 
 
+func _server_release_to(kind: String) -> void:
+	ui.show_release(false)
+	Server.command(("/release " + kind).strip_edges())    # ReleaseCommandHandler: city / house / bind
+
+
 func _server_invite(who: String) -> void:
 	Server.command(("/invite " + who).strip_edges())
 
@@ -1445,8 +1469,31 @@ func _server_skill_info(e: Dictionary) -> void:
 		Server.detail_shown(r[0], r[1])
 
 
+var _member_pick := {}                         # the group member whose row you clicked last (not you)
+
+
+## The group page's DISBAND: your target, if it is in your group, goes - the server's /disband <name> (owner
+## 2026-10-17: with a bot targeted - its row, a click on it, the group-target keys - DISBAND broke up the whole group;
+## the bare /disband takes you out and deletes your /spawn companions). A member's row clicked while it isn't drawn
+## (out of view: no target here) counts too, as long as nothing else has been targeted since. Otherwise the bare
+## /disband: you leave.
 func _server_disband() -> void:
-	Server.command("/disband")
+	var name := ""
+	var pick := _member_pick
+	_member_pick = {}
+	if npcs is ServerWorld:
+		var sw := npcs as ServerWorld
+		var t: Npc = sw.target if sw.target and is_instance_valid(sw.target) else null
+		for m in PlayerData.group_rows():
+			if bool(m.get("me", false)):
+				continue
+			var st: NpcState = sw.by_oid.get(int(m.get("oid", 0)))
+			if t != null and st != null and st.view == t:
+				name = String(m.get("name", ""))
+				break
+			if t == null and not pick.is_empty() and int(m.get("oid", 0)) == int(pick.get("oid", -1)):
+				name = String(m.get("name", ""))
+	Server.command("/disband " + name if name != "" else "/disband")
 
 
 ## The client's /loc line: the zone, your place in it (DAoC units, as the debug text) and the way you face

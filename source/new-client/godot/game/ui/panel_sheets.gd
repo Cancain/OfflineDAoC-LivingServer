@@ -192,7 +192,14 @@ static func _server_magic(list: VBoxContainer) -> void:
 		list.add_child(_line_row(String(head), key))
 		if not bool(_open_lines.get(key, false)):
 			continue
-		for i in groups[head]:
+		# lowest level first inside each spec, as the old client lists them (owner 2026-10-16: they came in the
+		# server's order, mixed by spell type); same-level spells keep the server's order
+		var by_level: Array = (groups[head] as Array).duplicate()
+		by_level.sort_custom(func(a, b):
+			var la := int(Server.skills[a].level)
+			var lb := int(Server.skills[b].level)
+			return la < lb or (la == lb and int(a) < int(b)))
+		for i in by_level:
 			var sk: Dictionary = Server.skills[i]
 			list.add_child(_server_row("spell", "srv:skill:%d" % (i - first), String(sk.name), "spell", int(sk.icon),
 					str(int(sk.level))))
