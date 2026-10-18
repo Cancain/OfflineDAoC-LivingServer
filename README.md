@@ -106,9 +106,11 @@ There are three editions. They are the same game on the same server:
 
 | Edition | What it is | Download |
 |---|---|---|
-| **0.36b** (recommended) | The original DAoC client, with the custom Hibernian class, the **Sluaghbinder** (a pet-summoning undead binder), for players and bots. | [v0.36b release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36b) |
-| **0.36** | The original DAoC client with the classic Classic + SI class list only. There are no Sluaghbinder players or bots. | [v0.36 release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36) |
-| **0.36c** (new) | The game with **two clients**: the original one and a **new client** built in Godot 4. Both play the same account, characters, bots and world, so you can switch whenever you like. It works with 0.36b and with 0.36: the installer asks which one you want. | [v0.36c release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36c) |
+| **0.36b** | The original DAoC client, with the custom Hibernian class, the **Sluaghbinder** (a pet-summoning undead binder), for players and bots. | [v0.36b release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36b) |
+| **0.36** (recommended) | The original DAoC client with the classic Classic + SI class list only. There are no Sluaghbinder players or bots. | [v0.36 release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36) |
+| **0.36c** (BETA) | The game with **two clients**: the original one and a **new client** built in Godot 4. Both play the same account, characters, bots and world, so you can switch whenever you like. It works with 0.36b and with 0.36: the installer asks which one you want. | [v0.36c release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36c) |
+
+**Handy commands:** [QUICK COMMANDS.txt](QUICK%20COMMANDS.txt) lists the in-game commands and launcher shortcuts: teleport to a bot (`/tele`), find monsters of a level (`/mobs`), add 10 or 100 bots at once (Shift or Ctrl + click), and more. Every command is in [ALL SERVER COMMANDS.txt](ALL%20SERVER%20COMMANDS.txt), and both files are in your game folder too.
 
 ## Download and play (no Git or AI needed)
 
@@ -131,7 +133,7 @@ There are three editions. They are the same game on the same server:
    2. Click **ENTER REALM**.
    3. Your own local account is created automatically the first time.
 6. **Create your bots** with the bot buttons in the launcher. Every new install starts with an empty world and
-   default settings.
+   default settings. [QUICK COMMANDS.txt](QUICK%20COMMANDS.txt) has the shortcuts and in-game commands.
 
 **Already have 0.36b or 0.36 and want the new client?** Download `Download-OfflineDAoC-v0.36c.zip`, unzip it,
 double-click `ADD-NEW-CLIENT-TO-0.36-OR-0.36b.cmd` and choose your game folder. Your saves stay as they are, and both

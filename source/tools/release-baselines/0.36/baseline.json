@@ -1,0 +1,19 @@
+{
+  "release": "0.36 / 0.36b / 0.36c",
+  "published_utc": "2026-10-16T22:34:37Z",
+  "repo_tag": "v0.36b (also v0.36, v0.36c)",
+  "repo_commit": "d88b7b2078bafb3a9b3c767f287a4c26155a14bb",
+  "server_source_commit": "cd0b78b",
+  "server_source_note": "CLAUDE VERSION development-source/server at cd0b78b, plus the four edition-switch files kept in this repo",
+  "game_package_manifest": "0.36b-package.sha256",
+  "new_client_package_manifest": "0.36c-new-client.sha256",
+  "edition_files_0.36": {
+    "runtime/data/opendaoc.sqlite3.db": "4fdb7ca498500e8a8bc7f861b3a758d0e77d8636911d04cc7ad6d28002b85d0f",
+    "runtime/client-opendaoc/app/game.dll": "f55ed6b068e22ce8e1106871c2fad6ee10c18390bbb8b5dc772219ad8c8b83bb"
+  },
+  "game_dll_0.36b": "e1d471bb19108610ab9c8ca77dd41af40afe716685b03f4cdeda88c05678463b",
+  "world_db_0.36b": "d7013934b8dfc3f09a6a43f8311792908b21e237afbabfdc933ec014f3f4b151",
+  "launcher_dll": "49ba9c0b2475b35ca3abbe0ea6e123ccc5c97ef24123ac00978e6f5b5e2e3981",
+  "new_client_network_dll": "569c22253243dfb1adabeab7e5d47b5722007568a35b8b68659548fc98b7b06c",
+  "local_world_db_copies": "Claude Takeover GitHub/release-baselines/0.36/world-0.36b.sqlite3.db and world-0.36.sqlite3.db (not in Git)"
+}

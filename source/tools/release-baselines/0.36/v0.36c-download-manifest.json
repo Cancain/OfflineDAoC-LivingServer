@@ -1,0 +1,150 @@
+{
+  "Version": "0.36c",
+  "Title": "Offline DAoC 0.36c (the new client, added to 0.36b or 0.36)",
+  "Mode": "newclient",
+  "BaseVersion": "0.36b",
+  "BaseClientSHA256": "E1D471BB19108610AB9C8CA77DD41AF40AFE716685B03F4CDEDA88C05678463B",
+  "ClassicBaseVersion": "0.36",
+  "ClassicClientSHA256": "F55ED6B068E22CE8E1106871C2FAD6EE10C18390BBB8B5DC772219AD8C8B83BB",
+  "RootFolder": "OfflineDAoC-v0.36c",
+  "RootFiles": [
+    "START OFFLINE DAOC - NEW CLIENT.cmd",
+    "READ ME - NEW CLIENT.txt"
+  ],
+  "UnpackedBytes": 33758711327,
+  "Parts": [
+    {
+      "Name": "OfflineDAoC-v0.36c-part01.zip",
+      "Bytes": 1840662618,
+      "SHA256": "a782cbb828bb8b62570a3c73e3a1ef14d704b33764ce566e202dbf93ca28ac12",
+      "UnpackedBytes": 1848552986,
+      "Files": 2534
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part02.zip",
+      "Bytes": 1831910795,
+      "SHA256": "76d1d523126664bcfe326ea67976a9d7ee6a19c0743ac349383365a8d6927253",
+      "UnpackedBytes": 1848806606,
+      "Files": 809
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part03.zip",
+      "Bytes": 1739876323,
+      "SHA256": "3fbb6b10e18997ba18afcc9f421401160f380eba59f2135d78e7c646907859e8",
+      "UnpackedBytes": 1841724902,
+      "Files": 1101
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part04.zip",
+      "Bytes": 1254219684,
+      "SHA256": "78795cff5988c30f509fa4ddd34d96e9d3558a031749d194735ff9c05dbb3c69",
+      "UnpackedBytes": 1847614096,
+      "Files": 2612
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part05.zip",
+      "Bytes": 1396669356,
+      "SHA256": "df4c7e8ddee9669ed193be4d8100d835b51a81b288c423111d75f8b36e839585",
+      "UnpackedBytes": 1848479443,
+      "Files": 590
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part06.zip",
+      "Bytes": 1564469197,
+      "SHA256": "42f3b13760e15a1d83c9c573c8f61e0b4a432b7d974d3c7184249a23aa69bb0b",
+      "UnpackedBytes": 1849889980,
+      "Files": 5204
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part07.zip",
+      "Bytes": 1517661759,
+      "SHA256": "1eaa404729dc18aaebecf64306581bc341bb64c255e24add367b37c7023f6cc0",
+      "UnpackedBytes": 1847204192,
+      "Files": 1814
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part08.zip",
+      "Bytes": 1546709809,
+      "SHA256": "ddc103c0538c958cd340f8f637f059fd11b1a102f8d0d20c501e407b2de08162",
+      "UnpackedBytes": 1848879256,
+      "Files": 923
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part09.zip",
+      "Bytes": 1616723879,
+      "SHA256": "2b12a42d1ba9438e52e2701a5ef1a9ec9c24bbdb2b4cb7f7cfb9e026e31c7624",
+      "UnpackedBytes": 1849071566,
+      "Files": 3019
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part10.zip",
+      "Bytes": 1799585431,
+      "SHA256": "8dc4a9e369ff7753d515ff6b66356c1fb0feb8014f6448cb46d8ebd8f6f21526",
+      "UnpackedBytes": 1849986043,
+      "Files": 3148
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part11.zip",
+      "Bytes": 1755120913,
+      "SHA256": "2bb7013721b7a34ec01b30de7ff6b0fe9f6929e5ac38be65f465a32d93e3e3b2",
+      "UnpackedBytes": 1847048693,
+      "Files": 4834
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part12.zip",
+      "Bytes": 1634256697,
+      "SHA256": "afb5b15f80083db12fe291c8594ef883d548b0e788aaa0f58e6d571b9e3c6e26",
+      "UnpackedBytes": 1848213974,
+      "Files": 4064
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part13.zip",
+      "Bytes": 1645985221,
+      "SHA256": "1d2623cc51c9f7bc5dd2876704526348ebd3f3efe9eb6e4de85263f3affc0ad5",
+      "UnpackedBytes": 1849704994,
+      "Files": 4297
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part14.zip",
+      "Bytes": 1652745752,
+      "SHA256": "b74c1f388b0a39a9262ea773e78e515fa05aa49ba1c74bea7a34e136cf2a0273",
+      "UnpackedBytes": 1808398544,
+      "Files": 4575
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part15.zip",
+      "Bytes": 1645569113,
+      "SHA256": "082776b1e4985c11e5afdd7db253556e84a7fec8bc2be1695d87bfa28fb9d7e0",
+      "UnpackedBytes": 1845464449,
+      "Files": 2668
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part16.zip",
+      "Bytes": 1644877640,
+      "SHA256": "857e6064ef89a30ccec215455330b070711bd0df40849951bf53c3397bcae688",
+      "UnpackedBytes": 1824531312,
+      "Files": 2426
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part17.zip",
+      "Bytes": 1697803933,
+      "SHA256": "aac692504d09b716d0588ba9ec7cacccd5cde2e79285dd3ec671ae206e11e20f",
+      "UnpackedBytes": 1849998788,
+      "Files": 4090
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part18.zip",
+      "Bytes": 1590626919,
+      "SHA256": "1605ec4bb167c95a8678bc1061544e6b9d120c1f052163d9213508ae59e346a2",
+      "UnpackedBytes": 1827834004,
+      "Files": 4329
+    },
+    {
+      "Name": "OfflineDAoC-v0.36c-part19.zip",
+      "Bytes": 402403267,
+      "SHA256": "605b55d7220ec2c2c004c4f6181a366aecef44c39af5bf7aeea1d0b83fed7ff1",
+      "UnpackedBytes": 577307499,
+      "Files": 718
+    }
+  ]
+}

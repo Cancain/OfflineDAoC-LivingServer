@@ -55,12 +55,26 @@ function Move-FailedNewCopyAside([string]$path, [string]$parent, [string]$leaf) 
 }
 
 $releaseBase = "https://github.com/shadowofze/OfflineDAoC/releases/download/v$ReleaseVersion"
-function Get-ReleaseAsset([string]$Name, [string]$OutFile) {
+# Windows PowerShell's own download is several times slower while it draws its progress bar, so release files come down
+# with Windows' built-in curl.exe (fast, with a progress bar, retries, and resuming a part that was cut off midway);
+# PowerShell, without its progress bar, is only the fallback.
+$ProgressPreference = 'SilentlyContinue'
+function Get-ReleaseAsset([string]$Name, [string]$OutFile, [int64]$Bytes = -1) {
     if ($LocalAssets) {
         Copy-Item -LiteralPath (Join-Path (Join-Path $LocalAssets "v$ReleaseVersion") $Name) -Destination $OutFile -Force
-    } else {
-        Invoke-WebRequest -UseBasicParsing -Uri "$releaseBase/$Name" -OutFile $OutFile
+        return
     }
+    # Only a shorter, unfinished part is continued; anything else is fetched from the start.
+    $existing = Get-Item -LiteralPath $OutFile -ErrorAction SilentlyContinue
+    if ($existing -and ($Bytes -lt 0 -or $existing.Length -ge $Bytes)) { Remove-Item -LiteralPath $OutFile -Force }
+    $curl = Join-Path $env:SystemRoot 'System32\curl.exe'
+    if (Test-Path -LiteralPath $curl -PathType Leaf) {
+        & $curl --location --fail --retry 5 --retry-delay 5 --continue-at - --progress-bar --output $OutFile "$releaseBase/$Name"
+        if ($LASTEXITCODE -eq 0) { return }
+        Write-Warning "curl.exe could not download $Name (code $LASTEXITCODE); trying again with PowerShell."
+        Remove-Item -LiteralPath $OutFile -Force -ErrorAction SilentlyContinue
+    }
+    Invoke-WebRequest -UseBasicParsing -Uri "$releaseBase/$Name" -OutFile $OutFile
 }
 $rootFolder = "OfflineDAoC-v$ReleaseVersion"
 $partPattern = '^' + [regex]::Escape($rootFolder) + '\.zip\.\d{3}$'
@@ -436,7 +450,7 @@ if ($manifest.Mode -eq 'newclient') {
         if ($valid) { $valid = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -eq $part.SHA256 }
         if (!$valid) {
             Write-Host ("Step 2 of 2: new client part {0} of {1} ({2:N1} GB)..." -f $index, $manifest.Parts.Count, ($part.Bytes / 1GB))
-            Get-ReleaseAsset $part.Name $path
+            Get-ReleaseAsset $part.Name $path ([int64]$part.Bytes)
             if ((Get-Item -LiteralPath $path).Length -ne $part.Bytes -or (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -ne $part.SHA256) {
                 throw 'Download verification failed. Run this file again to retry; finished parts are kept.'
             }
@@ -522,7 +536,7 @@ foreach ($part in $manifest.Parts) {
     if ($valid) { $valid = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash -eq $part.SHA256 }
     if (!$valid) {
         Write-Host "Downloading $($part.Name)..."
-        Get-ReleaseAsset $part.Name $path
+        Get-ReleaseAsset $part.Name $path ([int64]$part.Bytes)
         if ((Get-Item -LiteralPath $path).Length -ne $part.Bytes -or (Get-FileHash -LiteralPath $path).Hash -ne $part.SHA256) { throw 'Download verification failed. Run again to retry the incomplete part.' }
     }
     $partPaths += $path
