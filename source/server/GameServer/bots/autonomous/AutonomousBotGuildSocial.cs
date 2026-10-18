@@ -283,9 +283,15 @@ public static class AutonomousBotGuildSocial
             // A corpus reply for what the player said ("ty" -> "np", "lol" -> "heh", "ding" -> "gz"), else today's lines
             // (0.36-se.4: "haha true" answered any guild line that wasn't a question).
             // Unknown and real-world lines keep today's guild replies; nobody here says "omw" to a rez ask.
-            string line = intent is not (eAutonomousChatIntent.Unknown or eAutonomousChatIntent.IgnoreOutOfWorld) &&
-                          AutonomousBotVoices.TryLine(bot, "reply", out VC.Picked picked, AutonomousBotVoices.IntentName(intent),
-                              slots: slots, relax: true, requireVoices: false)
+            VC.Picked picked = null;
+            // The question type first, whatever the intent ("anyone on?" reads as none; live test 2026-10-18: it drew
+            // "hmm, i would ask a trainer").
+            string line = AutonomousBotVoices.TryShapedReply(bot, message, out picked, slots, relax: true, requireVoices: false) ||
+                          intent is not (eAutonomousChatIntent.Unknown or eAutonomousChatIntent.IgnoreOutOfWorld) &&
+                          (intent == eAutonomousChatIntent.Greeting
+                              ? AutonomousBotVoices.TryGreetingReply(bot, message, out picked, slots, relax: true, requireVoices: false)
+                              : AutonomousBotVoices.TryLine(bot, "reply", out picked, AutonomousBotVoices.IntentName(intent),
+                                  slots: slots, relax: true, requireVoices: false))
                 ? picked.Text
                 : Lines.Reply(kind, player.Name, bot.Level, bot.CurrentZone?.Description, Random.Shared);
             if (!AutonomousBotChatCoordinator.TryAddDistinctResponse(used, line, out line))
@@ -368,7 +374,7 @@ public static class AutonomousBotGuildSocial
             foreach (string answers in VC.AnswerChain(voiced.Line.Invites))
             {
                 if (!AutonomousBotVoices.TryLine(other, "reply", out VC.Picked reply, answers: answers, slots: slots,
-                        requireVoices: false))
+                        requireVoices: false, filter: line => AutonomousChatShortTalk.ReplyFits(voiced.Text, line.Text)))
                     continue;
                 ScheduleGuildLine(other, guild, AutonomousBotChatCoordinator.ReplyDelayMs(reply.Text, 0, Random.Shared) + 1_500, () => reply.Text);
                 break;

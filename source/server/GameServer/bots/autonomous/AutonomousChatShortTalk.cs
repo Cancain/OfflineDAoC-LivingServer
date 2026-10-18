@@ -97,6 +97,71 @@ public static class AutonomousChatShortTalk
     public static bool SameClassWord(string a, string b) =>
         string.Equals(a.TrimEnd('s'), b.TrimEnd('s'), StringComparison.OrdinalIgnoreCase);
 
+    /// <summary>"how are you?", "hows everyone", "sup": a greeting that asks back, answered "not bad, you?" rather than "hi"
+    /// (live test 2026-10-18: "hi all" drew "not bad, and you?").</summary>
+    public static bool AsksHowAreYou(string text) =>
+        HasPhrase(AutonomousChatIntentModel.Words(text).Select(word => word.Replace("'", string.Empty)).ToArray(),
+            "how are you", "how are u", "how r u", "how r you", "how are ya", "how are yall", "how is everyone", "how is everybody",
+            "hows everyone", "hows everybody", "hows it going", "how is it going", "how are things", "hows things", "how you doing",
+            "how u doing", "how ya doing", "how goes it", "whats up", "wassup", "sup");
+
+    /// <summary>"anyone on?", "anybody here?", "whos on": asks who is around, answered "here" or "im on" (live test
+    /// 2026-10-18: /gu "anyone on?" drew "good question, someone else might know").</summary>
+    public static bool AsksWhoIsOn(string text)
+    {
+        string[] words = AutonomousChatIntentModel.Words(text).Select(word => word.Replace("'", string.Empty)).ToArray();
+        return words.Length <= 5 && HasPhrase(words, "anyone on", "anybody on", "any1 on", "anyone here", "anybody here", "anyone around",
+            "anybody around", "anyone awake", "anyone online", "anybody online", "who is on", "whos on", "whos around", "who is around",
+            "anyone still on", "anyone still up", "anyone up");
+    }
+
+    /// <summary>The question type a player's line asks, answered from that reply set before replies by topic: "ask_howareyou",
+    /// "ask_on", or null.</summary>
+    public static string QuestionShape(string text)
+    {
+        if (AsksHowAreYou(text))
+            return "ask_howareyou";
+        if (AsksWhoIsOn(text))
+            return "ask_on";
+        string[] words = AutonomousChatIntentModel.Words(text).Select(word => word.Replace("'", string.Empty)).ToArray();
+        // "what level are you?" in /group drew "sure Wrenfield, what do you need?" (live test 2026-10-18).
+        if (HasPhrase(words, "what level are you", "what lvl are you", "what level r u", "what lvl r u", "whats your level", "whats ur level",
+                "what level is everyone", "what lvl is everyone", "what level are you all", "how high are you"))
+            return "ask_level";
+        if (HasPhrase(words, "how close are you to", "how close r u to", "how close is everyone to", "how far to your next level"))
+            return "ask_xp";
+        // "where to next?" in a group: the next hunt, not directions (live test 2026-10-18).
+        if (HasPhrase(words, "where to next", "where now", "where next", "where are we heading", "where are we going", "where should we go",
+                "where should we head", "where we going", "where we heading"))
+            return "ask_next";
+        // "lf guild" that no bot guild took up (already in a guild, bot guilds off) drew "i could use a group too".
+        if (AutonomousBotGuildChatLines.AsksForGuild(text, false))
+            return "ask_guild";
+        // "mind if i hunt near cotswold?" drew "what?" and "yeah?" (live test 2026-10-18).
+        if (HasPhrase(words, "mind if i", "ok if i", "okay if i", "is it ok if", "alright if i", "anyone mind if"))
+            return "ask_permission";
+        // "should i roll a cleric or a friar?"
+        if (text.Contains('?') && words.Contains("or") && !HasPhrase(words, "or something", "or anything", "or what", "or so", "or not"))
+            return "ask_choice";
+        return null;
+    }
+
+    /// <summary>
+    /// False for a reply that asks what the line already said: "what lvl?" to "paladin 6 here" (live test 2026-10-18).
+    /// </summary>
+    public static bool ReplyFits(string incoming, string reply)
+    {
+        if (string.IsNullOrEmpty(incoming) || string.IsNullOrEmpty(reply))
+            return true;
+        string[] words = AutonomousChatIntentModel.Words(reply);
+        bool asksLevel = HasPhrase(words, "what lvl", "what level", "level range", "what level are you", "what lvl are you", "how high are you");
+        if (asksLevel && incoming.Any(char.IsDigit))
+            return false;
+        // "lfg 50 reaver will travel" drew "what class are u?".
+        bool asksClass = HasPhrase(words, "what class", "which class", "what are you playing", "what r u playing");
+        return !asksClass || !NamesAClass(incoming);
+    }
+
     public static bool HasPhrase(string[] words, params string[] phrases)
     {
         string text = " " + string.Join(' ', words) + " ";

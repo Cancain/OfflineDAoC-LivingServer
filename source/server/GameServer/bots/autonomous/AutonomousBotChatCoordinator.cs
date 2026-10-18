@@ -21,6 +21,12 @@ public static class AutonomousBotChatCoordinator
     private static readonly Dictionary<eRealm, long> FactionGap = new();
     private static readonly Dictionary<ushort, long> LocalGap = new();
     private static readonly Dictionary<eRealm, long> LastFactionPlayerResponse = new();
+    /// <summary>When a player of the realm last spoke in /faction. Unprompted lines wait <see cref="PlayerQuietMs"/> after it, so
+    /// they aren't read as answers (live test 2026-10-18: "lf group, minstrel 50" right after "mind if i hunt near cotswold?").</summary>
+    private static readonly Dictionary<eRealm, long> LastPlayerFactionLine = new();
+    public const int PlayerQuietMs = 15_000;
+
+    public static bool QuietAfterPlayer(long lastPlayerLine, long now) => lastPlayerLine > 0 && now - lastPlayerLine < PlayerQuietMs;
     private static readonly Dictionary<ushort, long> LastLocalPlayerResponse = new();
     private static readonly Dictionary<string, long> LastTellResponse = new(StringComparer.OrdinalIgnoreCase);
 
@@ -64,6 +70,8 @@ public static class AutonomousBotChatCoordinator
             long now = GameLoop.GameLoopTime;
             if (faction)
             {
+                if (QuietAfterPlayer(LastPlayerFactionLine.GetValueOrDefault(starter.Realm), now))
+                    return false;
                 long gap = FactionGap.GetValueOrDefault(starter.Realm, 180_000);
                 if (LastFactionAmbient.TryGetValue(starter.Realm, out long last) && now - last < gap)
                     return false;
@@ -125,6 +133,9 @@ public static class AutonomousBotChatCoordinator
         if (player == null || string.IsNullOrWhiteSpace(message))
             return;
         BroadcastFaction(player.Name, player.Realm, message);
+        AutonomousBotDebates.PlayerSpoke(player.Realm);
+        lock (Sync)
+            LastPlayerFactionLine[player.Realm] = GameLoop.GameLoopTime;
         if (AutonomousBotGuildSocial.TryAnswerGuildRequest(player, message, true))
             return;
         lock (Sync)
@@ -459,7 +470,7 @@ public static class AutonomousBotChatCoordinator
             .Where(Eligible)
             .Where(bot => bot.Realm == player.Realm)
             .Where(bot => faction || bot.CurrentRegion == player.CurrentRegion && bot.IsWithinRadius(player, WorldMgr.SAY_DISTANCE))
-            .OrderByDescending(bot => PlayerRelevance(bot, player, message, intent))
+            .OrderByDescending(bot => PlayerRelevance(bot, player, message, intent, faction) - (faction && AnsweredRecently(player.Realm, bot) ? 6 : 0))
             .ThenBy(_ => Random.Shared.Next())
             .ToArray();
         GameBot[] mentioned = eligible.Where(bot => ContainsMention(message, bot.Name)).ToArray();
@@ -497,6 +508,8 @@ public static class AutonomousBotChatCoordinator
             if (!TryAddDistinctResponse(scheduledResponses, response, out response))
                 continue;
             due = ReplyDelayMs(response, due, Random.Shared);
+            if (faction)
+                NoteFactionResponder(player.Realm, responder);
             Schedule(responder, due, () =>
             {
                 if (faction && HasFactionAudience(responder.Realm))
@@ -509,7 +522,7 @@ public static class AutonomousBotChatCoordinator
 
     /// <summary>Who answers a player first: a bot that can really help (a rezzer near a dead player, a bot in the
     /// frontier for "inc", a bot close in level for a group question), then bots whose task matches the words.</summary>
-    private static int PlayerRelevance(GameBot bot, GamePlayer player, string message, eAutonomousChatIntent intent)
+    private static int PlayerRelevance(GameBot bot, GamePlayer player, string message, eAutonomousChatIntent intent, bool faction = false)
     {
         int score = Relevance(bot, message);
         if (intent == eAutonomousChatIntent.Rez && WillComeRez(bot, player))
@@ -522,9 +535,33 @@ public static class AutonomousBotChatCoordinator
         // zone offered help to a level 3 near Cotswold).
         if (intent is eAutonomousChatIntent.Grouping or eAutonomousChatIntent.Grinding or eAutonomousChatIntent.Rez)
             score += bot.CurrentZone != null && bot.CurrentZone == player.CurrentZone ? 8 : bot.CurrentRegion == player.CurrentRegion ? 4 : 0;
-        if (bot.Group != null && bot.Group == player.Group)
+        // A groupmate answers first in /say, and for a rez or a "ty" anywhere; in /faction the realm answers (live test
+        // 2026-10-18: the player's one groupmate answered nearly every /faction line, 20 lines in 20 minutes).
+        if (bot.Group != null && bot.Group == player.Group && (!faction || intent is eAutonomousChatIntent.Rez or eAutonomousChatIntent.Thanks))
             score += 10;
         return score;
+    }
+
+    /// <summary>The last few bots that answered a player in /faction, by realm: they step back so others get a turn.</summary>
+    private static readonly Dictionary<eRealm, Queue<long>> RecentFactionResponders = new();
+    public const int RecentResponderMemory = 4;
+
+    private static bool AnsweredRecently(eRealm realm, GameBot bot)
+    {
+        lock (Sync)
+            return RecentFactionResponders.TryGetValue(realm, out var recent) && recent.Contains(bot.DatabaseID);
+    }
+
+    private static void NoteFactionResponder(eRealm realm, GameBot bot)
+    {
+        lock (Sync)
+        {
+            if (!RecentFactionResponders.TryGetValue(realm, out var recent))
+                RecentFactionResponders[realm] = recent = new Queue<long>();
+            recent.Enqueue(bot.DatabaseID);
+            while (recent.Count > RecentResponderMemory)
+                recent.Dequeue();
+        }
     }
 
     /// <summary>
@@ -664,7 +701,8 @@ public static class AutonomousBotChatCoordinator
             {
                 foreach (string answers in chain)
                 {
-                    if (AutonomousBotVoices.TryLine(responder, "reply", out VC.Picked picked, answers: answers, slots: slots))
+                    if (AutonomousBotVoices.TryLine(responder, "reply", out VC.Picked picked, answers: answers, slots: slots,
+                            filter: line => AutonomousChatShortTalk.ReplyFits(opening, line.Text)))
                     {
                         response = picked.Text;
                         break;
@@ -715,7 +753,8 @@ public static class AutonomousBotChatCoordinator
 
     /// <summary>A reply by name from a bot that remembers the player (Living Server memory), else the fallback.</summary>
     private static string KnownOr(GameBot responder, GamePlayer player, string incoming, Func<string> fallback) =>
-        AutonomousLivingServer.MemoryOn && Random.Shared.NextDouble() < 0.6 && AutonomousLivingServer.TryKnownReply(responder, player,
+        AutonomousLivingServer.MemoryOn && AutonomousChatShortTalk.QuestionShape(incoming) == null && Random.Shared.NextDouble() < 0.6 &&
+        AutonomousLivingServer.TryKnownReply(responder, player,
             AutonomousBotVoices.IntentName(AutonomousChatIntentModel.Predict(incoming)), out string known)
             ? known
             : fallback();
@@ -732,14 +771,18 @@ public static class AutonomousBotChatCoordinator
             return fallback();
         eAutonomousChatIntent value = knownIntent ?? AutonomousChatIntentModel.Predict(incoming);
         string intent = AutonomousBotVoices.IntentName(value);
-        // A bot that remembers this player answers by name, or coolly after abuse (Living Server memory).
-        if (player != null && Random.Shared.NextDouble() < 0.6 && AutonomousLivingServer.TryKnownReply(responder, player, intent, out string known))
+        // A bot that remembers this player answers by name, or coolly after abuse (Living Server memory). Not to a question
+        // with answers of its own: "where to next?" drew "Wrenfield?" (live test 2026-10-18).
+        if (player != null && AutonomousChatShortTalk.QuestionShape(incoming) == null && Random.Shared.NextDouble() < 0.6 &&
+            AutonomousLivingServer.TryKnownReply(responder, player, intent, out string known))
             return known;
         if (!AutonomousBotVoices.Enabled)
             return fallback();
         var slots = player == null ? null : new Dictionary<string, string>(StringComparer.Ordinal) { ["player"] = player.Name };
         // Only a bot that will really come says "omw" to "rez pls" ("will_rez"); one that can't rez at all says so ("!can_rez").
         string[] with = value == eAutonomousChatIntent.Rez && WillComeRez(responder, player) ? ["will_rez"] : null;
+        if (AutonomousBotVoices.TryShapedReply(responder, incoming, out VC.Picked shaped, slots, relax: player != null))
+            return shaped.Text;
         // Class talk is about the class asked about, or about no class in particular (re-run 2026-10-18: "is friar good?"
         // drew "necro pets do all the work").
         if (value == eAutonomousChatIntent.ClassTalk)
@@ -753,7 +796,13 @@ public static class AutonomousBotChatCoordinator
                     filter: line => !AutonomousChatShortTalk.NamesAClass(line.Text)))
                 return general.Text;
         }
-        else if (AutonomousBotVoices.TryLine(responder, "reply", out VC.Picked voiced, intent, slots: slots, flags: with, relax: player != null))
+        else if (value == eAutonomousChatIntent.Greeting)
+        {
+            if (AutonomousBotVoices.TryGreetingReply(responder, incoming, out VC.Picked hello, slots, relax: player != null))
+                return hello.Text;
+        }
+        else if (AutonomousBotVoices.TryLine(responder, "reply", out VC.Picked voiced, intent, slots: slots, flags: with, relax: player != null,
+                     filter: line => AutonomousChatShortTalk.ReplyFits(incoming, line.Text)))
             return voiced.Text;
         VC.Picked fallbackLine;
         if (player != null && value is not (eAutonomousChatIntent.Unknown or eAutonomousChatIntent.IgnoreOutOfWorld or eAutonomousChatIntent.Abuse) &&
@@ -761,6 +810,10 @@ public static class AutonomousBotChatCoordinator
             return fallbackLine.Text;
         return fallback();
     }
+
+    /// <summary>A bot's voiced reply to a player's line, or null (the /group answers use it; 0.36-se.4).</summary>
+    internal static string ReplyToPlayer(GameBot responder, GamePlayer player, string message) =>
+        VoicedReply(responder, message, () => null, player);
 
     /// <summary>How many of a conversation's scheduled replies were actually said (they run on timers).</summary>
     private sealed class ReplyTally

@@ -460,5 +460,169 @@ namespace DOL.GS.Tests
         }
 
         #endregion
+
+        #region Live test 2026-10-18
+
+        [TestCase("how is everyone?", true)]
+        [TestCase("hey all, hows it going", true)]
+        [TestCase("how's everyone doing", true)]
+        [TestCase("sup all", true)]
+        [TestCase("how are you?", true)]
+        [TestCase("hi all", false)]
+        [TestCase("hello", false)]
+        [TestCase("how much xp to 6?", false)]
+        [TestCase("how do i get to camelot", false)]
+        public void AHowAreYouIsToldFromAPlainHello(string text, bool asks) =>
+            Assert.That(AutonomousChatShortTalk.AsksHowAreYou(text), Is.EqualTo(asks));
+
+        [Test]
+        public void HowAreYouGreetingsHaveAnswersOfTheirOwn()
+        {
+            // "hi all" drew "not bad, and you?": those lines answer "how are you" and are kept out of plain hellos.
+            var answers = Corpus.Lines.Where(l => l.Kind == "reply" && l.Answers.Contains("ask_howareyou")).ToList();
+            Assert.That(answers, Has.Count.GreaterThanOrEqualTo(5));
+            Assert.That(Corpus.Lines.Count(l => l.Kind == "reply" && l.Intent == "greeting" && !l.Answers.Contains("ask_howareyou")),
+                Is.GreaterThanOrEqualTo(10), "Plain hellos are left for a plain hello.");
+            Assert.That(Model.Predict("how is everyone?"), Is.EqualTo(Intent.Greeting));
+        }
+
+        [TestCase((ushort)10)]
+        [TestCase((ushort)101)]
+        [TestCase((ushort)201)]
+        public void TheCapitalsAreCapitals(ushort region) =>
+            Assert.That(AutonomousBotVoices.IsCapitalRegion(region), Is.True,
+                "The capitals are one zone at the dungeon offset; chat must not call them dungeons (\"lfg City of Camelot\").");
+
+        [Test]
+        public void ARoleThatSaysItIsNot50IsNotPlayedByA50()
+        {
+            VC.Scene scene = Corpus.Scenes.Single(s => s.Id == "rvr_guild_recruit");
+            Assert.That(scene.Roles["D"].LevelHigh, Is.EqualTo(49), "D says \"i am not 50 yet, can i join\".");
+            var random = new Random(4);
+            var fifties = Enumerable.Range(1, 8).Select(i => new AutonomousBotDebates.Candidate(i, BotPersonalityType.Socialite, "Cleric", 50)).ToList();
+            Assert.That(AutonomousBotDebates.Cast(scene, fifties, random), Is.Null, "Nobody below 50 to play D: the scene isn't cast.");
+            var mixed = fifties.Append(new AutonomousBotDebates.Candidate(99, BotPersonalityType.Socialite, "Cleric", 42)).ToList();
+            for (int i = 0; i < 20; i++)
+                Assert.That(AutonomousBotDebates.Cast(scene, mixed, random)?["D"], Is.EqualTo(99));
+            Assert.That(Corpus.Scenes.Where(s => s.Roles.Values.Any(r => r.LevelLow != 1 || r.LevelHigh != 50)).Select(s => s.Id),
+                Is.SupersetOf(new[] { "rvr_guild_recruit", "rvr_relic_retake", "hib_gen_relic_night" }));
+        }
+
+        [TestCase("anyone on?", "ask_on")]
+        [TestCase("whos around", "ask_on")]
+        [TestCase("anybody here?", "ask_on")]
+        [TestCase("how is everyone?", "ask_howareyou")]
+        [TestCase("anyone on for a group at the pikemen camp near the bridge?", null)]
+        [TestCase("lf guild", "ask_guild")]
+        [TestCase("mind if i hunt near cotswold?", "ask_permission")]
+        [TestCase("should i roll a cleric or a friar?", "ask_choice")]
+        [TestCase("lfg or something?", null)]
+        [TestCase("where to next?", "ask_next")]
+        [TestCase("what level are you?", "ask_level")]
+        [TestCase("how close are you to a level?", "ask_xp")]
+        [TestCase("hows it going", "ask_howareyou")]
+        [TestCase("so where are we heading?", "ask_next")]
+        [TestCase("lol", null)]
+        public void APlayersQuestionTypeIsRead(string text, string shape) =>
+            Assert.That(AutonomousChatShortTalk.QuestionShape(text), Is.EqualTo(shape));
+
+        [Test]
+        public void QuestionsAboutTheWorldAndWhoIsOnHaveFittingAnswers()
+        {
+            // /gu "anyone on?" drew "good question, someone else might know"; "anyone know if Caer Sursbrooke is ours?" drew
+            // "ask again in a bit".
+            Assert.That(Corpus.Lines.Count(l => l.Kind == "reply" && l.Answers.Contains("ask_on")), Is.GreaterThanOrEqualTo(10));
+            Assert.That(Corpus.Lines.Count(l => l.Kind == "reply" && l.Answers.Contains("ask_know")), Is.GreaterThanOrEqualTo(10));
+            Assert.That(Corpus.Lines.Single(l => l.Text.StartsWith("anyone know who camps")).Invites, Is.EqualTo("ask_know"));
+            Assert.That(Corpus.Lines.Single(l => l.Text == "anyone else up at this hour? i never sleep").Invites, Is.EqualTo("chat"),
+                "\"anyone else...?\" is company, not a request: \"same here\", not \"sorry, busy\".");
+            Assert.That(Corpus.Lines.Single(l => l.Text == "murd tonight? short a couple for a group").Invites, Is.EqualTo("lfg"));
+            Assert.That(Corpus.Lines.Where(l => l.Text.Contains('?') && l.Invites is "joke" or "boast").Select(l => l.Text),
+                Is.All.Not.StartWith("who is the best"));
+        }
+
+        [TestCase("what does lfg mean?", "looking for group")]
+        [TestCase("whats pbae", "point blank")]
+        [TestCase("noob question, what is a con?", "tough")]
+        [TestCase("what does inc mean", "incoming")]
+        public void ChatWordsAreExplained(string text, string part)
+        {
+            Assert.That(Knowledge.TryExplainTerm(text, out string answer), Is.True);
+            Assert.That(answer, Does.Contain(part));
+        }
+
+        [TestCase("what is the best class?")]
+        [TestCase("what does a friar do")]
+        [TestCase("lfg")]
+        public void OtherQuestionsAreNotGlossary(string text) => Assert.That(Knowledge.TryExplainTerm(text, out _), Is.False);
+
+        [Test]
+        public void RepliesDontNameAChannel()
+        {
+            // A reply can be sent in /faction, /say, /group or /gu: "ask in /faction, someone will know" was said in /faction.
+            Assert.That(Corpus.Lines.Where(l => l.Kind == "reply").Select(l => l.Text),
+                Has.None.Matches(@"\b(try|ask in|post in|someone in) /?faction\b"),
+                "Advice that teaches the channel (\"say lfg in faction with your level\") is fine.");
+        }
+
+        [Test]
+        public void AGroupInACapitalDoesntTalkAboutPulls()
+        {
+            var inCamelot = new VC.Speaker(1, "Theaenorelle", eRealm.Albion, "Cleric", 8, BotPersonalityType.Socialite,
+                new HashSet<string> { "in_group", "in_player_group", "in_capital", "evening" });
+            var lines = Corpus.Candidates("group", inCamelot).Select(l => l.Text).ToList();
+            Assert.That(lines, Is.Not.Empty);
+            Assert.That(lines, Has.None.Contains("pull").And.None.Contains("oom").And.None.Contains("camp"));
+            Assert.That(Corpus.Lines.Single(l => l.Text == "where to next?").Invites, Is.EqualTo("ask_next"));
+            Assert.That(Corpus.Lines.Count(l => l.Kind == "reply" && l.Answers.Contains("ask_next")), Is.GreaterThanOrEqualTo(8));
+        }
+
+        [TestCase("any guild running groups today? paladin 6 here", "what lvl?", false)]
+        [TestCase("lfg 5 scout", "what level range?", false)]
+        [TestCase("lfg, anyone?", "what lvl?", true)]
+        [TestCase("lfg 50 reaver will travel", "what class are u?", false)]
+        [TestCase("lfg 50 will travel", "what class are u?", true)]
+        [TestCase("lfg 5 scout", "im free, what are you hunting?", true)]
+        public void AReplyDoesntAskWhatWasSaid(string incoming, string reply, bool fits) =>
+            Assert.That(AutonomousChatShortTalk.ReplyFits(incoming, reply), Is.EqualTo(fits));
+
+        [TestCase("Camelot City", "Camelot")]
+        [TestCase("City of Camelot", "Camelot")]
+        [TestCase("Jordheim", null)]
+        public void CapitalsAreFoundByTheirShortName(string name, string shortName) =>
+            Assert.That(Knowledge.ShortCityName(name), Is.EqualTo(shortName));
+
+        [TestCase("tell me about it")]
+        [TestCase("story of my life")]
+        [TestCase("been like that all night")]
+        public void SympathyAnswersOnlyComplaints(string text) =>
+            Assert.That(Corpus.Lines.Single(l => l.Kind == "reply" && l.Text == text).Answers, Is.EqualTo(new[] { "complaint" }),
+                "\"picked up new spells, cant wait to try them\" drew \"tell me about it\".");
+
+        [Test]
+        public void TravelLinesNameWhereTheBotIsGoing()
+        {
+            // "heading to {zone}" named the zone the bot was in ("any1 know the fastest way to City of Camelot?" in Camelot).
+            var travel = Corpus.Lines.Where(l => l.Needs.Contains("traveling") && l.Text.Contains(" to {")).ToList();
+            Assert.That(travel, Is.Not.Empty);
+            Assert.That(travel.Select(l => l.Text), Has.All.Contains("{destination}"));
+        }
+
+        [Test]
+        public void UnpromptedFactionLinesWaitAfterAPlayerSpeaks()
+        {
+            Assert.That(Chat.QuietAfterPlayer(10_000, 10_000 + Chat.PlayerQuietMs - 1), Is.True);
+            Assert.That(Chat.QuietAfterPlayer(10_000, 10_000 + Chat.PlayerQuietMs), Is.False);
+            Assert.That(Chat.QuietAfterPlayer(0, 5_000), Is.False, "No player has spoken yet.");
+        }
+
+        [Test]
+        public void ARunningSceneWaitsWhenAPlayerSpeaks()
+        {
+            Assert.That(AutonomousBotDebates.AfterPlayerSpoke(1_000, 5_000), Is.EqualTo(5_000 + AutonomousBotDebates.PlayerPauseMs));
+            Assert.That(AutonomousBotDebates.AfterPlayerSpoke(90_000, 5_000), Is.EqualTo(90_000), "A longer pause is kept.");
+        }
+
+        #endregion
     }
 }

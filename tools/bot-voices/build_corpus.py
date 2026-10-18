@@ -59,8 +59,8 @@ SLOTS = {'me', 'class', 'level', 'realm', 'zone', 'monster', 'npc', 'item', 'cou
          'capital', 'enemy', 'keep', 'frontier', 'player', 'player_class', 'place', 'q',
          # Living Server
          'target', 'what', 'size', 'classes', 'killer', 'killer_class',
-         # 0.36-se.4: the plural of {monster} ("2 hill cats")
-         'monsters'}
+         # 0.36-se.4: the plural of {monster} ("2 hill cats"), and where a travelling bot is going
+         'monsters', 'destination'}
 MEMORY_SLOTS = {'player', 'player_class', 'place'}
 MAX_RAW = 140
 
@@ -168,18 +168,44 @@ def fresh_tags():
 def infer_invites(text, kind):
     """What an opener without @invites invites: questions by their shape, otherwise a light reaction."""
     t = SLOT_RE.sub('x', text.lower()).strip()
+    # "anyone know who camps x? want to take turns": the question is what comes before the last "?" (live test 2026-10-18).
+    # lfg and trade lines keep their own answers ("want to join us? sending an invite").
+    if '?' in t and kind not in ('lfg', 'trade'):
+        t = t[:t.rfind('?') + 1]
     if t.endswith('?'):
-        if re.search(r"^((hey|hi|so|ok|yo)[ ,]+)?(how (is|are|r) (every|you|u|ya|yall|things|it)|hows (every|it|things)|how goes|"
+        if re.search(r"^((hey|hi|hello|heya|so|ok|yo|evening|morning)( all| everyone| guys| guildies| folks)?[ ,!]+|just got (home|on|back|in)[ ,]+)?(how (is|are|r) (every|you|u|ya|yall|things|it)|hows (every|it|things)|how goes|"
                      r"what did i miss|whats new|whats up|what is everyone (up to|doing))", t):
             return 'ask_howareyou'
         if re.search(r"\b(mind if i|ok if i|okay if i|is it ok if)\b", t):
             return 'ask_permission'
         if re.search(r"\bor\b", t) and not re.search(r"\bor (something|so|anything|what)\b", t):
             return 'ask_choice'
+        # "where to next?": where the group goes, answered "your call" or "somewhere with more xp", not directions.
+        if re.search(r"\bwhere (to next|now|next|are we (heading|going|off to)|should we (go|head)|we (going|heading))\b", t):
+            return 'ask_next'
         if re.search(r"\bwhere\b|\bwheres\b|how do (i|you) get|which way|how far", t):
             return 'ask_where'
-        if re.search(r"\b(best|better|worth it|what do (you|u) think|thoughts on|should i|is it worth|favorite|favourite)\b", t):
+        if re.search(r"\b(best(?! (thing|part|moment|day))|better|worth it|what do (you|u) think|thoughts on|should i|is it worth|favorite|favourite)\b", t):
             return 'ask_opinion'
+        # "tell me your best death story": a story, not "pretty sure yes" (live test 2026-10-18).
+        if re.search(r"\b(tell me|whats|what is) your (best|worst|favorite|funniest|dumbest)\b|\bbest thing that happened\b", t):
+            return 'ask_story'
+        # "what level is everyone at?", "how close are you to a level?", "what are we doing this weekend?"
+        if re.search(r"\bwhat level (is|are) (every|you|u|yall)", t):
+            return 'ask_level'
+        if re.search(r"\bhow close (are|r) (you|u|yall|every)", t):
+            return 'ask_xp'
+        if re.search(r"\bwhat (are|r) we (doing|up to)\b", t):
+            return 'ask_plans'
+        # "castle excalibur still ours?", "how much do merchants pay for x?": what someone may know
+        if re.search(r"\b(still ours|still holding|ours right now|did we lose|how much do (merchants|vendors) pay)\b", t):
+            return 'ask_know'
+        # "anyone know if x is ours?": a question about the world, answered "no idea" or "last i saw" (live test 2026-10-18).
+        if re.search(r"\b(anyone|anybody|any1|does anyone|someone) (know|knows|seen|heard)\b", t):
+            return 'ask_know'
+        # "anyone else up at this hour?": company, answered "same here", not "sorry, busy".
+        if re.search(r"\b(anyone|anybody|any1) else\b", t):
+            return 'chat'
         if re.match(r"(anyone|any1|anybody|who|any )", t) or re.search(r"\b(anyone|anybody|any1)\b", t):
             return 'ask_anyone'
         if re.search(r"\b(how|what|why|when|which)\b", t):
@@ -224,6 +250,9 @@ def parse_file(path, problems):
                     if c not in ALL_CLASSES:
                         problems.append(f'{where}: unknown class {c}')
                 scene['roles'][role] = dict(type=split_list(req.get('type', '')), **{'class': split_list(req.get('class', ''))})
+                # levels=35-49: a role whose lines only fit some levels ("i am not 50 yet"; live test 2026-10-18).
+                if 'levels' in req:
+                    scene['roles'][role]['levels'] = parse_levels(req['levels'], where)
             elif key == 'end':
                 scene = None
             else:

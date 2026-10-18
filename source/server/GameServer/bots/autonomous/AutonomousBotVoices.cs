@@ -98,14 +98,14 @@ public static class AutonomousBotVoices
         var flags = new HashSet<string>(StringComparer.Ordinal);
         OfflineWorldBotRecord record = bot.PersistentRecord;
         flags.Add(bot.Group != null ? "in_group" : "solo");
-        if (bot.CurrentRegion?.IsDungeon == true || bot.CurrentZone?.IsDungeon == true) flags.Add("in_dungeon");
+        if (InDungeon(bot)) flags.Add("in_dungeon");
         if (bot.CurrentZone?.IsRvR == true || bot.CurrentRegion?.IsRvR == true)
         {
             flags.Add("in_rvr");
             // 0.36-se.4: a battleground (Abermenai, Thidranki, Murdaigean, Caledonia, Cathal Valley) or the frontier proper
             flags.Add(IsBattlegroundRegion(bot.CurrentRegionID) ? "in_battleground" : "in_frontier");
         }
-        if (!string.IsNullOrEmpty(record?.TravelDestination)) flags.Add("traveling");
+        if (TravelingTo(bot) != null) flags.Add("traveling");
         else if (!string.IsNullOrEmpty(record?.CurrentCampId)) flags.Add("at_camp");
         if (record != null && AutonomousObjectiveAssignments.IsIntentionalTownIdle(record, DateTime.UtcNow)) flags.Add("in_town");
         if (LeveledAt.TryGetValue(bot.DatabaseID, out long leveled) && GameLoop.GameLoopTime - leveled < JustLeveledMs) flags.Add("just_leveled");
@@ -127,6 +127,23 @@ public static class AutonomousBotVoices
 
     /// <summary>Camelot City, Jordheim and Tir na Nog.</summary>
     public static bool IsCapitalRegion(ushort regionId) => regionId is 10 or 101 or 201;
+
+    /// <summary>Where a bot is travelling, or null when it has no destination or is already there (live test 2026-10-18: bots
+    /// at the Realm Exchange in Camelot "travel" to Camelot, and "heading to {zone}" named the zone they were in).</summary>
+    public static string TravelingTo(GameBot bot)
+    {
+        string destination = bot?.PersistentRecord?.TravelDestination;
+        if (string.IsNullOrWhiteSpace(destination) ||
+            string.Equals(destination, bot.CurrentZone?.Description, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(destination, bot.CurrentRegion?.Description, StringComparison.OrdinalIgnoreCase))
+            return null;
+        return destination;
+    }
+
+    /// <summary>Whether a bot is in a dungeon. The capitals are one zone at the dungeon offset, so the server calls them
+    /// dungeons; in the live test of se.4 a bot in Camelot said "lfg City of Camelot".</summary>
+    public static bool InDungeon(GameBot bot) =>
+        !IsCapitalRegion(bot.CurrentRegionID) && (bot.CurrentRegion?.IsDungeon == true || bot.CurrentZone?.IsDungeon == true);
 
     /// <summary>A realm dungeon a bot of this level would use (Kirstena's 2002 ranges, checked against the world database).</summary>
     public static string DungeonFor(eRealm realm, int level)
@@ -201,6 +218,7 @@ public static class AutonomousBotVoices
             ["zone"] = zone,
             ["monster"] = monster,
             ["monsters"] = monster == null ? null : VC.Plural(monster),
+            ["destination"] = TravelingTo(bot),
             ["item"] = item,
             ["count"] = random.Next(2, 5).ToString(),
             ["q"] = VC.Openers[random.Next(VC.Openers.Length)],
@@ -212,7 +230,7 @@ public static class AutonomousBotVoices
         }
         else
         {
-            foreach (var pair in SharedSlots(bot.Realm, bot.Level, random, bot.CurrentRegion?.IsDungeon == true ? zone : null))
+            foreach (var pair in SharedSlots(bot.Realm, bot.Level, random, InDungeon(bot) ? zone : null))
                 slots[pair.Key] = pair.Value;
             // A bot at a camp names where it really is, not a dungeon for its level (audit 2026-10-16).
             if (!string.IsNullOrEmpty(record?.CurrentCampId) && !string.IsNullOrEmpty(zone))
@@ -238,6 +256,34 @@ public static class AutonomousBotVoices
     }
 
     #endregion
+
+    /// <summary>
+    /// A reply to a greeting: "how is everyone?" gets "not bad, you?", a plain "hi all" a hello and never an answer to a
+    /// question nobody asked (live test 2026-10-18: "hi all" drew "not bad, and you?" in /faction and "good just dinged
+    /// actually" in /gu).
+    /// </summary>
+    public static bool TryGreetingReply(GameBot bot, string incoming, out VC.Picked result, IReadOnlyDictionary<string, string> slots = null,
+        bool relax = false, bool requireVoices = true)
+    {
+        bool asked = AutonomousChatShortTalk.AsksHowAreYou(incoming);
+        if (asked && TryLine(bot, "reply", out result, answers: "ask_howareyou", slots: slots, relax: relax, requireVoices: requireVoices))
+            return true;
+        return TryLine(bot, "reply", out result, IntentName(eAutonomousChatIntent.Greeting), slots: slots, relax: relax,
+            requireVoices: requireVoices, filter: line => asked || !line.Answers.Contains("ask_howareyou", StringComparer.Ordinal));
+    }
+
+    /// <summary>A reply for the kind of question a player asked ("anyone on?" -> "here"), before replies by topic.</summary>
+    public static bool TryShapedReply(GameBot bot, string incoming, out VC.Picked result, IReadOnlyDictionary<string, string> slots = null,
+        bool relax = false, bool requireVoices = true)
+    {
+        result = null;
+        string shape = AutonomousChatShortTalk.QuestionShape(incoming);
+        // "hows it going" may read as no intent at all: it is still a how-are-you (live test 2026-10-18: it drew "hm?").
+        if (shape == "ask_howareyou")
+            return TryGreetingReply(bot, incoming, out result, slots, relax, requireVoices);
+        return shape is "ask_on" or "ask_permission" or "ask_choice" or "ask_guild" or "ask_next" or "ask_level" or "ask_xp" &&
+               TryLine(bot, "reply", out result, answers: shape, slots: slots, relax: relax, requireVoices: requireVoices);
+    }
 
     /// <summary>A corpus line of a kind for this bot, or false (the caller keeps its old line).</summary>
     public static bool TryLine(GameBot bot, string kind, out string text, string intent = null, Random random = null)

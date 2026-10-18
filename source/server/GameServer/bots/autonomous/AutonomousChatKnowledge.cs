@@ -26,6 +26,8 @@ public static class AutonomousChatKnowledge
             return false;
 
         string query = message.Trim();
+        if (TryExplainTerm(query, out answer))
+            return true;
         if (LooksLikeStableQuestion(query) && TryAnswerStable(player.Realm, query, out answer))
             return true;
         if (LooksLikeSpellQuestion(query) && TryAnswerSpell(player, query, out answer))
@@ -51,6 +53,41 @@ public static class AutonomousChatKnowledge
             return true;
         return LooksLikeLocationQuestion(query) && TryAnswerLocation(realm, query, out answer);
     }
+
+    #region Chat words (0.36-se.4)
+
+    // What period chat words mean. Live test 2026-10-18: "what does lfg mean?" drew "what level range?".
+    private static readonly Dictionary<string, string> Terms = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["lfg"] = "looking for group", ["lfm"] = "looking for more, a group wants people", ["lf1m"] = "looking for one more",
+        ["gz"] = "congrats", ["grats"] = "congrats", ["inc"] = "incoming, enemies or adds coming", ["oom"] = "out of mana",
+        ["oop"] = "out of power", ["brb"] = "be right back", ["afk"] = "away from keyboard", ["bio"] = "bathroom break lol",
+        ["ks"] = "kill steal, taking someone elses mob", ["pbae"] = "point blank area effect, the caster blows up everything around him",
+        ["pbaoe"] = "point blank area effect, the caster blows up everything around him", ["rp"] = "realm points, you get them in rvr",
+        ["rps"] = "realm points, you get them in rvr", ["rr"] = "realm rank, from realm points", ["rvr"] = "realm vs realm, the frontier",
+        ["wts"] = "want to sell", ["wtb"] = "want to buy", ["wtt"] = "want to trade", ["pst"] = "please send tell",
+        ["pc"] = "price check", ["con"] = "how tough a mob looks, by its color", ["add"] = "another mob joining the fight",
+        ["adds"] = "more mobs joining the fight", ["ding"] = "level up", ["rez"] = "resurrect", ["aggro"] = "a mob that attacks on sight",
+        ["df"] = "darkness falls, the big dungeon", ["ml"] = "master level", ["ra"] = "realm ability", ["np"] = "no problem",
+        ["ty"] = "thank you", ["lol"] = "laughing out loud", ["imo"] = "in my opinion", ["mez"] = "mesmerize, it holds a mob still",
+        ["stun"] = "they cant move or act for a bit", ["zerg"] = "a huge mob of players running together", ["gank"] = "killing someone who cant fight back",
+    };
+
+    /// <summary>"what does lfg mean?", "whats pbae", "what is a con": a short meaning.</summary>
+    public static bool TryExplainTerm(string text, out string answer)
+    {
+        answer = string.Empty;
+        string t = (text ?? string.Empty).Trim().TrimEnd('?', '!', '.').ToLowerInvariant();
+        var m = System.Text.RegularExpressions.Regex.Match(t,
+            @"^(?:so |um |hey |sorry |noob question,? |dumb question,? )?(?:what does|what do|wat does|what is|whats|what's|wat is|wats) (?:an? )?([a-z0-9]+)(?: mean| stand for| means)?$");
+        if (!m.Success || !Terms.TryGetValue(m.Groups[1].Value, out string meaning))
+            return false;
+        string word = m.Groups[1].Value;
+        answer = Pick($"{word} = {meaning}", $"{meaning}", $"it means {meaning}", $"{meaning} :)");
+        return true;
+    }
+
+    #endregion
 
     #region Trainers (0.36-se.4)
 
@@ -81,22 +118,26 @@ public static class AutonomousChatKnowledge
         var trainers = TrainersOf(realm, classId);
         if (trainers.Count == 0)
             return false;
-        // The asker's own region first, then the capital.
+        // The nearest one in the asker's own region, then the capital.
         var best = trainers.OrderByDescending(t => asker != null && t.Region == asker.CurrentRegionID)
+            .ThenBy(t => asker != null && t.Region == asker.CurrentRegionID ? Math.Pow(t.X - asker.X, 2) + Math.Pow(t.Y - asker.Y, 2) : 0)
             .ThenByDescending(t => t.Capital).First();
         string className = AllClasses().FirstOrDefault(c => c?.ID == classId)?.Name?.ToLowerInvariant() ?? "your class";
         var other = trainers.FirstOrDefault(t => t.Zone != best.Zone);
-        answer = other.Name != null && Random.Shared.Next(2) == 0
-            ? $"{className} trainer is {best.Name} in {best.Zone}, theres one in {other.Zone} too"
-            : Random.Shared.Next(2) == 0 ? $"{best.Name} in {best.Zone}, they train {className}s" : $"{className}s train with {best.Name}, {best.Zone}";
+        // Worded to read right when a voice drops the commas (live test 2026-10-18: "Lieutenant Mhoudi in Campacorentin Forest they
+        // train scouts").
+        answer = other.Name != null && Random.Shared.Next(3) == 0
+            ? $"{best.Name} in {best.Zone} trains {className}s, theres one in {other.Zone} too"
+            : Pick($"{className} trainer is {best.Name} in {best.Zone}", $"{best.Name} trains {className}s in {best.Zone}",
+                $"go see {best.Name} in {best.Zone}");
         return true;
     }
 
     private static readonly object TrainerSync = new();
-    private static Dictionary<(eRealm Realm, int ClassId), List<(string Name, string Zone, ushort Region, bool Capital)>> _trainers;
+    private static Dictionary<(eRealm Realm, int ClassId), List<(string Name, string Zone, ushort Region, bool Capital, int X, int Y)>> _trainers;
 
     /// <summary>The trainers of a class a realm can reach, indexed once on the first trainer question.</summary>
-    private static List<(string Name, string Zone, ushort Region, bool Capital)> TrainersOf(eRealm realm, int classId)
+    private static List<(string Name, string Zone, ushort Region, bool Capital, int X, int Y)> TrainersOf(eRealm realm, int classId)
     {
         if (_trainers == null)
         {
@@ -104,7 +145,7 @@ public static class AutonomousChatKnowledge
             {
                 if (_trainers == null)
                 {
-                    var index = new Dictionary<(eRealm, int), List<(string, string, ushort, bool)>>();
+                    var index = new Dictionary<(eRealm, int), List<(string, string, ushort, bool, int, int)>>();
                     foreach (Region region in WorldMgr.GetAllRegions().Where(region => region != null &&
                                  AutonomousCapnBryGoalCatalog.IsClassicOrShroudedIslesExpansion(region.Expansion)))
                     {
@@ -120,7 +161,7 @@ public static class AutonomousChatKnowledge
                                 if (!index.TryGetValue(key, out var list))
                                     index[key] = list = new();
                                 list.Add((trainer.Name, trainer.CurrentZone?.Description ?? region.Description, region.ID,
-                                    AutonomousBotVoices.IsCapitalRegion(region.ID)));
+                                    AutonomousBotVoices.IsCapitalRegion(region.ID), trainer.X, trainer.Y));
                             }
                         }
                     }
@@ -275,6 +316,13 @@ public static class AutonomousChatKnowledge
             return true;
         }
 
+        if (AutonomousBotVoices.IsCapitalRegion(place.RegionId) && place.Area.Equals(place.Name, StringComparison.OrdinalIgnoreCase))
+        {
+            answer = Pick($"{place.Name}? any stable master runs a horse there", $"take a horse to {place.Name}, the roads all lead there",
+                $"{place.Name}, the capital, a stable master gets you there");
+            return true;
+        }
+
         answer = place.Area.Equals(place.Name, StringComparison.OrdinalIgnoreCase)
             ? Pick($"{place.Name} is its own zone, a stable master can get you close", $"{place.Name}? take a horse from a stable master")
             : Pick($"{place.Name} is in {place.Area}", $"{place.Name}? thats in {place.Area}", $"in {place.Area}, follow the road",
@@ -295,9 +343,13 @@ public static class AutonomousChatKnowledge
             foreach (Region region in WorldMgr.GetAllRegions().Where(region => region != null &&
                          AutonomousCapnBryGoalCatalog.IsClassicOrShroudedIslesExpansion(region.Expansion)))
             {
-                Add(building, region.Description, new(region.Description, region.Description, region.ID, region.IsDungeon, false, 0));
+                bool capital = AutonomousBotVoices.IsCapitalRegion(region.ID); // the capitals look like dungeons to the server
+                Add(building, region.Description, new(region.Description, region.Description, region.ID, region.IsDungeon && !capital, false, 0));
                 foreach (Zone zone in region.Zones.Where(zone => zone != null))
-                    Add(building, zone.Description, new(zone.Description, region.Description, region.ID, zone.IsDungeon, false, 0));
+                    Add(building, zone.Description, new(zone.Description, region.Description, region.ID, zone.IsDungeon && !capital, false, 0));
+                // "where is camelot?": nobody types "camelot city" or "city of camelot" (live test 2026-10-18).
+                if (capital && ShortCityName(region.Description) is string shortName)
+                    Add(building, shortName, new(region.Description, region.Description, region.ID, false, false, 0));
 
                 foreach (GameNPC npc in region.Objects.OfType<GameNPC>())
                 {
@@ -320,6 +372,18 @@ public static class AutonomousChatKnowledge
             _places = building.ToDictionary(entry => entry.Key, entry => entry.Value.Distinct().ToArray(), StringComparer.OrdinalIgnoreCase);
             return _places;
         }
+    }
+
+    /// <summary>"Camelot City" or "City of Camelot" -> "Camelot"; null for other names.</summary>
+    public static string ShortCityName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return null;
+        if (name.StartsWith("City of ", StringComparison.OrdinalIgnoreCase))
+            return name["City of ".Length..].Trim();
+        if (name.EndsWith(" City", StringComparison.OrdinalIgnoreCase))
+            return name[..^" City".Length].Trim();
+        return null;
     }
 
     private static void Add(Dictionary<string, List<Place>> index, string key, Place place)

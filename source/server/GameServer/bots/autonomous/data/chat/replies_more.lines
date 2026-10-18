@@ -127,3 +127,124 @@ eh, rather be killing things
 ask me after this pull
 lol whatever you say
 dunno, been here all day
+
+# "anyone know if Caer Sursbrooke is ours?", "anyone know who camps x?": a question about the world.
+# Live test of se.4 (2026-10-18): these drew "ask again in a bit". New writing.
+@kind reply
+@answers ask_know
+@who *
+not sure, havent been that way
+last i saw, yes
+was earlier, not sure now
+someone was there an hour ago
+havent seen anyone
+i think so? dont quote me
+dunno, ask in a bit
+no idea, check the map
+pretty sure, yeah
+heard the same, no idea if its true
+dont think so
+@who Explorer
+was there earlier, looked fine
+@who NoLifer
+yes, been watching it all night
+
+# "anyone on?", "whos around": who is here. Live test of se.4 (2026-10-18): /gu "anyone on?" drew "good question,
+# someone else might know". New writing.
+@kind reply
+@answers ask_on
+@who *
+here o/
+yep, on
+o/ hi
+just got on
+still here
+around, kinda
+half here lol
+here, at the bind
+me
+present
+on and grinding
+here, whats up?
+@who NoLifer
+always on
+@who Socialite
+here!! whats going on
+
+# Guild and group questions about levels and plans ("what level is everyone at now?", "how close are you to a
+# level?", "what are we doing this weekend?"). Before, they drew advice ("practice on blues first"). New writing.
+@kind reply
+@answers ask_level
+@who *
+{level} here
+just hit {level}
+{level} and grinding
+@levels 1-49
+{level}, slowly
+{level}, halfway to the next
+still {level}, dont ask
+@levels 50-50
+50, finally
+capped, just rps now
+@kind reply
+@answers ask_xp
+@levels 1-49
+@who *
+about halfway
+two bubbles
+one more pull i hope
+not even close lol
+just dinged, so far
+almost, few more kills
+three bubbles, ugh
+@levels 50-50
+im 50, no more bubbles
+capped, its all realm points now
+@kind reply
+@answers ask_plans
+@who *
+rvr if enough of us show
+leveling probably
+keep raid sunday?
+whatever gets the most people on
+dunno, bring ideas
+dungeon run maybe
+i am in for anything
+
+# "where to next?", "so where are we heading?": the group's next hunt. Live test of se.4 (2026-10-18): it drew
+# directions ("follow the road"). New writing.
+@kind reply
+@answers ask_next
+@who *
+your call
+you lead, i follow
+somewhere with more xp
+{camp} maybe?
+back to {camp}?
+anywhere but here lol
+stay a bit longer?
+wherever has blues for us
+@levels 1-45
+{dungeon} could be good for us
+@levels 1-50
+@who Explorer
+somewhere new, i am bored of this place
+@who Leveler
+wherever the xp is best, dont care where
+
+# "tell me your best death story", "best thing that happened to you this week? go": a story. Live test of se.4
+# (2026-10-18): it drew "pretty sure yes but dont quote me". New writing.
+@kind reply
+@answers ask_story
+@who *
+too many to pick one lol
+pulled a whole room once, never again
+a guard killed me once, still not sure why
+fell off a cliff running from a grey con
+drowned in a pond, a tiny one
+a named spawned on top of us at the bind
+my pet ran off and brought the whole camp back
+@who Daredevil
+tried to solo an orange, it went about how youd think
+@who Socialite
+best thing this week? this group honestly
