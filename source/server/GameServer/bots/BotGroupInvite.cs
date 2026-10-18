@@ -8,6 +8,53 @@ public static class BotGroupInvite
     public static bool CloseEnoughToInviteByName(GamePlayer player, GameBot bot) =>
         player?.CurrentRegion != null && bot?.CurrentRegion == player.CurrentRegion && player.IsWithinRadius(bot, InviteByNameRange);
 
+    /// <summary>The duty that keeps an autonomous gamebot from answering an invitation (None when it is free).</summary>
+    public enum Duty { None, Dead, Siege, Relic, RvrEvent, RealmRaid, StableRoute, Helper }
+
+    /// <summary>
+    /// The first duty that rules out an invitation, in a fixed order. Pure, so the rules are tested without a world.
+    /// Audit 2026-10-17: /invite by name reaches autonomous gamebots within 6,000 units, and taking one from its
+    /// autonomous group mid-siege, mid-raid or carrying a relic broke the job it was on.
+    /// </summary>
+    public static Duty DutyOf(bool alive, bool siege, bool relic, bool rvrEvent, bool realmRaid, bool stableRoute, bool helper) =>
+        !alive ? Duty.Dead :
+        siege ? Duty.Siege :
+        relic ? Duty.Relic :
+        rvrEvent ? Duty.RvrEvent :
+        realmRaid ? Duty.RealmRaid :
+        stableRoute ? Duty.StableRoute :
+        helper ? Duty.Helper :
+        Duty.None;
+
+    /// <summary>What the player is told when an autonomous gamebot is on duty (null when it is free).</summary>
+    public static string BusyMessage(string name, Duty duty) => duty switch
+    {
+        Duty.Dead => $"{name} is dead and can't join you right now.",
+        Duty.Siege => $"{name} is busy with a siege right now.",
+        Duty.Relic => $"{name} is carrying a relic right now.",
+        Duty.RvrEvent => $"{name} is marching with a realm force right now.",
+        Duty.RealmRaid => $"{name} is committed to a realm raid right now.",
+        Duty.StableRoute => $"{name} is riding a stable master route right now.",
+        Duty.Helper => $"{name} is already helping another player.",
+        _ => null,
+    };
+
+    /// <summary>The duty of an autonomous gamebot. Companion bots are never on duty here.</summary>
+    public static Duty DutyOf(GameBot bot)
+    {
+        if (bot?.IsAutonomousWorldBot != true)
+            return Duty.None;
+        // The force tag is never cleared when an event ends, so it counts only while its event is still running.
+        string force = bot.TempProperties.GetProperty<string>("RvrEventForce");
+        return DutyOf(bot.IsAlive,
+            BotSiegeRuntime.Assigned(bot) || BotSiegeRuntime.HoldingPosition(bot),
+            bot.TempProperties.GetProperty<GameRelic>(GameRelic.PLAYER_CARRY_RELIC_WEAK) != null,
+            !string.IsNullOrEmpty(force) && AutonomousRvrEventLayer.IsEventForce(force, GameLoop.GameLoopTime),
+            AutonomousRealmRaid.IsReserved(bot),
+            bot.IsOnStableMasterRoute,
+            bot.IsTemporaryGroupHelper);
+    }
+
     public static bool TryInvite(GamePlayer player, GameBot bot)
     {
         if (player == null || bot == null || player.Realm != bot.Realm)
@@ -26,6 +73,13 @@ public static class BotGroupInvite
         if (player.Group != null && player.Group.MemberCount >= ServerProperties.Properties.GROUP_MAX_MEMBER)
         {
             ChatUtil.SendSystemMessage(player, "The group is full.");
+            return false;
+        }
+
+        string busy = BusyMessage(bot.Name, DutyOf(bot));
+        if (busy != null)
+        {
+            ChatUtil.SendSystemMessage(player, busy);
             return false;
         }
 
