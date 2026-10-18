@@ -1,6 +1,6 @@
 # Audit and release plan (2026-10-12)
 
-What was built on Chris's fork (`chris4aker/OfflineDAoC`) on 2026-10-11 and 2026-10-12, what state
+What was built on the fork (`chris4aker/OfflineDAoC-SocialExpansion`) on 2026-10-11 and 2026-10-12, what state
 each piece is in, and the plan to code, test, install and release it.
 
 **New development stops here** until this release is played and fixed.

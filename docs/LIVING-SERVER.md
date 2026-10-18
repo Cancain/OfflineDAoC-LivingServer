@@ -3,11 +3,13 @@
 Part of the Social Expansion fork. The goal (Chris, 2026-10-16): make the autonomous gamebots feel
 like players on a 2003 server, through continuity and consequence more than through more chat.
 
-**Status:** built on `feature/living-server`. Automated tests pass (see "Tests" below).
-**Partly checked in game** (2026-10-17, see "In-game check" below). Every part starts **off**; with
-everything off the server behaves exactly as before.
+**Status:** released in 0.36-se.1. Automated tests pass (see "Tests" below). **Partly checked in
+game** (2026-10-17, see "In-game check" below). Every part starts **off**. With everything off, the
+only changes left are the always-on ones listed in [KNOWN-ISSUES.md](KNOWN-ISSUES.md).
 
-Only autonomous gamebots change. Your `/spawn` companions and real players are never affected.
+The Living Server parts change only autonomous gamebots; your `/spawn` companions and real players
+are not affected by them. (One always-on fix does reach companions: a dead bot's corpse now stays
+where it fell until it releases.)
 Lines come from the bot-voices corpus (`living_server.lines` and `memory.lines`), in each bot's
 own writing style. They work whether or not "Bot voices" is on, and they are only said where a
 real player can hear them (your group, `/say` near you, your realm's `/faction`, a guild with you

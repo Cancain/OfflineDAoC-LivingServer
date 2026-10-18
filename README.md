@@ -20,9 +20,10 @@
 They join guilds and recruit you, each has its own personality, and they talk the way players did in
 2002–2003, down to the build arguments in /faction.
 
-> **Released: 0.36-se.1 (2026-10-17)**, for shadowofze's 0.36 / 0.36b, with or without the 0.36c
-> new client. Download it from this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases);
-> what's in it is in [CHANGELOG-SOCIAL-EXPANSION.md](CHANGELOG-SOCIAL-EXPANSION.md).
+> **Latest release: 0.36-se.2**, for shadowofze's 0.36 / 0.36b, with or without the 0.36c new client.
+> Download it from this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases).
+> Every change is in [CHANGELOG-SOCIAL-EXPANSION.md](CHANGELOG-SOCIAL-EXPANSION.md); known problems and
+> what hasn't been tested are in [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md).
 
 ## Why
 
@@ -42,28 +43,65 @@ Social Expansion makes them feel like a community, not just a population.
 | **XP by level range** | Separate player and bot XP rates for level bands. The suggested setting keeps levels 1–34 worth playing and compresses the 35–50 grind. |
 | **Living Server** | Bots remember you: they greet you by name, thank you for an old rez and stay cool if you insulted them. Dings get grats chains, and the first to 50 in each class is announced server-wide. Dead bots ask you for a rez, and passing bot healers rez you. Frontier bots call incoming enemy groups in /faction, and bots hold grudges against the enemies who keep killing them. Bots can log on and off on a schedule (by session or by your clock), take "brb" breaks and now and then go linkdead. Each part has its own switch. |
 | **Camelot Herald** | A news page written from your world: realm point leaders, guilds, keeps, relics, server firsts and the realms' Most Wanted. One button in the launcher. |
+| **Talk to bots by name** *(always on)* | `/send <bot>` reaches an online bot of your realm and it answers. Ask to join and it tells you to invite it: you lead, bots join. `/invite <name>` and `/target <name>` work on nearby bots. |
 
 ## Safe to try
 
-- **Everything starts switched off.** Turn each feature on in the launcher's Social Expansion tab,
-  and off again the same way. With all of them off, it plays exactly like the base game.
+- **Every feature above starts switched off,** apart from talking to bots by name. Turn each one on
+  in the launcher's Social Expansion tab, and off again the same way.
+- **With everything off, a few changes still apply:** talking to bots by name, and two fixes to the
+  base game's bots (a dead bot's corpse stays where it fell until it releases, and a bot that dies
+  three times on the way to its group's meetup stops trying). Everything else plays like the
+  normal 0.36.
 - **It never breaks the base game's rules.** Real loot, the Realm Exchange, stablemaster routes,
   bots earning their armor and the other owner rules are untouched.
-- **Install and undo in one click.** The installer checks that your game is the right version,
-  backs up every file it replaces, and verifies each copy. `ROLLBACK.cmd` puts the originals back.
-- **It's tested.** 2,911 automated server tests pass on the 0.36-se.1 build, and every feature was
-  played in game with 300 bots per realm. A few parts haven't been seen in game yet (keep claims,
-  guild merit, linkdeads, nemesis chat lines, rezzing a bot); the changelog lists them.
+- **The install can be undone.** The installer checks that your game is the right version, backs
+  up every file it replaces and verifies each copy; `ROLLBACK.cmd` puts the original files back.
+  Bot guilds leave guilds, alliances and keep claims in your world, so remove them first if you
+  used them (see [Undo and uninstall](#undo-and-uninstall)).
+- **How it's tested:** 2,900+ automated server tests pass on every build, and every feature was
+  played in game with 300 bots per realm, on the 0.36c new client. The original game client wasn't
+  tried, and a few parts haven't been seen in game yet: see [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md).
 
 ## How to get it
 
-1. Install Offline DAoC 0.36b or 0.36 (or 0.36c) from [shadowofze's releases](https://github.com/shadowofze/OfflineDAoC/releases).
+1. Install Offline DAoC 0.36 or 0.36b (or 0.36c) from [shadowofze's releases](https://github.com/shadowofze/OfflineDAoC/releases).
 2. Download the Social Expansion zip from this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases), unzip it and put its folder in your game folder.
-3. Close the game and server, then double-click `INSTALL.cmd`.
-4. Open the launcher as usual and switch features on in its **Social Expansion** tab (server stopped).
+3. Close the game and server, then double-click `INSTALL.cmd` in that folder.
+4. Open the launcher as usual. It now has a **Social Expansion** tab.
+
+## Getting started
+
+A fresh world has no bots yet, and most of these features need some.
+
+1. **Make bots.** On the launcher's main screen, use the **+ Lv.1** and **+ Lv.50** buttons for each
+   realm. Bot guilds need at least 8 bots of level 5 or higher in a realm before that realm forms a
+   guild, so add some level 50s (or play a while so level 1s grow).
+2. **Switch features on.** With the server stopped, open the **Social Expansion** tab, tick what
+   you want and click **Save settings**. Good first picks: Bot voices with /faction debates, Bot personalities, and the Living
+   Server parts. Add Bot guilds once you have enough bots.
+3. **Start the server and play.** Settings apply at the next server start. Give it a few minutes:
+   the first /faction debate comes 5–10 minutes after the server starts (while you're online),
+   frontier alarms need bots in the frontier, and guilds form once enough bots are online.
+4. **Check it's running.** The server log (`runtime\server\logs\server.log`) has a line starting
+   `FORK_BUILD name=0.36-se.2` that lists which features are on.
+
+## Undo and uninstall
+
+- **Turn a feature off:** untick it in the Social Expansion tab (or click **ALL OFF**), save, and
+  restart the server.
+- **Remove bot guilds from your world:** turning bot guilds off keeps the guilds, their alliances
+  and any keeps they claimed. To remove them, close the game and server and run
+  `python tools\claude-version\set_bot_guilds.py --purge --apply` in your game folder (Python 3).
+  It backs up your database first, releases keeps claimed by bot guilds, removes bot guilds and
+  their alliances, and moves any of your characters in a bot guild back to the starting guild.
+- **Uninstall:** after the steps above, double-click `ROLLBACK.cmd`. It restores the server and
+  launcher files the install replaced. If you installed more than one build, run it once per build.
+  The new tables and settings stay in your database; the original server ignores them.
 
 ## Details
 
+- [Known issues and what's not tested yet](docs/KNOWN-ISSUES.md)
 - [Bot guilds: design and status](docs/BOT-GUILDS.md)
 - [Bot personalities, voices and debates](docs/BOT-PERSONALITIES.md)
 - [XP by level range](docs/XP-BY-LEVEL-RANGE.md)
@@ -76,8 +114,8 @@ Social Expansion makes them feel like a community, not just a population.
 - **[OpenDAoC](https://github.com/OpenDAoC/OpenDAoC-Core)** is the open-source server underneath.
 - **[stefanrows](https://github.com/stefanrows/OfflineDAoC)**: the core bot-guild membership code is
   adapted from his fork.
-- The Social Expansion is directed by Chris
-  ([chris4aker](https://github.com/chris4aker)) and written with Claude (Anthropic).
+- The Social Expansion is directed by [chris4aker](https://github.com/chris4aker) and written with
+  Claude (Anthropic).
 
 Same license as the original: GPL-3.0.
 
