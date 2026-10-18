@@ -258,6 +258,36 @@ Phase 3 (grouping) has no switch of its own; it follows `bot_guilds_enabled`.
 - It empties the bot guild tables and alliances, deletes non-starting guilds and their ranks, and
   blanks starting guilds' alliance ids.
 
+### 3.12 Removing bot guilds
+
+Turning bot guilds off (`--off`, or the launcher tab) keeps the guilds the bots formed, so turning
+them on again brings them back. Going back to an older server build keeps them too. To remove them
+from your world for good, close the server, launcher and game, then run:
+
+```
+python tools\claude-version\set_bot_guilds.py --purge            (shows what it would remove)
+python tools\claude-version\set_bot_guilds.py --purge --apply    (removes it)
+```
+
+`--purge --apply` backs up the database first (to `runtime\server\deployment-backups\bot-guilds-purge-<time>`), then:
+- turns bot guilds off (`bot_guilds_enabled` False);
+- releases every keep and tower a bot guild claimed, as `/gc release` does: no claim, and the
+  unclaimed keep level (`starting_keep_level`, normally 4). The realm that took it keeps it;
+- ends every alliance a bot guild leads. Your guild leaves such an alliance; an alliance your
+  guild leads stays, without the bot guilds;
+- moves each of your characters in a bot guild to their realm's starting guild (Clan Cotswold,
+  Mularn Protectors, Tir na Nog Adventurers) at the starting rank, as for a new character. With
+  starting guilds off, or none for that realm, the character is left guildless;
+- deletes the bot guilds with their ranks, banks, dues and merit, and their bot guild records
+  and bot memberships.
+
+Your own guilds, their claims and alliances, and bots you invited into them are not touched. It
+refuses while the server is running (or did not close cleanly), and running it again changes
+nothing. Test: `tools/claude-version/tests/test_set_bot_guilds.py`.
+
+With bot guilds off, the server no longer rewrites bot guild ranks or dues at startup, so the saved
+guilds stay exactly as they were (`StartupRewrites_*` in `UT_AutonomousBotGuilds`).
+
 ## 4. Tests
 
 **Automated, in CI on every push** (`UT_AutonomousBotGuilds`, `UT_AutonomousBotGuildSocial`,

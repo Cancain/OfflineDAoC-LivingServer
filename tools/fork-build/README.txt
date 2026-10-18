@@ -47,6 +47,10 @@ UNDO
 Close everything and double-click ROLLBACK.cmd. It puts back exactly the files the install
 replaced (server and launcher). Click ALL OFF in the tab and save first if you want the settings gone;
 the original server ignores them either way.
+Bot guilds the bots formed stay in your world (with their keep claims and alliances) until you
+remove them. With everything closed, before or after the rollback:
+  python tools\claude-version\set_bot_guilds.py --purge --apply
+Your characters in a bot guild go back to their realm's starting guild; your own guilds stay.
 
 SWITCHING FEATURES ON
 ---------------------

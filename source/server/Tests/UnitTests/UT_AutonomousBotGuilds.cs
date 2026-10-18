@@ -306,5 +306,72 @@ namespace DOL.GS.Tests
             other.Guild = TestGuild(eRealm.Albion);
             Assert.That(guild.AddBotMember(other, guild.GetRankByID(9)), Is.False, "A bot in another guild must leave it first.");
         }
+
+        // Records rank saves; any other write fails the test.
+        public class RecordingWrites : DispatchProxy
+        {
+            public static readonly List<DataObject> Saved = new();
+
+            protected override object Invoke(MethodInfo method, object[] args)
+            {
+                if (method.Name == nameof(IObjectDatabase.SaveObject) && args[0] is DataObject saved)
+                {
+                    Saved.Add(saved);
+                    return true;
+                }
+                if (!method.Name.StartsWith("Select") && !method.Name.StartsWith("Find"))
+                    throw new InvalidOperationException("Unexpected database write: " + method.Name);
+                Type type = method.ReturnType;
+                return type.IsGenericType && typeof(IEnumerable).IsAssignableFrom(type)
+                    ? Activator.CreateInstance(typeof(List<>).MakeGenericType(type.GetGenericArguments()[0])) : null;
+            }
+        }
+
+        private static readonly IObjectDatabase RecordingDatabase = DispatchProxy.Create<IObjectDatabase, RecordingWrites>();
+        private sealed class RecordingServer : GameServer { protected override IObjectDatabase DataBaseImpl => RecordingDatabase; }
+
+        private static bool MemberRanksHearAlliance(Guild guild) =>
+            Enumerable.Range(7, 2).Select(level => guild.GetRankByID(level)).All(rank => rank.AcHear && rank.GcHear && rank.GcSpeak);
+
+        [Test]
+        public void StartupRewrites_BotGuildsOff_LeaveTheSavedGuildAsItIs()
+        {
+            Guild guild = TestGuild(eRealm.Albion);
+
+            // The server double throws on any database write, so this also proves nothing was saved.
+            Assert.That(AutonomousBotGuilds.ApplyStartupRewrites(guild, BotGuildCharter.Rvr, enabled: false), Is.False);
+            Assert.Multiple(() =>
+            {
+                Assert.That(Enumerable.Range(7, 2).Select(level => guild.GetRankByID(level))
+                    .Any(rank => rank.AcHear || rank.GcHear || rank.GcSpeak), Is.False, "Rank rights are not rewritten.");
+                Assert.That(guild.IsGuildDuesOn(), Is.False, "Dues are not turned on.");
+                Assert.That(guild.GetGuildDuesPercent(), Is.Zero);
+            });
+            Assert.That(AutonomousBotGuilds.ApplyStartupRewrites(null, BotGuildCharter.Rvr, enabled: true), Is.False);
+        }
+
+        [Test]
+        public void StartupRewrites_BotGuildsOn_GrantMemberRightsAndCharterDuesOnce()
+        {
+            GameServer.LoadTestDouble((RecordingServer)RuntimeHelpers.GetUninitializedObject(typeof(RecordingServer)));
+            RecordingWrites.Saved.Clear();
+            Guild guild = TestGuild(eRealm.Albion);
+
+            Assert.That(AutonomousBotGuilds.ApplyStartupRewrites(guild, BotGuildCharter.Rvr, enabled: true), Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(MemberRanksHearAlliance(guild), Is.True);
+                Assert.That(RecordingWrites.Saved, Is.EqualTo(new[] { guild.GetRankByID(7), guild.GetRankByID(8) }));
+                Assert.That(guild.IsGuildDuesOn(), Is.True);
+                Assert.That(guild.GetGuildDuesPercent(), Is.EqualTo(AutonomousBotGuildEconomy.DefaultDuesPercent(BotGuildCharter.Rvr)));
+            });
+
+            // A second startup saves nothing that is already right and keeps dues a player changed.
+            RecordingWrites.Saved.Clear();
+            guild.SetGuildDuesPercent(10);
+            Assert.That(AutonomousBotGuilds.ApplyStartupRewrites(guild, BotGuildCharter.Rvr, enabled: true), Is.True);
+            Assert.That(RecordingWrites.Saved, Is.Empty);
+            Assert.That(guild.GetGuildDuesPercent(), Is.EqualTo(10));
+        }
     }
 }
