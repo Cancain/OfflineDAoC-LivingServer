@@ -82,6 +82,16 @@ function Read-ManifestFile([string]$path) {
     return $manifest
 }
 
+# Whether a release's PACKAGE MANIFEST.sha256 is Offline DAoC <base>. Each release lists its own docs/RELEASE-<version>.md and
+# keeps the earlier ones, so the newest listed is the game's release (an updated 0.37 lists 0.36 and 0.37). An updated
+# game has no editions\ folder (the 0.37 update removes it), so that check, which the 0.36 full downloads pass, is only
+# the fallback for a manifest without release notes. Found on a real 0.36c game updated to 0.37c (2026-10-18).
+function Test-ReleaseManifest($manifest, [string]$base) {
+    $versions = @($manifest.Keys | ForEach-Object { if ($_ -match '^docs/RELEASE-(\d+\.\d+)\.md$') { [version]$Matches[1] } })
+    if ($versions.Count -gt 0) { return (($versions | Sort-Object | Select-Object -Last 1) -eq [version]$base) }
+    return [bool]($manifest.Keys | Where-Object { $_ -like "editions/$base-no-custom-class/*" } | Select-Object -First 1)
+}
+
 function Get-InstallRecords([string]$Game) {
     $root = Join-Path $Game 'runtime\server\deployment-backups'
     if (!(Test-Path -LiteralPath $root)) { return @() }
