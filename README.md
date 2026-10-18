@@ -20,7 +20,8 @@
 They join guilds and recruit you, each has its own personality, and they talk the way players did in
 2002–2003, down to the build arguments in /faction.
 
-> **Latest release: 0.36-se.4**, for shadowofze's 0.36 / 0.36b, with or without the 0.36c new client.
+> **Latest release: 0.37-se.1**, for shadowofze's 0.37 / 0.37b, with or without the 0.37c new client. It has
+> everything in 0.36-se.4. Still on 0.36? Use 0.36-se.4 (under Releases), or update the game (see below).
 > Download it from this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases).
 > Every change is in [CHANGELOG-SOCIAL-EXPANSION.md](CHANGELOG-SOCIAL-EXPANSION.md); known problems and
 > what hasn't been tested are in [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md).
@@ -36,7 +37,7 @@ Social Expansion makes them feel like a community, not just a population.
 
 | Feature | What you'll see |
 |---|---|
-| **Bot guilds** | Each realm has its own bot guilds, a few big and many small, each with a purpose: leveling, social, RvR, raiding or crafting. Bots wear guild names, chat in /gu, group with guildmates, and recruit you when you ask "lf guild". Guilds claim and defend keeps, pay dues, earn merit, buy guild buffs and form alliances. You can also /ginvite bots into your own guild. |
+| **Bot guilds** | Each realm has its own bot guilds, a few big and many small, each with a purpose: leveling, social, RvR, raiding or crafting. Bots wear guild names, chat in /gu, group with guildmates, and recruit you when you ask "lf guild". Guilds claim and defend keeps, pay dues, earn merit, buy guild buffs and form alliances. (Inviting a bot into your own guild is part of the game itself since 0.37; a member of a bot guild answers for itself first.) |
 | **Bot personalities** | Every bot is one of six types: Leveler, Socialite, Daredevil, Explorer, Crafter or No-lifer. Each also has five traits (curiosity, risk, sociability, patience, chattiness). Personality tilts how a bot spends its time: who lingers in town, who chases orange cons, who goes looking for zones they haven't seen. Target any bot and type `/personality`. |
 | **Bot voices** | 2,296 lines written for the era, chosen by realm, class, level, situation, place, time of day and personality. Bots answer what you actually said ("ty" → "np", "ding" → "gz", "where is the scout trainer" → the trainer), answer each other in kind (a boast gets "show off", a question an answer), and talk in /group when they're in your group, answering what you say there. Each bot writes in one of five styles (plain, terse, chatty, proper or typo-prone), and a few regulars talk more than the rest. No line repeats in a realm within three days, across restarts too. |
 | **/faction debates** | 296 multi-bot conversations: class and spec arguments, relic and keep alerts, dragon raids, Darkness Falls, buffbots, zergs, realm pride and more. A different cast plays one every 30–45 minutes while you're online. |
@@ -53,23 +54,32 @@ Social Expansion makes them feel like a community, not just a population.
   base game's bots (a dead bot's corpse stays where it fell until it releases, and a bot that dies
   three times on the way to its group's meetup stops trying), and bots reading short chat better
   when they answer you ("ty", "lol", "inc"; place answers worded like a player). Everything else
-  plays like the normal 0.36.
+  plays like the normal 0.37.
 - **It never breaks the base game's rules.** Real loot, the Realm Exchange, stablemaster routes,
   bots earning their armor and the other owner rules are untouched.
 - **The install can be undone.** The installer checks that your game is the right version, backs
   up every file it replaces and verifies each copy; `ROLLBACK.cmd` puts the original files back.
   Bot guilds leave guilds, alliances and keep claims in your world, so remove them first if you
   used them (see [Undo and uninstall](#undo-and-uninstall)).
-- **How it's tested:** 2,900+ automated server tests pass on every build, and every feature was
-  played in game with 300 bots per realm, on the 0.36c new client. The original game client wasn't
-  tried, and a few parts haven't been seen in game yet: see [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md).
+- **How it's tested:** 3,000+ automated server tests pass on every build. The features were played in
+  game with 300 bots per realm on the 0.36c new client (0.36-se.1 to se.3), and the bot chat of se.4 was
+  tested live with a scripted player. The original game client wasn't tried, and a few parts haven't been
+  seen in game yet: see [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md).
 
 ## How to get it
 
-1. Install Offline DAoC 0.36 or 0.36b (or 0.36c) from [shadowofze's releases](https://github.com/shadowofze/OfflineDAoC/releases).
+1. Install Offline DAoC 0.37 or 0.37b (or 0.37c) from [shadowofze's releases](https://github.com/shadowofze/OfflineDAoC/releases),
+   or update your 0.36 game to it (below).
 2. Download the Social Expansion zip from this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases), unzip it and put its folder in your game folder.
 3. Close the game and server, then double-click `INSTALL.cmd` in that folder.
 4. Open the launcher as usual. It now has a **Social Expansion** tab.
+
+**Already playing 0.36 with the Social Expansion?** The 0.37 update only applies to the game's own files,
+so put them back first: put the 0.37-se.1 folder in your game folder and double-click
+`PREPARE-FOR-UPDATE.cmd` (it restores the released 0.36 server and launcher from the installer's backups
+and checks each one). Then update the game to 0.37 with its downloader (choice 1, Update), and run this
+build's `INSTALL.cmd`. Your saves, bot guilds, bot memory and settings stay as they were. If you install
+0.37 fresh instead and bring your progress over, see the package's README.txt for the one extra step.
 
 ## Getting started
 
@@ -85,7 +95,7 @@ A fresh world has no bots yet, and most of these features need some.
    the first /faction debate comes 5–10 minutes after the server starts (while you're online),
    frontier alarms need bots in the frontier, and guilds form once enough bots are online.
 4. **Check it's running.** The server log (`runtime\server\logs\server.log`) has a line starting
-   `FORK_BUILD name=0.36-se.4` that lists which features are on.
+   `FORK_BUILD name=0.37-se.1` that lists which features are on.
 
 ## Undo and uninstall
 

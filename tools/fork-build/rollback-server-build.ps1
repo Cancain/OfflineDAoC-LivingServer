@@ -1,16 +1,23 @@
 # Undoes the most recent fork server build install (docs/RELEASE-PLAN.md).
 #
 #   ROLLBACK.cmd
-#   ROLLBACK.cmd -GameFolder "C:\Games\OfflineDAoC\playable-v0.36b"
+#   ROLLBACK.cmd -GameFolder "C:\Games\OfflineDAoC\playable-v0.37b"
 #   ROLLBACK.cmd -DryRun
+#   PREPARE-FOR-UPDATE.cmd     (= ROLLBACK.cmd -ToRelease)
 #
 # Restores the GameServer.dll/.pdb files, the launcher files and helper scripts the last install replaced, from its
 # backup, and checks every restored file by SHA-256. It refuses if the installed files changed since
 # (unless -Force). Run it again to undo the install before that one.
+#
+# -ToRelease puts back the game's released server and launcher files whatever was installed over them (fork builds,
+# copies by hand): for each one it finds, among every backup in runtime\server\deployment-backups, a copy with the
+# fingerprint the game's PACKAGE MANIFEST.sha256 gives it. An Offline DAoC update (0.37 and on) applies only to released
+# files, and it tells the game's version by the launcher, so run this before updating; install this build again after.
 param(
     [string]$GameFolder = '',
     [switch]$DryRun,
-    [switch]$Force
+    [switch]$Force,
+    [switch]$ToRelease
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'fork-build-common.ps1')
@@ -26,6 +33,57 @@ function Stop-RestoreFailed([string]$Message) {
 $game = Find-GameFolder $GameFolder $PSScriptRoot
 Write-Host "Game folder: $game"
 Assert-GameClosed
+
+if ($ToRelease) {
+    $manifest = Read-PackageManifest $game
+    if ($null -eq $manifest) { Stop-WithMessage "No PACKAGE MANIFEST.sha256 in $game, so the released files can't be told apart." }
+    $clientManifest = Read-ManifestFile (Join-Path $game 'new-client\PACKAGE MANIFEST.sha256')
+    $wanted = @()
+    foreach ($folder in $Script:ServerFolders) { foreach ($name in @('GameServer.dll', 'GameServer.pdb')) { $wanted += "$folder/$name" } }
+    foreach ($folder in $Script:LauncherFolders) { foreach ($name in $Script:LauncherFiles) { $wanted += "$folder/$name" } }
+    $backups = Join-Path $game 'runtime\server\deployment-backups'
+    $copies = @{}
+    if (Test-Path -LiteralPath $backups) {
+        foreach ($file in Get-ChildItem -LiteralPath $backups -Recurse -File) {
+            if ($file.Name -like 'GameServer.*' -or $Script:LauncherFiles -contains $file.Name) {
+                $hash = Get-Sha256 $file.FullName
+                if (!$copies.ContainsKey($hash)) { $copies[$hash] = $file.FullName }
+            }
+        }
+    }
+    $restore = @(); $missing = @()
+    foreach ($rel in $wanted) {
+        $released = if ($rel -like 'new-client/*') { if ($clientManifest) { $clientManifest[$rel] } } else { $manifest[$rel] }
+        if (!$released) { continue }                   # not part of this game (no new client, or not shipped)
+        $path = Join-Path $game $rel
+        $current = if (Test-Path -LiteralPath $path) { Get-Sha256 $path } else { '' }
+        if ($current -eq $released) { continue }
+        if ($copies.ContainsKey($released)) { $restore += [pscustomobject]@{ Path = $rel; From = $copies[$released]; Hash = $released } }
+        else { $missing += $rel }
+    }
+    if ($missing.Count -gt 0) {
+        Stop-WithMessage ("No backup holds the released copy of:`n  " + ($missing -join "`n  ") +
+            "`nThe update's downloader can repair the game (or install it fresh and bring your progress over).")
+    }
+    if ($restore.Count -eq 0) { Write-Host 'The released server and launcher files are already in place.' -ForegroundColor Green }
+    foreach ($item in $restore) { Write-Host "  $($item.Path)  <-  $($item.From)" }
+    if ($DryRun) { Write-Host ''; Write-Host 'Dry run: every check passed. Nothing was changed.' -ForegroundColor Green; exit 0 }
+    foreach ($item in $restore) {
+        $target = Join-Path $game $item.Path
+        Copy-Item -LiteralPath $item.From -Destination $target -Force
+        if ((Get-Sha256 $target) -ne $item.Hash) {
+            Write-Host "RESTORE STOPPED PART-WAY: $($item.Path) failed verification. Close everything and run it again." -ForegroundColor Red
+            exit 1
+        }
+    }
+    foreach ($open in @(Get-InstallRecords $game | Where-Object { !$_.RolledBack })) {
+        Set-Content -LiteralPath (Join-Path $open.BackupFolder 'rolled-back.txt') -Value "Rolled back to the release at $(Get-Date -Format o)."
+    }
+    Write-Host ''
+    Write-Host "The released server and launcher are back ($($restore.Count) file(s)). Now update the game, then run INSTALL.cmd of the" -ForegroundColor Green
+    Write-Host 'Social Expansion build for the new version. Your settings stay in the database.' -ForegroundColor Green
+    exit 0
+}
 
 $record = Get-InstallRecords $game | Where-Object { !$_.RolledBack } | Select-Object -Last 1
 if ($null -eq $record) { Stop-WithMessage 'No fork build install to undo.' }
