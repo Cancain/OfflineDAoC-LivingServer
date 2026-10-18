@@ -1107,7 +1107,17 @@ namespace DOL.GS
                 AutonomousLivingServer.OnBotReleasing(this);
             // Transfer the corpse first: a failed MoveTo must not revive the bot
             // at its killer or cause HandleDeathRecovery to discard its timer.
-            if (!MoveTo(releaseRegion, release.X, release.Y, release.Z, Heading))
+            bool moved;
+            _releasingCorpse = true;
+            try
+            {
+                moved = MoveTo(releaseRegion, release.X, release.Y, release.Z, Heading);
+            }
+            finally
+            {
+                _releasingCorpse = false;
+            }
+            if (!moved)
                 return;
             Health = Math.Max(1, MaxHealth / 3);
             Mana = Math.Max(0, MaxMana / 3);
@@ -2673,13 +2683,22 @@ namespace DOL.GS
             return base.MoveInRegion(regionID, x, y, z, heading, forceMove);
         }
 
+        // True only while this bot's own release (ReleaseToNearestBindAndReturn) moves its corpse to the bind.
+        private bool _releasingCorpse;
+
         private void LogDeadMove(ushort regionID, int x, int y, int z, string how)
         {
-            if (!IsAutonomousWorldBot || IsAlive || _deadMoveLoggedForDeath == _deathTick || !log.IsInfoEnabled)
+            // Audit 2026-10-17: this ran on every gamebot death with every feature off and captured a stack trace
+            // each time. It now logs only with the Living Server death part on, and the normal release (the move
+            // expected on every death) is named instead of walking the stack.
+            if (!AutonomousLivingServer.DeathOn || !IsAutonomousWorldBot || IsAlive || _deadMoveLoggedForDeath == _deathTick ||
+                !log.IsInfoEnabled)
                 return;
             _deadMoveLoggedForDeath = _deathTick;
-            string stack = string.Join(" <- ", new System.Diagnostics.StackTrace(2, false).GetFrames()
-                .Take(8).Select(frame => frame.GetMethod() is { } method ? $"{method.DeclaringType?.Name}.{method.Name}" : "?"));
+            string stack = _releasingCorpse
+                ? $"{nameof(GameBot)}.{nameof(ReleaseToNearestBindAndReturn)}"
+                : string.Join(" <- ", new System.Diagnostics.StackTrace(2, false).GetFrames()
+                    .Take(8).Select(frame => frame.GetMethod() is { } method ? $"{method.DeclaringType?.Name}.{method.Name}" : "?"));
             log.Info($"LIVING_SERVER_DEAD_MOVE bot=\"{Name}\" id={DatabaseID} how={how} deadMs={GameLoop.GameLoopTime - _deathTick} " +
                      $"from={CurrentRegionID}:{X},{Y},{Z} to={regionID}:{x},{y},{z} by={stack}");
         }
