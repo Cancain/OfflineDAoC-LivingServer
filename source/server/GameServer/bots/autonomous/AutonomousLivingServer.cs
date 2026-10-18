@@ -66,10 +66,18 @@ public static partial class AutonomousLivingServer
         Load("server firsts reached before records began", () => SeedFirstsOnce(FirstsOn));
         // One-kill nemesis rows older than a week are forgotten, so the table stays small (review 2026-10-16).
         if (NemesisOn)
-            Load("old nemesis rows", () => Nemeses.RemoveWhere(row => row.Kills <= 1 && IsOlderThan(row.LastUtc, TimeSpan.FromDays(7))));
+            Load("old nemesis rows", () => PruneOldNemeses(Nemeses));
+        // Rows of characters that were deleted are forgotten too (audit 2026-10-17). Once, at start-up.
+        if (MemoryOn && Memories.Count > 0 || NemesisOn && Nemeses.Count > 0)
+            Load("rows of deleted characters", PruneDeletedCharacters);
         GameEventMgr.AddHandler(GamePlayerEvent.LevelUp, new DOLEventHandler(OnPlayerLevelUp));
         GameEventMgr.AddHandler(GamePlayerEvent.RRLevelUp, new DOLEventHandler(OnPlayerRealmRankUp));
-        _flushTimer = new Timer(_ => FlushAll(), null, FlushIntervalMs, FlushIntervalMs);
+        _nextNemesisPrune = Environment.TickCount64 + NemesisPruneIntervalMs;
+        _flushTimer = new Timer(_ =>
+        {
+            PruneOldNemesesIfDue();
+            FlushAll();
+        }, null, FlushIntervalMs, FlushIntervalMs);
         if (Log.IsInfoEnabled)
             Log.Info($"Living Server: {Memories.Count} memories, {Nemeses.Count} nemesis rows, {Firsts.Count} server firsts " +
                      $"(memory {MemoryOn}, grats {GratsOn}, firsts {FirstsOn}, death {DeathOn}, alarms {AlarmsOn}, " +
@@ -92,6 +100,53 @@ public static partial class AutonomousLivingServer
         Nemeses.Flush(wait);
         Firsts.Flush(wait);
     }
+
+    #region Pruning (start-up and the flush timer, never the game loop; deletes go through the batched writer)
+
+    public static readonly TimeSpan OldNemesisAge = TimeSpan.FromDays(7);
+    /// <summary>A long-running server also forgets old one-kill nemeses, not only at start-up (audit 2026-10-17).</summary>
+    public const long NemesisPruneIntervalMs = 6 * 60 * 60_000L;
+    private static long _nextNemesisPrune;
+
+    /// <summary>Removes one-kill nemesis rows older than a week. Returns how many.</summary>
+    public static int PruneOldNemeses(LivingServerTable<(long BotId, string Killer), OfflineBotNemesisRecord> table) =>
+        table.RemoveWhere(row => row.Kills <= 1 && IsOlderThan(row.LastUtc, OldNemesisAge));
+
+    private static void PruneOldNemesesIfDue()
+    {
+        if (!NemesisOn || Environment.TickCount64 < Volatile.Read(ref _nextNemesisPrune))
+            return;
+        Volatile.Write(ref _nextNemesisPrune, Environment.TickCount64 + NemesisPruneIntervalMs);
+        try
+        {
+            int pruned = PruneOldNemeses(Nemeses);
+            if (pruned > 0 && Log.IsInfoEnabled)
+                Log.Info($"Living Server: forgot {pruned} old one-kill nemesis row(s)");
+        }
+        catch (Exception exception)
+        {
+            Log.Warn("Living Server: could not prune old nemesis rows", exception);
+        }
+    }
+
+    /// <summary>
+    /// Removes the rows of bots that are not in the roster (offline_world_bots). An empty roster prunes nothing,
+    /// so a roster that could not be read never wipes the table. Returns how many.
+    /// </summary>
+    public static int PruneOrphans<TKey, TRow>(LivingServerTable<TKey, TRow> table, Func<TRow, long> botOf, IReadOnlySet<long> roster)
+        where TRow : DOL.Database.DataObject, ILivingServerRow =>
+        roster == null || roster.Count == 0 ? 0 : table.RemoveWhere(row => !roster.Contains(botOf(row)));
+
+    private static void PruneDeletedCharacters()
+    {
+        var roster = GameServer.Database.SelectAllObjects<OfflineWorldBotRecord>().Select(bot => bot.BotId).ToHashSet();
+        int memories = MemoryOn ? PruneOrphans(Memories, row => row.BotId, roster) : 0;
+        int nemeses = NemesisOn ? PruneOrphans(Nemeses, row => row.BotId, roster) : 0;
+        if (memories + nemeses > 0 && Log.IsInfoEnabled)
+            Log.Info($"Living Server: forgot {memories} memory and {nemeses} nemesis row(s) of deleted characters");
+    }
+
+    #endregion
 
     /// <summary>True only for a readable time older than the age (an unreadable time is kept).</summary>
     internal static bool IsOlderThan(string utc, TimeSpan age) =>
