@@ -59,6 +59,7 @@ world. To remove them (server and game closed; Python 3), in your game folder:
   python tools\claude-version\set_bot_guilds.py --purge
   python tools\claude-version\set_bot_guilds.py --purge --apply
 The first shows what it would change; the second does it, after backing up the database.
+Your characters in a bot guild go back to their realm's starting guild; your own guilds stay.
 
 Uninstalling: close everything and double-click ROLLBACK.cmd. It puts back exactly the files the
 install replaced (server and launcher). If you installed more than one build, run it once per
