@@ -23,7 +23,7 @@ const RESTORABLE := [["panel", "CHARACTER PANEL"], ["status", "STATUS"], ["chat"
 		["quickbar1", "QUICKBAR 1"], ["quickbar2", "QUICKBAR 2"], ["quickbar3", "QUICKBAR 3"], ["minigroup", "GROUP"],
 		["minipet", "PET"], ["compass", "COMPASS"], ["time", "TIME"], ["info", "INFORMATION"], ["map", "MAP"],
 		["journal", "QUEST JOURNAL"], ["conc", "CONCENTRATION"], ["benefits", "BENEFITS"], ["warmap", "WAR MAP"],
-		["target", "TARGET"], ["raid", "RAID"]]
+		["target", "TARGET"], ["raid", "RAID"], ["guild", "GUILD"]]
 
 var root: Control
 var ui_scale := 1.0
@@ -64,7 +64,7 @@ var _cast_name: Label
 var _effects_bar: HBoxContainer
 var npc_dialog: NpcDialog
 var trainer: TrainerWindow
-const TRANSIENT := ["npc_dialog", "trainer", "merchant", "vault", "exchange", "guide", "info", "release", "siege"]
+const TRANSIENT := ["npc_dialog", "trainer", "merchant", "vault", "exchange", "guide", "info", "release", "siege", "emblem"]
 const INFO_W := 160.0                                     # the information window's width (interact.bmp is 300)
 const INFO_WIDE := 320.0                                  # ... for a server text with long lines (/stables routes)
 var _compass_letters: Control
@@ -356,6 +356,7 @@ func _build() -> void:
 	_build_conc()
 	_build_benefits()
 	_build_warmap()
+	_build_guild()
 	PlayerData.window_toggle.connect(func(id: String):
 		if windows.has(id):
 			if windows[id].visible:
@@ -363,6 +364,10 @@ func _build() -> void:
 			else:
 				windows[id].show_window())
 	PlayerData.disband_requested.connect(func():
+		if Server.active:
+			return                     # the server's group (ZoneViewer._server_disband) - emptying the list here first
+									# left it no member to name (owner 2026-10-17: DISBAND on a targeted bot broke up
+									# the whole group)
 		if PlayerData.group.is_empty():
 			PlayerData.message.emit("You are not in a group.", "system")
 		else:
@@ -667,8 +672,9 @@ func _tick_minigroup() -> void:
 		r.add_child(gem)
 		var n := UiArt.label("", 7, UiArt.CREAM)
 		n.name = "N"
-		n.position = Vector2(11, 0)
-		n.size = Vector2(62, 10)
+		n.position = Vector2(11, 1)                         # centred on the gem's and the bar's middle (row y 5; capitals
+		n.size = Vector2(62, 10)                            # have no descenders, so 1 px lower - owner 2026-10-17: the
+		n.vertical_alignment = VERTICAL_ALIGNMENT_CENTER     # names sat higher than the power gems and HP bars)
 		n.clip_text = true
 		r.add_child(n)
 		var bg := _bar(r, "redbg", Rect2(76, 2, 60, 6))
@@ -796,6 +802,38 @@ func siege_window_open(d: Dictionary) -> void:
 func siege_window_close() -> void:
 	if siege and siege.visible:
 		siege.hide_window()
+
+
+## The guild window (Shift+G): the server's guild roster (GuildWindow).
+var guild_window: GuildWindow
+## The guild emblem picker - the server opens it (EmblemDialogue).
+var emblem_window: EmblemWindow
+
+
+func open_emblem_picker(current: int) -> void:
+	if emblem_window == null:
+		emblem_window = EmblemWindow.new()
+		var at := Vector2(area().x * 0.5 - EmblemWindow.SIZE.x * 0.5, 90)
+		emblem_window.setup("emblem", "emblempick", Rect2(), at)
+		_add(emblem_window, at, false)
+		emblem_window.build()
+	emblem_window.open(current)
+
+
+func _build_guild() -> void:
+	guild_window = GuildWindow.new()
+	guild_window.resizable = true
+	guild_window.patch = [6, 19, 13, 33]
+	guild_window.min_size = GuildWindow.BODY
+	guild_window.max_size = GuildWindow.BODY
+	guild_window.size = GuildWindow.BODY
+	var at := Vector2(area().x * 0.5 - GuildWindow.BODY.x * 0.5, 70)
+	guild_window.setup("guild", "interact", Rect2(), at)
+	_add(guild_window, at, false)
+	guild_window.typing = func(text: String):
+		if chat:
+			chat.start_typing(text)
+	guild_window.build()
 
 
 func _build_warmap() -> void:
@@ -1019,42 +1057,57 @@ func message(text: String, kind := "system") -> void:
 
 
 ## The information window for an item (shift-click on it).
-## The death window. 1.65 had one way back: release to your bind point (period FAQ: "releasing ... are returned to
-## your bind point"); the later client's city / house choices came with New Frontiers and house teleports (1.68),
-## so they are left out. Same stone frame and buttons as the rest of the UI (no period picture of it survives).
+## The death window, laid out as the original client's (ui/atlantis/release_window.xml, 285 x 96): the release timer's
+## line and green bar over four buttons - /RELEASE and /RELEASE CITY, /RELEASE HOUSE and /RELEASE BIND - each the
+## server's /release command of that kind (owner 2026-10-16: the new client had one release button, the original four).
 func _build_release() -> void:
 	var w := ClassicWindow.new()
 	w.resizable = true
 	w.patch = [6, 19, 13, 33]
-	w.size = Vector2(200, 112)
-	var at := Vector2(area().x * 0.5 - 100, area().y * 0.32)
+	w.size = Vector2(285, 118)
+	var at := Vector2(area().x * 0.5 - 142, area().y * 0.32)
 	w.setup("release", "interact", Rect2(), at)
 	w.closable = false
 	root.add_child(w)
 	windows["release"] = w
 	w.visible = false
-	var title := UiArt.label("YOU HAVE DIED", 11, UiArt.GOLD_HI)
-	title.position = Vector2(12, 21)
-	title.size = Vector2(173, 16)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	w.add_child(title)
-	var text := UiArt.label("RELEASE TO RETURN TO YOUR BIND POINT.", 8, UiArt.CREAM)
-	text.position = Vector2(12, 40)
-	text.size = Vector2(173, 14)
-	text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	w.add_child(text)
-	var b := UiArt.button("RELEASE", Vector2(90, 18), 10)
-	b.position = Vector2(54, 58)
-	b.pressed.connect(func(): PlayerData.release_requested.emit())
-	w.add_child(b)
 	# the old server's "Release Timer" (SendTimerWindow, RELEASE_TIME): the automatic release counting down
-	var timer := UiArt.label("", 8, UiArt.CREAM)
-	timer.position = Vector2(12, 82)
-	timer.size = Vector2(173, 14)
+	var timer := UiArt.label("YOU HAVE DIED", 10, UiArt.GOLD_HI)
+	timer.position = Vector2(12, 21)
+	timer.size = Vector2(261, 16)
 	timer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	w.add_child(timer)
+	var bar_bg := ColorRect.new()
+	bar_bg.color = Color(0.05, 0.05, 0.05, 0.85)
+	bar_bg.position = Vector2(32, 42)
+	bar_bg.size = Vector2(220, 8)
+	w.add_child(bar_bg)
+	var bar := ColorRect.new()
+	bar.color = Color(0.2, 0.75, 0.25)
+	bar.position = Vector2(1, 1)
+	bar.size = Vector2(0, 6)
+	bar_bg.add_child(bar)
+	var full := [0.0]                                       # the timer's starting length (the bar's full width)
 	PlayerData.hook(self, PlayerData.release_timer, func(left: float):
-		timer.text = "" if left < 0.0 else "RELEASE TIMER  %d:%02d" % [int(left) / 60, int(left) % 60])
+		if left < 0.0:
+			timer.text = "YOU HAVE DIED"
+			bar.size.x = 0.0
+			full[0] = 0.0
+			return
+		full[0] = maxf(full[0], left)
+		timer.text = "RELEASE TIMER  %d:%02d" % [int(left) / 60, int(left) % 60]
+		bar.size.x = 218.0 * clampf(left / maxf(full[0], 1.0), 0.0, 1.0))
+	for spec in [["/RELEASE", "", Vector2(15, 58)], ["/RELEASE CITY", "city", Vector2(150, 58)],
+			["/RELEASE HOUSE", "house", Vector2(15, 84)], ["/RELEASE BIND", "bind", Vector2(150, 84)]]:
+		var b := UiArt.button(String(spec[0]), Vector2(120, 20), 9)
+		b.position = spec[2]
+		var kind := String(spec[1])
+		b.pressed.connect(func():
+			if kind == "":
+				PlayerData.release_requested.emit()
+			else:
+				PlayerData.release_to.emit(kind))
+		w.add_child(b)
 
 
 ## The cast bar over the quickbars (fills for the cast time) and the effects bar (the player's buffs / debuffs:
@@ -1664,6 +1717,9 @@ func handle_input(event: InputEvent) -> bool:
 			return true
 	if Keybinds.pressed(event, "show_journal") and journal:
 		journal.toggle_window()
+		return true
+	if Keybinds.pressed(event, "show_guild") and guild_window:
+		guild_window.toggle_window()
 		return true
 	if Keybinds.pressed(event, "show_map") and map_window:
 		map_window.player = player

@@ -252,6 +252,7 @@ func set_armor(parts: Dictionary, tints: Dictionary = {}) -> void:
 var armor := {}                             # the worn armour parts (set_armor)
 var hood_up := false                        # /hood: the cloak's hood up (the server's hood state for this figure)
 var cloak_hidden := false                   # the server's hidden-cloak flag (inventory / equipment packets, bit 0x01)
+var cloak_emblem := 0                       # the worn cloak's guild emblem (Emblems), 0 none - set before set_armor
 var helm_hidden := false                    # the hidden-helm flag (bit 0x02)
 var _helm: Node3D
 var _helm_hides_hair := false
@@ -278,6 +279,13 @@ func _apply_cloak() -> void:
 		var dyed: Color = armor_tints.get("cloak", Color.WHITE)
 		m.set_shader_parameter("tint", dyed)
 		m.set_shader_parameter("tint_mode", 1 if dyed != Color.WHITE else 0)
+		# a guild emblem in place of the dye (the server sends one or the other; owner 2026-10-17: guild gamebots)
+		m.set_shader_parameter("has_emblem", cloak_emblem > 0)
+		if cloak_emblem > 0:
+			m.set_shader_parameter("pattern_tex", Emblems.pattern_texture(cloak_emblem))
+			var logo := Emblems.logo_texture(Emblems.decode(cloak_emblem).logo)
+			m.set_shader_parameter("logo_tex", logo)
+			m.set_shader_parameter("has_logo", logo != null)
 		for mi in _parts("cloak_%d" % want):
 			mi.material_override = m
 	_apply_full_helm()
@@ -630,11 +638,27 @@ uniform vec3 tint : source_color = vec3(1.0);
 uniform int tint_mode = 0;
 uniform bool has_eye = false;
 uniform bool has_decal = false;
+// a cloak's guild emblem (Emblems; the client's $insigniaTexture pixel shader): the pattern on the cloak's set 0 (UV2),
+// the logo on its set 2 (CUSTOM0), the cloak's own texture on set 1 - pattern x cloak x 2 x logo, in the client's gamma
+uniform sampler2D pattern_tex : filter_linear, repeat_enable;
+uniform sampler2D logo_tex : filter_linear_mipmap, repeat_disable;
+uniform bool has_emblem = false;
+uniform bool has_logo = false;
+varying vec2 logo_uv;
+
+void vertex() {
+	logo_uv = CUSTOM0.xy;
+}
 
 void fragment() {
 	vec4 c = texture(albedo_tex, UV);
 	vec3 col = c.rgb;
-	if (tint_mode == 1) col *= tint;
+	if (has_emblem) {
+		vec3 g = pow(col, vec3(1.0 / 2.2)) * texture(pattern_tex, UV2).rgb * 2.0;
+		if (has_logo) g *= texture(logo_tex, logo_uv).r;
+		col = pow(clamp(g, 0.0, 1.0), vec3(2.2));
+	}
+	else if (tint_mode == 1) col *= tint;
 	else if (tint_mode == 2) col *= mix(tint, vec3(1.0), smoothstep(0.90, 0.99, c.a));
 	if (has_eye) col *= texture(eye_tex, UV).rgb;
 	if (has_decal) {

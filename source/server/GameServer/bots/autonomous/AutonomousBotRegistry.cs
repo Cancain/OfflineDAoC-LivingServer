@@ -118,7 +118,7 @@ public static class AutonomousBotRegistry
         {
             Active[bot.DatabaseID] = bot;
             _snapshot = new(-1, []);
-            AutonomousBotGuilds.OnBotOnline(bot);
+            AutonomousBotRealmGuilds.OnBotOnline(bot);
         }
     }
 
@@ -128,7 +128,7 @@ public static class AutonomousBotRegistry
         {
             AutonomousGoalDiagnostics.End(bot, GoalAttemptEnd.Logout, "Bot left the active world; not a goal failure");
             Active.TryRemove(bot.DatabaseID, out _);
-            AutonomousBotGuilds.OnBotOffline(bot);
+            AutonomousBotRealmGuilds.OnBotOffline(bot);
             _snapshot = new(-1, []);
             AutonomousBotEconomy.ForgetCachedDecision(bot.DatabaseID);
         }

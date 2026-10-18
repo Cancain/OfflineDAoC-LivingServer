@@ -30,7 +30,7 @@ public sealed record ImportSummary(long Accounts, long Characters, long Bots, lo
 public static class ImportEngine
 {
     /// <summary>This release; the "b" edition has the custom class, the plain one does not.</summary>
-    public const string Release = "0.36";
+    public const string Release = "0.37";
     public static readonly Policy Rules = JsonSerializer.Deserialize<Policy>(File.ReadAllText(Path.Combine(AppContext.BaseDirectory,"progress-policy.json")))!;
     const int SluaghbinderClass = 63, AcolyteClass = 16, Hibernia = 3;
     // The Sluaghbinder client of 0.33b/0.34b, and of 0.35b / 0.36b (classic war map, red quest markers, QUEST GUIDE button).

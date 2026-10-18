@@ -19,6 +19,7 @@ signal skill_info(entry: Dictionary)                # right-click a spell / styl
 signal delve(item: Dictionary)                      # Shift+I: the summary (delve) in the information window
 signal summary(item: Dictionary)                    # right-click on an item: its standard information there
 signal release_requested                            # /release after death
+signal release_to(kind: String)                     # the death window's /RELEASE CITY, HOUSE, BIND ("" = /release)
 signal pray_requested                               # /pray at the gravestone
 signal group_changed                                # members joined / left (the group windows)
 signal member_clicked(row: Dictionary)              # a group member's row clicked (the group page, the mini group)

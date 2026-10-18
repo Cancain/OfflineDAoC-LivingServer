@@ -52,6 +52,10 @@ func load_zone(content_dir: String, terrain_set_name := "blend", texture_set_nam
 	for k in info.texture_sets:
 		folders[k] = dir.path_join(info.texture_sets[k])
 	materials = NifMaterials.new(folders, texture_set)
+	if int(info.get("id", 0)) == 160:
+		# Tuscaran Glacier's ice: its reflections turned down further (owner 2026-10-17: "its really missing the gritty
+		# ice texture of the old client") - this zone only
+		materials.env_strength = 0.35
 	var t0 := Time.get_ticks_msec()
 	_load_heights()
 	if not city:                                           # a city (Tir na Nog...) is all city chunks: no terrain, no water
@@ -176,7 +180,9 @@ func _build_terrain() -> void:
 	var detail_name: String = String(info.get("terrain_detail", "")) if info.get("terrain_detail") != null else ""   # null in some zones
 	var detail := materials.texture(detail_name) if detail_name != "" else null
 	if detail:
-		_detail_mean = _mean_luminance(detail.get_image())
+		var img := materials.image(detail_name)                 # (from the file: load_zone runs on a worker)
+		if img:
+			_detail_mean = _mean_luminance(img)
 	for cz in CHUNKS:
 		for cx in CHUNKS:
 			var verts := PackedVector3Array()

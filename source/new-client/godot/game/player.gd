@@ -564,6 +564,7 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 			if cp.has("cloak"):
 				parts["cloak"] = cp.cloak
 				tints["cloak"] = Fig3Figure.dye(int(cl.get("color", 0)))
+		fig.cloak_emblem = int(cl.get("emblem", 0)) if not cl.is_empty() else 0   # its guild emblem
 		fig.hood_up = bool(gear.get("hood", false))
 		fig.cloak_hidden = bool(gear.get("cloak_hidden", false))
 		fig.helm_hidden = bool(gear.get("helm_hidden", false))
@@ -586,7 +587,8 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 		# client draws the right hand's one only (owner 2026-10-11: a shield in both hands; the old client: right arm)
 		var shield_model := int(WeaponModels.info(model_id).get("shield", 0)) > 0
 		var right: Dictionary = item_at.call(10)
-		if slot == 11 and shield_model and int(WeaponModels.info(int(right.get("model", 0))).get("shield", 0)) > 0:
+		# (not the hand-to-hand greaves: objects.csv marks them Shield too, and a Savage wears one on each arm)
+		if slot == 11 and shield_model and int(WeaponModels.info(model_id).get("stance", 0)) != 13 				and int(WeaponModels.info(int(right.get("model", 0))).get("shield", 0)) > 0:
 			continue
 		var shield: bool = int(it.get("object_type", 0)) == ItemDb.SHIELD_TYPE or (shield_model and slot == 11)
 		var on_back: bool = int(it.get("hand", 0)) == 1 or slot == 12 or slot == 13 or WeaponModels.stance(model_id) in ["2h", "pole", "staff", "scy"]
@@ -597,18 +599,24 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 		if shield:
 			bone = "Bip01 L Shield"
 		elif combat or not sheathes:
-			# the skeleton's "Held" nodes under each hand match the weapon NIF's HELD frame (the client's grip point)
-			bone = "Bip01 L Held" if slot == 11 or slot == 13 else "Bip01 R Held"
+			# the skeleton's "Held" nodes under each hand match the weapon NIF's HELD frame (the client's grip point);
+			# an item objects.csv marks Shield (the hand-to-hand greaves) on the forearm's Shield bone of its hand -
+			# game.dll 0x422806 (owner 2026-10-17: the Savage's right claw floated off its Held bone)
+			if shield_model and skel.find_bone("Bip01 R Shield") >= 0:
+				bone = "Bip01 L Shield" if slot == 11 or slot == 13 else "Bip01 R Shield"
+			else:
+				bone = "Bip01 L Held" if slot == 11 or slot == 13 else "Bip01 R Held"
 		elif on_back:
 			bone = "Bip01 R Back"
 		else:
 			bone = "Bip01 R Belt" if slot == 11 else "Bip01 L Belt"
 		var idx := skel.find_bone(bone)
-		var w := WeaponModels.make(model_id, combat)
+		var w := WeaponModels.make(model_id, combat, bone == "Bip01 L Held" or bone == "Bip01 L Shield")
 		if idx < 0 or w == null:
 			push_warning("gear: no %s (bone %d) or no model %d" % [bone, idx, model_id])
 			continue
 		WeaponModels.dye(w, int(it.get("color", 0)))           # its luster / enamel
+		WeaponModels.set_emblem(w, model_id, int(it.get("emblem", 0)))   # a shield's guild emblem
 		var at := BoneAttachment3D.new()
 		at.bone_name = bone
 		skel.add_child(at)

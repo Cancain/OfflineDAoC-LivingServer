@@ -5,8 +5,9 @@ shader_type spatial;
 render_mode blend_add, unshaded, depth_draw_never, cull_back, shadows_disabled;
 
 uniform vec3 tint : source_color = vec3(0.86, 0.92, 1.0);
-uniform float strength = 0.16;
-uniform float rim = 0.45;
+uniform float strength = 0.05;       // owner 2026-10-17: 0.16 / 0.45 washed spirit champions near white - the old
+                                      // client keeps their armour's texture and colour, only a little pale
+uniform float rim = 0.2;
 
 void fragment() {
 	float facing = clamp(dot(normalize(NORMAL), normalize(VIEW)), 0.0, 1.0);

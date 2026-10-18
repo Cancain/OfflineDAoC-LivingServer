@@ -1,7 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-if not exist "%~dp0Get-OfflineDAoC.ps1" (
+if not exist "%~dp0..\Get-OfflineDAoC.ps1" (
   echo Get-OfflineDAoC.ps1 is missing. Unzip the whole downloader zip from the release page, then retry.
   pause
   exit /b 1
@@ -35,7 +35,7 @@ echo Allow about 60 GB of free disk space while it installs.
 echo If it stops, run this file again and press the same number: it continues
 echo where it stopped.
 echo.
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Get-OfflineDAoC.ps1" -ReleaseVersion 0.36c %CLASSIC% -Destination "%~dp0%FOLDER%"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\Get-OfflineDAoC.ps1" -ReleaseVersion 0.36c %CLASSIC% -Destination "%~dp0%FOLDER%"
 if errorlevel 1 goto failed
 echo.
 echo Done. Open the %FOLDER% folder and read READ ME - NEW CLIENT.txt.

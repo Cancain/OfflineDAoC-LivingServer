@@ -334,8 +334,11 @@ static func _overview_gear(nm: String, c: Dictionary) -> Dictionary:
 		var id := "ovw:%s:%d" % [nm, slots[k]]
 		var shield := int(WeaponModels.info(m).get("shield", 0)) > 0 if slots[k] == 11 else false
 		var colors: Dictionary = c.get("colors", {})
+		# PacketLib1125: an item's guild emblem in its colour's place (owner 2026-10-17: no emblems on the select
+		# screen) - a dye is 0-143 (tints.csv), more is the emblem
+		var tex := int(colors.get(k, 0))
 		ItemDb.add_runtime(id, {"id": id, "name": "", "model": m, "object_type": 42 if shield else 0, "hand": 0,
-				"color": int(colors.get(k, 0))})
+				"color": tex if tex <= 0xFF else 0, "emblem": tex if tex > 0xFF else 0})
 		inv[str(slots[k])] = {"id": id, "count": 1}
 	return inv
 
@@ -674,6 +677,28 @@ func _on_world_inner(kind: String, d: Dictionary) -> void:
 			on_skills(d)
 		"trainer":                                        # the trainer's specializations (TrainerWindow code 0)
 			trainer_specs = d.get("specs", [])
+			_trainer_names = {}                               # the names and lists come again after it
+			_names_run = 0
+			trainer_changed.emit()
+		"trainer_names":                                  # the trainer's skill names (TrainerWindow code 4)
+			var at := _names_run                              # arrival order: the packet's own start is one byte and
+			for n in d.names:                                 # wraps past 255 (long hybrid lists)
+				_trainer_names[at] = String(n)
+				at += 1
+			_names_run = at
+			_name_trainer_skills()
+		"trainer_skills":                                 # what each specialization gives by level (code 3)
+			trainer_skills = {}
+			var run := 0                                      # the names' running place (the full counts)
+			for sp in d.specs:
+				var list: Array = []
+				for i in sp.skills.size():
+					var k: Dictionary = sp.skills[i]
+					k["at"] = run + i
+					list.append(k)
+				trainer_skills[int(sp.index)] = list
+				run += int(sp.count)
+			_name_trainer_skills()
 			trainer_changed.emit()
 		"trainer_ra":                                     # the trainer's Realm Skills (TrainerWindow code 1)
 			realm_abilities = d.list
@@ -840,6 +865,15 @@ func command(text: String) -> void:
 
 var skills: Array = []                   # VariousUpdate 1: your usable skills in the server's order (specs first)
 var trainer_specs: Array = []            # the trainer window's specializations: [{index, level, next, name}]
+var trainer_skills := {}                 # spec index -> [{level, icon, page, id, name}] (the training previews)
+var _trainer_names := {}                 # running place -> skill name (TrainerWindow code 4)
+var _names_run := 0
+
+
+func _name_trainer_skills() -> void:
+	for list in trainer_skills.values():
+		for k in list:
+			k["name"] = _trainer_names.get(int(k.at), "")
 var realm_abilities: Array = []          # the trainer's Realm Skills: [{index, level, cost, name, available}]
 var ra_points := 0                       # realm skill points to spend
 signal trainer_changed
@@ -1291,7 +1325,8 @@ func _on_inventory_items(d: Dictionary, mine: Array) -> void:
 					"spd_abs": int(it.value2), "hand": int(it.hand), "type_damage": int(it.type_damage), "object_type": ot,
 					"weight": int(it.weight), "condition": int(it.condition), "maxcondition": 100,
 					"durability": int(it.durability), "maxdurability": 100, "quality": int(it.quality),
-					"bonus": int(it.bonus), "model": int(it.model), "extension": int(it.extension), "color": int(it.color),
+					"bonus": int(it.bonus), "model": int(it.model), "extension": int(it.extension), "color": int(it.get("color", 0)),
+					"emblem": int(it.get("emblem", 0)),            # (an emblemed cloak / shield: no colour sent)
 					"effect": int(it.effect), "icon": item_icon(int(it.model)), "maxcount": 999 if count > 1 else 1,
 					"packsize": 1, "price": 0, "isdropable": 1, "istradable": 1, "server": true})
 			inv[slot] = {"id": id, "count": count}
@@ -1369,6 +1404,7 @@ func _server_item(id: String, it: Dictionary, detail_key: Variant) -> Dictionary
 			"condition": int(it.get("condition", 100)), "maxcondition": 100, "durability": int(it.get("durability", 100)),
 			"maxdurability": 100, "quality": int(it.get("quality", 100)), "bonus": int(it.get("bonus", 0)),
 			"model": int(it.model), "color": int(it.get("color", 0)), "effect": int(it.get("effect", 0)),
+			"emblem": int(it.get("emblem", 0)),
 			"icon": item_icon(int(it.model)), "price": int(it.get("price", 0)), "can_use": bool(it.get("can_use", true)),
 			"detail_key": detail_key, "maxcount": 999 if count > 1 else 1, "packsize": 1, "server": true}
 

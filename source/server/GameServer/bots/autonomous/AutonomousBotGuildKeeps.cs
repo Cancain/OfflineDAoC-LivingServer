@@ -24,7 +24,7 @@ public static class AutonomousBotGuildKeeps
 
     private static readonly Logger Log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
 
-    public static bool Enabled => AutonomousBotGuilds.Enabled && Properties.BOT_GUILD_CLAIMS_KEEPS;
+    public static bool Enabled => AutonomousBotRealmGuilds.Enabled && Properties.BOT_GUILD_CLAIMS_KEEPS;
 
     #region Pure rules (tested)
 
@@ -126,12 +126,12 @@ public static class AutonomousBotGuildKeeps
         GameBot[] present = AutonomousBotRegistry.Snapshot()
             .Where(bot => bot.IsAutonomousWorldBot && bot.IsAlive && bot.ObjectState == GameObject.eObjectState.Active &&
                           bot.Realm == keep.Realm && bot.CurrentRegionID == region && bot.Guild != null &&
-                          AutonomousBotGuilds.IsBotGuild(bot.Guild) && bot.CurrentAreas.Contains(keep.Area))
+                          AutonomousBotRealmGuilds.IsBotGuild(bot.Guild) && bot.CurrentAreas.Contains(keep.Area))
             .ToArray();
         var byGuild = present.GroupBy(bot => bot.Guild).ToArray();
         string chosenId = ChooseClaimant(byGuild.Select(group =>
         {
-            AutonomousBotGuilds.TryGetBotGuild(group.Key.GuildID, out AutonomousBotGuilds.BotGuildInfo info);
+            AutonomousBotRealmGuilds.TryGetBotGuild(group.Key.GuildID, out AutonomousBotRealmGuilds.BotGuildInfo info);
             return new Claimant(group.Key.GuildID, info?.Charter ?? BotGuildCharter.Social, group.Count());
         }));
         if (chosenId == null)

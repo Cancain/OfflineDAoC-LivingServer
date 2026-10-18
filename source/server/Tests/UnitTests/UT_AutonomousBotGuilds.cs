@@ -339,7 +339,7 @@ namespace DOL.GS.Tests
             Guild guild = TestGuild(eRealm.Albion);
 
             // The server double throws on any database write, so this also proves nothing was saved.
-            Assert.That(AutonomousBotGuilds.ApplyStartupRewrites(guild, BotGuildCharter.Rvr, enabled: false), Is.False);
+            Assert.That(AutonomousBotRealmGuilds.ApplyStartupRewrites(guild, BotGuildCharter.Rvr, enabled: false), Is.False);
             Assert.Multiple(() =>
             {
                 Assert.That(Enumerable.Range(7, 2).Select(level => guild.GetRankByID(level))
@@ -347,7 +347,7 @@ namespace DOL.GS.Tests
                 Assert.That(guild.IsGuildDuesOn(), Is.False, "Dues are not turned on.");
                 Assert.That(guild.GetGuildDuesPercent(), Is.Zero);
             });
-            Assert.That(AutonomousBotGuilds.ApplyStartupRewrites(null, BotGuildCharter.Rvr, enabled: true), Is.False);
+            Assert.That(AutonomousBotRealmGuilds.ApplyStartupRewrites(null, BotGuildCharter.Rvr, enabled: true), Is.False);
         }
 
         [Test]
@@ -357,7 +357,7 @@ namespace DOL.GS.Tests
             RecordingWrites.Saved.Clear();
             Guild guild = TestGuild(eRealm.Albion);
 
-            Assert.That(AutonomousBotGuilds.ApplyStartupRewrites(guild, BotGuildCharter.Rvr, enabled: true), Is.True);
+            Assert.That(AutonomousBotRealmGuilds.ApplyStartupRewrites(guild, BotGuildCharter.Rvr, enabled: true), Is.True);
             Assert.Multiple(() =>
             {
                 Assert.That(MemberRanksHearAlliance(guild), Is.True);
@@ -369,7 +369,7 @@ namespace DOL.GS.Tests
             // A second startup saves nothing that is already right and keeps dues a player changed.
             RecordingWrites.Saved.Clear();
             guild.SetGuildDuesPercent(10);
-            Assert.That(AutonomousBotGuilds.ApplyStartupRewrites(guild, BotGuildCharter.Rvr, enabled: true), Is.True);
+            Assert.That(AutonomousBotRealmGuilds.ApplyStartupRewrites(guild, BotGuildCharter.Rvr, enabled: true), Is.True);
             Assert.That(RecordingWrites.Saved, Is.Empty);
             Assert.That(guild.GetGuildDuesPercent(), Is.EqualTo(10));
         }

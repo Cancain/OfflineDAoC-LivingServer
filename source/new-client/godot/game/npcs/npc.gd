@@ -124,8 +124,11 @@ func _build_model() -> void:
 			tb = _pb("dress", tb)
 			model = f
 			anim = f.anim
-			height = 1.85 * f.scale.y
 		f.scale *= size
+		# its height (name plate, click box) at the size it is drawn: the /spawn "Companion Class Menu" is a size-1
+		# troll (model 150, the server's "invisible" model) - measured before the size, its click box and name stood
+		# at full troll height (owner 2026-10-17)
+		height = 1.85 * f.scale.y
 		tb = _pb("scale", tb)
 	elif info.has("object_model"):
 		# an object drawn as a living (the server's siege weapons: objects.csv item models - ServerWorld._model_info);
@@ -161,10 +164,12 @@ func _build_model() -> void:
 				for clip in anim.get_animation_list():
 					anim.get_animation(clip).loop_mode = Animation.LOOP_LINEAR if Fig3Figure.loops(clip) else Animation.LOOP_NONE
 			tb = _pb("mob_anims", tb)
-			height = _model_height(model)
+			height = maxf(_model_height(model), _idle_top(model))
 			var hover := figure_look(model, info, state.index if state else get_instance_id())
 			model.position.y += hover
 			height += hover
+			_hover = hover
+			_hover_node = model
 			tb = _pb("mob_height", tb)
 			_hold_weapons(model)
 			tb = _pb("mob_weapons", tb)
@@ -221,6 +226,20 @@ func _attach_effects() -> void:
 			add_child(fx)
 			if bool(e.get("autoscale", false)):
 				fx.scale *= float(spawn.get("size", 50)) / 50.0 * float(info.get("scale", 1.0))
+			if model == null:
+				# a figure that is only its effect (cold lights, wisps): the client floats it too - its min / max float
+				# height (owner 2026-10-16: cold lights sat on the ground; the hover was only applied to meshes)
+				var hover := float_m(info, state.index if state else get_instance_id())
+				fx.position.y += hover
+				height = maxf(height, hover + 0.6)
+				_hover = hover
+				_hover_node = fx
+				# its drawn size is the effect's (owner 2026-10-16: a sulphurous cloud's name sat small inside the cloud and
+				# only a little box in its middle took clicks): the name over it, the click box round it
+				var b := _effect_bounds(fx)
+				if b.size.y > 0.1:
+					_fx_bounds = b if _fx_bounds.size.y <= 0.0 else _fx_bounds.merge(b)
+					height = maxf(height, b.end.y)
 		NifParticles.fit_to_scale.call_deferred(fx)          # particle sprites follow the scale too (once placed)
 
 
@@ -235,10 +254,12 @@ func _hold_weapons(root: Node3D) -> void:
 	var by_slot := {}
 	_weapon_fx = {}
 	_weapon_colors = {}
+	_weapon_emblems = {}
 	for e in rows:
 		by_slot[int(e.slot)] = int(e.model)
 		_weapon_fx[int(e.slot)] = int(e.get("effect", 0))
 		_weapon_colors[int(e.slot)] = int(e.get("color", 0))
+		_weapon_emblems[int(e.slot)] = int(e.get("emblem", 0))
 	_weapon_root = root
 	_weapon_slots = by_slot
 	_hang_weapons(state != null and state.fighting)
@@ -252,6 +273,7 @@ var _weapon_root: Node3D
 var _weapon_slots := {}
 var _weapon_fx := {}                           # slot -> the item's weapon effect (a glow / flame), 0 none
 var _weapon_colors := {}                       # slot -> the item's dye (tints.csv), 0 none
+var _weapon_emblems := {}                      # slot -> a shield's guild emblem, 0 none
 var _weapon_nodes: Array = []
 var _weapons_drawn := false
 
@@ -299,7 +321,7 @@ func _hang_weapons(drawn: bool) -> void:
 		var m := int(slots[slot])
 		return {"model": m, "color": int(_weapon_colors.get(slot, 0)),
 				"object_type": 42 if slot == 11 and int(WeaponModels.info(m).get("shield", 0)) > 0 else 0,
-				"effect": int(_weapon_fx.get(slot, 0))}
+				"effect": int(_weapon_fx.get(slot, 0)), "emblem": int(_weapon_emblems.get(slot, 0))}
 	var skel_root: Node3D = (_weapon_root as Fig3Figure).model if _weapon_root is Fig3Figure else _weapon_root
 	var sk := skel_root.find_children("*", "Skeleton3D", true, false)
 	var can_sheathe := sk.size() > 0 and (sk[0] as Skeleton3D).find_bone("Bip01 R Belt") >= 0
@@ -339,15 +361,24 @@ func _dress(f: Fig3Figure) -> void:
 	var parts := {}
 	var tints := {}
 	var by_slot := {}
+	_weapon_fx = {}
+	_weapon_colors = {}
+	_weapon_emblems = {}
 	for e in rows:
 		var slot := int(e.slot)
 		by_slot[slot] = int(e.model)
+		# the weapons' effects, dyes and a shield's guild emblem, as _hold_weapons keeps them (a race figure's weapons
+		# hung without them)
+		_weapon_fx[slot] = int(e.get("effect", 0))
+		_weapon_colors[slot] = int(e.get("color", 0))
+		_weapon_emblems[slot] = int(e.get("emblem", 0))
 		if slot in [22, 23, 25, 27, 28]:
 			var p := Fig3Figure.armor_parts(int(e.model), female)
 			parts.merge(p, true)
 			for k in p:                                             # the server's colour for it (EquipmentUpdate)
 				tints[k] = Fig3Figure.dye(int(e.get("color", 0)))
 		elif slot == 26:                                            # the cloak (hood up / down: the server's hood flag)
+			f.cloak_emblem = int(e.get("emblem", 0))                # a guild gamebot's / companion's emblem
 			var cp := Fig3Figure.armor_parts(int(e.model), female)
 			if cp.has("cloak"):
 				parts["cloak"] = cp.cloak
@@ -385,6 +416,11 @@ static func ghost_look(model: Node3D, figure := false) -> void:
 	if _ghost_glow == null:
 		_ghost_glow = ShaderMaterial.new()
 		_ghost_glow.shader = load("res://game/npcs/ghost_glow.gdshader")
+		# drawn after every ghost's depth and colour passes (they are 0 and 1): its order against the depth passes was
+		# left to the distance sort - before them it lit every inner face (the ghost went white), after them only the
+		# front (darker) - and among a crowd of ghosts walking about that order changed frame to frame: "dark to white
+		# highlighted repeatedly" (owner 2026-10-17, frost spectres at a keep)
+		_ghost_glow.render_priority = 2
 	for mi in model.find_children("*", "MeshInstance3D", true, false):
 		var m := mi as MeshInstance3D
 		var sm := m.material_override as ShaderMaterial
@@ -399,8 +435,66 @@ static func ghost_look(model: Node3D, figure := false) -> void:
 			m.material_override = depth
 			m.material_overlay = _ghost_glow
 			continue
-		m.transparency = 0.5
+		# a monster model (the spectral snake, forest skrats, spirits): one see-through layer too - each surface first
+		# writes only its depth, then draws its colour half see-through on that surface alone. The plain 50 %
+		# transparency showed its inner faces and re-sorted them as it moved: the ghost flickered (owner 2026-10-16)
+		if m.mesh == null:
+			continue
+		for i in m.mesh.get_surface_count():
+			var base := m.get_active_material(i) as BaseMaterial3D
+			var two_sided := base != null and base.cull_mode == BaseMaterial3D.CULL_DISABLED
+			var tex: Texture2D = base.albedo_texture if base else null
+			var depth := ShaderMaterial.new()
+			depth.shader = _monster_ghost_shader(true, two_sided)
+			var look := ShaderMaterial.new()
+			look.shader = _monster_ghost_shader(false, two_sided)
+			look.render_priority = 1                             # after every depth pass
+			for mat in [depth, look]:
+				(mat as ShaderMaterial).set_shader_parameter("albedo_tex", tex)
+				(mat as ShaderMaterial).set_shader_parameter("has_tex", tex != null)
+			look.set_shader_parameter("albedo_col", base.albedo_color if base else Color.WHITE)
+			depth.next_pass = look
+			m.set_surface_override_material(i, depth)
 		m.material_overlay = _ghost_glow
+
+
+static var _monster_ghost_shaders := {}                  # [depth pass?, two-sided?] -> Shader
+
+
+static func _monster_ghost_shader(depth_pass: bool, two_sided: bool) -> Shader:
+	var key := "%s:%s" % [depth_pass, two_sided]
+	if not _monster_ghost_shaders.has(key):
+		var cull := "cull_disabled" if two_sided else "cull_back"
+		var code := ""
+		if depth_pass:
+			code = """shader_type spatial;
+render_mode blend_mix, depth_draw_always, %s, unshaded, shadows_disabled;
+uniform sampler2D albedo_tex : source_color, filter_linear_mipmap, repeat_enable;
+uniform bool has_tex = false;
+void fragment() {
+	float a = has_tex ? texture(albedo_tex, UV).a : 1.0;
+	if (a < 0.5) discard;
+	ALPHA = 0.0;
+	DEPTH = FRAGCOORD.z * 0.9993;
+}
+""" % cull
+		else:
+			code = """shader_type spatial;
+render_mode blend_mix, depth_draw_never, %s, shadows_disabled;
+uniform sampler2D albedo_tex : source_color, filter_linear_mipmap, repeat_enable;
+uniform bool has_tex = false;
+uniform vec4 albedo_col : source_color = vec4(1.0);
+uniform float ghost_alpha = 0.5;
+void fragment() {
+	vec4 c = albedo_col * (has_tex ? texture(albedo_tex, UV) : vec4(1.0));
+	ALBEDO = c.rgb;
+	ALPHA = c.a * ghost_alpha;
+}
+""" % cull
+		var sh := Shader.new()
+		sh.code = code
+		_monster_ghost_shaders[key] = sh
+	return _monster_ghost_shaders[key]
 
 
 static func _ghost_shader(src: Shader) -> Array:
@@ -409,21 +503,22 @@ static func _ghost_shader(src: Shader) -> Array:
 
 		var mode := RegEx.create_from_string("render_mode [^;]*;")
 		var d := mode.sub(code, "render_mode blend_mix, depth_draw_always, cull_back, shadows_disabled;")
-		# its depth a hair behind the surface (reverse Z: smaller is farther; 0.3 % of the distance - ~1.5 cm at 5 m):
-		# the two passes are different shaders, so their depths for the same face differ by rounding, and the colour
-		# pass flickered in and out as the camera turned (owner 2026-10-15). Inner faces lie far deeper and stay hidden.
+		# its depth a hair behind the surface (reverse Z: smaller is farther; x 0.9993): the two passes are different
+		# shaders, so their depths for the same face differ by rounding, and the colour pass flickered in and out as the
+		# camera turned (owner 2026-10-15). 0.3 % let what lies a few cm behind the skin - the eyes, the inside of the
+		# mouth - show through the face (owner 2026-10-16); 0.07 % is still hundreds of times the rounding.
 		d = d.replace("ALPHA = c.a;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;", "if (c.a < 0.5) discard;
 	ALPHA = 0.0;
-	DEPTH = FRAGCOORD.z * 0.997;")
+	DEPTH = FRAGCOORD.z * 0.9993;")
 		d = d.replace("//CUTOUT", "ALPHA = 0.0;
-	DEPTH = FRAGCOORD.z * 0.997;")
+	DEPTH = FRAGCOORD.z * 0.9993;")
 		# the see-through pass: the part's own colours - skin tone, dyes - evenly see-through, a little whitened. Only
 		# hair takes its texture alpha (its coverage); on faces the alpha is gloss and on clothes the tint mask, and as
 		# opacity it left skin and dyed armour the most see-through - no skin or armour colour under the ghost (owner
 		# 2026-10-16, after the 2026-10-15 texture-alpha pass)
 		var l := mode.sub(code, "render_mode blend_mix, depth_draw_never, cull_back, shadows_disabled;
-uniform float ghost_alpha = 0.85;
+uniform float ghost_alpha = 0.9;
 uniform float ghost_white = 0.0;")
 		l = l.replace("ALPHA = c.a;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;", "ALBEDO = mix(ALBEDO, vec3(1.0), ghost_white);
@@ -465,12 +560,42 @@ static func figure_look(m: Node3D, model_info: Dictionary, seed: int) -> float:
 				if mat and mat.transparency != mode:          # (shared by every copy of the model: set once)
 					mat.transparency = mode
 					mat.alpha_scissor_threshold = 0.5
+	return float_m(model_info, seed)
+
+
+## The client's float height for a model (monsters.csv min / max float height, world units): a random height between
+## them, the same for a given seed, in metres; 0 without one.
+static func float_m(model_info: Dictionary, seed: int) -> float:
 	var fl: Array = model_info.get("float_units", [])
 	if fl.size() < 2:
 		return 0.0
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(seed)
 	return rng.randf_range(float(fl[0]), float(fl[1])) * 0.025
+
+
+## How high the model's skeleton reaches in its idle pose, in the view's space (0 without one). A creature whose own
+## clip carries it up - the client's cicadas fly a few metres up in their idle .kfa (Dyranapur, Lydsyg, the giant
+## cicadas) - has its rest-pose mesh down at the ground: measured from that alone, its name and click box sat on the
+## floor under the flying body (owner 2026-10-17).
+func _idle_top(m: Node3D) -> float:
+	if anim == null or not anim.has_animation("idle"):
+		return 0.0
+	var skels := m.find_children("*", "Skeleton3D", true, false)
+	if skels.is_empty():
+		return 0.0
+	anim.play("idle")
+	anim.advance(0.0)
+	var sk := skels[0] as Skeleton3D
+	var to_view := Transform3D.IDENTITY                   # the skeleton's transform up to this view (the model's scale)
+	var n: Node = sk
+	while n != self and n is Node3D:
+		to_view = (n as Node3D).transform * to_view
+		n = n.get_parent()
+	var top := 0.0
+	for i in sk.get_bone_count():
+		top = maxf(top, (to_view * sk.get_bone_global_pose(i)).origin.y)
+	return top + 0.25 if top > 0.0 else 0.0
 
 
 func _model_height(m: Node3D) -> float:
@@ -513,6 +638,29 @@ func _build_pick() -> void:
 
 
 ## The drawn model's bounds in this NPC's own space (every mesh incl. held weapons), or a figure-sized box.
+var _fx_bounds := AABB()                                  # an effect-only figure's drawn box (local), else empty
+
+
+## An attached effect's drawn box in this view's space: its meshes' and particle systems' boxes (a particle system's
+## visibility box), through the effect's own transforms and scale. Capped at 30 m (a runaway default box).
+func _effect_bounds(fx: Node3D) -> AABB:
+	var out := AABB()
+	var first := true
+	for g in fx.find_children("*", "GeometryInstance3D", true, false):
+		var gi := g as GeometryInstance3D
+		var t := Transform3D.IDENTITY
+		var n: Node = gi
+		while n != self and n is Node3D:
+			t = (n as Node3D).transform * t
+			n = n.get_parent()
+		var box: AABB = t * gi.get_aabb()
+		if box.size.length() <= 0.0 or box.size.length() > 30.0:
+			continue
+		out = box if first else out.merge(box)
+		first = false
+	return out if not first else AABB()
+
+
 func _local_bounds() -> AABB:
 	var out := AABB()
 	var first := true
@@ -525,6 +673,8 @@ func _local_bounds() -> AABB:
 			var b := inv * m.global_transform * m.get_aabb()
 			out = b if first else out.merge(b)
 			first = false
+	if (first or out.size.y < 0.1) and _fx_bounds.size.y > 0.1:
+		return _fx_bounds                                   # a figure that is only its effect: the effect's box
 	if first or out.size.y < 0.1:
 		var h := maxf(height, 0.5)
 		return AABB(Vector3(-h * 0.25, 0.0, -h * 0.25), Vector3(h * 0.5, h, h * 0.5))
@@ -673,6 +823,11 @@ var _swim_drop := 0.0
 
 func _fit_swim() -> void:
 	if model == null or not is_instance_valid(model) or not _shown_swim:
+		return
+	if info.has("race") or model is Fig3Figure:
+		# a race figure (gamebots, companions) swims as you do, at the height _ground gives it - its swim pose is the
+		# low one you swim in; lowered to the pelvis as well it went under (owner 2026-10-17: gamebots and companions
+		# swam far below you, names on the surface)
 		return
 	var sk: Skeleton3D = null
 	for s in model.find_children("*", "Skeleton3D", true, false):
@@ -825,13 +980,28 @@ func flinch() -> void:
 
 
 ## vocal: its death cry too (the server's deaths; offline combat plays its own).
+var _hover := 0.0                                         # its float height (monsters.csv), metres
+var _hover_node: Node3D                                    # what was lifted by it (the model, or a wisp's effect)
+var _fell := false
+
+
 func play_death(vocal := false) -> void:
 	if vocal and sounds and _shown_mode != int(NpcState.Mode.DEAD):
 		sounds.event("die")
 	_action_left = 0.0
 	_shown_mode = int(NpcState.Mode.DEAD)
+	# a cast or a drawn bow ends with its caster (owner 2026-10-17: /disband with a bonedancer companion's boneknitters
+	# mid-cast - the bodies stood in the cast loop, the loop being replayed over the death every frame, till they sank)
+	casting_spell = false
+	_bow_hold = false
 	if anim and anim.has_animation("death"):
 		anim.play("death", 0.1)
+	# a hovering monster's body drops to the ground as it dies - bodies lie on the ground to be looted (owner
+	# 2026-10-16: a dead forest skrat hung in the air, then floated down and was gone)
+	if _hover > 0.0 and not _fell and is_instance_valid(_hover_node):
+		_fell = true
+		var tw := create_tween()
+		tw.tween_property(_hover_node, "position:y", _hover_node.position.y - _hover, clampf(_hover * 0.35, 0.25, 0.8)) 				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 
 
 ## A body the server let go (RemoveObject type 0: the server deletes a monster the moment it dies; the old client

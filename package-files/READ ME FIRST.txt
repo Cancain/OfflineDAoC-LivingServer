@@ -1,4 +1,4 @@
-OFFLINE DAOC 0.36
+OFFLINE DAOC 0.37
 
 This folder is the complete game: client, server, clean world, launcher,
 tools and source code. It contains no one else's account, characters or bots.
@@ -21,30 +21,38 @@ PLAY
 Only one Offline DAoC server can run at a time.
 
 EDITION
-0.36b includes the custom Hibernian Sluaghbinder class.
-0.36 has only the original Classic + Shrouded Isles classes.
+0.37 has only the original Classic + Shrouded Isles classes.
+0.37b includes the custom Hibernian Sluaghbinder class.
 The download helper you used chose the edition, and the launcher shows it
-(VERSION 0.36b or VERSION 0.36).
+(VERSION 0.37 or VERSION 0.37b).
 
-THE NEW CLIENT (0.36c)
-0.36c is this game (0.36b or 0.36) with a second, new client added in
+UPDATES
+From 0.37 on, new versions come as updates: download the new version's
+downloader from its release page, run its GET-OFFLINE-DAOC file and press 1
+(Update my game). Only what changed is downloaded; your account, characters,
+bots and settings stay. Everything an update replaces is backed up in
+patch-backups in this folder (BACKUP.txt there says how to undo it).
+
+THE NEW CLIENT (0.37c)
+0.37c is this game (0.37 or 0.37b) with a second, new client added in
 new-client.
 If this folder has START OFFLINE DAOC - NEW CLIENT.cmd, you have it: read
 READ ME - NEW CLIENT.txt. Both clients play the same account, characters and
-bots. On 0.36 it offers the classic classes only. To add it to a 0.36b or
-0.36 folder, use ADD-NEW-CLIENT-TO-0.36-OR-0.36b.cmd from the 0.36c release
-page. See docs\NEW-CLIENT.md.
+bots. On 0.37 it offers the classic classes only. To add it to this folder,
+run GET-OFFLINE-DAOC-v0.37c.cmd from the 0.37c release page and press 1
+(Update my game): it offers to add the new client. See docs\NEW-CLIENT.md.
 
 COMING FROM AN OLDER VERSION?
-Run IMPORT PROGRESS FROM OLD OFFLINE DAOC.cmd and pick your old folder. It
-brings over your account, characters, items, money, houses and bots, from
-0.35 / 0.35b and every earlier version. Your old folder is not changed, and
-this folder is backed up first. See docs\TRANSFER-PROGRESS.md.
+From 0.36, 0.36b or 0.36c, just update (see UPDATES). From 0.35 or older:
+run IMPORT PROGRESS FROM OLD OFFLINE DAOC.cmd and pick your old folder. It
+brings over your account, characters, items, money, houses and bots. Your old
+folder is not changed, and this folder is backed up first. See
+docs\TRANSFER-PROGRESS.md.
 
 MORE HELP
 docs\PLAY.md               full guide and troubleshooting
-docs\RELEASE-0.36.md       what's new
-docs\NEW-CLIENT.md         the new client (0.36c)
+docs\RELEASE-0.37.md       what's new
+docs\NEW-CLIENT.md         the new client (0.37c)
 CHANGELOG.md               every change, version by version
 QUICK COMMANDS.txt         handy in-game commands
 AGENTS.md, docs\DEVELOPMENT.md    for developers and AI assistants

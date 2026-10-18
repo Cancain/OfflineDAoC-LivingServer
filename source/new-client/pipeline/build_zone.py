@@ -648,6 +648,19 @@ ZONE_COPIES = {277: 245, 276: 247}
 HOUSING_ZONES = {13, 114, 213}                         # Caerwent / Erikstaad / Meath housing (post-1.65)
 
 
+def client_zonejump(zdir, zone_id):
+    """The zone's zonejump.csv as the client has it: its csvNNN.mpk copy when there is one (the patched tables - owner
+    2026-10-17: Delling Crater's Tuscaran Glacier entrance and Abermenai's three realm exits are only there, so the
+    zone-in spots were missing), else None (datNNN.mpk's own)."""
+    p = zdir / f'csv{zone_id:03d}.mpk'
+    if not p.exists():
+        return None
+    try:
+        return read_mpk(str(p)).get('zonejump.csv')
+    except ValueError:                                     # a few csv archives aren't MPAK (zone009): the dat copy
+        return None
+
+
 def zone_exits(dat):
     """The zone's exits: zonejump.csv rows (id, name, x1, y1, x2, y2, z1, z2, target) are boxes in zone units whose
     target is the old server's ZonePoint id (checked: Tir na Nog 19 = 'TNN > LOUGH DERG HIB', Lough Derg 13 =
@@ -764,6 +777,9 @@ def build(zone_id, upscale=True):
     out.mkdir(parents=True, exist_ok=True)
     (ROOT / 'godot/content/.gdignore').touch()             # runtime-loaded content: keep it out of the editor import
     dat = read_mpk(str(zdir / f'dat{zone_id:03d}.mpk'))
+    jump = client_zonejump(zdir, zone_id)
+    if jump is not None:
+        dat['zonejump.csv'] = jump
     sector = sector_ini(dat['sector.dat'])
     if 'city.csv' in dat:
         return build_city(zone_id, upscale, zdir, out, dat, sector)

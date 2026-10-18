@@ -13,7 +13,7 @@ Parts, each on by default and only active while bot guilds are on:
   --economy    dues from real loot, merit points, guild buffs
   --alliances  each realm's RvR and raiding bot guilds form one alliance
 
-Needs a server build with AutonomousBotGuilds.cs; older servers ignore these settings.
+Needs a server build with AutonomousBotRealmGuilds.cs (AutonomousBotGuilds.cs before 0.37); older servers ignore these settings.
 Turning it off keeps the saved guilds and memberships; turning it on again restores them.
 --apply needs the server, launcher and game closed; it backs up the database first.
 

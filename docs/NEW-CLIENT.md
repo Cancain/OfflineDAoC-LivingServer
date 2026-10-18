@@ -1,6 +1,6 @@
-# The new client (0.36c)
+# The new client (0.37c)
 
-0.36c adds a second game client to Offline DAoC 0.36b or 0.36: a new client built in the Godot 4 engine. It plays
+0.37c adds a second game client to Offline DAoC 0.37b or 0.37: a new client built in the Godot 4 engine. It plays
 the same game as the original client. It connects to the same local server, logs in with the same account, and
 shows the same characters, bots, items and world.
 
@@ -10,7 +10,7 @@ is the same character with the new client tomorrow.
 ## What it is
 
 - **The same game.** The new client is only a client. Every rule, monster, quest, item and bot comes from the
-  same Offline DAoC server as 0.36b and 0.36.
+  same Offline DAoC server as 0.37b and 0.37.
 - **The game's own art, redrawn by a modern engine.** The zones, buildings, characters, monsters, spell effects,
   sounds, music and interface are converted from the original game client's own files, with textures upscaled
   4x.
@@ -21,35 +21,35 @@ is the same character with the new client tomorrow.
 
 ## Installing it
 
-Everything happens in one folder. The new client lives in `new-client\` inside a 0.36b or 0.36 game folder:
+Everything happens in one folder. The new client lives in `new-client\` inside the game folder:
 
 ```
-playable-v0.36c\
+playable-v0.37c\
   START OFFLINE DAOC.cmd               the original client
   START OFFLINE DAOC - NEW CLIENT.cmd  the new client
   runtime\                             the server, the world and YOUR SAVES (shared by both)
   new-client\                          the new client and its own settings
 ```
 
-- **New install:** from the [v0.36c release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.36c),
-  download `Download-OfflineDAoC-v0.36c.zip`, unzip it, and double-click `DOWNLOAD-AND-PLAY-v0.36c.cmd`. It
-  asks which game you want (press **1** for 0.36b with the Sluaghbinder, **2** for 0.36 with the classic classes
-  only), installs that complete game and then the new client.
-- **Already have 0.36b or 0.36:** from the same downloader zip, double-click `ADD-NEW-CLIENT-TO-0.36-OR-0.36b.cmd`
-  and choose your game folder (the one with `START OFFLINE DAOC.cmd` in it). Nothing in that folder is changed except that the
-  new client is added.
+From the [v0.37c release](https://github.com/shadowofze/OfflineDAoC/releases/tag/v0.37c), download
+`Download-OfflineDAoC-v0.37c.zip`, unzip it, and double-click `GET-OFFLINE-DAOC-v0.37c.cmd`:
+- **1 = Update my game:** choose your game folder (0.36, 0.36b or 0.36c). The game and, if it has one, the new client
+  are updated. If the game has no new client yet, it asks whether to add it. Nothing else in the folder changes.
+- **2 = New install:** it asks which game you want (press **1** for 0.37 with the classic classes only, **2** for
+  0.37b with the Sluaghbinder), installs that complete game and the new client, and updates both.
 
-The download is large (about 30 GB, in 19 checked parts). The helper checks every part, unpacks it and deletes it
-before fetching the next, and it continues where it stopped if you run it again. Keep the game folder's path
-short (for example `C:\Games\OfflineDAoC`); the helper tells you if it is too long.
+Adding the new client is a large download (about 30 GB, in 19 checked parts). The helper checks every part, unpacks
+it and deletes it before fetching the next, and it continues where it stopped if you run it again. An update of a
+new client you already have is much smaller. Keep the game folder's path short (for example `C:\Games\OfflineDAoC`);
+the helper tells you if it is too long.
 
-The new client works with both editions. On **0.36b** it offers every class, the Sluaghbinder too. On **0.36**
+The new client works with both editions. On **0.37b** it offers every class, the Sluaghbinder too. On **0.37**
 (classic classes only) it offers the classic classes only, exactly like the original client there: its launcher
 reads the game's class setting and tells the new client.
 
 ## Playing
 
-1. Double-click **START OFFLINE DAOC - NEW CLIENT.cmd**. The launcher opens (it shows VERSION 0.36c).
+1. Double-click **START OFFLINE DAOC - NEW CLIENT.cmd**. The launcher opens (it shows VERSION 0.37c).
 2. Click **START SERVER** and wait for **RUNNING**.
 3. Click **ENTER REALM**. The new client starts and logs you in with your account.
 
@@ -58,7 +58,7 @@ game, click STOP SERVER, close the launcher and open the other start file.
 
 ## Requirements
 
-- Everything the 0.36b or 0.36 game needs (see [PLAY.md](PLAY.md)). The new client itself does not need the .NET
+- Everything the 0.37b or 0.37 game needs (see [PLAY.md](PLAY.md)). The new client itself does not need the .NET
   Framework 3.5 feature; the original client does.
 - A graphics card that supports **Vulkan or DirectX 12** (most cards from the last ten years), with up-to-date
   drivers.
@@ -76,7 +76,7 @@ game, click STOP SERVER, close the launcher and open the other start file.
 
 ## Bringing progress from an older version
 
-Use **IMPORT PROGRESS FROM OLD OFFLINE DAOC.cmd** in the game folder, as in 0.36b and 0.36. The progress goes into
+Use **IMPORT PROGRESS FROM OLD OFFLINE DAOC.cmd** in the game folder, as in 0.37b and 0.37. The progress goes into
 `runtime\data`, so both clients have it.
 
 ## Reporting problems
@@ -88,4 +88,4 @@ in **[Bug reports](https://github.com/shadowofze/OfflineDAoC/discussions/14)** o
 
 The new client's source code is in [source/new-client](../source/new-client) (the Godot project and the Python
 content pipeline that converts the original client's files). See its README. The converted content itself is
-not in the repository; it comes with the 0.36c download.
+not in the repository; it comes with the 0.36c download and the 0.37c update.

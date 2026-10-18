@@ -56,6 +56,17 @@ func setup(model: Node3D, anim: AnimationPlayer, sound_set: int, steps := true) 
 	_contacts["swim"] = _find_contacts("swim", ["Bip01 L Hand", "Bip01 R Hand"])
 
 
+## Footsteps on / off after setup (a steed you ride: the client's creature sheet row 41 is "horse (also player mount)"
+## and its move_dirt is g_Gallop_OnDirt - owner 2026-10-17: no gallop riding a stable master's horse; NPC views are
+## built with steps off).
+func set_steps(on: bool) -> void:
+	if on and _contacts.is_empty() and _skel and _anim:
+		for clip in MOVE_CLIPS:
+			_contacts[clip] = _find_contacts(clip, ["Bip01 L Foot", "Bip01 R Foot"])
+	enabled = on
+	set_physics_process(on)
+
+
 ## Contact moments of the given bones in one clip: where each bone reaches the bottom of its swing.
 func _find_contacts(clip: String, bones: Array) -> Array:
 	if not _anim.has_animation(clip):
@@ -199,7 +210,7 @@ func _play_row(row: Dictionary, delay: float) -> void:
 		play_log.pop_front()
 	var p := AudioStreamPlayer3D.new()
 	p.stream = _stream(row["file"])
-	p.bus = "Ambient"
+	p.bus = "Effects"
 	p.attenuation_model = AudioStreamPlayer3D.ATTENUATION_DISABLED
 	p.pitch_scale = _rng.randf_range(row["rate"][0], row["rate"][1])
 	var gain := _rng.randf_range(row["vol"][0], row["vol"][1])

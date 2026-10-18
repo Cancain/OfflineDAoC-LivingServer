@@ -1,7 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-if not exist "%~dp0Get-OfflineDAoC.ps1" (
+if not exist "%~dp0..\Get-OfflineDAoC.ps1" (
   echo Get-OfflineDAoC.ps1 is missing. Unzip the whole downloader zip from the release page, then retry.
   pause
   exit /b 1
@@ -18,7 +18,7 @@ echo The new client is about 30 GB in checked parts; allow about 40 GB of free
 echo disk space while it installs. If it stops, run this file again.
 echo Close the launcher and the game first.
 echo.
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Get-OfflineDAoC.ps1" -ReleaseVersion 0.36c -AddTo pick
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\Get-OfflineDAoC.ps1" -ReleaseVersion 0.36c -AddTo pick
 if errorlevel 1 goto failed
 echo.
 echo Done. In your game folder, START OFFLINE DAOC - NEW CLIENT.cmd plays with the

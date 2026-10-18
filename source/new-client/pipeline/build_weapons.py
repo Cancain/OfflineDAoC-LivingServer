@@ -47,6 +47,9 @@ def apply_texture(g, tex):
             a = prim.get('attributes', {})
             if 'TEXCOORD_2' not in a or prim.get('material') is None:
                 continue
+            # the guild emblem's pattern keeps its own coordinates (set 0) as TEXCOORD_3 - Godot's CUSTOM0.zw - for the
+            # emblem shader (Emblems.shield_material; owner 2026-10-17); the plain shield draws its surface on set 2
+            a.setdefault('TEXCOORD_3', a['TEXCOORD_0'])
             a['TEXCOORD_0'] = a['TEXCOORD_2']
             mat = g['materials'][prim['material']]
             mat.setdefault('pbrMetallicRoughness', {})['baseColorTexture'] = {'index': tex_index, 'texCoord': 0}
@@ -151,11 +154,14 @@ def main():
                     im['uri'] = f'../textures/x4plus/{det}.png'
                     info['textures'] = set(info['textures']) | {det}
                     changed = True
+        emblem_surface = ''
         if pr:
             tex = pr[2].strip().rsplit('.', 1)[0].lower()
             if apply_texture(g, tex):
                 info['textures'] = set(info['textures']) | {tex}
                 changed = True
+                if any(str(m.get('slots', {}).get('base', {}).get('tex', '')).startswith('cloakpattern') for m in mats):
+                    emblem_surface = tex                 # an emblem shield: its surface under the guild emblem
         if changed:
             (d / 'model.gltf').write_text(json.dumps(g), encoding='utf-8')
         for t in sorted(info['textures']):
@@ -174,6 +180,8 @@ def main():
         out[model] = {'nif': nif.lower(), 'file': f'{folder}/model.gltf', 'name': o[1],
                       'belt': num(o[17]), 'stance': num(o[19]), 'left': num(o[20]), 'back_offset': num(n[15]),
                       'sound_set': num(o[21]), 'shield': num(o[18])}   # cc_weapons.csv row: draw / swing / hit / parried sounds
+        if emblem_surface:
+            out[model]['emblem'] = emblem_surface
         held = nif_static.held_frame(path.read_bytes())        # a mesh turned inside the NIF: its grip turns it back
         if not held and not out[model].get('shield'):           # a grip rolled about the length (shields: as checked)
             held = nif_static.held_roll(path.read_bytes())

@@ -97,6 +97,31 @@ static func pack_copy(gltf_path: String) -> PackedScene:
 	return out
 
 
+## Background loading (owner 2026-10-17, hitches in a companion fight: each spell effect's first copy was parsed,
+## textured and packed on the main thread - 60-200 ms a packet, up to 1.5 s frames): the effect is parsed and packed on
+## a worker, then kept like copy_of's. is_loaded() says whether copy_of would now be instant.
+static var _loading := {}                      # gltf path -> true while a worker packs it
+
+
+static func is_loaded(gltf_path: String) -> bool:
+	return _packed.has(gltf_path)
+
+
+static func loading(gltf_path: String) -> bool:
+	return _loading.has(gltf_path)
+
+
+static func prefetch(gltf_path: String) -> void:
+	if gltf_path == "" or _packed.has(gltf_path) or _loading.has(gltf_path):
+		return
+	_loading[gltf_path] = true
+	WorkerThreadPool.add_task(func():
+		var ps := NifScene.pack_copy(gltf_path)
+		(func():
+			NifScene._packed[gltf_path] = ps
+			NifScene._loading.erase(gltf_path)).call_deferred())
+
+
 static func copy_of(gltf_path: String) -> NifScene:
 	if not _packed.has(gltf_path):
 		_packed[gltf_path] = pack_copy(gltf_path)

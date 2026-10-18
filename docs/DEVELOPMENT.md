@@ -12,6 +12,9 @@ This guide is for people (and AI assistants) who change the code. Players only n
 | `source/tools/OfflineDaoc.ProgressImport` | Progress transfer tool |
 | `source/tools/build_release_036.py`, `assemble_release_036.py`, `seal_release_036.py`, `smoke_release_036.py`, `test_release_import_036.py` | Build, assemble, seal and test the public 0.36 / 0.36b package |
 | `source/tools/build_newclient_036.py`, `seal_newclient_036.py` | Build and seal the 0.36c new-client package |
+| `source/tools/build_release_037.py`, `assemble_release_037.py`, `build_newclient_037.py` | Build the 0.37 reference packages (what a fresh install of 0.37 is; never uploaded) |
+| `source/tools/make_patch.py`, `OfflineDaoc.Patcher`, `make_downloaders_037.py` | Build the 0.37 update patches, the patcher they carry, and the downloader zips |
+| `source/tools/release-baselines/`, `find_changes_since_release.py` | What each full release shipped, and what changed since |
 | `source/tools/make_downloaders_036.py` | Makes the small downloader zips of the three release pages |
 | `source/tools/release-world-defaults.json` | Default owner and level of every keep and the state of every keep door, applied to every release world |
 | `source/new-client` | The new client (Godot 4, C#) and its content pipeline. See its [README](../source/new-client/README.md). |
@@ -40,7 +43,7 @@ dotnet test source/tools/OfflineDaoc.Launcher.Tests/OfflineDaoc.Launcher.Tests.c
 
 - `serverconfig.xml` is local and ignored by git. The build only needs it to exist.
 - Some launcher tests expect that no local DAoC server is running.
-- At 0.36: 2,764 server tests and 107 launcher tests pass.
+- At 0.37: 2,790 server tests and 107 launcher tests pass.
 
 The new client builds separately; see [source/new-client/README.md](../source/new-client/README.md).
 
@@ -118,6 +121,29 @@ Checks:
 (no developer mode, debug probes or `save` folder; the network client must be built from the current
 code), and `seal_newclient_036.py` packs it into independent, verified zip parts below 2 GB. Each part
 unpacks on its own, so the downloader removes a part as soon as it is unpacked.
+
+## Updates (patches) from 0.37 on
+
+0.36 / 0.36b / 0.36c are the full downloads; later versions are patches on that base, so players never download
+the whole game again. [source/tools/release-baselines/README.md](../source/tools/release-baselines/README.md) has the
+design. To make one:
+1. `find_changes_since_release.py --baseline 0.36 …` lists what the server and client have changed.
+2. Build the reference packages of the new version exactly as a full release (`build_release_037.py`,
+   `assemble_release_037.py`, `build_newclient_037.py`): they are what a fresh install must equal.
+3. `make_patch.py --version 0.37 …` diffs them against the baseline into a game patch (both editions; world updates
+   per edition, checked by applying them to the released world) and a client patch, packs verified zip parts and
+   writes the three releases' download manifests; `make_downloaders_037.py` adds the downloader zips.
+4. The patcher (`OfflineDaoc.Patcher`, run with the game's bundled .NET) checks every file it replaces against its
+   released fingerprints, backs up to `patch-backups\`, applies the world update once (recorded in
+   `offline_patch_log`; a world row changes only if it still has its released values, save tables never), writes
+   the files with the launcher last, and rolls back on any failure. Exit codes: 0 updated, 2 already up to date,
+   3 changed files (listed), 4 unknown folder, 5 game running, 1 failed and restored.
+5. `Get-OfflineDAoC.ps1` mode `patch`: `-Update <folder|pick>` updates a game (and its new client, or offers to add
+   one with 0.37c); without it, a new install of the 0.36 base and then the update. Changed files lead to an offer of
+   a fresh install with the progress importer.
+
+Patches are cumulative from the base: the next one (0.38) is built against the same 0.36 baseline, with the
+previous patch's file fingerprints accepted too.
 
 ## Sharing safely
 

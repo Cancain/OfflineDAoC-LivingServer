@@ -39,13 +39,17 @@ import nif_character as nc
 
 OUT = ROOT / 'godot/content/characters'
 TEX = OUT / 'fig3_textures'
-# (realm, race, male fig3 index, female fig3 index) - the 1.65 Classic + SI races only
+# (realm, race, male fig3 index, female fig3 index) - the 1.65 Classic + SI races, then the server's later NPC races
 RACES = [('alb', 'Briton', 1, 2), ('alb', 'Avalonian', 9, 10), ('alb', 'Highlander', 13, 14), ('alb', 'Saracen', 3, 4),
          ('alb', 'Inconnu', 23, 24),
          ('mid', 'Norse', 15, 16), ('mid', 'Troll', 31, 32), ('mid', 'Dwarf', 21, 22), ('mid', 'Kobold', 19, 20),
          ('mid', 'Valkyn', 27, 28),
          ('hib', 'Celt', 33, 34), ('hib', 'Firbolg', 29, 30), ('hib', 'Elf', 11, 12), ('hib', 'Lurikeen', 17, 18),
-         ('hib', 'Sylvan', 35, 36)]
+         ('hib', 'Sylvan', 35, 36),
+         # the later races the server's NPCs use (owner 2026-10-16: Elizabeth <Smith> and the other Half Ogre / Frostalf
+         # / Shar NPCs drawn as one classic model with one skin over every part): their Catacombs figures, so their
+         # outfits dress them as every other race's - build them alone with `build_races.py hal_m hal_f fro_m ...`
+         ('alb', 'Half Ogre', 25, 26), ('mid', 'Frostalf', 5, 6), ('hib', 'Shar', 7, 8)]
 SLOTS = {'body': 1, 'lbody': 2, 'legs': 3, 'boots': 4, 'arms': 5, 'gloves': 6}     # lbody = the Highlander kilt
 CATSKIN = {'body': 68, 'lbody': 69, 'arms': 71, 'gloves': 72, 'legs': 73, 'boots': 74}     # monsters.csv columns
 SIZES = {'Short': 0.95, 'Average': 1.0, 'Tall': 1.05}

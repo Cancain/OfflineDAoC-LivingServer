@@ -9,7 +9,7 @@ namespace OfflineDaoc.Launcher;
 
 internal sealed partial class MainForm : Form
 {
-    internal const string DisplayVersion = "0.36";
+    internal const string DisplayVersion = "0.37";
     internal const int AutoRefreshMilliseconds = 5 * 60 * 1000;
     internal const int RvrSnapshotRefreshMilliseconds = 30 * 1000;
     internal const int LiveBotSnapshotMaxAgeMilliseconds = 20_000;
@@ -171,7 +171,7 @@ internal sealed partial class MainForm : Form
         }
         _logsDirectory = Path.Combine(_root, "logs");
 
-        Text = _newClient ? "Offline DAoC 0.36c — New client" : "Offline DAoC — Classic + Shrouded Isles";
+        Text = _newClient ? $"Offline DAoC {DisplayVersion}c — New client" : "Offline DAoC — Classic + Shrouded Isles";
         MinimumSize = new Size(960, 620);
         Size = new Size(1100, 700);
         StartPosition = FormStartPosition.CenterScreen;

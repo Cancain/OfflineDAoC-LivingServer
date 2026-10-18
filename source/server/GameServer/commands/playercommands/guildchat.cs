@@ -52,6 +52,8 @@ namespace DOL.GS.Commands
 			string message = "[Guild] " + client.Player.Name + ": \"" + text + "\"";
 			client.Player.Guild.SendMessageToGuildMembers(message, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 			AutonomousBotGuildSocial.OnPlayerGuildChat(client.Player, text);
+			// Gamebot members may answer (AutonomousBotGuilds).
+			AutonomousBotGuilds.OnPlayerGuildChat(client.Player, text);
 		}
 	}
 
