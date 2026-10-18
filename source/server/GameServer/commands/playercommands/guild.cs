@@ -393,7 +393,7 @@ namespace DOL.GS.Commands
 								if (!AutonomousBotGuilds.Join(client.Player, invitedBot))
 									client.Out.SendMessage($"{invitedBot.Name} could not join the guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								else
-									AutonomousBotRealmGuilds.LeaveForPlayerGuild(invitedBot, leftGuild);
+									AutonomousBotRealmGuilds.LeaveForPlayerGuild(invitedBot, leftGuild, client.Player);
 								break;
 							}
 						}

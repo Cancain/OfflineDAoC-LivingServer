@@ -610,15 +610,15 @@ public static class AutonomousBotRealmGuilds
                     current.RankLevel, bot.Level, inviter.Level))
         {
             case AutonomousBotGuildPlanner.InviteAnswer.Busy:
-                bot.Say("not now, kinda busy here");
+                AnswerInviter(bot, inviter, "not now, kinda busy here");
                 return true;
             case AutonomousBotGuildPlanner.InviteAnswer.LeadsOwnGuild:
-                bot.Say(current.RankLevel == 0
+                AnswerInviter(bot, inviter, current.RankLevel == 0
                     ? $"thanks {inviter.Name}, but i run {botGuildName}, cant leave them"
                     : $"ty for the offer, but im an officer in {botGuildName}");
                 return true;
             case AutonomousBotGuildPlanner.InviteAnswer.LevelGap:
-                bot.Say(bot.Level > inviter.Level
+                AnswerInviter(bot, inviter, bot.Level > inviter.Level
                     ? "appreciate it, but id be out of your range for groups"
                     : "ty but im a bit low for you guys, maybe later");
                 return true;
@@ -633,8 +633,18 @@ public static class AutonomousBotRealmGuilds
             ? GuildMgr.GetGuildByGuildID(membership.GuildId)?.Name
             : null;
 
+    /// <summary>A bot's answer to a /ginvite: said aloud when the inviter is in /say range, otherwise sent to them (/send),
+    /// since the invite works by name from anywhere.</summary>
+    static void AnswerInviter(GameBot bot, GamePlayer inviter, string text)
+    {
+        if (inviter != null && bot.CurrentRegion == inviter.CurrentRegion && bot.IsWithinRadius(inviter, WorldMgr.SAY_DISTANCE))
+            bot.Say(text);
+        else
+            AutonomousLivingServer.Tell(bot, inviter, text);
+    }
+
     /// <summary>A bot guild's member joined a player's guild: it leaves its bot guild and says goodbye.</summary>
-    public static void LeaveForPlayerGuild(GameBot bot, string leftGuildName)
+    public static void LeaveForPlayerGuild(GameBot bot, string leftGuildName, GamePlayer inviter = null)
     {
         if (bot == null || !Members.TryGetValue(bot.DatabaseID, out Membership membership) || !BotGuilds.ContainsKey(membership.GuildId))
             return;
@@ -644,7 +654,7 @@ public static class AutonomousBotRealmGuilds
         Bind(bot);
         AutonomousBotGuilds.Present(bot);
         if (!string.IsNullOrEmpty(leftGuildName))
-            bot.Say($"sure, im in. sorry {leftGuildName}, see you around");
+            AnswerInviter(bot, inviter, $"sure, im in. sorry {leftGuildName}, see you around");
     }
 
     /// <summary>/gc remove for a bot member of the remover's guild. False when no bot member has that name.</summary>

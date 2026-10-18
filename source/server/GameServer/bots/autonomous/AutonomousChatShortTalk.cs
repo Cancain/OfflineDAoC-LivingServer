@@ -134,6 +134,16 @@ public static class AutonomousChatShortTalk
         if (HasPhrase(words, "where to next", "where now", "where next", "where are we heading", "where are we going", "where should we go",
                 "where should we head", "where we going", "where we heading"))
             return "ask_next";
+        // "what are you up to?" in /gu drew "lol what" (live test of 0.37-se.1, 2026-10-18): what the bot is doing now, or,
+        // with "tonight" or "later", its plans.
+        if (HasPhrase(words, "what are we doing", "what are we up to", "what r we doing", "what r we up to"))
+            return "ask_plans";
+        if (HasPhrase(words, "what are you up to", "what r u up to", "what are u up to", "what you up to", "what u up to",
+                "what are you doing", "what r u doing", "what are u doing", "what you doing", "whatcha doing", "wyd",
+                "what is everyone up to", "whats everyone up to", "what is everyone doing", "whats everyone doing",
+                "what are you all up to", "what are you guys up to", "what are you all doing", "what are you guys doing",
+                "what is everybody up to", "whats everybody up to", "whats everybody doing", "what are yall up to"))
+            return HasPhrase(words, "tonight", "later", "tomorrow", "this weekend") ? "ask_plans" : "ask_doing";
         // "lf guild" that no bot guild took up (already in a guild, bot guilds off) drew "i could use a group too".
         if (AutonomousBotGuildChatLines.AsksForGuild(text, false))
             return "ask_guild";

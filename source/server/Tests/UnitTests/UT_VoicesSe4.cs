@@ -522,6 +522,11 @@ namespace DOL.GS.Tests
         [TestCase("how close are you to a level?", "ask_xp")]
         [TestCase("hows it going", "ask_howareyou")]
         [TestCase("so where are we heading?", "ask_next")]
+        [TestCase("welcome all! what are you up to?", "ask_doing")]
+        [TestCase("wyd", "ask_doing")]
+        [TestCase("whats everyone doing?", "ask_doing")]
+        [TestCase("what is everyone up to tonight?", "ask_plans")]
+        [TestCase("so what are we doing this weekend?", "ask_plans")]
         [TestCase("lol", null)]
         public void APlayersQuestionTypeIsRead(string text, string shape) =>
             Assert.That(AutonomousChatShortTalk.QuestionShape(text), Is.EqualTo(shape));
@@ -539,6 +544,25 @@ namespace DOL.GS.Tests
             Assert.That(Corpus.Lines.Single(l => l.Text == "murd tonight? short a couple for a group").Invites, Is.EqualTo("lfg"));
             Assert.That(Corpus.Lines.Where(l => l.Text.Contains('?') && l.Invites is "joke" or "boast").Select(l => l.Text),
                 Is.All.Not.StartWith("who is the best"));
+        }
+
+        [Test]
+        public void WhatABotIsDoingIsAnsweredFromWhatItIsDoing()
+        {
+            // /gu "welcome all! what are you up to?" drew "lol what" (live test of 0.37-se.1, 2026-10-18).
+            var traveling = new VC.Speaker(1, "Ranenenwin", eRealm.Albion, "Scout", 6, BotPersonalityType.Explorer,
+                new HashSet<string> { "solo", "traveling", "outdoors", "evening" });
+            var slots = new Dictionary<string, string> { ["destination"] = "Prydwen Keep", ["level"] = "6", ["zone"] = "Black Mountains South" };
+            var picked = Enumerable.Range(0, 60).Select(i => Corpus.TryPick(new VC.Request("reply", traveling, slots, null, DateTime.UtcNow,
+                new Random(i)) { Answers = "ask_doing" }, out VC.Picked p) ? p.Text : null).ToList();
+            Assert.That(picked, Has.None.Null);
+            Assert.That(picked, Has.Some.Contains("Prydwen Keep"));
+            Assert.That(picked, Has.None.Contains("{").And.None.Contains("bags are full").And.None.Contains("in town"));
+            var inCamelot = new VC.Speaker(2, "Haroorren", eRealm.Albion, "Mercenary", 6, BotPersonalityType.Leveler,
+                new HashSet<string> { "in_group", "in_capital", "evening" });
+            Assert.That(Corpus.Candidates("reply", inCamelot).Where(l => l.Answers.Contains("ask_doing")).Select(l => l.Text),
+                Is.Not.Empty.And.None.Contains("kill").And.None.Contains("grind").And.None.Contains("xp"));
+            Assert.That(Corpus.Lines.Single(l => l.Text == "what is everyone doing tonight?").Invites, Is.EqualTo("ask_plans"));
         }
 
         [TestCase("what does lfg mean?", "looking for group")]

@@ -248,3 +248,39 @@ my pet ran off and brought the whole camp back
 tried to solo an orange, it went about how youd think
 @who Socialite
 best thing this week? this group honestly
+
+# "what are you up to?", "whats everyone doing?": what the bot is doing right now. Live test of 0.37-se.1
+# (2026-10-18): /gu "welcome all! what are you up to?" drew "lol what". New writing.
+@kind reply
+@answers ask_doing
+@who *
+not much, you?
+just messing around
+@needs outdoors
+the usual, killing stuff
+@needs at_camp
+camping {camp}
+xp in {camp}, its decent
+farming {monsters} in {camp}
+@needs traveling
+heading to {destination}
+on my way to {destination}, long run
+@needs in_capital
+in town, sorting my bags
+standing around in {zone} lol
+@needs bag_full
+selling, bags are full
+@needs in_group, outdoors
+grouping, xp is good
+@needs in_rvr
+rvr, its busy out here
+@needs just_died
+running back after a death lol
+@needs just_leveled
+just dinged {level}!
+@needs
+@who Socialite
+talking to all of you :)
+@who Leveler
+@needs outdoors
+grinding, what else
