@@ -25,7 +25,9 @@ function New-FakeLauncher([string]$dir, [string]$prefix) {
     }
     return $lines
 }
-function New-FakeGame([string]$root, [string]$edition, [switch]$NewClient) {
+# -ReleaseNotes: the layout of a game updated by a patch (0.37 on): no editions\ folder, and the manifest lists each
+# release's docs/RELEASE-<version>.md up to this one.
+function New-FakeGame([string]$root, [string]$edition, [switch]$NewClient, [string[]]$ReleaseNotes = @()) {
     $folders = @('runtime/server', 'runtime/server/lib', 'runtime/server/win-x64')
     $lines = @()
     foreach ($folder in $folders) {
@@ -41,10 +43,19 @@ function New-FakeGame([string]$root, [string]$edition, [switch]$NewClient) {
         $client = New-FakeLauncher (Join-Path $root 'new-client\runtime') 'new-client/runtime'
         Set-Content -LiteralPath (Join-Path $root 'new-client\PACKAGE MANIFEST.sha256') -Value $client -Encoding UTF8
     }
-    $editionFile = Join-Path $root "editions\$edition-no-custom-class\runtime\x.txt"
-    New-Item -ItemType Directory -Path (Split-Path -Parent $editionFile) -Force | Out-Null
-    [IO.File]::WriteAllText($editionFile, 'edition')
-    $lines += "$(Sha $editionFile)  editions/$edition-no-custom-class/runtime/x.txt"
+    if ($ReleaseNotes.Count -gt 0) {
+        foreach ($version in $ReleaseNotes) {
+            $notes = Join-Path $root "docs\RELEASE-$version.md"
+            New-Item -ItemType Directory -Path (Split-Path -Parent $notes) -Force | Out-Null
+            [IO.File]::WriteAllText($notes, "release $version")
+            $lines += "$(Sha $notes)  docs/RELEASE-$version.md"
+        }
+    } else {
+        $editionFile = Join-Path $root "editions\$edition-no-custom-class\runtime\x.txt"
+        New-Item -ItemType Directory -Path (Split-Path -Parent $editionFile) -Force | Out-Null
+        [IO.File]::WriteAllText($editionFile, 'edition')
+        $lines += "$(Sha $editionFile)  editions/$edition-no-custom-class/runtime/x.txt"
+    }
     Set-Content -LiteralPath (Join-Path $root 'PACKAGE MANIFEST.sha256') -Value $lines -Encoding UTF8
 }
 
@@ -155,6 +166,21 @@ New-FakeGame $lost $base
 [IO.File]::WriteAllText((Join-Path $lost 'runtime\OfflineDAoC.dll'), 'a launcher with no backup')
 $noCopy = Run 'rollback-server-build.ps1' @('-GameFolder', $lost, '-ToRelease')
 Check ($noCopy.Code -ne 0 -and [IO.File]::ReadAllText((Join-Path $lost 'runtime\OfflineDAoC.dll')) -eq 'a launcher with no backup') "-ToRelease without a released copy is refused`n$($noCopy.Output)"
+
+# A game updated by a patch has no editions\ folder (the real 0.36c -> 0.37c update, 2026-10-18): its newest release
+# notes say which release it is.
+$updated = Join-Path $work 'updated'
+New-FakeGame $updated $base -NewClient -ReleaseNotes @('0.35', '0.36', $base)
+$updatedInstall = Run 'install-server-build.ps1' @('-GameFolder', $updated)
+Check ($updatedInstall.Code -eq 0 -and (Sha (Join-Path $updated 'runtime\server\GameServer.dll')) -eq $info['GameServer.dll']) "install on an updated game (no editions folder)`n$($updatedInstall.Output)"
+$older = Join-Path $work 'older'
+New-FakeGame $older $base -ReleaseNotes @('0.35', '0.36')
+$olderInstall = Run 'install-server-build.ps1' @('-GameFolder', $older)
+Check ($olderInstall.Code -ne 0 -and (Sha (Join-Path $older 'runtime\server\GameServer.dll')) -ne $info['GameServer.dll']) 'a game whose newest release notes are older is refused'
+$newer = Join-Path $work 'newer'
+New-FakeGame $newer $base -ReleaseNotes @('0.36', $base, '9.99')
+$newerInstall = Run 'install-server-build.ps1' @('-GameFolder', $newer)
+Check ($newerInstall.Code -ne 0 -and (Sha (Join-Path $newer 'runtime\server\GameServer.dll')) -ne $info['GameServer.dll']) 'a game updated past this release is refused'
 
 # No game: refused.
 $none = Run 'install-server-build.ps1' @('-GameFolder', (Join-Path $work 'missing'))

@@ -65,7 +65,7 @@ $base = $info['BaseRelease']
 if ($null -eq $manifest) {
     if (!$Force) { Stop-WithMessage "No PACKAGE MANIFEST.sha256 in the game folder, so it can't be checked as Offline DAoC $base. (-Force skips this check.)" }
     $manifest = @{}
-} elseif (!($manifest.Keys | Where-Object { $_ -like "editions/$base-no-custom-class/*" } | Select-Object -First 1)) {
+} elseif (!(Test-ReleaseManifest $manifest $base)) {
     if (!$Force) { Stop-WithMessage "This game folder isn't Offline DAoC $base (or $($base)b). This build only fits $base; installing it on another release would undo that release's server changes." }
 }
 
