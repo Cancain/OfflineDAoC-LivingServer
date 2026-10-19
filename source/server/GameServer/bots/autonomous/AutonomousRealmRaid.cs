@@ -188,7 +188,7 @@ namespace DOL.GS
                 int online = OnlineLevelFifty(realm);
                 if (!RealmRaidRecruitmentPolicy.ScheduledRaidDue(now, due, Raids.Values.Any(r => r.Definition.Realm == realm), online, minutes))
                     continue;
-                NextScheduled[realm] = now + minutes * 60_000L;
+                NextScheduled[realm] = now + RealmRaidRecruitmentPolicy.NextScheduleMilliseconds(minutes, Random.Shared.NextDouble());
                 int kind = ScheduledKind.GetValueOrDefault(realm);
                 Definition chosen = null;
                 for (int step = 0; step < ScheduleKinds.Length && chosen == null; step++)

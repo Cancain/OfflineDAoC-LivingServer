@@ -42,12 +42,18 @@ namespace DOL.GS
         public const int KeepAttackers = 128;
         public const int RelicAttackers = 240;
 
+        // 0.5 (owner, 2026-10-07) followed a run where defenders matched attackers and every siege failed. At 0.5 every
+        // bot siege of 2026-10-19 fell (12-17 defenders against 42-53 attackers). The owner wants fights won about two
+        // times in three, never guaranteed: 0.75 to start, then SiegeDefenseBalance steers by recent results.
         [DOL.GS.ServerProperties.ServerProperty("autonomous", "rvr_siege_defense_ratio",
-            "Bot defenders a siege may draw, as a share of its attacker cap (128 keep / 240 relic); walls, doors and keep guards are extra.", 0.5)]
-        public static double DefenseRatio = 0.5;
+            "Bot defenders a siege may draw, as a share of its attacker cap (128 keep / 240 relic); walls, doors and keep guards are extra. Recent results move it up or down by up to 0.25 (SiegeDefenseBalance).", 0.75)]
+        public static double DefenseRatio = 0.75;
+
+        /// <summary>The ratio in use: the setting, steered by the last sieges' results.</summary>
+        public static double EffectiveDefenseRatio => SiegeDefenseBalance.Ratio(DefenseRatio);
 
         public static int AttackerCap(bool relic) => relic ? RelicAttackers : KeepAttackers;
-        public static int DefenderCap(bool relic) => Math.Max(8, (int)Math.Round(AttackerCap(relic) * Math.Clamp(DefenseRatio, 0.25, 2.0)));
+        public static int DefenderCap(bool relic) => Math.Max(8, (int)Math.Round(AttackerCap(relic) * Math.Clamp(EffectiveDefenseRatio, 0.25, 2.0)));
         public static int ThirdRealmCap(bool relic) => AttackerCap(relic) / 2;
 
         /// <summary>Attackers needed to start the battle: 85% of the cap at the posts, half of it on a strike or at the deadline.</summary>

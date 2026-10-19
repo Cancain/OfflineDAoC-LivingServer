@@ -237,8 +237,7 @@ public static partial class AutonomousRvrEventLayer
     // Chance-based concurrent sieges (one attack per realm). Off in the legacy event-layer tests, which
     // document the one-siege-at-a-time ChooseIntent rules.
     public static bool SiegeScheduling = true;
-    private static long _nextSiegeRoll, _lastSiegeActiveTick;
-    private static bool _siegeStartReady;
+    private static long _lastSiegeActiveTick;
 
     /// <summary>Chance per minute that a new siege starts, by how many are running and how long none has.</summary>
     public static double SiegeStartChancePerMinute(int active, double idleMinutes) => active switch
@@ -249,17 +248,35 @@ public static partial class AutonomousRvrEventLayer
         _ => 0,
     };
 
-    // Called under Sync. One roll a minute server-wide; a won roll waits for the next siege-capable force.
-    private static bool SiegeStartAllowed(long nowTick)
+    /// <summary>
+    /// A realm's own catch-up chance per minute once it has gone 30 minutes without opening a siege (2% more per minute,
+    /// at most 50%). On 2026-10-19 one server-wide roll let Albion open all four sieges: its warbands formed first
+    /// after each raid (Albion's raids run ten minutes ahead), and with one siege running the next had a 4% chance a minute.
+    /// </summary>
+    public static double RealmCatchUpChance(double realmIdleMinutes) =>
+        realmIdleMinutes <= 30 ? 0 : Math.Min(0.5, (realmIdleMinutes - 30) * 0.02);
+
+    public static double RealmSiegeStartChancePerMinute(int active, double idleMinutes, double realmIdleMinutes) =>
+        Math.Min(1, SiegeStartChancePerMinute(active, idleMinutes) + RealmCatchUpChance(realmIdleMinutes));
+
+    private static readonly Dictionary<eRealm, long> NextRealmSiegeRoll = new();
+    private static readonly Dictionary<eRealm, long> RealmLastAttackTick = new();
+    private static readonly HashSet<eRealm> RealmSiegeReady = new();
+
+    // Called under Sync. Each realm rolls once a minute for its own next attack; a won roll waits for that realm's next
+    // siege-capable force (one attack per realm at a time is enforced by the caller).
+    private static bool SiegeStartAllowed(long nowTick, eRealm realm)
     {
         int active = Events.Values.Count(entry => !entry.DefenseReaction);
         if (active > 0) _lastSiegeActiveTick = nowTick;
-        if (_siegeStartReady) return true;
-        if (nowTick < _nextSiegeRoll) return false;
-        _nextSiegeRoll = nowTick + 60_000;
+        if (RealmSiegeReady.Contains(realm)) return true;
+        if (nowTick < NextRealmSiegeRoll.GetValueOrDefault(realm)) return false;
+        NextRealmSiegeRoll[realm] = nowTick + 60_000;
         double idleMinutes = active == 0 ? (nowTick - _lastSiegeActiveTick) / 60_000d : 0;
-        _siegeStartReady = Random.Shared.NextDouble() < SiegeStartChancePerMinute(active, idleMinutes);
-        return _siegeStartReady;
+        double realmIdleMinutes = (nowTick - RealmLastAttackTick.GetValueOrDefault(realm)) / 60_000d;
+        bool ready = Random.Shared.NextDouble() < RealmSiegeStartChancePerMinute(active, idleMinutes, realmIdleMinutes);
+        if (ready) RealmSiegeReady.Add(realm);
+        return ready;
     }
 
     public static Plan ChooseOrJoin(Force force, IReadOnlyCollection<LiveObjective> objectives, long nowTick, double roll)
@@ -389,7 +406,7 @@ public static partial class AutonomousRvrEventLayer
                                                               objective.OwningRealm != force.Realm && !Events.ContainsKey(objective.Id) && !OnCooldown(objective.Id, nowTick))
                 , SelectedKeeps);
             bool siegeCapable = force.MemberCount >= 4 && force.AverageLevel >= 50 && force.CanSupplySiege;
-            if (SiegeScheduling && (keep != null || relic != null) && siegeCapable && !SiegeStartAllowed(nowTick))
+            if (SiegeScheduling && (keep != null || relic != null) && siegeCapable && !SiegeStartAllowed(nowTick, force.Realm))
                 return ReservePlan(force, objectives);
             // Relic sieges are the larger, rarer event: about one new siege in eight, strong warbands only.
             Intent intent = !SiegeScheduling ? ChooseIntent(force, hasEnemy, keep != null, relic != null, roll)
@@ -422,7 +439,8 @@ public static partial class AutonomousRvrEventLayer
                 };
                 active.Attackers[force.GroupId] = force.MemberCount;
                 Events[selected.Id] = active;
-                _siegeStartReady = false;
+                RealmSiegeReady.Remove(force.Realm);
+                RealmLastAttackTick[force.Realm] = nowTick;
                 if (Log.IsInfoEnabled) Log.Info($"RVR_EVENT_OPENED target={selected.Id} name=\"{selected.Name}\" relic={selected.IsRelicKeep} " +
                          $"attacker={force.Realm} defender={selected.OwningRealm} warband={force.GroupId} size={force.MemberCount}");
                 RealmEventRecords.Begin(selected.Id, selected.Name, selected.IsRelicKeep ? "Relic keep" : "Keep", GlobalConstants.RealmToName(force.Realm), "Automatic continuous siege; defender: " + GlobalConstants.RealmToName(selected.OwningRealm));
@@ -475,7 +493,7 @@ public static partial class AutonomousRvrEventLayer
         if (!SiegeScheduling) return Capacity(active);
         int cap = RealmEventPolicy.DefenderCap(active.RelicKeep);
         return active.MarchedAttackers <= 0 ? cap
-            : Math.Clamp((int)Math.Round(active.MarchedAttackers * Math.Clamp(RealmEventPolicy.DefenseRatio, 0.25, 2.0)), 8, cap);
+            : Math.Clamp((int)Math.Round(active.MarchedAttackers * Math.Clamp(RealmEventPolicy.EffectiveDefenseRatio, 0.25, 2.0)), 8, cap);
     }
 
     private static int Capacity(ActiveEvent active) => active.DefenseReaction ? 240 : active.Retake ? active.RetakeCap :
@@ -1265,6 +1283,8 @@ public static partial class AutonomousRvrEventLayer
 
     private static void EndEvent(ActiveEvent active, long nowTick, string reason, eRealm winner = eRealm.None)
     {
+        if (!active.DefenseReaction && (reason.StartsWith("Keep captured") || reason.StartsWith("Siege defended")))
+            SiegeDefenseBalance.Record(reason.StartsWith("Keep captured") && (winner == eRealm.None || winner == active.AttackerRealm));
         foreach (eRealm realm in new[] { active.AttackerRealm, active.DefenderRealm, OtherRealm(active) })
             RealmEventNotices.Queue(active.TargetId, realm, RealmEventBanter.SiegeOutcome(Place(active.Target.Name),
                 realm == active.DefenderRealm, reason.StartsWith("Siege defended"), reason.StartsWith("Rally failed"), winner, realm));

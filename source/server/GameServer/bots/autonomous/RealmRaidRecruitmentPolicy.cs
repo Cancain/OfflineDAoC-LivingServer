@@ -48,6 +48,15 @@ public static class RealmRaidRecruitmentPolicy
     public static bool ScheduledRaidDue(long now, long due, bool realmHasRaid, int onlineLevelFifty, int scheduleMinutes) =>
         scheduleMinutes > 0 && now >= due && !realmHasRaid && onlineLevelFifty >= MinimumScaledBots * 2;
 
+    /// <summary>
+    /// The next slot: the schedule plus or minus up to 20 minutes, never sooner than 30, so the realms don't keep the
+    /// order of the first round. With a fixed order Albion's raids always ended first and its released level 50s
+    /// opened every siege of 2026-10-19.
+    /// </summary>
+    public const int ScheduleJitterMinutes = 20;
+    public static long NextScheduleMilliseconds(int scheduleMinutes, double roll) =>
+        Math.Max(30, scheduleMinutes + (int)Math.Round((Math.Clamp(roll, 0, 1) * 2 - 1) * ScheduleJitterMinutes)) * 60_000L;
+
     /// <summary>First scheduled raid after a server start: Albion after 20 minutes, Midgard 30, Hibernia 40.</summary>
     public static long FirstScheduledDelayMilliseconds(int realmIndex) => (20 + 10 * Math.Clamp(realmIndex, 0, 2)) * 60_000L;
 

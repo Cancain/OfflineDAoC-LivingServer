@@ -99,6 +99,16 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   death spots, taking up to 6,000 extra units, every bend checked on the navmesh first. Logged as
   `AUTONOMOUS_DANGER_BYPASS`.
 
+**Every realm attacks, and sieges are contested**
+- On 2026-10-19 Albion opened all four bot sieges and took every keep: one server-wide roll decided when a siege
+  could start, Albion's siege-sized warbands formed first after each raid (its raids ran ten minutes ahead), and
+  with one siege running the next had a 4% chance a minute. Each realm now rolls for its own attacks, and a realm
+  that hasn't attacked for 30 minutes gets an extra 2% a minute (at most 50%). Raid slots drift by up to 20 minutes
+  so the realms don't keep the same order.
+- Defenders could bring half the attacking army (12-17 against 42-53), so every siege fell. `rvr_siege_defense_ratio`
+  is now 0.75, and the last six sieges steer it by up to 0.25: attackers winning more than 80% bring more defenders,
+  less than 45% fewer. The target is a siege won about two times in three.
+
 **Checked**
 - Automated: 3,223 server tests.
 - Live, on the owner's PC (new client, 650 bots online), first 39 minutes of the new build against the same 39

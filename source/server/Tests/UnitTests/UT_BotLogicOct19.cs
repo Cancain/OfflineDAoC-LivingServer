@@ -236,6 +236,43 @@ namespace DOL.UnitTests
         }
 
         [Test]
+        public void ARealmThatHasNotAttackedCatchesUp()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(AutonomousRvrEventLayer.RealmCatchUpChance(20), Is.Zero);
+                Assert.That(AutonomousRvrEventLayer.RealmCatchUpChance(55), Is.EqualTo(0.5).Within(1e-9));
+                Assert.That(AutonomousRvrEventLayer.RealmCatchUpChance(600), Is.EqualTo(0.5), "at most 50% a minute");
+                Assert.That(AutonomousRvrEventLayer.RealmSiegeStartChancePerMinute(1, 0, 10), Is.EqualTo(0.04).Within(1e-9),
+                    "a realm that just attacked keeps the old odds");
+                Assert.That(AutonomousRvrEventLayer.RealmSiegeStartChancePerMinute(1, 0, 60), Is.EqualTo(0.54).Within(1e-9),
+                    "an hour without attacking: Midgard and Hibernia get their turn while Albion's siege runs");
+            });
+        }
+
+        [Test]
+        public void SiegeDefendersFollowRecentResults()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(SiegeDefenseBalance.NextShift(0, [true, true]), Is.Zero, "too few results");
+                Assert.That(SiegeDefenseBalance.NextShift(0, [true, true, true]), Is.EqualTo(SiegeDefenseBalance.Step),
+                    "attackers took every keep: more defenders");
+                Assert.That(SiegeDefenseBalance.NextShift(0, [true, false, true, false, false, false]), Is.EqualTo(-SiegeDefenseBalance.Step),
+                    "attackers lost most: fewer defenders");
+                Assert.That(SiegeDefenseBalance.NextShift(0, [true, true, false]), Is.Zero, "two in three: unchanged");
+                Assert.That(SiegeDefenseBalance.NextShift(0.25, [true, true, true]), Is.EqualTo(0.25), "never more than 0.25 off the setting");
+                Assert.That(DOL.GS.RealmEventPolicy.DefenseRatio, Is.EqualTo(0.75));
+            });
+        }
+
+        [TestCase(0.0, 130L)]
+        [TestCase(0.5, 150L)]
+        [TestCase(1.0, 170L)]
+        public void RaidSlotsDriftSoTheRealmsTakeTurns(double roll, long minutes) =>
+            Assert.That(RealmRaidRecruitmentPolicy.NextScheduleMilliseconds(150, roll), Is.EqualTo(minutes * 60_000L));
+
+        [Test]
         public void ADeathNamesWhatKindOfThingKilledTheBot() =>
             Assert.That(AutonomousDeathDiagnostics.KillerKind(null), Is.EqualTo("none"));
     }
