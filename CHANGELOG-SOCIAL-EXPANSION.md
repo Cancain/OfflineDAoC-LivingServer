@@ -43,7 +43,17 @@ The Social Expansion on shadowofze's **0.37 / 0.37b** (with or without the 0.37c
   that typed in /gu and /faction and used /gc invite and /gc remove. A se.4 membership in a player guild moved to
   0.37's table at start; a bot guild member joined (and said goodbye to its bot guild), an officer and a level 50
   said no, an unguilded bot joined, /gc remove worked, guildmates answered /gu, and no new server errors.
-- **In game:** not played yet on 0.37.
+- **Upgrade on a real install** (the owner's 0.36c game with se.4, Windows, 2026-10-18): PREPARE-FOR-UPDATE put the 12
+  released files back, shadowofze's 0.37c update applied, and INSTALL.cmd installed 0.37-se.1. The first INSTALL refused the
+  updated game (0.37's update removes the editions folder the installer checked); fixed before release, see below. The 27
+  bot guilds and 617 memberships, the 300-bot roster per realm and the Social Expansion settings came through, and the server
+  logged the same start-up errors as before the update.
+- **In game, briefly:** logged in on the new client; guild chat greeted the character and answered "what are you up to?"
+  with "not much, you?" and "the usual, killing stuff". Not played for long.
+
+**Installer fix found in that upgrade**
+- INSTALL.cmd now recognises a game updated by a patch: the release is the newest docs/RELEASE-<version>.md in the game's
+  manifest (the editions check remains for the 0.36 full downloads). Three new installer tests.
 
 ## 0.36-se.4 — 2026-10-18
 
