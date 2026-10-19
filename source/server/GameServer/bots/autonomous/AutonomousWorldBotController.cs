@@ -3093,7 +3093,8 @@ namespace DOL.GS
             GameNPC FindWithin(ushort radius) => bot.GetNPCsInRadius(radius)
                 .Where(npc => IsExperienceMonster(npc) && npc.IsAlive && npc.CurrentRegionID == _camp.RegionId &&
                     !AutonomousAuditedCampPolicy.IsBotExcludedNpc(npc) &&
-                    !AutonomousPveTargetPolicy.IsUnreachableFlyer(npc.Flags, npc.Z, bot.Z))
+                    !AutonomousPveTargetPolicy.IsUnreachableFlyer(npc.Flags, npc.Z, bot.Z) &&
+                    !AutonomousPveTargetPolicy.FlyerOutOfRangedReach(npc.Flags, canPullFromRange, bot.GetDistanceTo(npc)))
                 .Where(npc => _camp.RegionId != AutonomousDarknessFallsPolicy.RegionId ||
                     AutonomousDarknessFallsNavigation.TryGetProof(npc.InternalID, out _))
                 .Where(npc => _camp.RegionId != AutonomousDarknessFallsPolicy.RegionId ||
@@ -3250,6 +3251,9 @@ namespace DOL.GS
             Dictionary<string, CampDestination> destinations = new(StringComparer.OrdinalIgnoreCase);
             Dictionary<string, (eRealm Wing, float Distance)> darknessFallsRoutes = new(StringComparer.OrdinalIgnoreCase);
             List<AutonomousBotDecisionEngine.Camp> camps = new();
+            // Levelling solo bots weigh travel time (AutonomousBotDecisionEngine.TravelWeightPercent).
+            bool weighTravel = !sharedGroup && bot.Level < 50;
+            var travelCrossings = new Dictionary<(eRealm Realm, ushort Region), DbZonePoint>();
 
             // The live world used to be regrouped by every individual bot.
             // With a large roster that meant thousands of full region/object
@@ -3348,7 +3352,7 @@ namespace DOL.GS
                     cell.IsFrontier,
                     cell.LiveMobCount,
                     string.Equals(cell.Id, bot.PersistentRecord?.CurrentCampId, StringComparison.OrdinalIgnoreCase) ? bot.PersistentRecord.DeathCount : 0,
-                    0,
+                    weighTravel && !cell.IsDungeon ? EstimateTravelMinutes(bot, cell.RegionId, cell.X, cell.Y, travelCrossings) : 0,
                     averageLevel,
                     cell.IsDungeon ? AutonomousDungeonPopulationPolicy.Population(cell.RegionId) : 0,
                     cell.IsDungeon ? AutonomousDungeonPopulationPolicy.Capacity(cell.RegionId, cell.LiveMobCount) : 0));
@@ -3356,8 +3360,9 @@ namespace DOL.GS
 
             // Once realm/accessibility/level/con filters have been applied, each
             // distinct location is drawn in proportion to its live spawns (capped).
-            // Distance, local density, and monster-name scoring may not pull a
-            // population into one nearby camp.
+            // Local density and monster names play no part. Travel time does for
+            // levelling solo bots only (weighTravel), and only as a smooth weight with a
+            // floor, so nearby camps are favoured without pulling everyone into one.
             IEnumerable<AutonomousBotDecisionEngine.Camp> legal = camps.Where(camp =>
                 camp.Reachable && camp.Realm == bot.Realm && camp.LiveMobCount > 0);
             AutonomousBotDecisionEngine.PveEnvironment environment;
@@ -3434,8 +3439,11 @@ namespace DOL.GS
             // location has one entry; outdoor draws are weighted by live spawns
             // (capped) with no distance or name preference.
             // Solo bots add their personality's taste to the live-spawn weight; groups keep the shared draw.
+            Func<AutonomousBotDecisionEngine.Camp, int> taste = sharedGroup ? null : AutonomousBotPersonality.CampWeigher(bot);
+            Func<AutonomousBotDecisionEngine.Camp, int> weigher = !weighTravel ? taste
+                : camp => Math.Max(1, (taste?.Invoke(camp) ?? 100) * AutonomousBotDecisionEngine.TravelWeightPercent(camp.TravelMinutes) / 100);
             AutonomousBotDecisionEngine.Camp chosen = AutonomousBotDecisionEngine.SelectWithinEnvironment(
-                legalCells, environment, Random.Shared, sharedGroup ? null : AutonomousBotPersonality.CampWeigher(bot));
+                legalCells, environment, Random.Shared, weigher);
             bool usedDeathFallback = false;
             if (chosen == null && !sharedGroup && _deathDifficultySteps > 0)
             {

@@ -30,5 +30,14 @@ namespace DOL.GS
         // casters and archers shoot it as before.
         public static bool MustProveFlyerApproach(GameNPC.eFlags flags, bool canPullFromRange) =>
             (flags & GameNPC.eFlags.FLYING) != 0 && !canPullFromRange;
+
+        /// <summary>How far a caster or archer may be from a flyer it picks: it can't walk up to one in the air.</summary>
+        public const int RangedFlyerPullDistance = 1450;
+
+        // Overnight 2026-10-19 the melee timeouts were gone, but casters took over: a level 50 Runemaster picked
+        // gliders 2,900-3,100 units away, never moved closer (there is no ground path to a point in the air) and
+        // timed out 86 times. A ranged bot now only picks a flyer it can already shoot.
+        public static bool FlyerOutOfRangedReach(GameNPC.eFlags flags, bool canPullFromRange, double distance) =>
+            (flags & GameNPC.eFlags.FLYING) != 0 && canPullFromRange && distance > RangedFlyerPullDistance;
     }
 }

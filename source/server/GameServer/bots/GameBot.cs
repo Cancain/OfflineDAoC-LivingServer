@@ -953,6 +953,7 @@ namespace DOL.GS
 
             if (IsAutonomousWorldBot && PersistentRecord != null)
             {
+                AutonomousDeathDiagnostics.Record(this, killer, PersistentRecord.Activity);
                 PersistentRecord.DeathCount++;
                 GoalDiagnosticAttempt?.Died();
                 PersistentRecord.TargetName = (TargetObject as GameLiving)?.Name ?? killer?.Name ?? string.Empty;
