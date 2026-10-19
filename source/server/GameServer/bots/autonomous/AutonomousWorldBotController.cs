@@ -158,6 +158,9 @@ namespace DOL.GS
         private int _terminalRouteFailuresInPocket;
         private bool _routeInterruptedByCombat;
         private bool _recoverBeforeNextCampTarget;
+        // Standing between pulls while waiting for a party (AutonomousGroupMatchmakingPause).
+        private long _lfgPauseUntilTick;
+        private long _lfgNextRollTick;
         private ConColor? _lastEngagedCon;
         private string _lastFailedCampId = string.Empty;
         private string _lastFailedTargetName = string.Empty;
@@ -675,6 +678,7 @@ namespace DOL.GS
                             bot.StopMoving();
                             SetStatus(bot, "Waiting for group members", GoalText(),
                                 "Holding the route until the party catches up before the next region crossing");
+                            AutonomousBotBodyLanguage.Idle(bot, BodySpot.Waiting, default);
                             return true;
                         }
                     }
@@ -724,6 +728,7 @@ namespace DOL.GS
                         SetStatus(bot, "Waiting for group members", GoalText(),
                             "Holding the certified route until every living bot is back in formation",
                             _camp.MonsterName, _camp.ZoneName);
+                        AutonomousBotBodyLanguage.Idle(bot, BodySpot.Waiting, default);
                         return true;
                     }
                     if (FollowDarknessFallsCampRoute(bot)) return true;
@@ -781,6 +786,7 @@ namespace DOL.GS
                         SetStatus(bot, "Waiting for group members", GoalText(),
                             "Holding the route until every living bot is back in formation", _camp?.MonsterName ?? string.Empty,
                             _camp?.ZoneName ?? string.Empty);
+                        AutonomousBotBodyLanguage.Idle(bot, BodySpot.Waiting, default);
                         return true;
                     }
                     // Each step below can abandon the camp (IssuePath rejects a route with no safe seam and
@@ -1534,6 +1540,7 @@ namespace DOL.GS
                     bot.BeginRecoveryRest();
                 SetStatus(bot, "Formed up at rendezvous", _groupDirective.SharedGoal,
                     "Regrouping after casualties; waiting for every member to return and recover; task timer continues");
+                AutonomousBotBodyLanguage.Idle(bot, BodySpot.Waiting, default);
             }
             return true;
         }
@@ -1553,6 +1560,7 @@ namespace DOL.GS
             bot.StopMoving();
             SetStatus(bot, "Holding group formation", _groupDirective.SharedGoal,
                 "Waiting for the complete party before starting another fight; task timer continues");
+            AutonomousBotBodyLanguage.Idle(bot, BodySpot.Waiting, default);
             return true;
         }
 
@@ -2722,6 +2730,20 @@ namespace DOL.GS
                 return true;
             _nextTargetSearchTick = GameLoop.GameLoopTime + 900 + bot.ObjectID % 500;
 
+            // Waiting for a party: often stand between pulls so party formation finds this bot out of combat.
+            if (!brain.HasAggro && !bot.InCombat && AutonomousGroupMatchmakingPause.ShouldHold(
+                    bot.Group == null && AutonomousObjectiveAssignments.IsAwaitingGroupMatchmaking(bot), bot.Level,
+                    GameLoop.GameLoopTime, ref _lfgPauseUntilTick, ref _lfgNextRollTick,
+                    Random.Shared.NextDouble(), Random.Shared.NextDouble()))
+            {
+                bot.StopMovingOnPath();
+                bot.StopMoving();
+                SetStatus(bot, "Looking for a group between pulls", GoalText(),
+                    "Standing at the camp for a minute so a forming party can pick this bot up", _camp.MonsterName, _camp.ZoneName);
+                AutonomousBotBodyLanguage.Idle(bot, BodySpot.Waiting, default);
+                return true;
+            }
+
             GameNPC target = FindCampTarget(bot);
             // A level-up can turn a whole low-level camp grey. Those kills give no
             // experience, so a solo bot fought on in place until the stuck watchdog
@@ -3033,6 +3055,7 @@ namespace DOL.GS
             bot.BeginRecoveryRest();
             SetStatus(bot, "Resting between pulls", GoalText(),
                 $"At the live camp: HP {bot.HealthPercent}% • power {bot.ManaPercent}% • endurance {bot.EndurancePercent}%");
+            AutonomousBotBodyLanguage.Idle(bot, BodySpot.Resting, default);
             return true;
         }
 
@@ -3062,6 +3085,9 @@ namespace DOL.GS
                     _failedSoloPullRoutes.Remove(id);
                 _nextFailedSoloPullRoutePruneTick = nowTick + 10_000;
             }
+            eCharacterClass searchClass = (eCharacterClass)(bot.CharacterClass?.ID ?? 0);
+            bool canPullFromRange = BotSpellPower.IsOffensiveCaster(bot) ||
+                searchClass is eCharacterClass.Scout or eCharacterClass.Hunter or eCharacterClass.Ranger;
             GameNPC FindWithin(ushort radius) => bot.GetNPCsInRadius(radius)
                 .Where(npc => IsExperienceMonster(npc) && npc.IsAlive && npc.CurrentRegionID == _camp.RegionId &&
                     !AutonomousAuditedCampPolicy.IsBotExcludedNpc(npc) &&
@@ -3101,6 +3127,7 @@ namespace DOL.GS
                         return false;
 
                     bool verifyRoute = soloSavage || bot.CurrentZone?.IsDungeon == true ||
+                        AutonomousPveTargetPolicy.MustProveFlyerApproach(npc.Flags, canPullFromRange) ||
                         AutonomousAuditedCampPolicy.RequiresVerifiedTargetRoute(
                             npc.CurrentRegionID, npc.Name) ||
                         IsSourceEmptyCamp(_camp?.Id);
@@ -3775,6 +3802,7 @@ namespace DOL.GS
             _levelAtLastSoloDeath = bot.Level;
             _soloDeathRecoveryUntilTick = nowTick +
                 AutonomousDeathRecoveryPolicy.RetryDelayMilliseconds(_recentSoloDeathsWithoutExperience);
+            _routeCautionUntilTick = nowTick + RouteCautionAfterDeathMilliseconds;
             _recoverAfterSoloDeath = true;
 
             ConColor failedCon = _lastEngagedCon ?? MaximumTargetCon(groupSize);

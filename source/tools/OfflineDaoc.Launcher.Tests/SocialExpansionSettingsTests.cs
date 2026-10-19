@@ -58,7 +58,7 @@ public class SocialExpansionSettingsTests
         GuildAlliances = false, PlayerXpByLevel = SocialExpansionSettings.SuggestedPlayerXp,
         BotXpByLevel = SocialExpansionSettings.SuggestedBotXp,
         LivingMemory = true, LivingGrats = true, LivingFirsts = true, LivingDeath = true, LivingAlarms = true,
-        LivingNemesis = true, ScheduleMode = "clock", LivingBreaks = true,
+        LivingNemesis = true, ScheduleMode = "clock", LivingBreaks = true, LivingBodyLanguage = true,
     };
 
     [Test] public void NoRowsMeansTheServerDefaultsEverythingOff()
@@ -85,6 +85,7 @@ public class SocialExpansionSettingsTests
         Assert.That(rows["bot_living_memory"], Is.EqualTo("True"));
         Assert.That(rows["bot_schedule_mode"], Is.EqualTo("clock"));
         Assert.That(rows["bot_living_breaks"], Is.EqualTo("True"));
+        Assert.That(rows["bot_living_body_language"], Is.EqualTo("True"));
         var problems = new List<string>();
         Assert.That(SocialExpansionSettings.Load(_database, problems), Is.EqualTo(AllOn));
         Assert.That(problems, Is.Empty);
@@ -134,6 +135,8 @@ public class SocialExpansionSettingsTests
         Assert.That(off.AnyLiving, Is.False);
         Assert.That(off.IsAllOff, Is.True);
         Assert.That((SocialExpansionSettings.Defaults with { ScheduleMode = "session" }).IsAllOff, Is.False);
+        Assert.That((SocialExpansionSettings.Defaults with { LivingBodyLanguage = true }).IsAllOff, Is.False);
+        Assert.That(off.LivingBodyLanguage, Is.False);
     }
 
     [Test] public void NothingIsWrittenWhileTheServerRunsOrWithInvalidRanges()

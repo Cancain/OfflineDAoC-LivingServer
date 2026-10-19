@@ -21,5 +21,14 @@ namespace DOL.GS
         // A high flyer that attacks the bot is fought normally by its defense.
         public static bool IsUnreachableFlyer(GameNPC.eFlags flags, int monsterZ, int botZ) =>
             (flags & GameNPC.eFlags.FLYING) != 0 && Math.Abs(monsterZ - botZ) > UnreachableFlyerHeight;
+
+        // The height gap alone let low-hovering gliders over a cliff edge through:
+        // on 2026-10-18 a level 50 Midgard melee group timed out on them 45 times
+        // from 2,400-3,500 units away and one member stood still for 15 minutes
+        // (group camps never abandon on unreachable pulls). A bot that can't hit
+        // from range must prove a ground approach to a flyer before choosing it;
+        // casters and archers shoot it as before.
+        public static bool MustProveFlyerApproach(GameNPC.eFlags flags, bool canPullFromRange) =>
+            (flags & GameNPC.eFlags.FLYING) != 0 && !canPullFromRange;
     }
 }

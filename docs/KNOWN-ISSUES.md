@@ -39,6 +39,10 @@ meetup fix drop two no-shows (in the server log).
 - you rezzing a dead bot, or a passing bot rezzing you (no healer passed in five deaths)
 - grats on your own ding from nearby bots
 - the exact bot XP-by-level factor (bot XP does go up with it on; the exact rate wasn't measured)
+- body language (bots looking around, emoting, stepping, waving and cheering); how its emotes look on bots in
+  either client
+- whether the safer solo routes and the between-pulls group wait (next build) really cut bot deaths and raise
+  the number of bot groups; they are tuned from one day's server log, not measured after the change
 
 ## Known problems
 
@@ -84,8 +88,8 @@ meetup fix drop two no-shows (in the server log).
   bots don't count for your guild's merit, realm points, keep claims or buffs (the base game's choice); bots in
   a bot-run guild still do for theirs. With bot voices on, bots in your guild talk from the voices corpus;
   with them off, they use the base game's own lines. Not played in game yet.
-- **Moving to 0.37:** `PREPARE-FOR-UPDATE.cmd` and `carry_social_tables.py` were tested on test folders and
-  databases, not on a real update yet.
+- **Moving to 0.37:** `PREPARE-FOR-UPDATE.cmd` was used for a real update (the owner's 0.36c game to 0.37c).
+  `carry_social_tables.py` was tested on test folders and databases only.
 
 ## Reporting a problem
 

@@ -2445,6 +2445,10 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("bots", "bot_living_breaks", "Living Server: an idle bot now and then says brb and logs off for 5-25 minutes, and a bot grouped with you rarely goes linkdead for 30-90 seconds (the group hears about it) and comes back with an apology. Never during a fight, siege or relic march.", false)]
 		public static bool BOT_LIVING_BREAKS;
 
+		/// <summary>Idle bots look around, emote, shift their feet, wave at you and cheer a ding nearby.</summary>
+		[ServerProperty("bots", "bot_living_body_language", "Living Server: autonomous gamebots standing around in town, waiting for their group or resting look around, emote now and then (ponder, shrug, laugh, stretch their legs with a step or two in town), turn and wave at you when you walk up, and cheer when someone dings nearby. Only where a real player can see it; never in a fight. Bots cannot jump or sit (the game sends no such state for them).", false)]
+		public static bool BOT_LIVING_BODY_LANGUAGE;
+
 
 
 		#endregion

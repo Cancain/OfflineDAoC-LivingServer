@@ -9,6 +9,9 @@ namespace DOL.GS
     public sealed partial class AutonomousWorldBotController
     {
         private long _nextRouteThreatScanTick;
+        // A solo bot that died recently treats a yellow on its route like an orange (AutonomousRouteThreatPolicy.Decide).
+        private long _routeCautionUntilTick;
+        public const long RouteCautionAfterDeathMilliseconds = 30 * 60_000;
         private long _lastRouteThreatRetargetTick = long.MinValue / 2;
         private readonly Dictionary<GameNPC, int> _routeThreatDetours = new();
         // Monsters next to the route that cannot be walked to (a ledge above the road): they
@@ -122,7 +125,7 @@ namespace DOL.GS
             bool mayRetarget = _camp != null &&
                                now - _lastRouteThreatRetargetTick >= AutonomousRouteThreatPolicy.RetargetCooldownMilliseconds;
             RouteThreatAction action = AutonomousRouteThreatPolicy.Decide(con, grouped, pack, bossLike,
-                detour.HasValue, detours, mayRetarget);
+                detour.HasValue, detours, mayRetarget, cautious: !grouped && now < _routeCautionUntilTick);
             if (action == RouteThreatAction.Ignore)
                 return false;
 

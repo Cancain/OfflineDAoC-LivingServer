@@ -42,6 +42,7 @@ public static partial class AutonomousLivingServer
             }
             if (GratsOn)
                 Grats(who, level);
+            AutonomousBotBodyLanguage.CheerDing(who);
         }
         catch (Exception exception)
         {

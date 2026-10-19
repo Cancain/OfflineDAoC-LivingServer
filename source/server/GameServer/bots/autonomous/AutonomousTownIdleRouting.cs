@@ -84,8 +84,12 @@ namespace DOL.GS
                         "Returning after interruption without extending either deadline", string.Empty, _townIdleDestination.Town.Name);
                     return true;
                 }
-                bot.StopMovingOnPath();
-                bot.StopMoving();
+                // Body language (Living Server) may take a step or two around the spot; don't cancel it.
+                if (!AutonomousBotBodyLanguage.Idle(bot, BodySpot.Town, _townIdleDestination.Point))
+                {
+                    bot.StopMovingOnPath();
+                    bot.StopMoving();
+                }
                 if (brain.CheckHeals()) return true;
                 if (AutonomousRestPolicy.IsFullyRecovered(bot.HealthPercent, bot.ManaPercent, bot.EndurancePercent, bot.MaxMana > 0))
                     bot.WakeRecoveryRest();

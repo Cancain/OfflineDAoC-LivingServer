@@ -30,6 +30,7 @@ stopped; they are used at the next start. The server keys (category `bots`) are:
 | Nemeses | `bot_living_nemesis` | False |
 | Bot schedule | `bot_schedule_mode` | `off` (also `session`, `clock`) |
 | Breaks and linkdeads | `bot_living_breaks` | False |
+| Body language | `bot_living_body_language` | False |
 
 **ALL OFF** in the tab switches every part off, along with the other Social Expansion features.
 
@@ -171,6 +172,26 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
   - Never during a fight: it wakes at once if anyone in the group fights, if it's attacked, or if
     the group breaks up. Bots on a stable route, a siege job, a relic or an RvR event force never
     go linkdead.
+
+### Body language (`bot_living_body_language`)
+Bots standing around stop standing like statues. Only autonomous gamebots do this, only where a
+real player can see them, and never in a fight, while casting, stealthed or on a horse route.
+- **In town** (a town break): every 6–20 seconds a bot looks left or right (30–150 degrees),
+  plays an emote (ponder, shrug, laugh, nod, point, flex, clap, cheer, wave, beckon, salute,
+  drink, now and then a dance) or takes a step or two around its spot (it stays within 60 units).
+- **Waiting** for its group, formed up at a rendezvous, or standing between pulls while it looks
+  for a group: looks around and emotes (ponder, shrug, "let's go", point, nod, flex, beckon),
+  never steps, so formations stay put.
+- **Resting between pulls:** now and then looks around.
+- **Greeting:** a bot of your realm that you walk up to (within 650 units) usually turns to you
+  and waves, bows or salutes; it doesn't greet you again for 20 minutes.
+- **Cheers:** when you ding, one to three bots standing nearby turn to you and cheer, clap or
+  throw a victory pose; a bot's ding nearby gets at most one.
+
+What it can't do: bots can't jump, sit or strafe. The game's updates for an NPC (which a gamebot
+is) carry its position, heading and speed but no jump or sit state, and the new client puts NPCs
+on the ground. All emotes used are ones the new client animates (ids 1–46); the original client
+hasn't been tried.
 
 ## New client (0.36c)
 

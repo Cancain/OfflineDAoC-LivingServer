@@ -3,6 +3,34 @@
 What this fork adds to shadowofze's Offline DAoC. The base game's own changes are in
 [CHANGELOG.md](CHANGELOG.md). The newest version is first.
 
+## Next build (not released yet)
+
+From the owner's first day playing 0.37-se.1 (the server log of 2026-10-18: 4,721 bot tasks).
+
+**Body language (new Living Server part, off by default)**
+- `bot_living_body_language` (launcher: Social Expansion > Living Server > **Body language**): bots standing around in
+  town, waiting for their group or resting look around, emote now and then, take a step or two in town, turn and
+  wave at you when you walk up, and cheer a ding nearby. Only where a real player can see them, never in a fight.
+  Bots can't jump, sit or strafe: the game sends no such state for an NPC. See [docs/LIVING-SERVER.md](docs/LIVING-SERVER.md).
+
+**Fewer bot deaths on the way to camps**
+- 30% of bot tasks ended in a death, more than half of them before the bot reached its camp. Of solo bots that pulled
+  an orange monster on their route, 34-54% were dead within 150 seconds (21-27% after a yellow; 7-18% after green or
+  blue). Now a solo bot goes around a yellow when it can and gives up the camp rather than fight an orange (a single
+  orange is still fought when it has just given up another camp). A solo bot that died in the last half hour treats
+  a yellow like an orange. Groups are unchanged.
+
+**More bot groups**
+- 98% of bot tasks were solo: bots waiting for a party grind solo, and party formation only takes bots that aren't
+  fighting, so 244 waits ran out after 20 minutes and only 23 PvE parties formed all day. A bot waiting for a party
+  now often stands at its camp between pulls for 45-90 seconds ("Looking for a group between pulls"), like a player
+  with /lfg on: 60% of the time at level 50 (which gets no experience from soloing), 35% while levelling.
+
+**Melee bots no longer stand under flying monsters**
+- A melee bot only picks a flying monster it can walk up to. A level 50 Midgard melee group timed out 45 times on
+  griffon gliders in Gripklosa from 2,400-3,500 units away, and one member stood still for 15 minutes. Casters and
+  archers shoot flyers as before.
+
 ## 0.37-se.1 — 2026-10-18
 
 The Social Expansion on shadowofze's **0.37 / 0.37b** (with or without the 0.37c new client), with everything in

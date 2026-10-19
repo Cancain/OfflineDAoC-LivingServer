@@ -52,7 +52,7 @@ public static class ForkBuildInfo
         {
             ("memory", Properties.BOT_LIVING_MEMORY), ("grats", Properties.BOT_LIVING_GRATS), ("firsts", Properties.BOT_LIVING_FIRSTS),
             ("death", Properties.BOT_LIVING_DEATH), ("alarms", Properties.BOT_LIVING_ALARMS), ("nemesis", Properties.BOT_LIVING_NEMESIS),
-            ("breaks", Properties.BOT_LIVING_BREAKS),
+            ("breaks", Properties.BOT_LIVING_BREAKS), ("body", Properties.BOT_LIVING_BODY_LANGUAGE),
         }.Where(part => part.Item2).Select(part => part.Item1));
         string Range(string spec) => string.IsNullOrWhiteSpace(spec) ? "off" : $"\"{spec.Trim()}\"";
         return $"FORK_BUILD name={BuildName} commit={Commit} " +
