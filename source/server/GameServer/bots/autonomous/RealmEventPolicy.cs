@@ -45,7 +45,9 @@ namespace DOL.GS
         // 0.5 (owner, 2026-10-07) followed a run where defenders matched attackers and every siege failed. At 0.5 every
         // bot siege of 2026-10-19 fell (12-17 defenders against 42-53 attackers). The owner wants fights won about two
         // times in three, never guaranteed: 0.75 to start, then SiegeDefenseBalance steers by recent results.
-        [DOL.GS.ServerProperties.ServerProperty("autonomous", "rvr_siege_defense_ratio",
+        // New key: the stored rvr_siege_defense_ratio (0.5 on the owner's server since 2026-10-07) is no longer read, as
+        // neutral_raid_encounter_level_cap replaced neutral_raid_encounter_level.
+        [DOL.GS.ServerProperties.ServerProperty("autonomous", "rvr_siege_defense_share",
             "Bot defenders a siege may draw, as a share of its attacker cap (128 keep / 240 relic); walls, doors and keep guards are extra. Recent results move it up or down by up to 0.25 (SiegeDefenseBalance).", 0.75)]
         public static double DefenseRatio = 0.75;
 

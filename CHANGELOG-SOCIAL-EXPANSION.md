@@ -105,8 +105,8 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   with one siege running the next had a 4% chance a minute. Each realm now rolls for its own attacks, and a realm
   that hasn't attacked for 30 minutes gets an extra 2% a minute (at most 50%). Raid slots drift by up to 20 minutes
   so the realms don't keep the same order.
-- Defenders could bring half the attacking army (12-17 against 42-53), so every siege fell. `rvr_siege_defense_ratio`
-  is now 0.75, and the last six sieges steer it by up to 0.25: attackers winning more than 80% bring more defenders,
+- Defenders could bring half the attacking army (12-17 against 42-53), so every siege fell. the new setting
+  `rvr_siege_defense_share` is 0.75 (the stored `rvr_siege_defense_ratio` of 0.5 is no longer read), and the last six sieges steer it by up to 0.25: attackers winning more than 80% bring more defenders,
   less than 45% fewer. The target is a siege won about two times in three.
 
 **Checked**

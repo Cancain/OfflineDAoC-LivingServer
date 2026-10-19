@@ -7,7 +7,7 @@ namespace DOL.GS;
 /// <summary>
 /// Keeps bot sieges contested (owner, 2026-10-19: endgame fights should be won about two times in three, never a
 /// sure thing). The last sieges' results nudge the defenders' share: attackers winning nearly every one adds up to
-/// 0.25 to rvr_siege_defense_ratio, attackers losing most of them takes up to 0.25 away. In memory only.
+/// 0.25 to rvr_siege_defense_share, attackers losing most of them takes up to 0.25 away. In memory only.
 /// </summary>
 public static class SiegeDefenseBalance
 {
