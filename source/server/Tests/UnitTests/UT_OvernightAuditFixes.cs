@@ -169,8 +169,14 @@ public sealed class UT_OvernightAuditFixes
         Assert.That(AutonomousBotGroupCoordinator.PveFormationSize(eCharacterClass.Warrior,
             eCharacterClass.Thane, eCharacterClass.Berserker, eCharacterClass.Savage, eCharacterClass.Hunter,
             eCharacterClass.Runemaster, eCharacterClass.Skald), Is.Zero);
+        // No real tank, but heavy melee: since 2026-10-19 an off-tank holds the tank slot (UseOffTanks), because
+        // Midgard's waiting level 50s had too few Warriors and Thanes to form parties at all.
         Assert.That(AutonomousBotGroupCoordinator.PveFormationSize(eCharacterClass.Healer,
             eCharacterClass.Shaman, eCharacterClass.Berserker, eCharacterClass.Savage, eCharacterClass.Hunter,
+            eCharacterClass.Runemaster), Is.Positive);
+        // No tank and no off-tank: still none.
+        Assert.That(AutonomousBotGroupCoordinator.PveFormationSize(eCharacterClass.Healer,
+            eCharacterClass.Shaman, eCharacterClass.Shadowblade, eCharacterClass.Spiritmaster, eCharacterClass.Hunter,
             eCharacterClass.Runemaster), Is.Zero);
     }
 

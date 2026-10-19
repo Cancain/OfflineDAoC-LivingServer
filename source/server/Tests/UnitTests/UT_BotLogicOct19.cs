@@ -38,6 +38,27 @@ namespace DOL.UnitTests
             Assert.That(AutonomousPveTargetPolicy.FlyerOutOfRangedReach(flags, ranged, distance), Is.EqualTo(skipped));
 
         [Test]
+        public void AnOffTankHoldsTheTankSlotOnlyWhenNoRealTankIsThere()
+        {
+            Assert.Multiple(() =>
+            {
+                // Midgard level 50s waiting with no Warrior or Thane in reach (overnight 2026-10-19).
+                Assert.That(AutonomousBotGroupCoordinator.PveFormationSize(eCharacterClass.Berserker,
+                    eCharacterClass.Healer, eCharacterClass.Runemaster, eCharacterClass.Hunter, eCharacterClass.Shadowblade), Is.EqualTo(5));
+                Assert.That(AutonomousBotGroupCoordinator.PveFormationSize(eCharacterClass.Runemaster,
+                    eCharacterClass.Healer, eCharacterClass.Savage, eCharacterClass.Hunter, eCharacterClass.Shadowblade), Is.EqualTo(5));
+                // No tank and no off-tank: still no party.
+                Assert.That(AutonomousBotGroupCoordinator.PveFormationSize(eCharacterClass.Runemaster,
+                    eCharacterClass.Healer, eCharacterClass.Spiritmaster, eCharacterClass.Hunter, eCharacterClass.Shadowblade), Is.EqualTo(0));
+                // A real tank in the pool: the off-tank rule stays off.
+                Assert.That(AutonomousBotGroupCoordinator.UseOffTanks(eCharacterClass.Berserker,
+                    [eCharacterClass.Warrior, eCharacterClass.Healer]), Is.False);
+                Assert.That(AutonomousBotGroupCoordinator.UseOffTanks(eCharacterClass.Berserker,
+                    [eCharacterClass.Healer, eCharacterClass.Hunter]), Is.True);
+            });
+        }
+
+        [Test]
         public void ADeathNamesWhatKindOfThingKilledTheBot() =>
             Assert.That(AutonomousDeathDiagnostics.KillerKind(null), Is.EqualTo("none"));
     }

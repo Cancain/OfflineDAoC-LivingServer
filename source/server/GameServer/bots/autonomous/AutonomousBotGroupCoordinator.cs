@@ -25,7 +25,11 @@ public static partial class AutonomousBotGroupCoordinator
     // declared a pile at the rendezvous center "assembled" even though every
     // intended formation point was still inside that broad radius.
     private const int CohesionRadius = 500;
-    private const int MaximumPveRecruitmentDistance = 30_000;
+    // How far a party member may be from its leader, as travel time (zone crossings included). It used to be
+    // 30,000 units in the leader's own region: overnight 2026-10-19 the median distance between compatible waiting
+    // bots was 86,000, a full roster was within 30,000 only 1-16% of the time, and 963 of 1,210 waits timed out
+    // (48 PvE groups in 7 hours). The meetup already brings members from afar; 8 minutes fits the 20-minute staging.
+    public const double MaximumPveRecruitmentMinutes = 8;
     // A verified broken route gets one bounded retry. Initial attendance then
     // sheds that no-show; an active locked party ends its task instead of
     // holding every survivor in a permanent regroup.
@@ -1522,11 +1526,12 @@ public static partial class AutonomousBotGroupCoordinator
                             AutonomousRvrEventLayer.IsForceCommitted($"rvr-{bot.DatabaseID}", GameLoop.GameLoopTime)) &&
                           (objectiveKind != eAutonomousObjectiveKind.GroupPve ||
                            CanRecruitPveMember(bot.IsOnStableMasterRoute, bot.IsReturningAfterRelease,
-                               bot.InCombat, bot.IsAttacking, (bot.Brain as BotBrain)?.HasAggro == true, 0)) &&
+                               bot.InCombat, bot.IsAttacking, (bot.Brain as BotBrain)?.HasAggro == true, 0d)) &&
                           AutonomousObjectiveAssignments.Is(bot, objectiveKind))
             .OrderBy(_ => Random.Shared.Next())
             .ToArray();
         var claimed = new HashSet<GameBot>();
+        var recruitCrossings = new Dictionary<(eRealm Realm, ushort Region), DbZonePoint>();
         int rendezvousChecks = 0;
         // RvR stages at the realm's fixed border keep, so the leader is the
         // bot closest to it. PvE meets around its leader and keeps the
@@ -1582,19 +1587,30 @@ public static partial class AutonomousBotGroupCoordinator
                 : 8;
             if (rolledSize == 1)
                 continue;
+            // PvE recruits by travel time to the leader, from any region of the realm; RvR keeps the leader's region.
+            bool pve = objectiveKind == eAutonomousObjectiveKind.GroupPve;
+            var travel = new Dictionary<GameBot, double>();
+            double TravelToLeader(GameBot candidate)
+            {
+                if (!travel.TryGetValue(candidate, out double minutes))
+                    travel[candidate] = minutes = AutonomousWorldBotController.EstimateTravelMinutes(candidate,
+                        leader.CurrentRegionID, leader.X, leader.Y, recruitCrossings);
+                return minutes;
+            }
             GameBot[] compatiblePool = available
                 .Where(candidate => candidate != leader && !claimed.Contains(candidate) && candidate.Group == null &&
                                      AutonomousObjectiveAssignments.Is(candidate, objectiveKind) &&
-                                     candidate.Realm == leader.Realm && candidate.CurrentRegionID == leader.CurrentRegionID &&
+                                     candidate.Realm == leader.Realm &&
+                                     (pve || candidate.CurrentRegionID == leader.CurrentRegionID) &&
                                      LevelsCompatible(leader.Level, candidate.Level) &&
-                                     (objectiveKind != eAutonomousObjectiveKind.GroupPve ||
+                                     (!pve ||
                                       CanRecruitPveMember(candidate.IsOnStableMasterRoute,
                                           candidate.IsReturningAfterRelease, candidate.InCombat,
                                           candidate.IsAttacking, (candidate.Brain as BotBrain)?.HasAggro == true,
-                                          candidate.GetDistanceTo(leader))))
+                                          TravelToLeader(candidate))))
                 .OrderBy(candidate => AutonomousBotRealmGuilds.GuildmateRank(leader, candidate))
-                .ThenBy(candidate => Math.Abs(candidate.Level - leader.Level))
-                .ThenBy(candidate => candidate.GetDistanceTo(leader))
+                .ThenBy(candidate => pve ? 0 : Math.Abs(candidate.Level - leader.Level))
+                .ThenBy(candidate => pve ? TravelToLeader(candidate) : candidate.GetDistanceTo(leader))
                 .ToArray();
             Dictionary<long, BotPveGroupRole> pveRoles = null;
             GameBot[] compatible;
@@ -2752,9 +2768,9 @@ public static partial class AutonomousBotGroupCoordinator
         first >= 50 || second >= 50 ? first >= 50 && second >= 50 : Math.Abs(first - second) <= 5;
 
     public static bool CanRecruitPveMember(bool riding, bool returning, bool inCombat,
-        bool attacking, bool hasAggro, int distanceFromLeader) =>
+        bool attacking, bool hasAggro, double travelMinutesToLeader) =>
         !riding && !returning && !inCombat && !attacking && !hasAggro &&
-        distanceFromLeader >= 0 && distanceFromLeader <= MaximumPveRecruitmentDistance;
+        travelMinutesToLeader >= 0 && travelMinutesToLeader <= MaximumPveRecruitmentMinutes;
 
     private static bool TryBuildPveRoster(GameBot leader, GameBot[] candidates, out GameBot[] selected,
         out Dictionary<long, BotPveGroupRole> roles, int minimumSize = 8, int maximumSize = 8)
@@ -2762,12 +2778,16 @@ public static partial class AutonomousBotGroupCoordinator
         selected = [];
         roles = null;
         // Guildmates of the leader get the first claim on slots (docs/BOT-GUILDS.md, phase 3); roles still decide.
+        // The caller's order (nearest first) is kept within each guild rank, so the roster takes the closest bots
+        // that fill it; a random reshuffle here used to throw that order away (2026-10-19).
         GameBot[] pool = candidates.Where(candidate => candidate?.CharacterClass != null)
-            .OrderBy(candidate => AutonomousBotRealmGuilds.GuildmateRank(leader, candidate))
-            .ThenBy(_ => Random.Shared.Next()).ToArray();
+            .OrderBy(candidate => AutonomousBotRealmGuilds.GuildmateRank(leader, candidate)).ToArray();
         eCharacterClass[] poolClasses = pool.Select(candidate => (eCharacterClass)candidate.CharacterClass.ID).ToArray();
-        if (!TryMatchPveRoster((eCharacterClass)leader.CharacterClass.ID, poolClasses, minimumSize, maximumSize,
-                out BotPveGroupRole[] template, out int[] owners))
+        eCharacterClass leaderClass = (eCharacterClass)leader.CharacterClass.ID;
+        if (!TryMatchPveRoster(leaderClass, poolClasses, minimumSize, maximumSize,
+                out BotPveGroupRole[] template, out int[] owners) &&
+            !(UseOffTanks(leaderClass, poolClasses) && TryMatchPveRoster(leaderClass, poolClasses, minimumSize, maximumSize,
+                out template, out owners, offTanks: true)))
             return false;
         GameBot[] slotted = owners.Select(owner => owner < 0 ? leader : pool[owner]).ToArray();
         selected = slotted.Where(owner => owner != leader).ToArray();
@@ -2781,8 +2801,20 @@ public static partial class AutonomousBotGroupCoordinator
     /// Fills the first template (largest first) whose size is allowed. owners
     /// holds a pool index per slot, or -1 for the leader.
     /// </summary>
+    /// <summary>
+    /// Off-tanks (BotPartyRoles.CanOffTank) fill the tank slot only when nobody available is a real tank. Overnight
+    /// 2026-10-19 Warriors and Thanes were 12% of Midgard's waiting level 50s (23-29% in the other realms) and 14 of
+    /// them waited with no tank in reach.
+    /// </summary>
+    public static bool UseOffTanks(eCharacterClass leader, eCharacterClass[] pool) =>
+        !BotPartyRoles.CanFill(leader, BotPveGroupRole.Tank) && !pool.Any(c => BotPartyRoles.CanFill(c, BotPveGroupRole.Tank));
+
+    private static bool Fills(eCharacterClass characterClass, BotPveGroupRole role, bool offTanks) =>
+        BotPartyRoles.CanFill(characterClass, role) ||
+        offTanks && role == BotPveGroupRole.Tank && BotPartyRoles.CanOffTank(characterClass);
+
     private static bool TryMatchPveRoster(eCharacterClass leader, eCharacterClass[] pool, int minimumSize,
-        int maximumSize, out BotPveGroupRole[] template, out int[] owners)
+        int maximumSize, out BotPveGroupRole[] template, out int[] owners, bool offTanks = false)
     {
         foreach (BotPveGroupRole[] candidateTemplate in PveRosterTemplates)
         {
@@ -2790,13 +2822,13 @@ public static partial class AutonomousBotGroupCoordinator
                 continue;
             template = candidateTemplate;
             foreach (int leaderSlot in Enumerable.Range(0, template.Length)
-                         .Where(index => BotPartyRoles.CanFill(leader, candidateTemplate[index]))
+                         .Where(index => Fills(leader, candidateTemplate[index], offTanks))
                          .OrderBy(_ => Random.Shared.Next()))
             {
                 owners = Enumerable.Repeat(int.MinValue, template.Length).ToArray();
                 owners[leaderSlot] = -1;
                 for (int candidate = 0; candidate < pool.Length; candidate++)
-                    TryMatchPveSlot(candidate, pool, template, owners, new bool[template.Length], leaderSlot);
+                    TryMatchPveSlot(candidate, pool, template, owners, new bool[template.Length], leaderSlot, offTanks);
                 if (owners.All(owner => owner != int.MinValue))
                     return true;
             }
@@ -2818,15 +2850,15 @@ public static partial class AutonomousBotGroupCoordinator
     }
 
     private static bool TryMatchPveSlot(int candidate, eCharacterClass[] pool, BotPveGroupRole[] template,
-        int[] owners, bool[] visited, int reservedLeaderSlot)
+        int[] owners, bool[] visited, int reservedLeaderSlot, bool offTanks = false)
     {
         for (int slot = 0; slot < template.Length; slot++)
         {
-            if (slot == reservedLeaderSlot || visited[slot] || !BotPartyRoles.CanFill(pool[candidate], template[slot]))
+            if (slot == reservedLeaderSlot || visited[slot] || !Fills(pool[candidate], template[slot], offTanks))
                 continue;
             visited[slot] = true;
             if (owners[slot] == int.MinValue ||
-                TryMatchPveSlot(owners[slot], pool, template, owners, visited, reservedLeaderSlot))
+                TryMatchPveSlot(owners[slot], pool, template, owners, visited, reservedLeaderSlot, offTanks))
             {
                 owners[slot] = candidate;
                 return true;
@@ -2837,7 +2869,9 @@ public static partial class AutonomousBotGroupCoordinator
 
     /// <summary>Party size PvE formation would build from these classes (0 when none fits).</summary>
     public static int PveFormationSize(eCharacterClass leader, params eCharacterClass[] candidates) =>
-        TryMatchPveRoster(leader, candidates, MinimumPveFormationSize, 8, out BotPveGroupRole[] template, out _)
+        TryMatchPveRoster(leader, candidates, MinimumPveFormationSize, 8, out BotPveGroupRole[] template, out _) ||
+        UseOffTanks(leader, candidates) &&
+        TryMatchPveRoster(leader, candidates, MinimumPveFormationSize, 8, out template, out _, offTanks: true)
             ? template.Length : 0;
 
     private static bool HasActivePveComposition(Session session, GameBot[] members) =>
