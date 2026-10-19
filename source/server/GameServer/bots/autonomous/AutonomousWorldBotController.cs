@@ -33,6 +33,11 @@ namespace DOL.GS
         // candidates still pass the floor/wall line-of-sight gate below, so a
         // larger outdoor scan never targets through a dungeon wall or floor.
         private const int TargetSearchRadius = 5000;
+        // After a pull that never reached its target, the wide search waits (overnight 2026-10-19: 343 pull timeouts,
+        // median 3,216 units away; one level 8 Shaman timed out 28 times in an hour on rock crabs 2,000-3,300 away while
+        // nearer kills kept resetting the camp's failure count).
+        public const long WideTargetSearchPauseMilliseconds = 10 * 60_000;
+        private long _wideTargetSearchAfterTick;
         private const int DungeonBlockerRadius = 1450;
         private const int ZonePointArrivalRadius = 190;
         private const int EmptyCampReplanMilliseconds = 75_000;
@@ -2673,6 +2678,8 @@ namespace DOL.GS
                     break;
 
                 case SavageBotCombatPolicy.MeleePullDecision.GiveUp:
+                    if (distance > ImmediateTargetSearchRadius)
+                        _wideTargetSearchAfterTick = nowTick + WideTargetSearchPauseMilliseconds;
                     long retryAfter = nowTick + SavageBotCombatPolicy.FailedMeleePullRetryMilliseconds;
                     _failedSavageMeleePullTargets[target.ObjectID] = retryAfter;
                     bot.TempProperties.SetProperty(FailedSavageMeleePullHandoffKey,
@@ -3164,7 +3171,8 @@ namespace DOL.GS
 
             // Preserve the old cheap local lookup for ordinary pulls. Only an
             // empty local ring pays for the requested 5,000-unit expansion.
-            return FindWithin(ImmediateTargetSearchRadius) ?? FindWithin(TargetSearchRadius);
+            return FindWithin(ImmediateTargetSearchRadius) ??
+                   (GameLoop.GameLoopTime >= _wideTargetSearchAfterTick ? FindWithin(TargetSearchRadius) : null);
         }
 
         private void PatrolCamp(GameBot bot)
