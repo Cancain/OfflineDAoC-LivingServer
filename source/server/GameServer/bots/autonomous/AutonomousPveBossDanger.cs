@@ -72,6 +72,21 @@ public static class AutonomousPveBossDanger
         return false;
     }
 
+    /// <summary>Remembered spots within <paramref name="radius"/> that warn a bot of this level (for route bends).</summary>
+    public static List<(int X, int Y, int KillerLevel)> SpotsNear(ushort regionId, int x, int y, int botLevel, DateTime utc, float radius)
+    {
+        var near = new List<(int, int, int)>();
+        foreach (Spot spot in Volatile.Read(ref _spots))
+        {
+            if (spot.RegionId != regionId || utc - spot.Utc > Lifetime || !Warns(spot.KillerLevel, botLevel))
+                continue;
+            double dx = (double)spot.X - x, dy = (double)spot.Y - y;
+            if (dx * dx + dy * dy <= (double)radius * radius)
+                near.Add((spot.X, spot.Y, spot.KillerLevel));
+        }
+        return near;
+    }
+
     /// <summary>Whether the straight walk from one point to another in the same region passes a remembered spot.</summary>
     public static bool RouteCrosses(ushort regionId, int fromX, int fromY, int toX, int toY, int botLevel, DateTime utc)
     {

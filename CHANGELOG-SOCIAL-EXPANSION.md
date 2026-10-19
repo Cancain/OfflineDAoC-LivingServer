@@ -84,6 +84,15 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   killed 18 bots of levels 10-17 on their way to other camps, and 126 of the 159 bots under level 20 that died to
   red or purple monsters hadn't reached their camp yet. Kept in memory only; a restart forgets.
 
+**Levelling bots walk around monsters far above them** (route bends from stefanrows/OfflineDAoC)
+- The remembered spots above didn't stop road deaths in the live test: the Connacht meruchas still killed 30 bots
+  of levels 10-17 in two hours, some three times running from the same bind point, because roads to camps all
+  over Hibernia pass them. 22 of the 30 had seen the pack and chosen the old one-monster sidestep or a new camp.
+- Now a solo levelling bot on the road bends its next 3,000 units around every red or purple monster in sight
+  (700-1,650 units, wider the higher it is, whether or not it's already fighting someone) and around remembered
+  death spots, taking up to 6,000 extra units, every bend checked on the navmesh first. Logged as
+  `AUTONOMOUS_DANGER_BYPASS`.
+
 **Checked**
 - Automated: 3,223 server tests.
 - Live, on the owner's PC (new client, 650 bots online), first 39 minutes of the new build against the same 39

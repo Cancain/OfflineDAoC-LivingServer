@@ -194,6 +194,44 @@ namespace DOL.UnitTests
         }
 
         [Test]
+        public void ALevellingBotBendsAroundAPackFarAboveIt()
+        {
+            // The Connacht merucha pack (levels 30-33) on a level 12's road north.
+            var mobs = new[]
+            {
+                new AutonomousPveDangerBypass.MobView(new(332070, 431451), 30, "merucha", true),
+                new AutonomousPveDangerBypass.MobView(new(332839, 430379), 30, "merucha", true),
+                new AutonomousPveDangerBypass.MobView(new(333067, 431961), 33, "merucha", true),
+                new AutonomousPveDangerBypass.MobView(new(331000, 429000), 11, "hill toad", true),   // blue: not a danger
+            };
+            var dangers = AutonomousPveDangerBypass.BuildDangers(12, mobs, null);
+            System.Numerics.Vector2 start = new(332400, 428200), goal = new(332400, 434500);
+            var bends = AutonomousPveDangerBypass.BypassCandidates(start, goal, dangers);
+            Assert.Multiple(() =>
+            {
+                Assert.That(dangers, Has.Count.EqualTo(3));
+                Assert.That(dangers[0].Radius, Is.EqualTo(1650), "18 levels above: the widest circle");
+                Assert.That(bends, Is.Not.Empty, "a way around inside the 6,000-unit detour limit");
+                Assert.That(AutonomousPveDangerBypass.LegClear(start, bends[0], dangers), Is.True);
+                Assert.That(AutonomousPveDangerBypass.LegClear(bends[0], goal, dangers), Is.True);
+                Assert.That(AutonomousPveDangerBypass.BuildDangers(31, mobs, null), Is.Empty, "the same pack is no danger for a level 31");
+                Assert.That(AutonomousPveDangerBypass.BypassCandidates(start, new(340000, 428200), dangers), Is.Empty,
+                    "a road that doesn't pass the pack is not bent");
+                var remembered = AutonomousPveDangerBypass.BuildDangers(12, null, new[] { (332400, 431300, 30) });
+                Assert.That(AutonomousPveDangerBypass.BypassCandidates(start, goal, remembered), Is.Not.Empty,
+                    "a remembered death spot is bent around even when its killer isn't in sight");
+            });
+        }
+
+        [Test]
+        public void TheBendLooksAboutThreeThousandUnitsAhead()
+        {
+            System.Numerics.Vector3[] route = [new(0, 0, 0), new(2000, 0, 0), new(2000, 4000, 0)];
+            Assert.That(AutonomousPveDangerBypass.PointAlong(route, 3000), Is.EqualTo(new System.Numerics.Vector3(2000, 1000, 0)));
+            Assert.That(AutonomousPveDangerBypass.PointAlong(route, 99999), Is.EqualTo(route[^1]));
+        }
+
+        [Test]
         public void ADeathNamesWhatKindOfThingKilledTheBot() =>
             Assert.That(AutonomousDeathDiagnostics.KillerKind(null), Is.EqualTo("none"));
     }
