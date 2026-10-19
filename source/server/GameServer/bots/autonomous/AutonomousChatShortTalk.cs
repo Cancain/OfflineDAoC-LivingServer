@@ -123,6 +123,12 @@ public static class AutonomousChatShortTalk
             return "ask_howareyou";
         if (AsksWhoIsOn(text))
             return "ask_on";
+        // "where is everyone?" in /gu asks where the guild is, not for directions (played 2026-10-18: it read as travel).
+        string[] where = AutonomousChatIntentModel.Words(text).Select(word => word.Replace("'", string.Empty)).ToArray();
+        if (HasPhrase(where, "where is everyone", "wheres everyone", "where is everybody", "wheres everybody", "where did everyone go",
+                "where is the guild", "where are you all", "where are you guys", "where r u all", "where is everyone at",
+                "where yall at", "where are yall", "where all you at"))
+            return "ask_whereall";
         string[] words = AutonomousChatIntentModel.Words(text).Select(word => word.Replace("'", string.Empty)).ToArray();
         // "what level are you?" in /group drew "sure Wrenfield, what do you need?" (live test 2026-10-18).
         if (HasPhrase(words, "what level are you", "what lvl are you", "what level r u", "what lvl r u", "whats your level", "whats ur level",

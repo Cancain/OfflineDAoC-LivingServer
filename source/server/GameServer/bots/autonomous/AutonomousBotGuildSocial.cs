@@ -69,7 +69,8 @@ public static class AutonomousBotGuildSocial
             Lines.ReplyKind.Greeting => roll < 0.35 ? 3 : roll < 0.75 ? 2 : 1,
             Lines.ReplyKind.Farewell => roll < 0.4 ? 2 : 1,
             Lines.ReplyKind.Thanks or Lines.ReplyKind.Grouping or Lines.ReplyKind.Abuse => 1,
-            Lines.ReplyKind.Question => roll < 0.6 ? 1 : 0,
+            // A question to your own guild is answered (played 2026-10-18: "where is everyone?" drew nothing).
+            Lines.ReplyKind.Question => roll < 0.3 ? 2 : 1,
             Lines.ReplyKind.Banter => roll < 0.4 ? 1 : 0,
             _ => 0,
         };
@@ -276,6 +277,9 @@ public static class AutonomousBotGuildSocial
             : ResponderCount(kind, pool.Length, Random.Shared.NextDouble());
         var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var slots = new Dictionary<string, string>(StringComparer.Ordinal) { ["player"] = player.Name };
+        var spoken = new HashSet<GameBot>();
+        // Busy guildmates hand their line on (a level 50 RvR guild is mostly fighting); a named bot answers itself.
+        GameBot[] standIns = mentioned.Length > 0 ? [] : pool.Skip(count).Take(AutonomousBotChatCoordinator.PlayerReplyStandIns).ToArray();
         int due = 0;
         for (int i = 0; i < count; i++)
         {
@@ -297,7 +301,15 @@ public static class AutonomousBotGuildSocial
             if (!AutonomousBotChatCoordinator.TryAddDistinctResponse(used, line, out line))
                 continue;
             due = AutonomousBotChatCoordinator.ReplyDelayMs(line, due, Random.Shared) + 600;
-            ScheduleGuildLine(bot, guild, due, () => line);
+            string text = line;
+            GameBot chosen = bot;
+            _ = new ECSGameTimer(player, _ =>
+            {
+                GameBot speaker = AutonomousBotChatCoordinator.PickSpeaker(chosen, standIns, b => b.Guild == guild && Eligible(b), spoken);
+                if (speaker != null && HasListener(guild))
+                    SendGuildLine(guild, speaker.Name, text);
+                return 0;
+            }, due);
         }
     }
 

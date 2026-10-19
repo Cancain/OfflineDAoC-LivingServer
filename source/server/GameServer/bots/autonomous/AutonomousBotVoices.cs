@@ -281,7 +281,7 @@ public static class AutonomousBotVoices
         // "hows it going" may read as no intent at all: it is still a how-are-you (live test 2026-10-18: it drew "hm?").
         if (shape == "ask_howareyou")
             return TryGreetingReply(bot, incoming, out result, slots, relax, requireVoices);
-        return shape is "ask_on" or "ask_permission" or "ask_choice" or "ask_guild" or "ask_next" or "ask_level" or "ask_xp" or "ask_doing" or "ask_plans" &&
+        return shape is "ask_on" or "ask_permission" or "ask_choice" or "ask_guild" or "ask_next" or "ask_level" or "ask_xp" or "ask_doing" or "ask_plans" or "ask_whereall" &&
                TryLine(bot, "reply", out result, answers: shape, slots: slots, relax: relax, requireVoices: requireVoices);
     }
 

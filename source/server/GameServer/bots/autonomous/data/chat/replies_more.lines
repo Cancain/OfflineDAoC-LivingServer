@@ -284,3 +284,31 @@ talking to all of you :)
 @who Leveler
 @needs outdoors
 grinding, what else
+
+# "where is everyone?", "where are you all?": where the bot is. Played 2026-10-18 (0.37-se.1): /gu "where is everyone"
+# read as a travel question and drew nothing. New writing.
+@kind reply
+@answers ask_whereall
+@who *
+@needs
+{zone}
+{zone}, you?
+out in {zone}
+@needs outdoors
+{zone}, killing stuff
+@needs in_group, outdoors
+{zone} with a group
+@needs in_rvr
+frontier, {zone}
+rvr in {zone}, come help
+@needs in_capital
+in town, {zone}
+@needs at_camp
+at {camp}, decent xp
+@needs traveling
+headed to {destination}
+@needs in_dungeon
+down in {zone}
+@needs just_died
+running back from the bind lol
+@needs

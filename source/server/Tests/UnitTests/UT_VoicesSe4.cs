@@ -527,6 +527,9 @@ namespace DOL.GS.Tests
         [TestCase("whats everyone doing?", "ask_doing")]
         [TestCase("what is everyone up to tonight?", "ask_plans")]
         [TestCase("so what are we doing this weekend?", "ask_plans")]
+        [TestCase("where is everyone", "ask_whereall")]
+        [TestCase("wheres everyone?", "ask_whereall")]
+        [TestCase("where are you guys?", "ask_whereall")]
         [TestCase("lol", null)]
         public void APlayersQuestionTypeIsRead(string text, string shape) =>
             Assert.That(AutonomousChatShortTalk.QuestionShape(text), Is.EqualTo(shape));
@@ -563,6 +566,38 @@ namespace DOL.GS.Tests
             Assert.That(Corpus.Candidates("reply", inCamelot).Where(l => l.Answers.Contains("ask_doing")).Select(l => l.Text),
                 Is.Not.Empty.And.None.Contains("kill").And.None.Contains("grind").And.None.Contains("xp"));
             Assert.That(Corpus.Lines.Single(l => l.Text == "what is everyone doing tonight?").Invites, Is.EqualTo("ask_plans"));
+        }
+
+        [Test]
+        public void ABusyBotsReplyGoesToAStandIn()
+        {
+            // Played 2026-10-18 (0.37-se.1): a level 50's lfg and "where is everyone?" drew nothing; the chosen level 50s were
+            // fighting when their lines came due, and nobody took over.
+            var spoken = new HashSet<string>();
+            var busy = new HashSet<string> { "Gisaorelle", "Linaelisbeth" };
+            bool Free(string bot) => !busy.Contains(bot);
+            string[] standIns = ["Linaelisbeth", "Ysenorbel", "Cedenalfrey"];
+            Assert.That(Chat.PickSpeaker("Gisaorelle", standIns, Free, spoken), Is.EqualTo("Ysenorbel"));
+            Assert.That(Chat.PickSpeaker("Gisaorelle", standIns, Free, spoken), Is.EqualTo("Cedenalfrey"), "each bot speaks once");
+            Assert.That(Chat.PickSpeaker("Gisaorelle", standIns, Free, spoken), Is.Null, "nobody free: no reply");
+            Assert.That(Chat.PickSpeaker("Oserorhelm", standIns, Free, new HashSet<string>()), Is.EqualTo("Oserorhelm"), "a free bot says its own line");
+            Assert.That(Chat.PickSpeaker("Gisaorelle", [], Free, new HashSet<string>()), Is.Null, "a named bot has no stand-ins");
+        }
+
+        [Test]
+        public void AQuestionToYourGuildIsAnswered()
+        {
+            for (double roll = 0; roll < 1; roll += 0.05)
+                Assert.That(DOL.GS.AutonomousBotGuildSocial.ResponderCount(DOL.GS.AutonomousBotGuildChatLines.ReplyKind.Question, 5, roll),
+                    Is.InRange(1, 2));
+            var inFrontier = new VC.Speaker(3, "Gisaorelle", eRealm.Albion, "Cleric", 50, BotPersonalityType.Daredevil,
+                new HashSet<string> { "in_group", "in_rvr", "outdoors", "evening" });
+            var lines = Corpus.Candidates("reply", inFrontier).Where(l => l.Answers.Contains("ask_whereall")).Select(l => l.Text).ToList();
+            Assert.That(lines, Has.Some.Contains("rvr").Or.Some.Contains("frontier"));
+            var inCamelot = new VC.Speaker(4, "Oserorhelm", eRealm.Albion, "Paladin", 50, BotPersonalityType.Leveler,
+                new HashSet<string> { "solo", "in_capital", "evening" });
+            Assert.That(Corpus.Candidates("reply", inCamelot).Where(l => l.Answers.Contains("ask_whereall")).Select(l => l.Text),
+                Is.Not.Empty.And.None.Contains("kill"));
         }
 
         [TestCase("what does lfg mean?", "looking for group")]
