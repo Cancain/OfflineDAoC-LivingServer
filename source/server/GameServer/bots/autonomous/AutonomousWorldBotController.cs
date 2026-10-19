@@ -264,6 +264,8 @@ namespace DOL.GS
             try
             {
                 long nowTick = GameLoop.GameLoopTime;
+                // Living Server body language for a bot that is just standing around (no-op when the switch is off).
+                AutonomousBotBodyLanguage.Ambient(bot, brain.HasAggro);
                 if (nowTick >= _nextPocketCheckTick)
                 {
                     _nextPocketCheckTick = nowTick + 5_000 + bot.ObjectID % 1_000;

@@ -59,6 +59,8 @@ namespace DOL.GS
         {
             public long NextActTick;
             public long ShuffleUntilTick;
+            public long StillSinceTick;
+            public float LastX, LastY;
             public readonly Dictionary<string, long> Greeted = new(StringComparer.OrdinalIgnoreCase);
         }
 
@@ -104,7 +106,8 @@ namespace DOL.GS
         /// steps; a wait has looks and emotes; resting is mostly looking around. A resting bot never steps (a step
         /// would wake its rest).
         /// </summary>
-        public static BodyChoice Choose(BodySpot spot, bool greetDue, bool resting, double r1, double r2, double r3)
+        public static BodyChoice Choose(BodySpot spot, bool greetDue, bool resting, double r1, double r2, double r3,
+            bool allowStep = true)
         {
             r1 = Math.Clamp(r1, 0, 0.999999);
             r2 = Math.Clamp(r2, 0, 0.999999);
@@ -116,7 +119,7 @@ namespace DOL.GS
             {
                 case BodySpot.Town:
                     if (r1 < 0.45) return look;
-                    if (r1 < 0.75 || resting) return resting ? look : new(BodyMove.Emote, Pick(TownEmotes, r2));
+                    if (r1 < 0.75 || resting || !allowStep) return resting ? look : new(BodyMove.Emote, Pick(TownEmotes, r2));
                     return new(BodyMove.Shuffle, StepAngle: r2 * 2 * Math.PI, StepLength: ShuffleMinimumStep + (int)(r3 * 35));
                 case BodySpot.Waiting:
                     return r1 < 0.6 ? look : new(BodyMove.Emote, Pick(WaitEmotes, r2));
@@ -158,7 +161,43 @@ namespace DOL.GS
         /// One idle turn of a bot standing at <paramref name="anchor"/>. Returns true while a town step it started is
         /// still walking, so the caller doesn't stop it.
         /// </summary>
-        public static bool Idle(GameBot bot, BodySpot spot, Vector3 anchor)
+        public static bool Idle(GameBot bot, BodySpot spot, Vector3 anchor) => Act(bot, spot, anchor, allowStep: true);
+
+        /// <summary>A bot standing still this long, with nothing to fight, counts as standing around.</summary>
+        public const long StandingStillMs = 5_000;
+
+        /// <summary>
+        /// Every turn of every autonomous gamebot: one that has stood still for <see cref="StandingStillMs"/> with no
+        /// enemy targeted (at a merchant, the Realm Exchange, a trainer, while planning its next goal or waiting
+        /// anywhere) looks around and emotes now and then. It never steps here; only a town break steps.
+        /// </summary>
+        public static void Ambient(GameBot bot, bool hasAggro)
+        {
+            if (!On || hasAggro || !Eligible(bot))
+                return;
+            try
+            {
+                BodyState state = States.GetValue(bot, _ => new BodyState());
+                long now = GameLoop.GameLoopTime;
+                bool fighting = bot.TargetObject is GameLiving target && target != bot && target.IsAlive && target.Realm != bot.Realm;
+                float dx = bot.X - state.LastX, dy = bot.Y - state.LastY;
+                if (bot.IsMoving || fighting || dx * dx + dy * dy > 24 * 24)
+                {
+                    state.StillSinceTick = now;
+                    state.LastX = bot.X;
+                    state.LastY = bot.Y;
+                    return;
+                }
+                if (now - state.StillSinceTick < StandingStillMs)
+                    return;
+                Act(bot, bot.CurrentRegion?.IsCapitalCity == true ? BodySpot.Town : BodySpot.Waiting, default, allowStep: false);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private static bool Act(GameBot bot, BodySpot spot, Vector3 anchor, bool allowStep)
         {
             if (!On || !Eligible(bot))
                 return false;
@@ -181,7 +220,7 @@ namespace DOL.GS
                                (!state.Greeted.TryGetValue(watcher.Name, out long last) || now - last >= GreetCooldownMs);
 
                 BodyChoice choice = Choose(spot, greetDue, bot.IsRecoveryResting,
-                    Random.Shared.NextDouble(), Random.Shared.NextDouble(), Random.Shared.NextDouble());
+                    Random.Shared.NextDouble(), Random.Shared.NextDouble(), Random.Shared.NextDouble(), allowStep);
                 switch (choice.Move)
                 {
                     case BodyMove.Look:
@@ -202,7 +241,7 @@ namespace DOL.GS
                         return false;
                     case BodyMove.Shuffle:
                         // A step never competes with resting: only a fully recovered bot shifts its feet.
-                        if (spot != BodySpot.Town || bot.IsRecoveryResting ||
+                        if (!allowStep || spot != BodySpot.Town || bot.IsRecoveryResting ||
                             !AutonomousRestPolicy.IsFullyRecovered(bot.HealthPercent, bot.ManaPercent, bot.EndurancePercent, bot.MaxMana > 0))
                             return false;
                         Vector3 from = new(bot.X, bot.Y, bot.Z);

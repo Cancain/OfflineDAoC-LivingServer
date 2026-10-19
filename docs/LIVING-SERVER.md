@@ -183,6 +183,9 @@ real player can see them, and never in a fight, while casting, stealthed or on a
   for a group: looks around and emotes (ponder, shrug, "let's go", point, nod, flex, beckon),
   never steps, so formations stay put.
 - **Resting between pulls:** now and then looks around.
+- **Standing around anywhere else** (at a merchant, the Realm Exchange or a trainer, choosing its next
+  goal, holding on a road): after 5 seconds standing still with no enemy targeted, it looks around and
+  emotes now and then, like waiting. It never steps there.
 - **Greeting:** a bot of your realm that you walk up to (within 650 units) usually turns to you
   and waves, bows or salutes; it doesn't greet you again for 20 minutes.
 - **Cheers:** when you ding, one to three bots standing nearby turn to you and cheer, clap or

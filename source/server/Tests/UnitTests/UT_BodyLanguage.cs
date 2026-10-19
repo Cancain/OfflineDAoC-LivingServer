@@ -46,6 +46,15 @@ namespace DOL.UnitTests
         }
 
         [Test]
+        public void ABotJustStandingAroundLooksAndEmotesButNeverSteps()
+        {
+            for (double r1 = 0; r1 < 1; r1 += 0.05)
+                Assert.That(AutonomousBotBodyLanguage.Choose(BodySpot.Town, false, false, r1, 0.5, 0.5, allowStep: false).Move,
+                    Is.AnyOf(BodyMove.Look, BodyMove.Emote), $"roll {r1}");
+            Assert.That(AutonomousBotBodyLanguage.StandingStillMs, Is.InRange(3_000, 10_000));
+        }
+
+        [Test]
         public void WaitingAndRestingNeverStep()
         {
             for (double r1 = 0; r1 < 1; r1 += 0.05)
