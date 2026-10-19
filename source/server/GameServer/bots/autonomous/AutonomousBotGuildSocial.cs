@@ -295,7 +295,9 @@ public static class AutonomousBotGuildSocial
                           (intent == eAutonomousChatIntent.Greeting
                               ? AutonomousBotVoices.TryGreetingReply(bot, message, out picked, slots, relax: true, requireVoices: false)
                               : AutonomousBotVoices.TryLine(bot, "reply", out picked, AutonomousBotVoices.IntentName(intent),
-                                  slots: slots, relax: true, requireVoices: false))
+                                  slots: slots, relax: true, requireVoices: false,
+                                  // in-game check 2026-10-18: "lfg, anyone want a 50 cleric?" drew "what level and class?"
+                                  filter: candidate => AutonomousChatShortTalk.ReplyFits(message, candidate.Text)))
                 ? picked.Text
                 : Lines.Reply(kind, player.Name, bot.Level, bot.CurrentZone?.Description, Random.Shared);
             if (!AutonomousBotChatCoordinator.TryAddDistinctResponse(used, line, out line))

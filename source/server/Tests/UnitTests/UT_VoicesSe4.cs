@@ -642,6 +642,10 @@ namespace DOL.GS.Tests
         [TestCase("lfg 50 reaver will travel", "what class are u?", false)]
         [TestCase("lfg 50 will travel", "what class are u?", true)]
         [TestCase("lfg 5 scout", "im free, what are you hunting?", true)]
+        [TestCase("lfg 50 cleric, in camelot", "how many do u have?", false)]
+        [TestCase("lfg 50 cleric, in camelot", "need a healer still?", false)]
+        [TestCase("lfm 2 for gobbos, need healer", "how many do you have?", true)]
+        [TestCase("lfg, anyone want a 50 cleric?", "what level and class?", false)]
         public void AReplyDoesntAskWhatWasSaid(string incoming, string reply, bool fits) =>
             Assert.That(AutonomousChatShortTalk.ReplyFits(incoming, reply), Is.EqualTo(fits));
 

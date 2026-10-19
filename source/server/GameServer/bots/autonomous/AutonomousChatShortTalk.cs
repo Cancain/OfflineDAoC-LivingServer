@@ -175,7 +175,16 @@ public static class AutonomousChatShortTalk
             return false;
         // "lfg 50 reaver will travel" drew "what class are u?".
         bool asksClass = HasPhrase(words, "what class", "which class", "what are you playing", "what r u playing");
-        return !asksClass || !NamesAClass(incoming);
+        if (asksClass && NamesAClass(incoming))
+            return false;
+        // "lfg" is a player looking for a group, not one with a group (in-game check 2026-10-18: "lfg 50 cleric, in camelot"
+        // drew "how many do u have?"). Lines that assume the asker leads a group fit "lfm", not "lfg".
+        string[] said = AutonomousChatIntentModel.Words(incoming);
+        bool seeksGroup = (HasPhrase(said, "lfg", "looking for group", "looking for a group") || said.Contains("lf")) &&
+                          !HasPhrase(said, "lfm", "looking for more", "lf1m", "lf2m", "lf3m");
+        bool assumesGroup = HasPhrase(words, "how many do you have", "how many do u have", "need a healer still",
+            "still need someone", "if you still need someone", "how many u got");
+        return !(seeksGroup && assumesGroup);
     }
 
     public static bool HasPhrase(string[] words, params string[] phrases)
