@@ -10,11 +10,11 @@ namespace DOL.UnitTests
     [TestFixture]
     public class UT_BodyLanguage
     {
-        [TestCase(BodySpot.Town, 0.0, 6_000)]
-        [TestCase(BodySpot.Town, 0.999, 19_986)]
-        [TestCase(BodySpot.Waiting, 0.0, 8_000)]
+        [TestCase(BodySpot.Town, 0.0, 8_000)]
+        [TestCase(BodySpot.Town, 0.999, 24_983)]
+        [TestCase(BodySpot.Waiting, 0.0, 10_000)]
         [TestCase(BodySpot.Resting, 0.5, 21_000)]
-        [TestCase(BodySpot.Town, 7.0, 19_999)]     // a bad roll is clamped, never a burst
+        [TestCase(BodySpot.Town, 7.0, 24_999)]     // a bad roll is clamped, never a burst
         public void IdleActionsAreSecondsApart(BodySpot spot, double roll, long expected) =>
             Assert.That(AutonomousBotBodyLanguage.NextDelayMs(spot, roll), Is.EqualTo(expected).Within(1));
 
@@ -35,7 +35,7 @@ namespace DOL.UnitTests
             Assert.Multiple(() =>
             {
                 Assert.That(AutonomousBotBodyLanguage.Choose(BodySpot.Town, false, false, 0.2, 0.5, 0.5).Move, Is.EqualTo(BodyMove.Look));
-                Assert.That(AutonomousBotBodyLanguage.Choose(BodySpot.Town, false, false, 0.6, 0.5, 0.5).Move, Is.EqualTo(BodyMove.Emote));
+                Assert.That(AutonomousBotBodyLanguage.Choose(BodySpot.Town, false, false, 0.7, 0.5, 0.5).Move, Is.EqualTo(BodyMove.Emote));
                 BodyChoice step = AutonomousBotBodyLanguage.Choose(BodySpot.Town, false, false, 0.9, 0.5, 0.5);
                 Assert.That(step.Move, Is.EqualTo(BodyMove.Shuffle));
                 Assert.That(step.StepLength, Is.InRange(AutonomousBotBodyLanguage.ShuffleMinimumStep, 60));
@@ -43,6 +43,17 @@ namespace DOL.UnitTests
                     Assert.That(AutonomousBotBodyLanguage.Choose(BodySpot.Town, false, true, r1, 0.5, 0.5).Move,
                         Is.Not.EqualTo(BodyMove.Shuffle), $"resting, roll {r1}");
             });
+        }
+
+        [Test]
+        public void EmotesAreTheMinorityOfIdleActions()
+        {
+            int emotes = 0, total = 0;
+            foreach (BodySpot spot in new[] { BodySpot.Town, BodySpot.Waiting })
+                for (double r1 = 0.005; r1 < 1; r1 += 0.01, total++)
+                    if (AutonomousBotBodyLanguage.Choose(spot, false, false, r1, 0.5, 0.5, allowStep: false).Move == BodyMove.Emote)
+                        emotes++;
+            Assert.That(emotes, Is.InRange(total / 5, total / 4), "about one action in four or five is an emote");
         }
 
         [Test]

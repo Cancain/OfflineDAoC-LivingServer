@@ -95,8 +95,8 @@ namespace DOL.GS
             roll = Math.Clamp(roll, 0, 0.999999);
             return spot switch
             {
-                BodySpot.Town => 6_000 + (long)(roll * 14_000),
-                BodySpot.Waiting => 8_000 + (long)(roll * 17_000),
+                BodySpot.Town => 8_000 + (long)(roll * 17_000),
+                BodySpot.Waiting => 10_000 + (long)(roll * 20_000),
                 _ => 12_000 + (long)(roll * 18_000),
             };
         }
@@ -118,11 +118,13 @@ namespace DOL.GS
             switch (spot)
             {
                 case BodySpot.Town:
-                    if (r1 < 0.45) return look;
-                    if (r1 < 0.75 || resting || !allowStep) return resting ? look : new(BodyMove.Emote, Pick(TownEmotes, r2));
+                    // Mostly looking around; an emote about every minute and a half per bot. The first night (2026-10-19)
+                    // with a 55% emote share the Camelot Exchange saw 2,303 emotes in 7 hours: too busy to read as people.
+                    if (r1 < 0.6 || resting) return look;
+                    if (r1 < 0.8 || !allowStep) return r1 < 0.8 ? new(BodyMove.Emote, Pick(TownEmotes, r2)) : look;
                     return new(BodyMove.Shuffle, StepAngle: r2 * 2 * Math.PI, StepLength: ShuffleMinimumStep + (int)(r3 * 35));
                 case BodySpot.Waiting:
-                    return r1 < 0.6 ? look : new(BodyMove.Emote, Pick(WaitEmotes, r2));
+                    return r1 < 0.75 ? look : new(BodyMove.Emote, Pick(WaitEmotes, r2));
                 default:
                     return r1 < 0.85 ? look : new(BodyMove.None);
             }

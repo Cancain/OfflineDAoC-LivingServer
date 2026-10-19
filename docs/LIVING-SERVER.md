@@ -176,12 +176,13 @@ Each character gets at most one grats chain every 20 seconds. This is separate f
 ### Body language (`bot_living_body_language`)
 Bots standing around stop standing like statues. Only autonomous gamebots do this, only where a
 real player can see them, and never in a fight, while casting, stealthed or on a horse route.
-- **In town** (a town break): every 6–20 seconds a bot looks left or right (30–150 degrees),
-  plays an emote (ponder, shrug, laugh, nod, point, flex, clap, cheer, wave, beckon, salute,
-  drink, now and then a dance) or takes a step or two around its spot (it stays within 60 units).
+- **In town** (a town break): every 8–25 seconds a bot mostly looks left or right (30–150
+  degrees); about one time in five it plays an emote (ponder, shrug, laugh, nod, point, flex,
+  clap, cheer, wave, beckon, salute, drink, now and then a dance) and one in five it takes a step
+  or two around its spot (it stays within 60 units). So a bot emotes about every minute and a half.
 - **Waiting** for its group, formed up at a rendezvous, or standing between pulls while it looks
-  for a group: looks around and emotes (ponder, shrug, "let's go", point, nod, flex, beckon),
-  never steps, so formations stay put.
+  for a group: every 10–30 seconds it looks around, and one time in four emotes (ponder, shrug,
+  "let's go", point, nod, flex, beckon); it never steps, so formations stay put.
 - **Resting between pulls:** now and then looks around.
 - **Standing around anywhere else** (at a merchant, the Realm Exchange or a trainer, choosing its next
   goal, holding on a road): after 5 seconds standing still with no enemy targeted, it looks around and
