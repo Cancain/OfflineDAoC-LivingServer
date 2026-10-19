@@ -73,6 +73,13 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - Not yet known: whether 40-110 bots can beat encounters tuned for 200. Darkness Falls and Summoner's Hall bosses
   are level 64-80 and were barely scratched by 32 bots in an earlier test; their raid AI is not finished.
 
+**Bots remember where a monster far above them killed one** (from stefanrows/OfflineDAoC)
+- When a monster 10 or more levels above a bot kills it, the spot is remembered for 6 hours: bots that monster is
+  still far above pick no camp within 3,000 units of it, and a levelling bot counts a straight walk past it as a
+  long trip, so it usually picks another camp. In one hour a merucha camp (levels 30-33) on the Connacht road
+  killed 18 bots of levels 10-17 on their way to other camps, and 126 of the 159 bots under level 20 that died to
+  red or purple monsters hadn't reached their camp yet. Kept in memory only; a restart forgets.
+
 **Checked**
 - Automated: 3,223 server tests.
 - Live, on the owner's PC (new client, 650 bots online), first 39 minutes of the new build against the same 39

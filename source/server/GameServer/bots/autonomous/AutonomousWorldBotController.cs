@@ -3283,6 +3283,7 @@ namespace DOL.GS
             List<AutonomousBotDecisionEngine.Camp> camps = new();
             // Levelling solo bots weigh travel time (AutonomousBotDecisionEngine.TravelWeightPercent).
             bool weighTravel = !sharedGroup && bot.Level < 50;
+            DateTime dangerUtc = DateTime.UtcNow;
             var travelCrossings = new Dictionary<(eRealm Realm, ushort Region), DbZonePoint>();
 
             // The live world used to be regrouped by every individual bot.
@@ -3310,6 +3311,9 @@ namespace DOL.GS
                         _campLevelScratch[validCount++] = candidateLevel;
                 if (validCount == 0 ||
                     !sharedGroup && !AutonomousSoloCampFloor.CampQualifies(bot.Level, validCount, cell.Levels.Length))
+                    continue;
+                // No camp beside a spot where a monster far above this bot killed one recently (stefanrows' boss danger).
+                if (AutonomousPveBossDanger.IsNear(cell.RegionId, cell.X, cell.Y, planningLevel, dangerUtc))
                     continue;
                 int[] validLevels = _campLevelScratch.AsSpan(0, validCount).ToArray();
 
@@ -3382,7 +3386,9 @@ namespace DOL.GS
                     cell.IsFrontier,
                     cell.LiveMobCount,
                     string.Equals(cell.Id, bot.PersistentRecord?.CurrentCampId, StringComparison.OrdinalIgnoreCase) ? bot.PersistentRecord.DeathCount : 0,
-                    weighTravel && !cell.IsDungeon ? EstimateTravelMinutes(bot, cell.RegionId, cell.X, cell.Y, travelCrossings) : 0,
+                    weighTravel && !cell.IsDungeon ? EstimateTravelMinutes(bot, cell.RegionId, cell.X, cell.Y, travelCrossings) +
+                        (cell.RegionId == bot.CurrentRegionID && AutonomousPveBossDanger.RouteCrosses(cell.RegionId, bot.X, bot.Y,
+                            cell.X, cell.Y, bot.Level, dangerUtc) ? AutonomousPveBossDanger.RoutePenaltyMinutes : 0) : 0,
                     averageLevel,
                     cell.IsDungeon ? AutonomousDungeonPopulationPolicy.Population(cell.RegionId) : 0,
                     cell.IsDungeon ? AutonomousDungeonPopulationPolicy.Capacity(cell.RegionId, cell.LiveMobCount) : 0));

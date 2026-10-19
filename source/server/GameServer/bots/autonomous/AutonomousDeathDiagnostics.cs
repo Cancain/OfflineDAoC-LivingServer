@@ -26,7 +26,11 @@ namespace DOL.GS
 
         public static void Record(GameBot bot, GameObject killer, string activityBefore)
         {
-            if (bot?.IsAutonomousWorldBot != true || !Log.IsInfoEnabled)
+            if (bot?.IsAutonomousWorldBot != true)
+                return;
+            if (killer is GameLiving deadly && AutonomousPveBossDanger.Marks(KillerKind(killer), deadly.Level, bot.Level))
+                AutonomousPveBossDanger.Record(bot.CurrentRegionID, bot.X, bot.Y, deadly.Level, DateTime.UtcNow);
+            if (!Log.IsInfoEnabled)
                 return;
             try
             {

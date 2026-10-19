@@ -166,6 +166,34 @@ namespace DOL.UnitTests
         }
 
         [Test]
+        public void BotsKeepAwayFromWhereAMonsterFarAboveThemKilledOne()
+        {
+            AutonomousPveBossDanger.Clear();
+            var now = new System.DateTime(2026, 10, 19, 13, 0, 0, System.DateTimeKind.Utc);
+            try
+            {
+                Assert.Multiple(() =>
+                {
+                    Assert.That(AutonomousPveBossDanger.Marks("monster", 30, 12), Is.True, "merucha 30 on a level 12");
+                    Assert.That(AutonomousPveBossDanger.Marks("monster", 21, 12), Is.False, "nine levels above");
+                    Assert.That(AutonomousPveBossDanger.Marks("bot", 50, 12), Is.False, "enemy bots are RvR, not a camp to avoid");
+                    AutonomousPveBossDanger.Record(200, 332000, 431500, 30, now);
+                    Assert.That(AutonomousPveBossDanger.IsNear(200, 333500, 432500, 12, now.AddHours(1)), Is.True);
+                    Assert.That(AutonomousPveBossDanger.IsNear(200, 336000, 431500, 12, now), Is.False, "4,000 away");
+                    Assert.That(AutonomousPveBossDanger.IsNear(100, 332000, 431500, 12, now), Is.False, "another region");
+                    Assert.That(AutonomousPveBossDanger.IsNear(200, 332000, 431500, 28, now), Is.False,
+                        "the same camp is ordinary for a level 28");
+                    Assert.That(AutonomousPveBossDanger.IsNear(200, 332000, 431500, 12, now.AddHours(7)), Is.False, "forgotten after 6 hours");
+                    Assert.That(AutonomousPveBossDanger.RouteCrosses(200, 320000, 431000, 345000, 432000, 12, now), Is.True,
+                        "a straight walk past the camp");
+                    Assert.That(AutonomousPveBossDanger.RouteCrosses(200, 320000, 440000, 345000, 440000, 12, now), Is.False,
+                        "8,500 units to the side");
+                });
+            }
+            finally { AutonomousPveBossDanger.Clear(); }
+        }
+
+        [Test]
         public void ADeathNamesWhatKindOfThingKilledTheBot() =>
             Assert.That(AutonomousDeathDiagnostics.KillerKind(null), Is.EqualTo("none"));
     }
