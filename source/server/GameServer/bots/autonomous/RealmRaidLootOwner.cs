@@ -83,7 +83,8 @@ namespace DOL.GS
             return true;
         }
 
-        private static bool Eligible(GameBot bot, GameObject drop) => bot.IsAutonomousWorldBot && !bot.IsTemporaryGroupHelper &&
+        // The Epic Special Forces receive nothing; with only them nearby a drop stays where it fell.
+        private static bool Eligible(GameBot bot, GameObject drop) => bot.IsAutonomousWorldBot && !bot.IsTemporaryGroupHelper && !bot.IsEpicSpecialForce &&
             bot.ObjectState == GameObject.eObjectState.Active && bot.CurrentRegionID == drop.CurrentRegionID &&
             bot.IsWithinRadius(drop, WorldMgr.VISIBILITY_DISTANCE) &&
             AutonomousBotRegistry.TryGet(bot.DatabaseID, out var current) && ReferenceEquals(current, bot);

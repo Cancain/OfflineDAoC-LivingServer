@@ -300,6 +300,10 @@ namespace DOL.GS
                             RealmEventRecords.Progress(raid.Definition.Id, "Battle", "Expedition began advancing to the encounter.", raid.Support.Length, present);
                             RealmEventNotices.Queue(raid.Definition.Id, raid.Definition.Realm,
                                 $"The {raid.Definition.Name} expedition is advancing with {present} staged level-50 adventurers.");
+                            // An expedition that lost here the last two times brings the Epic Special Forces from the start.
+                            if (raid.Definition.IsDungeon && AutonomousEpicSpecialForces.ComesFromStart(raid.Definition.Id))
+                                AutonomousEpicSpecialForces.Request(raid.Definition.Id, raid.Definition.Name, raid.Definition.Realm,
+                                    "the last two expeditions here were defeated");
                         }
                         else if (RealmRaidRecruitmentPolicy.StagingExpired(raid.Forced, now, raid.Created, raid.HubDepartedTick, present, DragonLanded(raid), raid.Required))
                         { End(raid, now, $"Staging failed: {present} adventurers arrived; no undersized or airborne assault was ordered."); continue; }
@@ -307,6 +311,13 @@ namespace DOL.GS
                     if (raid.Started && raid.DungeonRoute != null)
                     {
                         raid.DungeonRoute.Advance(raid.Support, now);
+                        while (raid.DungeonRoute.TryTakeWipe(out string wipedBy, out int failures))
+                            OnWipe(raid, wipedBy, failures, now);
+                        if (raid.DungeonRoute.Defeated)
+                        {
+                            End(raid, now, $"Defeated at {raid.DungeonRoute.DefeatedAt} after {RealmRaidDungeonRoute.MaximumFailedAttempts} failed attempts.");
+                            continue;
+                        }
                         if (raid.DungeonRoute.Blocked)
                         { End(raid, now, "Route blocked: no remaining encounter was reachable from the raid's positions for 20 minutes."); continue; }
                         if (raid.DungeonRoute.Complete)
@@ -701,12 +712,21 @@ namespace DOL.GS
                 if (!Raids.TryGetValue(id, out var raid) ||
                     raid.Parties.Count >= RealmRaidRecruitmentPolicy.MaximumParties || Membership.ContainsKey(group)) return false;
                 var members = group.GetMembersInTheGroup().OfType<GameBot>().ToArray();
-                if (members.Length is not (4 or 8) || raid.Support.Length + members.Length > RealmRaidRecruitmentPolicy.MaximumBots ||
+                // The Epic Special Forces come on top of the realm's own raiders (the 300-bot limit is the realm's).
+                bool specialForces = members.Length > 0 && members.All(b => b.IsEpicSpecialForce);
+                if (members.Length is not (4 or 8) ||
+                    !specialForces && raid.Support.Length + members.Length > RealmRaidRecruitmentPolicy.MaximumBots ||
                     members.Any(b => !IsEligible(b) || b.Realm != raid.Definition.Realm ||
                     Reservations.GetValueOrDefault(b.DatabaseID) != id)) return false;
                 int slot = Enumerable.Range(0, RealmRaidRecruitmentPolicy.MaximumParties).First(i => raid.Parties.Values.All(p => p.FormationSlot != i));
                 if (!TryStaging(raid, slot, out var staging) || !TryHubPost(raid, slot, out var hubPost)) return false;
                 var party = new Party { Members = members, FormationSlot = slot, Staging = staging, HubPost = hubPost, Target = members.Length };
+                // They arrive at the hub after the raid has left it, and walk in like late members.
+                if (specialForces && (raid.HubDeparted || raid.Started))
+                {
+                    party.Departed = true;
+                    foreach (GameBot b in members) party.CatchingUp.Add(b.DatabaseID);
+                }
                 raid.Parties[group] = party;
                 Membership[group] = raid;
                 DefenseGroups[group] = 0;
@@ -714,6 +734,30 @@ namespace DOL.GS
                 UpdateView(raid, party);
                 return true;
             }
+        }
+
+        /// <summary>Where the Epic Special Forces arrive for a running raid: its muster hub.</summary>
+        public static bool TryGetSpecialForcesPost(string id, out ushort region, out Vector3 point)
+        {
+            region = 0; point = default;
+            lock (Sync)
+            {
+                if (!Raids.TryGetValue(id, out var raid) || raid.Hub == null) return false;
+                region = raid.Hub.Region;
+                point = raid.Hub.Center;
+                return true;
+            }
+        }
+
+        public static bool IsRunning(string id)
+        {
+            lock (Sync) return Raids.ContainsKey(id);
+        }
+
+        /// <summary>A Special Forces member is reserved for its raid like a recruit, so it can be formed into a party.</summary>
+        public static void ReserveSpecialForce(GameBot bot, string id)
+        {
+            if (bot?.IsEpicSpecialForce == true) Reservations[bot.DatabaseID] = id;
         }
 
         private static bool Available(string id) => !Raids.ContainsKey(id) &&
@@ -1119,11 +1163,21 @@ namespace DOL.GS
             string outcome = stoppedByPlayer ? "Stopped by player" :
                 reason.StartsWith("Route blocked") ? "Route blocked" :
                 reason.StartsWith("Staging failed") ? "Failed rally" : reason.Contains("four-hour") ? "Timed out" :
+                reason.StartsWith("Defeated at") ? "Defeated" :
                 raid.Definition.IsDungeon ? raid.DungeonRoute?.Complete == true ? "Boss defeated" : "Ended (unconfirmed)" :
                 !raid.Boss.IsAlive ? "Boss defeated" : "Encounter unavailable";
+            // Partial success: the named encounters the raid killed before it was stopped are part of its record.
+            string[] named = raid.DungeonRoute?.NamedDefeated.ToArray() ?? [];
+            if (outcome != "Boss defeated" && named.Length > 0)
+                reason += $" Named encounters defeated: {string.Join(", ", named)}.";
             RealmEventRecords.Finish(raid.Definition.Id, outcome, reason, raid.Support.Length);
+            AutonomousEpicSpecialForces.RaidEnded(raid.Definition.Id, outcome);
             Log.Info($"REALM_RAID_ENDED event={raid.Definition.Id} outcome=\"{outcome}\" support={raid.Support.Length} required={raid.Required} " +
-                     $"forced={raid.Forced} minutes={(now - raid.Created) / 60_000} reason=\"{reason}\"");
+                     $"forced={raid.Forced} minutes={(now - raid.Created) / 60_000} named={named.Length} " +
+                     $"specialForces={AutonomousEpicSpecialForces.Count(raid.Definition.Id)} reason=\"{reason}\"");
+            if (outcome == "Defeated")
+                GameWideAnnouncements.Queue(AnnouncementKind.PveRealmEvent, GameWideAnnouncements.RaidDefeated(raid.Definition.Realm,
+                    raid.DungeonRoute?.DefeatedAt ?? raid.Definition.BossType, raid.Definition.Name));
             // Owner 2026-10-07: every realm hears when a raid (automatic or forced) brings down the final boss of an
             // epic dungeon, Summoner's Hall or Darkness Falls.
             if (outcome == "Boss defeated" && raid.Definition.IsDungeon)
@@ -1150,6 +1204,16 @@ namespace DOL.GS
         }
 
         private const string StoppedByPlayer = "Stopped by the player";
+
+        /// <summary>A named encounter wiped the raid: the realm hears it, and the raid regroups for one more attempt.</summary>
+        private static void OnWipe(Raid raid, string boss, int failures, long now)
+        {
+            Log.Info($"REALM_RAID_WIPE event={raid.Definition.Id} boss=\"{boss}\" failures={failures} support={raid.Support.Length} " +
+                     $"living={raid.Support.Count(b => b.IsAlive)} minutes={(now - raid.Created) / 60_000}");
+            if (failures >= RealmRaidDungeonRoute.MaximumFailedAttempts) return;
+            RealmEventNotices.Queue(raid.Definition.Id, raid.Definition.Realm, RealmEventBanter.RaidWipe(raid.Definition.Name, boss));
+            AutonomousEpicSpecialForces.Request(raid.Definition.Id, raid.Definition.Name, raid.Definition.Realm, $"a wipe at {boss}");
+        }
 
         // Runs 12 and 13 (2026-10-15/16): an automatic Darkness Falls or Summoner's Hall rally opened a minute before the
         // forced raid and held 140+ of the realm's level-50 bots, so forced Galladoria reserved only 288 of 300 and forced

@@ -37,6 +37,15 @@ public static class RealmEventRecords
         lock(Sync)if(Active.Remove(eventId,out var row))
         { row=row with {EndedUtc=DateTime.UtcNow.ToString("O"),Phase="Ended",Outcome=outcome,Details=details,Assigned=assigned<0?row.Assigned:assigned,Present=present<0?row.Present:present};Pending[row.Id]=row; }
     }
+    /// <summary>
+    /// The outcomes of an event's last finished runs, oldest first, from this ledger (what the launcher's Herald shows).
+    /// File I/O: call it off the game loop. Empty when the ledger cannot be read; nothing depends on it being there.
+    /// </summary>
+    public static List<string> FinishedOutcomes(string eventId,int limit)
+    {
+        try{return RealmEventRecordStore.Outcomes(PathName,eventId,limit);}
+        catch(Exception){return new();}
+    }
     [GameServerStartedEvent]
     public static void Start(DOLEvent e,object sender,EventArgs args)
     {

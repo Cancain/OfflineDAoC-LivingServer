@@ -105,9 +105,38 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   with one siege running the next had a 4% chance a minute. Each realm now rolls for its own attacks, and a realm
   that hasn't attacked for 30 minutes gets an extra 2% a minute (at most 50%). Raid slots drift by up to 20 minutes
   so the realms don't keep the same order.
-- Defenders could bring half the attacking army (12-17 against 42-53), so every siege fell. the new setting
+- Defenders could bring half the attacking army (12-17 against 42-53), so every siege fell. The new setting
   `rvr_siege_defense_share` is 0.75 (the stored `rvr_siege_defense_ratio` of 0.5 is no longer read), and the last six sieges steer it by up to 0.25: attackers winning more than 80% bring more defenders,
   less than 45% fewer. The target is a siege won about two times in three.
+
+**A wipe is not the end of a raid: regroup and try again**
+- In Galladoria on 2026-10-19 the raid took Conservator (level 77) to 45%, wiped, and he reset to full health. The
+  second try reached 42%, nobody damaged him for five minutes, and the raid walked past him with nothing to show.
+- The epic encounters keep their full strength. Every named encounter, not only the final one, now waits until
+  enough of the raid has gathered, and the raid goes in together. A wipe is when half the raiders in the fight fall,
+  or the encounter heals back to 95% after being taken to 85% or lower.
+- After a wipe the raid regroups. The fallen release to the hub and walk back, and the living rest and rebuff for at
+  least three minutes. The raid goes in again once 60% of its roster stands at the gathering point, or 40% after 20
+  minutes. The realm hears that the raid fell and is going in once more.
+- After two failed attempts on the same encounter the raid is **Defeated** and goes home (a new outcome in the
+  launcher's Herald). The named encounters it killed are listed in the record. Every realm hears it, like a victory.
+- An encounter the raid is still standing around is not skipped because it took no damage. One nobody can reach or
+  hurt is still set aside as before.
+- Logs: `REALM_EXPEDITION_WIPE`, `REALM_RAID_WIPE`, and `attempt=`/`retry=` on `REALM_EXPEDITION_FINAL_ENGAGE`.
+
+**The Epic Special Forces**
+- Each realm has an elite guild, the **Epic Special Forces**. When a raid in an epic dungeon, Darkness Falls or
+  Summoner's Hall wipes, up to 24 extra level 50s arrive at the raid's hub, in three parties of eight with the same
+  endgame kit and full training as a level-50 /spawn companion. They walk in with the fallen and join the retry, and
+  every realm hears that they answered.
+- They are needed less as the realm wins. A dungeon with no record gets 24; each win there sends one party fewer next
+  time and each loss one more, counted over that dungeon's last six results in the Herald. After three wins in a row
+  nobody comes. An expedition defeated at that dungeon the last two times brings them from the start.
+- They are the one exception to gamebots earning their armor. They live in memory only: they are never saved, never
+  counted in the population or a guild roster, take no loot or coin (with only them nearby a drop stays where it
+  fell), claim no server firsts, and leave when the raid ends. A restart leaves nothing behind.
+- Dragon raids don't call them yet.
+- Logs: `REALM_RAID_SPECIAL_FORCES_ARRIVED`, `_NOT_NEEDED`, `_FAILED`, `_LEFT`, and `specialForces=` on `REALM_RAID_ENDED`.
 
 **Checked**
 - Automated: 3,223 server tests.

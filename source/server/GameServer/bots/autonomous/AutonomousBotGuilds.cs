@@ -260,7 +260,7 @@ namespace DOL.GS
         public static void Present(GameBot bot)
         {
             if (bot == null) return;
-            string name = ShownGuild(bot)?.Name ?? string.Empty;
+            string name = GuildNameFor(bot);
             if (!string.Equals(bot.GuildName ?? string.Empty, name, StringComparison.Ordinal))
                 bot.GuildName = name; // re-sends the bot to nearby players when it is in the world
             if (bot.ObjectState == GameObject.eObjectState.Active)
@@ -268,7 +268,8 @@ namespace DOL.GS
         }
 
         /// <summary>The guild name before the bot enters the world (no broadcast needed).</summary>
-        public static string GuildNameFor(GameBot bot) => ShownGuild(bot)?.Name ?? string.Empty;
+        public static string GuildNameFor(GameBot bot) =>
+            bot?.IsEpicSpecialForce == true ? AutonomousEpicSpecialForces.GuildName : ShownGuild(bot)?.Name ?? string.Empty;
 
         #region Guild chat
 

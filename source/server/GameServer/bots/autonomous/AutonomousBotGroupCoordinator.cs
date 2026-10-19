@@ -174,6 +174,7 @@ public static partial class AutonomousBotGroupCoordinator
             RealmEventControls.Pulse();
             AutonomousRealmRaid.Pulse(now);
             AutonomousRealmRaid.RecruitForcedParty(now);
+            AutonomousEpicSpecialForces.Pulse(now);
             AutonomousRvrEventLayer.PulseDefense(now);
             RealmWarbandSupport.Pulse(now);
             AutonomousObjectiveAssignments.ReconcileIfDue();
