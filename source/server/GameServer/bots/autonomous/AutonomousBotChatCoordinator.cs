@@ -276,9 +276,17 @@ public static class AutonomousBotChatCoordinator
         };
     }
 
+    /// <summary>
+    /// Whether a listing's name reads like an item a player would advertise. The level 50 starter kits are item
+    /// templates named like "Offline level 50 Cleric 41/33" (provision_level50_roster.py); in-game check
+    /// 2026-10-18: "Does anybody want to make me an offer on Offline level 50 Cleric 41/33?" in /faction.
+    /// </summary>
+    public static bool IsAdvertisableItemName(string name) =>
+        !string.IsNullOrWhiteSpace(name) && !name.TrimStart().StartsWith("Offline level ", StringComparison.OrdinalIgnoreCase);
+
     public static bool TryAdvertiseExchangeItem(GameBot seller, string exactItemName)
     {
-        if (!Eligible(seller) || string.IsNullOrWhiteSpace(exactItemName) || !HasFactionAudience(seller.Realm))
+        if (!Eligible(seller) || !IsAdvertisableItemName(exactItemName) || !HasFactionAudience(seller.Realm))
             return false;
         lock (Sync)
         {

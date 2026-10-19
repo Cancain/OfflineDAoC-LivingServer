@@ -138,6 +138,14 @@ namespace DOL.UnitTests
             Assert.That(AutonomousGroupMatchmakingPause.MaximumPauseMs, Is.LessThan(15 * 60_000), "far inside the 15-minute stuck watchdog");
         }
 
+        [TestCase("Offline level 50 Cleric 41/33", false)]
+        [TestCase("offline level 50 Armsman 41/33", false)]
+        [TestCase("Shadowwalker Leather Helm", true)]
+        [TestCase("Offline Wanderer's Cloak", true)]
+        [TestCase("  ", false)]
+        public void StarterKitTemplatesAreNotAdvertisedInFaction(string name, bool advertised) =>
+            Assert.That(AutonomousBotChatCoordinator.IsAdvertisableItemName(name), Is.EqualTo(advertised));
+
         // A melee bot must prove a ground approach to a flyer; casters and archers shoot it as before.
         [TestCase(GameNPC.eFlags.FLYING, false, true)]
         [TestCase(GameNPC.eFlags.FLYING, true, false)]
