@@ -14,6 +14,18 @@ namespace DOL.GS
         // Passage of Conflict (244), or the unused client aliases 245/247.
         public static bool IsSharedFrontierDungeon(ushort region) => region is 246 or 248 or 276 or 277;
         public static bool IsSharedCombatDungeon(ushort region) => IsSharedFrontierDungeon(region) || region == 249;
+
+        /// <summary>
+        /// The Old Frontiers dungeons are destinations, not hallways. Walking from one realm's frontier to
+        /// another runs the length of a raid dungeon: on 2026-10-19 the Albion route to Midgard, Hibernia and
+        /// Dodens Gruva crossed Hall of the Corrupt beside Aidon the Archwizard (level 75), and about 118 of
+        /// an hour's 895 bot deaths were in these four regions. A route may enter one of them as its
+        /// destination, but passes through one only on the way out (the route starts inside the hub) or
+        /// for the neutral raid's own approach to Summoner's Hall. Porters still carry warbands across.
+        /// </summary>
+        public static bool MayRouteThrough(ushort region, ushort start, ushort target) =>
+            !IsSharedFrontierDungeon(region) || region == start || IsSharedFrontierDungeon(start) ||
+            target == SummonersHallRegion;
         public static bool IsSupportedDungeonZone(ushort zone) => zone is
             19 or 21 or 22 or 23 or 24 or 50 or 60 or 61 or 62 or
             125 or 126 or 127 or 128 or 129 or 150 or 160 or 161 or

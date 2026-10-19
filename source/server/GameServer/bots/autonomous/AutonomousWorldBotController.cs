@@ -2183,6 +2183,18 @@ namespace DOL.GS
         private bool TravelRvrObjective(GameBot bot, CampDestination destination)
         {
             if (TryFrontierTransport(bot, destination)) return true;
+            if (bot.CurrentRegionID != destination.RegionId &&
+                FindNextCrossing(bot, destination.RegionId, destination.X, destination.Y) == null)
+            {
+                // Only a porter reaches that frontier and it is not available yet (search cooling down, or no
+                // ticket). Wait here and let the next review choose again rather than abandoning a PvE camp.
+                _rvrFrontierCommittedUntil = 0;
+                _nextRvrPlanReview = Math.Min(_nextRvrPlanReview, GameLoop.GameLoopTime + 20_000);
+                bot.StopMovingOnPath();
+                SetRvrStatus(bot, "Waiting for a frontier teleporter", destination.MonsterName,
+                    $"{destination.ZoneName} is reached by porter, not on foot through the frontier dungeons");
+                return true;
+            }
             if (bot.CurrentRegionID != destination.RegionId)
             {
                 CampDestination previous = _camp;
@@ -2249,6 +2261,9 @@ namespace DOL.GS
         private CampDestination ChooseRvrDestination(GameBot bot)
         {
             HashSet<ushort> reachable = ReachableRegions(bot.Realm, bot.CurrentRegionID);
+            // The other frontiers are a porter ride away (TryFrontierTransport), not a walk through the dungeon hub.
+            foreach (ushort frontier in AutonomousFrontierTransport.PorterFrontiers(bot.Realm, bot.CurrentRegionID))
+                reachable.Add(frontier);
             // A warband that chose a frontier stays on it for a while. Re-planning every minute across all
             // three frontiers sent bots home and out again through the portal keeps over and over
             // (run 16: 6,500 departures an hour, one Nightshade ported 11 times in 30 minutes). Relic
@@ -2261,7 +2276,11 @@ namespace DOL.GS
             foreach (GameBot enemy in planning.Candidates
                          .Where(candidate => candidate.IsAlive && candidate.Realm != eRealm.None && candidate.Realm != bot.Realm &&
                                              AutonomousObjectiveAssignments.Is(candidate, eAutonomousObjectiveKind.RvR) &&
-                                             local.Contains(candidate.CurrentRegionID) && IsInFrontier(candidate))
+                                             local.Contains(candidate.CurrentRegionID) && IsInFrontier(candidate) &&
+                                             // Enemies inside the Old Frontiers dungeons are fought where met, never hunted
+                                             // there: the warbands died two and three times each to Aidon, Black Lady and
+                                             // the huscarls on the way in (2026-10-19).
+                                             !AutonomousDungeonPolicy.IsSharedFrontierDungeon(candidate.CurrentRegionID))
                          .OrderBy(candidate => unchecked((ulong)(candidate.DatabaseID ^ bot.DatabaseID * 397) * 11400714819323198485UL))
                          .Take(24))
             {
@@ -5102,6 +5121,9 @@ namespace DOL.GS
             while (queue.Count > 0)
             {
                 ushort region = queue.Dequeue();
+                // An Old Frontiers dungeon is reachable as a destination but is no hallway to the regions beyond it.
+                if (!AutonomousDungeonPolicy.MayRouteThrough(region, startRegion, 0))
+                    continue;
                 foreach (DbZonePoint point in points.Where(point => point.SourceRegion == region &&
                                                                     (point.Realm == 0 || point.Realm == (ushort)realm) &&
                                                                     AutonomousDarknessFallsPolicy.CanUsePortalRow(realm, point) &&
@@ -5154,6 +5176,8 @@ namespace DOL.GS
             while (queue.Count > 0)
             {
                 ushort region = queue.Dequeue();
+                if (!AutonomousDungeonPolicy.MayRouteThrough(region, currentRegion, targetRegion))
+                    continue;
                 IEnumerable<DbZonePoint> outgoing = points.Where(point => point.SourceRegion == region &&
                     (quarantineBot == null || region != currentRegion || !IsZonePointQuarantined(quarantineBot, point)));
                 if (quarantineBot != null && region == currentRegion)

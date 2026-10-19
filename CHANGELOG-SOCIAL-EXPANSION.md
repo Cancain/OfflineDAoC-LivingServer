@@ -42,6 +42,18 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   griffon gliders in Gripklosa from 2,400-3,500 units away, and one member stood still for 15 minutes. Casters and
   archers shoot flyers as before.
 
+**Bots no longer walk past Aidon to reach the other frontiers**
+- The four Old Frontiers dungeons (Hall of the Corrupt, Summoner's Hall, Dodens Gruva, Marfach Caverns) were the
+  bots' walking road between realms. Albion warbands formed at Snowdonia Fortress, far from the Castle Sauvage
+  porter, so they walked to Midgard and Hibernia through Hall of the Corrupt, past Aidon the Archwizard (level 75).
+  In one hour about 118 of 895 bot deaths were in those four dungeons, 50 of them to Aidon and his illusions,
+  and the same bots died there two and three times.
+- Now a bot enters those dungeons only as a destination (or on its way out, or the neutral raid's own approach
+  to Summoner's Hall). Warbands reach the other frontiers by their realm's porter: a distant warband rides or
+  walks to it. Enemy bots inside those dungeons are fought where they're met, never hunted there.
+- Side effect: Albion PvE parties no longer pick Dodens Gruva or Marfach camps, which they could only reach through
+  two of those dungeons.
+
 **Checked**
 - Automated: 3,223 server tests.
 - Live, on the owner's PC (new client, 650 bots online), first 39 minutes of the new build against the same 39

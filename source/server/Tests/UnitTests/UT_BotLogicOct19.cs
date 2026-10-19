@@ -58,6 +58,35 @@ namespace DOL.UnitTests
             });
         }
 
+        // The Old Frontiers dungeons (246 Dodens Gruva, 248 Summoner's Hall, 276 Marfach, 277 Hall of the Corrupt)
+        // are destinations, never hallways: Albion bots walked past Aidon (277) on the way to Midgard and Hibernia.
+        [TestCase((ushort)277, (ushort)1, (ushort)100, false)]   // Albion to Midgard's frontier through Hall of the Corrupt
+        [TestCase((ushort)277, (ushort)1, (ushort)246, false)]   // Albion to Dodens Gruva
+        [TestCase((ushort)248, (ushort)1, (ushort)200, false)]   // on through Summoner's Hall
+        [TestCase((ushort)246, (ushort)100, (ushort)1, false)]   // Midgard to Albion's frontier
+        [TestCase((ushort)248, (ushort)1, (ushort)248, true)]    // the neutral raid's own approach
+        [TestCase((ushort)277, (ushort)1, (ushort)248, true)]
+        [TestCase((ushort)277, (ushort)277, (ushort)1, true)]    // already inside: the way out
+        [TestCase((ushort)248, (ushort)246, (ushort)10, true)]   // logged in deep in the hub: still gets home
+        [TestCase((ushort)1, (ushort)100, (ushort)10, true)]     // ordinary regions are unaffected
+        [TestCase((ushort)249, (ushort)1, (ushort)200, true)]    // Darkness Falls is not part of this rule
+        public void FrontierDungeonsAreDestinationsNotHallways(ushort region, ushort start, ushort target, bool allowed) =>
+            Assert.That(AutonomousDungeonPolicy.MayRouteThrough(region, start, target), Is.EqualTo(allowed));
+
+        [Test]
+        public void WarbandsReachTheOtherFrontiersByPorter()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(AutonomousFrontierTransport.PorterFrontiers(eRealm.Albion, 1), Is.EquivalentTo(new ushort[] { 100, 200 }));
+                Assert.That(AutonomousFrontierTransport.PorterFrontiers(eRealm.Albion, 100), Is.EquivalentTo(new ushort[] { 1, 200 }),
+                    "from an enemy frontier: home and the third frontier");
+                Assert.That(AutonomousFrontierTransport.PorterFrontiers(eRealm.Hibernia, 200), Is.EquivalentTo(new ushort[] { 1, 100 }));
+                Assert.That(AutonomousFrontierTransport.PorterFrontiers(eRealm.Midgard, 277), Is.Empty, "no porter inside a dungeon");
+                Assert.That(AutonomousFrontierTransport.PorterFrontiers(eRealm.Albion, 10), Is.Empty, "or in a capital");
+            });
+        }
+
         [Test]
         public void ADeathNamesWhatKindOfThingKilledTheBot() =>
             Assert.That(AutonomousDeathDiagnostics.KillerKind(null), Is.EqualTo("none"));
