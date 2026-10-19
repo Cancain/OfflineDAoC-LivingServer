@@ -1,4 +1,5 @@
 using System;
+using DOL.GS.ServerProperties;
 
 namespace DOL.GS;
 
@@ -13,6 +14,38 @@ public static class RealmRaidRecruitmentPolicy
     public const long BattleMilliseconds = 4 * 60 * 60_000L;
     public const double NewEventChance = .20;
     public const double JoinExistingChance = .95;
+
+    // Automatic raids sized to the roster (2026-10-19 audit): with 150 level-50 bots per realm, about 110 online and
+    // 30 of them on group PvE, the fixed 200 meant no dragon, epic or neutral raid ever started on the owner's server.
+    [ServerProperty("autonomous", "realm_raid_minimum_bots",
+        "Automatic realm raids (dragons, epic dungeons, Summoner's Hall, Darkness Falls): level-50 bots that must be staged before the raid goes in. 0 (default) = half the realm's online level-50 bots, at least 40 and at most the encounter's suggested 200. Forced raids are unchanged.", 0)]
+    public static int MinimumBotsSetting = 0;
+
+    [ServerProperty("autonomous", "realm_raid_schedule_minutes",
+        "Each realm opens an automatic realm raid on this schedule, rotating dragon, epic dungeon and neutral raid (0 = no schedule: raids only start when an eight-bot party happens to choose one).", 150)]
+    public static int ScheduleMinutes = 150;
+
+    public const int MinimumScaledBots = 40;
+    public const double ScaledShare = 0.5;
+
+    /// <summary>Level-50 bots an automatic raid must stage before it goes in.</summary>
+    public static int RequiredBots(int onlineLevelFifty, int suggested, int setting)
+    {
+        int ceiling = Math.Clamp(suggested, MinimumScaledBots, MaximumBots);
+        if (setting > 0) return Math.Clamp(setting, 8, MaximumBots);
+        return Math.Clamp((int)Math.Round(onlineLevelFifty * ScaledShare), MinimumScaledBots, ceiling);
+    }
+
+    /// <summary>A scaled raid recruits a quarter above what it needs, in whole parties, so late losses don't stall it (a full 200 raid keeps the 300 cap).</summary>
+    public static int RecruitCap(int required) => required >= AutonomousMinimumPresent ? MaximumBots
+        : Math.Min(MaximumBots, (required * 5 / 4 + 7) / 8 * 8);
+
+    /// <summary>A realm's next scheduled raid opens when the slot is due, none of its raids is running and it has enough level 50s online.</summary>
+    public static bool ScheduledRaidDue(long now, long due, bool realmHasRaid, int onlineLevelFifty, int scheduleMinutes) =>
+        scheduleMinutes > 0 && now >= due && !realmHasRaid && onlineLevelFifty >= MinimumScaledBots * 2;
+
+    /// <summary>First scheduled raid after a server start: Albion after 20 minutes, Midgard 30, Hibernia 40.</summary>
+    public static long FirstScheduledDelayMilliseconds(int realmIndex) => (20 + 10 * Math.Clamp(realmIndex, 0, 2)) * 60_000L;
 
     // An automatic rally that has waited most of its window with a nearly full
     // roster goes in rather than failing outright. Caer Sidi failed twice in one
@@ -29,11 +62,14 @@ public static class RealmRaidRecruitmentPolicy
     // Forced raids (started by the player) go in as soon as 200 are staged and, for a dragon,
     // it has landed. They have no staging or battle time limit: they run until the encounter
     // is defeated, the player presses Stop event, or the server stops.
-    public static bool Ready(bool forced, long elapsed, int present, bool landed) =>
+    public static bool Ready(bool forced, long elapsed, int present, bool landed, int required = AutonomousMinimumPresent) =>
         elapsed >= (forced ? 0 : AutonomousMinimumStagingMilliseconds) &&
-        (present >= AutonomousMinimumPresent ||
-         !forced && elapsed >= AutonomousLateStartMilliseconds && present >= AutonomousLateStartMinimumPresent) &&
+        (present >= required ||
+         !forced && elapsed >= AutonomousLateStartMilliseconds && present >= LateStartMinimum(required)) &&
         landed;
+
+    /// <summary>90% of the requirement (180 of 200).</summary>
+    public static int LateStartMinimum(int required) => required * AutonomousLateStartMinimumPresent / AutonomousMinimumPresent;
 
     // 2026-10-16 (owner's session): the automatic Tuscaran rally needed 84 minutes to gather 200 at Hagall, so the one
     // 90-minute staging clock left 6 minutes for the trip to the dungeon and it failed with 93 there. A slow hub leaves
@@ -43,9 +79,9 @@ public static class RealmRaidRecruitmentPolicy
     public const int HubEarlyDepartureMinimum = 120;
     public const long PostDepartureStagingMilliseconds = 45 * 60_000L;
 
-    public static bool DepartHub(bool alreadyDeparted, int presentBots, long elapsed = 0) =>
-        alreadyDeparted || presentBots >= AutonomousMinimumPresent ||
-        elapsed >= HubPatienceMilliseconds && presentBots >= HubEarlyDepartureMinimum;
+    public static bool DepartHub(bool alreadyDeparted, int presentBots, long elapsed = 0, int required = AutonomousMinimumPresent) =>
+        alreadyDeparted || presentBots >= required ||
+        elapsed >= HubPatienceMilliseconds && presentBots >= required * HubEarlyDepartureMinimum / AutonomousMinimumPresent;
 
     public static bool StagingExpired(bool forced, long elapsed, int present = 0, bool landed = true) =>
         !forced && elapsed >= AutonomousStagingLimitMilliseconds &&
@@ -57,9 +93,10 @@ public static class RealmRaidRecruitmentPolicy
         Math.Max(created + AutonomousStagingLimitMilliseconds,
             departedTick > 0 ? departedTick + PostDepartureStagingMilliseconds : 0);
 
-    public static bool StagingExpired(bool forced, long now, long created, long departedTick, int present, bool landed) =>
+    public static bool StagingExpired(bool forced, long now, long created, long departedTick, int present, bool landed,
+        int required = AutonomousMinimumPresent) =>
         !forced && now >= StagingDeadline(created, departedTick) &&
-        !(present >= AutonomousMinimumPresent && !landed);
+        !(present >= required && !landed);
 
     public static bool BattleExpired(bool forced, long now, long deadline) => !forced && now >= deadline;
 

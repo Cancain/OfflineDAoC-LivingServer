@@ -94,6 +94,78 @@ namespace DOL.UnitTests
             Assert.That(AutonomousWorldBotController.WideTargetSearchPauseFor(level), Is.EqualTo(pause));
 
         [Test]
+        public void LevelFiftyLeadersFormSiegeSizedWarbandsOrRoamAlone()
+        {
+            Assert.Multiple(() =>
+            {
+                for (double roll = 0; roll < 1; roll += 0.01)
+                {
+                    int size = AutonomousRvrStaging.RollWarbandSize(8, roll, 50);
+                    Assert.That(size == 1 || size >= AutonomousRvrStaging.SiegeWarbandSize && size <= 8, $"roll {roll}: {size}");
+                }
+                Assert.That(AutonomousRvrStaging.RollWarbandSize(8, 0.1, 50), Is.EqualTo(1), "a quarter stay solo roamers");
+                Assert.That(AutonomousRvrStaging.RollWarbandSize(8, 0.999, 50), Is.EqualTo(8));
+                Assert.That(AutonomousRvrStaging.RollWarbandSize(8, 0.3, 49), Is.EqualTo(AutonomousRvrStaging.RollWarbandSize(8, 0.3)),
+                    "levelling leaders keep the even roll");
+                Assert.That(AutonomousRvrStaging.RollWarbandSize(3, 0.9, 50), Is.EqualTo(AutonomousRvrStaging.RollWarbandSize(3, 0.9)),
+                    "no room for a siege warband: even roll");
+            });
+        }
+
+        [TestCase(6, 5, true)]
+        [TestCase(6, 2, true)]     // forms with the members it found
+        [TestCase(6, 0, false)]
+        [TestCase(1, 0, false)]
+        public void AWarbandFormsWithTheMembersItFinds(int rolled, int found, bool forms) =>
+            Assert.That(AutonomousRvrStaging.AcceptWarband(rolled, found), Is.EqualTo(forms));
+
+        // Realm raids sized to the roster: 150 level-50 bots per realm, ~110 online, never reached the fixed 200.
+        [TestCase(110, 200, 0, 55)]     // half the realm's online level 50s
+        [TestCase(60, 200, 0, 40)]      // never below 40
+        [TestCase(500, 200, 0, 200)]    // never above the encounter's suggested size
+        [TestCase(110, 200, 64, 64)]    // the server setting wins
+        public void AutomaticRaidsNeedHalfTheRealmsOnlineLevelFifties(int online, int suggested, int setting, int required) =>
+            Assert.That(RealmRaidRecruitmentPolicy.RequiredBots(online, suggested, setting), Is.EqualTo(required));
+
+        [Test]
+        public void AScaledRaidStartsAndDepartsOnItsOwnRequirement()
+        {
+            const long staged = RealmRaidRecruitmentPolicy.AutonomousMinimumStagingMilliseconds;
+            Assert.Multiple(() =>
+            {
+                Assert.That(RealmRaidRecruitmentPolicy.Ready(false, staged, 55, true, 55), Is.True);
+                Assert.That(RealmRaidRecruitmentPolicy.Ready(false, staged, 54, true, 55), Is.False);
+                Assert.That(RealmRaidRecruitmentPolicy.Ready(false, RealmRaidRecruitmentPolicy.AutonomousLateStartMilliseconds, 49, true, 55),
+                    Is.True, "late start at 90%");
+                Assert.That(RealmRaidRecruitmentPolicy.Ready(false, staged, 199, true), Is.False, "the default stays 200");
+                Assert.That(RealmRaidRecruitmentPolicy.LateStartMinimum(200), Is.EqualTo(180));
+                Assert.That(RealmRaidRecruitmentPolicy.DepartHub(false, 55, 0, 55), Is.True);
+                Assert.That(RealmRaidRecruitmentPolicy.DepartHub(false, 33, RealmRaidRecruitmentPolicy.HubPatienceMilliseconds, 55), Is.True,
+                    "early departure at 60% after the hub's patience");
+                Assert.That(RealmRaidRecruitmentPolicy.DepartHub(false, 119, RealmRaidRecruitmentPolicy.HubPatienceMilliseconds), Is.False);
+                Assert.That(RealmRaidRecruitmentPolicy.RecruitCap(55), Is.EqualTo(72));
+                Assert.That(RealmRaidRecruitmentPolicy.RecruitCap(200), Is.EqualTo(RealmRaidRecruitmentPolicy.MaximumBots));
+            });
+        }
+
+        [Test]
+        public void EachRealmOpensARaidOnASchedule()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(RealmRaidRecruitmentPolicy.ScheduledRaidDue(1_000, 1_000, false, 110, 150), Is.True);
+                Assert.That(RealmRaidRecruitmentPolicy.ScheduledRaidDue(999, 1_000, false, 110, 150), Is.False, "not yet due");
+                Assert.That(RealmRaidRecruitmentPolicy.ScheduledRaidDue(1_000, 1_000, true, 110, 150), Is.False, "one raid per realm");
+                Assert.That(RealmRaidRecruitmentPolicy.ScheduledRaidDue(1_000, 1_000, false, 79, 150), Is.False, "too few level 50s online");
+                Assert.That(RealmRaidRecruitmentPolicy.ScheduledRaidDue(1_000, 1_000, false, 110, 0), Is.False, "schedule switched off");
+                Assert.That(RealmRaidRecruitmentPolicy.FirstScheduledDelayMilliseconds(0), Is.EqualTo(20 * 60_000L));
+                Assert.That(RealmRaidRecruitmentPolicy.FirstScheduledDelayMilliseconds(2), Is.EqualTo(40 * 60_000L));
+                Assert.That(RealmRaidRecruitmentPolicy.ScheduleMinutes, Is.EqualTo(150));
+                Assert.That(RealmRaidRecruitmentPolicy.MinimumBotsSetting, Is.Zero);
+            });
+        }
+
+        [Test]
         public void ADeathNamesWhatKindOfThingKilledTheBot() =>
             Assert.That(AutonomousDeathDiagnostics.KillerKind(null), Is.EqualTo("none"));
     }

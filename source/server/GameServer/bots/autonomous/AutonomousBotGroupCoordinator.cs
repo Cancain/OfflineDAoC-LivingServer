@@ -1583,7 +1583,7 @@ public static partial class AutonomousBotGroupCoordinator
             // below still guarantees that grouping pressure cannot consume
             // every solo RvR character.
             int rolledSize = objectiveKind == eAutonomousObjectiveKind.RvR
-                ? AutonomousRvrStaging.RollWarbandSize(largestAllowed, Random.Shared.NextDouble())
+                ? AutonomousRvrStaging.RollWarbandSize(largestAllowed, Random.Shared.NextDouble(), leader.Level)
                 : 8;
             if (rolledSize == 1)
                 continue;
@@ -1624,8 +1624,9 @@ public static partial class AutonomousBotGroupCoordinator
             else
             {
                 compatible = compatiblePool.Take(rolledSize - 1).ToArray();
-                if (compatible.Length != rolledSize - 1)
+                if (!AutonomousRvrStaging.AcceptWarband(rolledSize, compatible.Length))
                     continue;
+                rolledSize = compatible.Length + 1;
             }
 
             var group = new Group(leader);

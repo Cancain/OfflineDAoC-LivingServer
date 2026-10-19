@@ -16,6 +16,7 @@ namespace DOL.GS;
 /// </summary>
 public static partial class AutonomousRvrEventLayer
 {
+    private static readonly Logging.Logger Log = Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
     public const long BattleLifetimeMilliseconds = 4 * 60 * 60_000L;
     /// <summary>Time a marching relic army has to reach its keep (a keep siege has the usual hour).</summary>
     public const long RelicMarchMilliseconds = 2 * 60 * 60_000L;
@@ -422,6 +423,8 @@ public static partial class AutonomousRvrEventLayer
                 active.Attackers[force.GroupId] = force.MemberCount;
                 Events[selected.Id] = active;
                 _siegeStartReady = false;
+                if (Log.IsInfoEnabled) Log.Info($"RVR_EVENT_OPENED target={selected.Id} name=\"{selected.Name}\" relic={selected.IsRelicKeep} " +
+                         $"attacker={force.Realm} defender={selected.OwningRealm} warband={force.GroupId} size={force.MemberCount}");
                 RealmEventRecords.Begin(selected.Id, selected.Name, selected.IsRelicKeep ? "Relic keep" : "Keep", GlobalConstants.RealmToName(force.Realm), "Automatic continuous siege; defender: " + GlobalConstants.RealmToName(selected.OwningRealm));
                 if (!StagedAssault)
                     StartBattle(active, nowTick, "automatic assault opened; each assigned bot converges without formation staging");

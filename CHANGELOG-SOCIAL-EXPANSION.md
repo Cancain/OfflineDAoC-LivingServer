@@ -54,6 +54,25 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - Side effect: Albion PvE parties no longer pick Dodens Gruva or Marfach camps, which they could only reach through
   two of those dungeons.
 
+**Level 50s keep searching wide after a failed long pull**
+- The 10-minute "look nearby first" pause after a pull that never reached its target now applies to levelling bots
+  only. Level 50 camps are spread out: with the pause, level 50 kills per bot fell from 11.0 to 9.5 an hour.
+
+**The endgame runs on its own: sieges and realm raids**
+- A level 50 RvR leader now forms a warband of 4 to 8 (or roams alone), and a warband forms with the members it
+  finds instead of not at all. Overnight 234 of 250 warbands were pairs, and only a warband of 4 or more can open a
+  keep siege: one siege in 7.7 hours. Every siege opening is now logged (`RVR_EVENT_OPENED`).
+- Automatic realm raids (the realm dragon, the realm's epic dungeon, Summoner's Hall and Darkness Falls) are sized
+  to your roster: half the realm's online level 50s, at least 40 and at most the encounter's 200
+  (`realm_raid_minimum_bots`, 0 = scaled). They needed 200 level 50s looking for a group in one realm, so with 150
+  per realm none ever started. They now recruit level 50s waiting for a group and level 50s grinding solo (who
+  earn no experience there); RvR bots stay on the frontier. Forced raids from the launcher are unchanged.
+- Each realm opens a raid on a schedule (`realm_raid_schedule_minutes`, default 150; 0 = off), rotating dragon,
+  epic dungeon and neutral raid: the first 20, 30 and 40 minutes after the server starts. Logged as
+  `REALM_RAID_SCHEDULED` and `REALM_RAID_ENDED` (with the outcome, size and length).
+- Not yet known: whether 40-110 bots can beat encounters tuned for 200. Darkness Falls and Summoner's Hall bosses
+  are level 64-80 and were barely scratched by 32 bots in an earlier test; their raid AI is not finished.
+
 **Checked**
 - Automated: 3,223 server tests.
 - Live, on the owner's PC (new client, 650 bots online), first 39 minutes of the new build against the same 39
