@@ -36,7 +36,10 @@ namespace DOL.GS
         // After a pull that never reached its target, the wide search waits (overnight 2026-10-19: 343 pull timeouts,
         // median 3,216 units away; one level 8 Shaman timed out 28 times in an hour on rock crabs 2,000-3,300 away while
         // nearer kills kept resetting the camp's failure count).
+        // Levelling bots only: level 50 camps are sparse, and with the pause level 50 kills per bot fell from 5.3 to 3.7
+        // in the first 38 minutes of the 2026-10-19 test while pull timeouts barely moved (22 to 19).
         public const long WideTargetSearchPauseMilliseconds = 10 * 60_000;
+        public static long WideTargetSearchPauseFor(int level) => level < 50 ? WideTargetSearchPauseMilliseconds : 0;
         private long _wideTargetSearchAfterTick;
         private const int DungeonBlockerRadius = 1450;
         private const int ZonePointArrivalRadius = 190;
@@ -2698,7 +2701,7 @@ namespace DOL.GS
 
                 case SavageBotCombatPolicy.MeleePullDecision.GiveUp:
                     if (distance > ImmediateTargetSearchRadius)
-                        _wideTargetSearchAfterTick = nowTick + WideTargetSearchPauseMilliseconds;
+                        _wideTargetSearchAfterTick = nowTick + WideTargetSearchPauseFor(bot.Level);
                     long retryAfter = nowTick + SavageBotCombatPolicy.FailedMeleePullRetryMilliseconds;
                     _failedSavageMeleePullTargets[target.ObjectID] = retryAfter;
                     bot.TempProperties.SetProperty(FailedSavageMeleePullHandoffKey,

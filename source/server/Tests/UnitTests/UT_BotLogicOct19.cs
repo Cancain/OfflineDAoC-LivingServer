@@ -87,6 +87,12 @@ namespace DOL.UnitTests
             });
         }
 
+        [TestCase(8, 10 * 60_000L)]
+        [TestCase(49, 10 * 60_000L)]
+        [TestCase(50, 0L)]      // level 50 camps are sparse: keep searching wide
+        public void OnlyLevellingBotsPauseTheWideSearchAfterAFailedPull(int level, long pause) =>
+            Assert.That(AutonomousWorldBotController.WideTargetSearchPauseFor(level), Is.EqualTo(pause));
+
         [Test]
         public void ADeathNamesWhatKindOfThingKilledTheBot() =>
             Assert.That(AutonomousDeathDiagnostics.KillerKind(null), Is.EqualTo("none"));
