@@ -51,6 +51,13 @@ The Social Expansion on shadowofze's **0.37 / 0.37b** (with or without the 0.37c
 - **In game, briefly:** logged in on the new client; guild chat greeted the character and answered "what are you up to?"
   with "not much, you?" and "the usual, killing stuff". Not played for long.
 
+**Found in the owner's first play, then fixed**
+- A level 50 in a level 50 RvR bot guild got no answer to "lfg" in /gu and /faction or to "where is everyone?": the chosen bots
+  were in fights when their replies came due, and a reply to a player had no stand-in. Now a busy bot's reply goes to the
+  next free bot (a bot you named still answers itself), a question to your own guild always gets an answer, and "where is
+  everyone?" is answered with where the bot is ("Pennine Mountains", "at Black Mtns. South, decent xp"). Checked again in
+  play: all three got answers.
+
 **Installer fix found in that upgrade**
 - INSTALL.cmd now recognises a game updated by a patch: the release is the newest docs/RELEASE-<version>.md in the game's
   manifest (the editions check remains for the 0.36 full downloads). Three new installer tests.
