@@ -335,7 +335,8 @@ namespace DOL.GS
             view = null;
             if (leader?.Group == null || leader.Group.LivingLeader != leader) return false;
             GameBot[] members = leader.Group.GetMembersInTheGroup().OfType<GameBot>().ToArray();
-            if (members.Length != 8 || members.Any(b => !IsEligible(b) || IsReserved(b) ||
+            // A whole PvE party of five to eight level 50s may answer (most parties form with five or six).
+            if (members.Length is < RealmRaidRecruitmentPolicy.MinimumJoiningParty or > 8 || members.Any(b => !IsEligible(b) || IsReserved(b) ||
                 b.Realm != leader.Realm || !AutonomousObjectiveAssignments.Is(b, eAutonomousObjectiveKind.GroupPve))) return false;
             lock (Sync)
             {
@@ -344,6 +345,9 @@ namespace DOL.GS
                 if (raid == null && Raids.Values.Any(r => r.Definition.Realm == leader.Realm)) return false;
                 if (raid == null)
                 {
+                    // Only a full eight opens an unscheduled raid (the schedule is the regular way); smaller
+                    // parties only join one that is recruiting.
+                    if (members.Length != 8) return false;
                     // Decisions occur once when a party chooses a new task, not
                     // once per member or AI tick; keep ordinary PvE populated.
                     if (Random.Shared.NextDouble() >= RealmRaidRecruitmentPolicy.NewEventChance) return false;
@@ -551,10 +555,15 @@ namespace DOL.GS
                                 if (Reservations.GetValueOrDefault(b.DatabaseID) == raid.Definition.Id)
                                     Reservations.TryRemove(b.DatabaseID, out _);
                         }
+                    // An automatic raid holds up to three planned parties at once and forms whichever eight (or the final
+                    // four) are free first: one fixed roster of solo grinders was rarely out of combat all at once, and
+                    // the first scheduled dragon rally (2026-10-19) stalled at 24 of 58 for twenty minutes.
                     int recruitCap = RealmRaidRecruitmentPolicy.RecruitCap(raid.Required);
-                    if (!raid.Forced && raid.Support.Length < recruitCap && raid.ForcedParties.Count == 0)
+                    int planned = raid.ForcedParties.Sum(p => p.Length);
+                    if (!raid.Forced && raid.Support.Length + planned < recruitCap &&
+                        raid.ForcedParties.Count < RealmRaidRecruitmentPolicy.AutomaticPlannedParties)
                     {
-                        int size = Math.Min(8, recruitCap - raid.Support.Length);
+                        int size = Math.Min(8, recruitCap - raid.Support.Length - planned);
                         var waiting = AutonomousBotGroupCoordinator.PlanWaitingRaidParty(raid.Definition.Realm, size);
                         if (waiting != null)
                         {
@@ -576,7 +585,7 @@ namespace DOL.GS
                         raid.ForcedParties.Remove(members);
                         raid.ForcedParties.Add(members); // A bad route cannot starve the other parties.
                     }
-                    else if (raid.Forced)
+                    else
                     {
                         // Planned rosters were fixed sets of 8 from all over the realm, so one busy
                         // member held the other seven back (Oct 5 test: Albion formed 17 of 38

@@ -70,6 +70,10 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - Each realm opens a raid on a schedule (`realm_raid_schedule_minutes`, default 150; 0 = off), rotating dragon,
   epic dungeon and neutral raid: the first 20, 30 and 40 minutes after the server starts. Logged as
   `REALM_RAID_SCHEDULED` and `REALM_RAID_ENDED` (with the outcome, size and length).
+- Found in the first live run: an automatic raid planned one party of eight at a time and waited until all eight
+  were out of combat at once, so the first scheduled dragon rally stalled at 24 of 58 for twenty minutes. It now
+  holds three planned parties and forms whichever eight are free first, and a whole PvE party of five to eight
+  level 50s can join a raid that is recruiting (only a full eight still opens an unscheduled one).
 - Not yet known: whether 40-110 bots can beat encounters tuned for 200. Darkness Falls and Summoner's Hall bosses
   are level 64-80 and were barely scratched by 32 bots in an earlier test; their raid AI is not finished.
 

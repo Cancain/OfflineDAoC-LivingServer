@@ -26,6 +26,10 @@ public static class RealmRaidRecruitmentPolicy
     public static int ScheduleMinutes = 150;
 
     public const int MinimumScaledBots = 40;
+    /// <summary>Planned parties an automatic raid holds at once while it recruits.</summary>
+    public const int AutomaticPlannedParties = 3;
+    /// <summary>The smallest whole PvE party that may join an automatic raid.</summary>
+    public const int MinimumJoiningParty = 5;
     public const double ScaledShare = 0.5;
 
     /// <summary>Level-50 bots an automatic raid must stage before it goes in.</summary>
