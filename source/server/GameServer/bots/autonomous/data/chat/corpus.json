@@ -20913,23 +20913,6 @@
    "intent": "",
    "mood": "friendly",
    "weight": 1.0,
-   "text": "{player} rezzed half our group at {place} tonight, what a legend",
-   "id": "067415113798"
-  },
-  {
-   "kind": "gossip",
-   "topic": "general",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "friendly",
-   "weight": 1.0,
    "text": "shout out to {player} for saving our run at {place}",
    "id": "695c5a0076fd"
   },
@@ -20983,6 +20966,44 @@
    "weight": 1.0,
    "text": "grouped with {player} at {place}, solid player",
    "id": "883ada733a5c"
+  },
+  {
+   "kind": "gossip",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "player_rezzed_me"
+   ],
+   "intent": "",
+   "mood": "friendly",
+   "weight": 1.0,
+   "text": "{player} rezzed me at {place} once, what a legend",
+   "id": "fbecd47fdaeb"
+  },
+  {
+   "kind": "gossip",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "player_rezzed_me"
+   ],
+   "intent": "",
+   "mood": "friendly",
+   "weight": 1.0,
+   "text": "ty again {player} for that rez at {place}",
+   "id": "703a1ccd88ad"
   },
   {
    "kind": "gossip",

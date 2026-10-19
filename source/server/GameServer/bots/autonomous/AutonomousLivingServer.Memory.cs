@@ -205,9 +205,12 @@ public static partial class AutonomousLivingServer
                 if (!AutonomousBotRegistry.TryGet(row.BotId, out GameBot bot) || !CanTalk(bot) ||
                     bot.CurrentRegion == subject.CurrentRegion && bot.IsWithinRadius(subject, WorldMgr.SAY_DISTANCE * 2))
                     continue;
+                // Lines about a rez need a rez this bot remembers (in-game check 2026-10-18).
+                var flags = new List<string> { "knows_player" };
+                if (AutonomousBotGuildSocial.CountsAsGuildless(subject.Guild)) flags.Add("player_guildless");
+                if (row.Rezzed > 0) flags.Add("player_rezzed_me");
                 if (AutonomousBotVoices.TryEventLine(bot, "gossip", out string line, slots: MemorySlots(row, subject),
-                        flags: AutonomousBotGuildSocial.CountsAsGuildless(subject.Guild) ? ["knows_player", "player_guildless"] : ["knows_player"],
-                        mood: "friendly"))
+                        flags: flags.ToArray(), mood: "friendly"))
                     Speak(bot, Channel.Faction, line);
                 break;
             }

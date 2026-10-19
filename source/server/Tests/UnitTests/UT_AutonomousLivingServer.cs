@@ -314,6 +314,26 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void GossipAboutARezOnlyFromABotThePlayerRezzed()
+        {
+            // In-game check 2026-10-18: "Claudecheck rezzed half our group at Campacorentin Forest tonight, what a
+            // legend" from a bot whose memory had 3 groups and no rez, on a day they hadn't met.
+            var random = new Random(5);
+            var slots = Slots(("player", "Claudecheck"), ("player_class", "cleric"), ("place", "Campacorentin Forest"));
+            var picked = new Dictionary<bool, HashSet<string>> { [false] = new(), [true] = new() };
+            foreach (bool rezzed in new[] { false, true })
+                for (int i = 0; i < 400; i++)
+                    if (Corpus.TryPick("gossip", rezzed ? Speaker(BotPersonalityType.Leveler, "knows_player", "player_rezzed_me")
+                                                        : Speaker(BotPersonalityType.Leveler, "knows_player"),
+                            slots, null, DateTime.UtcNow, random, out string text, out _, mood: "friendly"))
+                        picked[rezzed].Add(text);
+            Assert.That(picked[false].Where(text => text.Contains("rez")), Is.Empty);
+            Assert.That(picked[true].Where(text => text.Contains("rez")), Is.Not.Empty);
+            Assert.That(picked[false].Concat(picked[true]).Where(text => text.Contains("tonight")), Is.Empty,
+                "memory has no date, so no gossip claims tonight");
+        }
+
+        [Test]
         public void FirstsAreSeededOnceSoBotsMadeAtFiftyLaterDontTakeThem()
         {
             // In-game check 2026-10-17: every start re-seeded, so "+ Lv.50" bots took every level-50 title.
