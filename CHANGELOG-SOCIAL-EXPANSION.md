@@ -74,6 +74,12 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   were out of combat at once, so the first scheduled dragon rally stalled at 24 of 58 for twenty minutes. It now
   holds three planned parties and forms whichever eight are free first, and a whole PvE party of five to eight
   level 50s can join a raid that is recruiting (only a full eight still opens an unscheduled one).
+- Four-hour live run (2026-10-19): Albion and Midgard killed their dragons with 66 and 72 bots, and Albion took
+  two Hibernian keeps. But three of five scheduled raids never fought: 82-91 bots were recruited and only 46-51 were
+  staged after 90 minutes (stragglers fighting trash at the entrance, still walking or released). A raid scaled to
+  the roster now goes in late with 70% of what it needs (a full 200 raid keeps 90%): it can still lose the fight.
+- Raid loot is logged (`REALM_RAID_LOOT` with the bot that received each piece, `REALM_RAID_LOOT_UNCLAIMED` when no
+  nearby raider could carry it, `REALM_RAID_LOOT_MONEY`).
 - Not yet known: whether 40-110 bots can beat encounters tuned for 200. Darkness Falls and Summoner's Hall bosses
   are level 64-80 and were barely scratched by 32 bots in an earlier test; their raid AI is not finished.
 

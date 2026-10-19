@@ -135,8 +135,12 @@ namespace DOL.UnitTests
             {
                 Assert.That(RealmRaidRecruitmentPolicy.Ready(false, staged, 55, true, 55), Is.True);
                 Assert.That(RealmRaidRecruitmentPolicy.Ready(false, staged, 54, true, 55), Is.False);
-                Assert.That(RealmRaidRecruitmentPolicy.Ready(false, RealmRaidRecruitmentPolicy.AutonomousLateStartMilliseconds, 49, true, 55),
-                    Is.True, "late start at 90%");
+                Assert.That(RealmRaidRecruitmentPolicy.Ready(false, RealmRaidRecruitmentPolicy.AutonomousLateStartMilliseconds, 39, true, 55),
+                    Is.True, "a scaled raid starts late with 70%");
+                Assert.That(RealmRaidRecruitmentPolicy.Ready(false, RealmRaidRecruitmentPolicy.AutonomousLateStartMilliseconds, 38, true, 55),
+                    Is.False);
+                Assert.That(RealmRaidRecruitmentPolicy.Ready(false, RealmRaidRecruitmentPolicy.AutonomousLateStartMilliseconds, 50, true, 70),
+                    Is.True, "the failed Caer Sidi rally (50 of 70) would have gone in");
                 Assert.That(RealmRaidRecruitmentPolicy.Ready(false, staged, 199, true), Is.False, "the default stays 200");
                 Assert.That(RealmRaidRecruitmentPolicy.LateStartMinimum(200), Is.EqualTo(180));
                 Assert.That(RealmRaidRecruitmentPolicy.DepartHub(false, 55, 0, 55), Is.True);

@@ -72,8 +72,16 @@ public static class RealmRaidRecruitmentPolicy
          !forced && elapsed >= AutonomousLateStartMilliseconds && present >= LateStartMinimum(required)) &&
         landed;
 
-    /// <summary>90% of the requirement (180 of 200).</summary>
-    public static int LateStartMinimum(int required) => required * AutonomousLateStartMinimumPresent / AutonomousMinimumPresent;
+    /// <summary>
+    /// Who must be staged for a late start: 90% of a full 200 (180), but 70% of a raid scaled to the roster. The
+    /// 2026-10-19 rallies had 82-91 recruited and still only 46-51 staged after 90 minutes (stragglers fighting
+    /// trash at the entrance, still walking or released), so three of five scheduled raids never fought at all.
+    /// The owner wants failures to come from the fight, not from the gathering: a short raid goes in and may lose.
+    /// </summary>
+    public const int ScaledLateStartPercent = 70;
+    public static int LateStartMinimum(int required) => required >= AutonomousMinimumPresent
+        ? required * AutonomousLateStartMinimumPresent / AutonomousMinimumPresent
+        : (required * ScaledLateStartPercent + 99) / 100;
 
     // 2026-10-16 (owner's session): the automatic Tuscaran rally needed 84 minutes to gather 200 at Hagall, so the one
     // 90-minute staging clock left 6 minutes for the trip to the dungeon and it failed with 93 there. A slow hub leaves
