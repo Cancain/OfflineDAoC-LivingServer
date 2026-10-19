@@ -37194,6 +37194,265 @@
     50
    ],
    "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_whereall"
+   ],
+   "text": "{zone}",
+   "id": "c42ee80233f6"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_whereall"
+   ],
+   "text": "{zone}, you?",
+   "id": "03e14ed3706f"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_whereall"
+   ],
+   "text": "out in {zone}",
+   "id": "c6691b3d6559"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "outdoors"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_whereall"
+   ],
+   "text": "{zone}, killing stuff",
+   "id": "c65a7d662e06"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group",
+    "outdoors"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_whereall"
+   ],
+   "text": "{zone} with a group",
+   "id": "d8fdc8e41e5d"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_rvr"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_whereall"
+   ],
+   "text": "frontier, {zone}",
+   "id": "0970ea7c08d4"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_rvr"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_whereall"
+   ],
+   "text": "rvr in {zone}, come help",
+   "id": "c5f08f22c6fd"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_capital"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_whereall"
+   ],
+   "text": "in town, {zone}",
+   "id": "a1f2afaf16ae"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "at_camp"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_whereall"
+   ],
+   "text": "at {camp}, decent xp",
+   "id": "46fce5c0fd7d"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "traveling"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_whereall"
+   ],
+   "text": "headed to {destination}",
+   "id": "7fbe6ca8027c"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_dungeon"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_whereall"
+   ],
+   "text": "down in {zone}",
+   "id": "e91cf3b46000"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "just_died"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_whereall"
+   ],
+   "text": "running back from the bind lol",
+   "id": "09894f73c490"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
    "intent": "thanks",
    "mood": "",
    "weight": 1.0,

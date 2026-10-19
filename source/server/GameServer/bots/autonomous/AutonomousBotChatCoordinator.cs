@@ -495,6 +495,7 @@ public static class AutonomousBotChatCoordinator
         if (voices && intent == eAutonomousChatIntent.Ding && !directed && AutonomousLivingServer.GratsSaidRecently(player.Name, 60_000))
             count = Math.Min(count, Random.Shared.NextDouble() < 0.5 ? 1 : 0);
         HashSet<string> scheduledResponses = new(StringComparer.OrdinalIgnoreCase);
+        var spoken = new HashSet<GameBot>();
         int due = 0;
         for (int index = 0; index < count; index++)
         {
@@ -510,13 +511,21 @@ public static class AutonomousBotChatCoordinator
             due = ReplyDelayMs(response, due, Random.Shared);
             if (faction)
                 NoteFactionResponder(player.Realm, responder);
-            Schedule(responder, due, () =>
+            // A bot named in the line answers itself; otherwise a busy bot's reply goes to the next bot that could say it.
+            GameBot[] standIns = directed ? [] : eligible.Skip(count).Take(PlayerReplyStandIns).ToArray();
+            string text = response;
+            _ = new ECSGameTimer(player, _ =>
             {
-                if (faction && HasFactionAudience(responder.Realm))
-                    BroadcastFaction(responder.Name, responder.Realm, response);
-                else if (!faction && HasLocalAudience(responder))
-                    responder.Say(response);
-            });
+                GameBot speaker = PickSpeaker(responder, standIns,
+                    bot => Eligible(bot) && !bot.InCombat && !bot.IsCasting && (faction || HasLocalAudience(bot)), spoken);
+                if (speaker == null)
+                    return 0;
+                if (faction && HasFactionAudience(speaker.Realm))
+                    BroadcastFaction(speaker.Name, speaker.Realm, text);
+                else if (!faction && HasLocalAudience(speaker))
+                    speaker.Say(text);
+                return 0;
+            }, due);
         }
     }
 
@@ -825,6 +834,27 @@ public static class AutonomousBotChatCoordinator
 
     /// <summary>A starter's closing line ("Fair enough. Safe travels.") only after somebody answered it.</summary>
     public static bool ClosingFollowsAReply(int repliesSaid) => repliesSaid > 0;
+
+    /// <summary>
+    /// Who says a reply when it comes due: the chosen bot, or, if it is fighting, casting or gone by then, the first stand-in
+    /// that can talk and hasn't spoken in this exchange (played 2026-10-18: a level 50's lfg and "where is everyone?" drew
+    /// nothing, because the chosen level 50s were in fights when their lines came due and nobody took over). Null: nobody.
+    /// </summary>
+    public static T PickSpeaker<T>(T chosen, IEnumerable<T> standIns, Func<T, bool> canSpeak, ISet<T> spoken) where T : class
+    {
+        lock (spoken)
+        {
+            T speaker = chosen != null && !spoken.Contains(chosen) && canSpeak(chosen)
+                ? chosen
+                : standIns.FirstOrDefault(bot => bot != null && !spoken.Contains(bot) && canSpeak(bot));
+            if (speaker != null)
+                spoken.Add(speaker);
+            return speaker;
+        }
+    }
+
+    /// <summary>How many other bots stand in for a busy one on a reply to a player.</summary>
+    public const int PlayerReplyStandIns = 6;
 
     private static void Schedule(GameBot speaker, int delay, Action action)
     {
