@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
 
@@ -63,6 +64,28 @@ namespace DOL.GS
 
         // Weak keys: a bot that logs out takes its state with it.
         private static readonly ConditionalWeakTable<GameBot, BodyState> States = new();
+
+        private static readonly DOL.Logging.Logger Log = DOL.Logging.LoggerManager.Create(typeof(AutonomousBotBodyLanguage));
+        // What was done, written to the server log every 5 minutes it is non-zero (BOT_BODY_LANGUAGE), so a play
+        // session can be checked from the log.
+        private static long _looks, _emotes, _steps, _greets, _cheers, _nextReportTick;
+        public const long ReportIntervalMs = 5 * 60_000;
+
+        private static void Count(ref long counter)
+        {
+            Interlocked.Increment(ref counter);
+            long now = GameLoop.GameLoopTime;
+            long next = Volatile.Read(ref _nextReportTick);
+            if (now < next || Interlocked.CompareExchange(ref _nextReportTick, now + ReportIntervalMs, next) != next)
+                return;
+            if (next == 0)
+                return;   // the first call only starts the clock
+            long looks = Interlocked.Exchange(ref _looks, 0), emotes = Interlocked.Exchange(ref _emotes, 0),
+                steps = Interlocked.Exchange(ref _steps, 0), greets = Interlocked.Exchange(ref _greets, 0),
+                cheers = Interlocked.Exchange(ref _cheers, 0);
+            if (Log.IsInfoEnabled)
+                Log.Info($"BOT_BODY_LANGUAGE minutes={ReportIntervalMs / 60_000} looks={looks} emotes={emotes} steps={steps} greets={greets} cheers={cheers}");
+        }
 
         /// <summary>Milliseconds until a bot's next idle action; <paramref name="roll"/> is in [0, 1).</summary>
         public static long NextDelayMs(BodySpot spot, double roll)
@@ -163,9 +186,11 @@ namespace DOL.GS
                 {
                     case BodyMove.Look:
                         bot.TurnTo(Turned(bot.Heading, choice.HeadingOffset));
+                        Count(ref _looks);
                         return false;
                     case BodyMove.Emote:
                         bot.Emote(choice.Emote);
+                        Count(ref _emotes);
                         return false;
                     case BodyMove.Greet:
                         lock (state.Greeted)
@@ -173,6 +198,7 @@ namespace DOL.GS
                         bot.TurnTo(watcher);
                         AutonomousLivingServer.Later(bot, 350 + Random.Shared.Next(500),
                             () => Eligible(bot) && bot.IsWithinRadius(watcher, GreetRadius * 2), () => bot.Emote(choice.Emote));
+                        Count(ref _greets);
                         return false;
                     case BodyMove.Shuffle:
                         // A step never competes with resting: only a fully recovered bot shifts its feet.
@@ -185,6 +211,7 @@ namespace DOL.GS
                             return false;
                         bot.WalkTo(to, (short)Math.Clamp(bot.MaxSpeed / 3, 60, 100));
                         state.ShuffleUntilTick = now + ShuffleMaximumMs;
+                        Count(ref _steps);
                         return bot.IsMoving;
                     default:
                         return false;
@@ -218,6 +245,7 @@ namespace DOL.GS
                     {
                         bot.TurnTo(who);
                         bot.Emote(emote);
+                        Count(ref _cheers);
                     });
                 }
             }
