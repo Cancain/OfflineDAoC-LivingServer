@@ -5,7 +5,9 @@ What this fork adds to shadowofze's Offline DAoC. The base game's own changes ar
 
 ## Next build (not released yet)
 
-From the owner's first day playing 0.37-se.1 (the server log of 2026-10-18: 4,721 bot tasks).
+From the owner's first day playing 0.37-se.1 (the server log of 2026-10-18: 4,721 bot tasks), then a live check on the
+owner's PC the same night (a 20-minute and a 40-minute session on the new build, compared with the same minutes of the
+evening's earlier 0.37-se.1 session; see "Checked" below).
 
 **Body language (new Living Server part, off by default)**
 - `bot_living_body_language` (launcher: Social Expansion > Living Server > **Body language**): bots standing around in
@@ -13,23 +15,50 @@ From the owner's first day playing 0.37-se.1 (the server log of 2026-10-18: 4,72
   wave at you when you walk up, and cheer a ding nearby. Only where a real player can see them, never in a fight.
   Bots can't jump, sit or strafe: the game sends no such state for an NPC. See [docs/LIVING-SERVER.md](docs/LIVING-SERVER.md).
 
-**Fewer bot deaths on the way to camps**
+**Safer routes for solo bots**
 - 30% of bot tasks ended in a death, more than half of them before the bot reached its camp. Of solo bots that pulled
   an orange monster on their route, 34-54% were dead within 150 seconds (21-27% after a yellow; 7-18% after green or
   blue). Now a solo bot goes around a yellow when it can and gives up the camp rather than fight an orange (a single
   orange is still fought when it has just given up another camp). A solo bot that died in the last half hour treats
   a yellow like an orange. Groups are unchanged.
 
-**More bot groups**
+**Bots waiting for a party stand between pulls**
 - 98% of bot tasks were solo: bots waiting for a party grind solo, and party formation only takes bots that aren't
   fighting, so 244 waits ran out after 20 minutes and only 23 PvE parties formed all day. A bot waiting for a party
   now often stands at its camp between pulls for 45-90 seconds ("Looking for a group between pulls"), like a player
   with /lfg on: 60% of the time at level 50 (which gets no experience from soloing), 35% while levelling.
 
+**Chat found wrong in the live check**
+- Replies to "lfg" no longer assume you lead a group: "lfg 50 cleric" drew "how many do u have?" in /faction. Lines like
+  that still answer "lfm".
+- A guildmate no longer asks what you just said: "lfg, anyone want a 50 cleric?" drew "what level and class?" in /gu.
+- Gossip about a rez only comes from a bot you really rezzed, and never says "tonight": a bot with three groups and no
+  rez in its memory said "Claudecheck rezzed half our group at Campacorentin Forest tonight".
+- Bots no longer advertise the level 50 starter kits in /faction ("Does anybody want to make me an offer on Offline
+  level 50 Cleric 41/33?").
+
 **Melee bots no longer stand under flying monsters**
 - A melee bot only picks a flying monster it can walk up to. A level 50 Midgard melee group timed out 45 times on
   griffon gliders in Gripklosa from 2,400-3,500 units away, and one member stood still for 15 minutes. Casters and
   archers shoot flyers as before.
+
+**Checked**
+- Automated: 3,223 server tests.
+- Live, on the owner's PC (new client, 650 bots online), first 39 minutes of the new build against the same 39
+  minutes of the earlier session:
+  - Body language: 78 looks, 82 emotes and 12 greetings were sent to the player's client. Bots standing at the
+    Camelot Realm Exchange were seen turning and gesturing. In the build before this one (without "standing around")
+    nothing was counted in 20 minutes and bots at the Exchange stood still. No steps or cheers yet (no town break
+    or ding happened near the player).
+  - Solo bots fought far fewer oranges and yellows on their routes (45 and 133, from 163 and 475).
+  - Deaths: level 50 solo tasks ending in a death fell from 35% to 27%; all tasks from 30% to 28%. Most deaths are
+    bots of levels 1-9 in the starting zones, and about half of all deaths still happen before the bot reaches its
+    camp, with no route threat logged before them. That is not fixed yet.
+  - Groups: 13 PvE parties (11 before) and 72 waits that ran out (54 before); no clear change yet. About 15% of
+    online bots were in a party at the end of the check (48 RvR, 47 PvE), so "98% of tasks are solo" overstated how
+    alone bots are: solo bots start many short tasks.
+  - No new server errors (390 at start-up, as before).
+  - The chat fixes above came after the check and haven't been played yet.
 
 ## 0.37-se.1 — 2026-10-18
 

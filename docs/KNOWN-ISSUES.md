@@ -39,10 +39,9 @@ meetup fix drop two no-shows (in the server log).
 - you rezzing a dead bot, or a passing bot rezzing you (no healer passed in five deaths)
 - grats on your own ding from nearby bots
 - the exact bot XP-by-level factor (bot XP does go up with it on; the exact rate wasn't measured)
-- body language (bots looking around, emoting, stepping, waving and cheering); how its emotes look on bots in
-  either client
-- whether the safer solo routes and the between-pulls group wait (next build) really cut bot deaths and raise
-  the number of bot groups; they are tuned from one day's server log, not measured after the change
+- body language: steps in town and cheers (looks, emotes and greetings were seen in the new client); the
+  original client wasn't tried
+- the between-pulls group wait (next build) didn't raise the number of bot groups in a 39-minute check
 
 ## Known problems
 
