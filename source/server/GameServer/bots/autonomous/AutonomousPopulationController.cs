@@ -226,6 +226,15 @@ public static class AutonomousPopulationController
             // not mistaken for an invalid origin and replaced by a capital.
             bot.SynchronizePositionForLoginValidation();
             AutonomousStuckWatchdog.RepairInvalidLoginPosition(bot);
+            if (LogsInBesideABoss(record))
+            {
+                // Morning 2026-10-19: level 50s saved inside the Hall of the Corrupt logged in beside Aidon the
+                // Archwizard and his illusions and died within seconds, 41 times in 41 minutes. A player who logged
+                // out there would recall first; the bot starts in its capital instead.
+                Log.Info($"AUTONOMOUS_LOGIN_MOVED_FROM_BOSS bot=\"{record.Name}\" region={record.RegionId} at={record.X},{record.Y},{record.Z}");
+                PlaceAtCapitalFallback(bot, record);
+                bot.SynchronizePositionForLoginValidation();
+            }
             if (string.IsNullOrWhiteSpace(record.LastSavedUtc) && record.Experience == 0)
             {
                 bot.Health = bot.MaxHealth;
@@ -266,6 +275,19 @@ public static class AutonomousPopulationController
     public static bool IsFreshUnplacedLevelOneRecord(OfflineWorldBotRecord record) =>
         record != null && record.Level == 1 && record.Experience == 0 && record.RealmPoints == 0 &&
         record.RegionId == 0 && string.IsNullOrWhiteSpace(record.LastSavedUtc);
+
+    /// <summary>How close to a boss (an epic or a scripted named monster with its own tether) a saved spot may be.</summary>
+    public const int LoginBossClearance = 2_500;
+
+    private static bool LogsInBesideABoss(OfflineWorldBotRecord record)
+    {
+        Region region = record.RegionId == 0 ? null : WorldMgr.GetRegion((ushort)record.RegionId);
+        if (region == null)
+            return false;
+        var npcs = new List<GameNPC>();
+        region.GetInRadius(new Point3D(record.X, record.Y, record.Z), eGameObjectType.NPC, LoginBossClearance, npcs);
+        return npcs.Any(npc => npc.IsAlive && npc.Realm == eRealm.None && AutonomousTetherReset.HasEncounterTether(npc));
+    }
 
     private static void PlaceAtCapitalFallback(GameBot bot, OfflineWorldBotRecord record)
     {
