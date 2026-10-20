@@ -78,6 +78,21 @@ namespace DOL.UnitTests
             finally { AutonomousRepeatDeathSpots.Clear(); }
         }
 
+        // Blendrake Faste, 2026-10-20: Midgard kept ~80 attacking Caer Sursbrooke while its own keep fell undefended.
+        [TestCase(0, 24, 80, 80, 8, true)]      // nobody defending, the attack keeps 72 of 80
+        [TestCase(11, 24, 80, 80, 8, true)]     // still under half the defense cap
+        [TestCase(12, 24, 80, 80, 8, false)]    // half the cap defends: the attack keeps its army
+        [TestCase(0, 24, 44, 80, 8, false)]     // the attack is already down to about half: it stays
+        [TestCase(0, 24, 48, 80, 8, true)]      // 40 left of the 80 that marched
+        public void AnAttackingWarbandBreaksOffToDefendItsOwnKeep(int defenders, int cap, int attackers, int marched, int size, bool breaks) =>
+            Assert.That(RealmEventPolicy.BreaksOffToDefend(defenders, cap, attackers, marched, size), Is.EqualTo(breaks));
+
+        [TestCase(true, 30, true)]
+        [TestCase(true, 0, false)]    // a battle opened before its army arrived
+        [TestCase(false, 30, false)]  // attackers still marching: the defense musters as before
+        public void DefendersGoStraightInOnceTheAttackersAreAtTheKeep(bool battleStarted, int attackersPresent, bool skip) =>
+            Assert.That(RealmEventPolicy.DefendersSkipMuster(battleStarted, attackersPresent), Is.EqualTo(skip));
+
         // Aegir's Landing, 2026-10-19: level-1 parties were sent to the Shrouded Isles and died to level 18-21 cats.
         [TestCase(eRealm.Midgard, (ushort)151, 1, false)]
         [TestCase(eRealm.Midgard, (ushort)151, 9, false)]

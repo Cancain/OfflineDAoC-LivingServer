@@ -61,6 +61,17 @@ namespace DOL.GS
         /// attacker reinforcements grew it to 70-105, so Dun Bolg's defense was capped at 25 against 89 and the attackers won
         /// every siege that finished.
         /// </summary>
+        /// <summary>
+        /// Home defense first (owner, 2026-10-20): an attacking warband breaks off to defend its own keep when the
+        /// defense there is under half its cap, and only while the attack it leaves keeps at least half of the larger
+        /// of its marched and current army.
+        /// </summary>
+        public static bool BreaksOffToDefend(int defenders, int defenderCap, int attackers, int marchedAttackers, int forceSize) =>
+            defenders * 2 < defenderCap && attackers - forceSize >= (Math.Max(attackers, marchedAttackers) + 1) / 2;
+
+        /// <summary>No defense muster once the battle is on and attackers are at the keep (owner, 2026-10-20).</summary>
+        public static bool DefendersSkipMuster(bool battleStarted, int attackersPresent) => battleStarted && attackersPresent > 0;
+
         public static int DefendersFor(int marchedAttackers, int currentAttackers, double ratio, int cap) =>
             Math.Clamp((int)Math.Round(Math.Max(marchedAttackers, currentAttackers) * Math.Clamp(ratio, 0.25, 2.0)), 8, Math.Max(8, cap));
 

@@ -175,6 +175,12 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   pack near its Sheeroe Hills bind.
 - **New bots level in their classic zones first.** No XP camps in the Shrouded Isles below level 10: level-1 Midgard
   parties were sent to Aegir's Landing, where scimitar cats (levels 18-21) killed level-1 bots 201 times in three hours.
+- **Home defense comes first.** A warband attacking an enemy keep now breaks off to defend its own realm's keep
+  when that siege has begun and the defense is under half its cap, as long as the attack keeps half its army
+  (`RVR_HOME_DEFENSE_BREAKOFF`). Raids are untouched: their members are not RvR forces. Albion took Midgard's
+  Blendrake Faste with no defender ever arriving while about 80 Midgard bots kept attacking Caer Sursbrooke.
+- **No defense muster once the attackers are at the keep.** Defenders go straight in. At Blendrake Faste the first
+  defenders formed 26 minutes into the siege, mustered for six minutes, never marched, and the keep fell.
 - **Torst no longer disappears.** His eddies' brain set its body's speed before it had a body; the error removed
   Torst from the world the moment he summoned them.
 

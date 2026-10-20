@@ -319,7 +319,7 @@ public static partial class AutonomousRvrEventLayer
                 return ReservePlan(force, objectives.Where(o => !o.IsRelicCarrier && o.Kind is not Intent.AssaultKeep and not Intent.AssaultRelicKeep).ToArray());
             if (ReleasedForces.ContainsKey(force.GroupId)) return null;
 
-            Plan committed = CommittedPlan(force, objectives);
+            Plan committed = CommittedPlan(force, objectives, nowTick);
             if (committed != null)
                 return committed;
 
@@ -375,6 +375,7 @@ public static partial class AutonomousRvrEventLayer
                         TryJoin(active.Defenders, force, DefenderCapFor(active)))
                     {
                         if (SiegeScheduling && !active.DefenseMustering) BeginDefenseMuster(active, nowTick);
+                        GoStraightInWhenUnderFire(active, nowTick);
                         return ToPlan(Intent.DefendEvent, target, true,
                             "Choosing to converge to defend the live opposing-realm assault; participation is capped.");
                     }
@@ -506,8 +507,9 @@ public static partial class AutonomousRvrEventLayer
         : RealmEventPolicy.SiegeReady(active.RelicKeep, deadline, Attendance(active, active.AttackerRealm, nowTick),
             Attendance(active, active.DefenderRealm, nowTick));
 
-    private static Plan CommittedPlan(Force force, IReadOnlyCollection<LiveObjective> objectives)
+    private static Plan CommittedPlan(Force force, IReadOnlyCollection<LiveObjective> objectives, long nowTick)
     {
+        if (HomeDefenseBreakOff(force, objectives, nowTick) is { } home) return home;
         foreach (ActiveEvent active in Events.Values)
         {
             // A local route/candidate refresh is not an event cancellation.
@@ -677,6 +679,49 @@ public static partial class AutonomousRvrEventLayer
         var log = DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
         if (log.IsInfoEnabled) log.Info($"RVR_DEFENSE_MUSTER target={active.TargetId} defenders={GlobalConstants.RealmToName(active.DefenderRealm)} " +
             $"cap={(active.DefenseReaction ? ResponseCap(true, active.DefenseScale) : DefenderCapFor(active))} minutes={milliseconds / 60_000}");
+    }
+
+    /// <summary>
+    /// Owner, 2026-10-20: once the attackers are at the keep there is no defense muster; defenders go straight in.
+    /// Blendrake Faste: the first Midgard defenders formed 26 minutes into the siege, mustered for six minutes, never
+    /// marched, and the keep fell eleven minutes later with no defender there.
+    /// </summary>
+    private static void GoStraightInWhenUnderFire(ActiveEvent active, long nowTick)
+    {
+        if (active.DefenseMustering && !active.DefenseMarching &&
+            RealmEventPolicy.DefendersSkipMuster(active.BattleStarted, Attendance(active, active.AttackerRealm, nowTick)))
+            GiveDefenseMarch(active, nowTick, "the attackers are already at the keep; defenders go straight in");
+    }
+
+    /// <summary>
+    /// Owner, 2026-10-20: home defense comes first. A warband committed to attacking an enemy keep breaks off to
+    /// defend its own realm's keep when that siege has begun and the defense is under half its cap, as long as the
+    /// attack keeps at least half its army. Raid members are never RvR forces, so this never pulls from a raid.
+    /// 2026-10-20: about 80 Midgard bots kept attacking Caer Sursbrooke while Albion took Blendrake Faste with no
+    /// Midgard defender ever arriving.
+    /// </summary>
+    private static Plan HomeDefenseBreakOff(Force force, IReadOnlyCollection<LiveObjective> objectives, long nowTick)
+    {
+        if (!SiegeScheduling || force.AverageLevel < 50) return null;
+        ActiveEvent attack = Events.Values.FirstOrDefault(active => active.Attackers.ContainsKey(force.GroupId));
+        if (attack == null || attack.Forced) return null;
+        ActiveEvent home = Events.Values
+            .Where(active => active != attack && active.DefenderRealm == force.Realm && active.BattleStarted &&
+                             IsLatestDefenseFocus(active))
+            .OrderBy(active => active.Defenders.Values.Sum())
+            .FirstOrDefault(active => RealmEventPolicy.BreaksOffToDefend(active.Defenders.Values.Sum(), DefenderCapFor(active),
+                attack.Attackers.Values.Sum(), attack.MarchedAttackers, force.MemberCount));
+        if (home == null || !TryJoin(home.Defenders, force, DefenderCapFor(home))) return null;
+        attack.Attackers.Remove(force.GroupId);
+        attack.Slots.Remove(force.GroupId);
+        if (!home.DefenseMustering) BeginDefenseMuster(home, nowTick);
+        GoStraightInWhenUnderFire(home, nowTick);
+        var log = DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
+        if (log.IsInfoEnabled) log.Info($"RVR_HOME_DEFENSE_BREAKOFF force={force.GroupId} realm={GlobalConstants.RealmToName(force.Realm)} " +
+            $"from={attack.TargetId} to={home.TargetId} size={force.MemberCount} defenders={home.Defenders.Values.Sum()}/{DefenderCapFor(home)} " +
+            $"attackLeft={attack.Attackers.Values.Sum()}");
+        LiveObjective target = objectives.FirstOrDefault(objective => objective.Id == home.TargetId) ?? home.Target;
+        return ToPlan(Intent.DefendEvent, target, true, "Breaking off the attack to defend our own keep under siege.");
     }
 
     private static int DefenseMusterAttendance(ActiveEvent active, long nowTick) => active.DefenseMustered.Values
