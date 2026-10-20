@@ -3,7 +3,13 @@
 What this fork adds to shadowofze's Offline DAoC. The base game's own changes are in
 [CHANGELOG.md](CHANGELOG.md). The newest version is first.
 
-## Next build (not released yet)
+## 0.37-se.2 — 2026-10-20 (not released yet)
+
+The endgame now runs without a player directing it: warbands open and defend keep sieges, each realm raids its
+dragon, its epic dungeon, Summoner's Hall and Darkness Falls on a schedule, a wiped raid regroups and tries again with
+the Epic Special Forces, and parties in dungeons go for the boss. Tested on the owner's PC with 600 bots per realm
+overnight and through 2026-10-20. 0.37-se.1 was never published on its own, so this release also carries everything
+in it (below).
 
 From the owner's first day playing 0.37-se.1 (the server log of 2026-10-18: 4,721 bot tasks), then a live check on the
 owner's PC the same night (a 20-minute and a 40-minute session on the new build, compared with the same minutes of the

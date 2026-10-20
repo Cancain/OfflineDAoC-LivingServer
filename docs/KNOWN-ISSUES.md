@@ -80,7 +80,7 @@ meetup fix drop two no-shows (in the server log).
   - Chat volume hasn't been tuned for very large rosters (1,000+ bots a realm).
 - **Added the 0.36c new client after installing this?** Run `INSTALL.cmd` again so the new client's
   launcher gets the Social Expansion tab too.
-- **Versions:** 0.37-se.1 is for 0.37 / 0.37b only, and the installer refuses anything else (0.36-se.4
+- **Versions:** 0.37-se.2 is for 0.37 / 0.37b only, and the installer refuses anything else (0.36-se.4
   stays available for 0.36). When shadowofze releases the next update, run `PREPARE-FOR-UPDATE.cmd` before
   updating, and wait for a Social Expansion build for that version before installing one again.
 - **Bots in your own guild (0.37):** inviting gamebots into your guild is now the base game's feature. Those

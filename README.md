@@ -20,8 +20,8 @@
 They join guilds and recruit you, each has its own personality, and they talk the way players did in
 2002–2003, down to the build arguments in /faction.
 
-> **Latest release: 0.37-se.1**, for shadowofze's 0.37 / 0.37b, with or without the 0.37c new client. It has
-> everything in 0.36-se.4. Still on 0.36? Use 0.36-se.4 (under Releases), or update the game (see below).
+> **Latest release: 0.37-se.2**, for shadowofze's 0.37 / 0.37b, with or without the 0.37c new client. It has
+> everything in 0.37-se.1 and 0.36-se.4, plus the self-running endgame: sieges, realm raids, dragons and dungeon bosses. Still on 0.36? Use 0.36-se.4 (under Releases), or update the game (see below).
 > Download it from this repository's [Releases](https://github.com/chris4aker/OfflineDAoC-SocialExpansion/releases).
 > Every change is in [CHANGELOG-SOCIAL-EXPANSION.md](CHANGELOG-SOCIAL-EXPANSION.md); known problems and
 > what hasn't been tested are in [docs/KNOWN-ISSUES.md](docs/KNOWN-ISSUES.md).
@@ -75,7 +75,7 @@ Social Expansion makes them feel like a community, not just a population.
 4. Open the launcher as usual. It now has a **Social Expansion** tab.
 
 **Already playing 0.36 with the Social Expansion?** The 0.37 update only applies to the game's own files,
-so put them back first: put the 0.37-se.1 folder in your game folder and double-click
+so put them back first: put the 0.37-se.2 folder in your game folder and double-click
 `PREPARE-FOR-UPDATE.cmd` (it restores the released 0.36 server and launcher from the installer's backups
 and checks each one). Then update the game to 0.37 with its downloader (choice 1, Update), and run this
 build's `INSTALL.cmd`. Your saves, bot guilds, bot memory and settings stay as they were. If you install
@@ -95,7 +95,7 @@ A fresh world has no bots yet, and most of these features need some.
    the first /faction debate comes 5–10 minutes after the server starts (while you're online),
    frontier alarms need bots in the frontier, and guilds form once enough bots are online.
 4. **Check it's running.** The server log (`runtime\server\logs\server.log`) has a line starting
-   `FORK_BUILD name=0.37-se.1` that lists which features are on.
+   `FORK_BUILD name=0.37-se.2` that lists which features are on.
 
 ## Undo and uninstall
 
