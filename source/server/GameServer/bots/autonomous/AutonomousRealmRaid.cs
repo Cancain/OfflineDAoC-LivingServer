@@ -293,7 +293,17 @@ namespace DOL.GS
                                 RealmEventBanter.RaidReminder(raid.Definition.Name, raid.Forced));
                         }
                         int present = PresentAtStaging(raid);
-                        if (RealmRaidRecruitmentPolicy.Ready(raid.Forced, now - raid.Created, present, DragonLanded(raid), raid.Required))
+                        bool ready = RealmRaidRecruitmentPolicy.Ready(raid.Forced, now - raid.Created, present, DragonLanded(raid), raid.Required);
+                        bool expired = !ready && RealmRaidRecruitmentPolicy.StagingExpired(raid.Forced, now, raid.Created, raid.HubDepartedTick,
+                            present, DragonLanded(raid), raid.Required);
+                        // Out of time with at least half the raid there: it goes in short, and the rest follow it in.
+                        if (expired && DragonLanded(raid) && RealmRaidRecruitmentPolicy.GoesInShortAtDeadline(raid.Forced, present, raid.Required))
+                        {
+                            ready = true;
+                            Log.Info($"REALM_RAID_SHORT_START event={raid.Definition.Id} present={present} required={raid.Required} " +
+                                     $"recruited={raid.Support.Length} minutes={(now - raid.Created) / 60_000}");
+                        }
+                        if (ready)
                         {
                             raid.Started = true;
                             raid.Deadline = raid.Forced ? long.MaxValue : now + RealmRaidRecruitmentPolicy.BattleMilliseconds;
@@ -305,7 +315,7 @@ namespace DOL.GS
                                 AutonomousEpicSpecialForces.Request(raid.Definition.Id, raid.Definition.Name, raid.Definition.Realm,
                                     "the last two expeditions here were defeated");
                         }
-                        else if (RealmRaidRecruitmentPolicy.StagingExpired(raid.Forced, now, raid.Created, raid.HubDepartedTick, present, DragonLanded(raid), raid.Required))
+                        else if (expired)
                         { End(raid, now, $"Staging failed: {present} adventurers arrived; no undersized or airborne assault was ordered."); continue; }
                     }
                     if (raid.Started && raid.DungeonRoute != null)

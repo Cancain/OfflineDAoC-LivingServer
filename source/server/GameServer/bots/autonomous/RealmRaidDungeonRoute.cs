@@ -67,8 +67,10 @@ namespace DOL.GS
         /// same encounter the raid is defeated and goes home; the named encounters it killed still count.
         /// </summary>
         public const int MaximumFailedAttempts = 2;
-        public const long RegroupMinimumMilliseconds = 3 * 60_000;
-        public const double RegroupShare = 0.6, RegroupPatientShare = 0.4;
+        // 2026-10-20: Galladoria's raid went back at the Organic-Energy Mechanism five minutes after 152 of 156 fell and did
+        // worse (47% against 31%); a regroup now waits for 70% of the roster and at least five minutes.
+        public const long RegroupMinimumMilliseconds = 5 * 60_000;
+        public const double RegroupShare = 0.7, RegroupPatientShare = 0.4;
         private readonly Dictionary<string, int> _failedAttempts = new(StringComparer.Ordinal);
         // Everyone who stood in the current attempt (raiders arriving during the fight join it).
         private readonly HashSet<GameLiving> _engaged = new();
@@ -91,7 +93,7 @@ namespace DOL.GS
         public static bool IsWipe(int engaged, int fallen, int healthPercent, int lowestPercent) =>
             engaged >= MinimumRaidersAtTarget && (fallen * 2 >= engaged || healthPercent >= 95 && lowestPercent <= 85);
 
-        /// <summary>Raiders a regroup waits for: 60% of the raid's roster (40% after 20 minutes), 8 to 150.</summary>
+        /// <summary>Raiders a regroup waits for: 70% of the raid's roster (40% after 20 minutes), 8 to 150.</summary>
         public static int RegroupNeeded(int roster, long regroupMilliseconds) =>
             Math.Max(MinimumRaidersAtTarget, Math.Min(FinalMusterMaximum, (int)Math.Ceiling(roster *
                 (regroupMilliseconds >= FinalMusterPatienceMilliseconds ? RegroupPatientShare : RegroupShare))));

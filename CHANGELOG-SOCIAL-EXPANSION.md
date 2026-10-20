@@ -138,6 +138,20 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - Dragon raids don't call them yet.
 - Logs: `REALM_RAID_SPECIAL_FORCES_ARRIVED`, `_NOT_NEEDED`, `_FAILED`, `_LEFT`, and `specialForces=` on `REALM_RAID_ENDED`.
 
+**From the first 600-per-realm night (2026-10-19/20)**
+- The regroup and the Epic Special Forces worked in the game: Galladoria's raid wiped at Conservator (taken to 9%),
+  24 Special Forces arrived, and the retry killed him; it then beat Spindler Broodmother and Tine on their second
+  attempts and was defeated at the Organic-Energy Mechanism. Albion killed Legion; Hibernia (with the Special Forces
+  after a wipe at Summoner Roesia) and Midgard both killed Grand Summoner Govannon.
+- **Rallies out of time go in short.** Three Albion rallies failed with 90/132, 101/149 and 103/150 staged while about
+  90 more recruits were still on the road. A raid scaled to the roster now goes in at its deadline with half of what it
+  needs (at least 40), and the rest follow it in (`REALM_RAID_SHORT_START`). Full 200 raids are unchanged.
+- **Siege defenders follow the real army.** The defense share was taken of the army that marched (10-60 bots) while
+  attacker reinforcements grew it to 70-105: Dun Bolg's defense was capped at 25 against 89, and attackers won every
+  siege that finished. Defenders now answer the larger of the marched and the current army.
+- A regroup after a wipe waits for 70% of the raid (was 60%) and at least five minutes (was three): the second try at
+  the Organic-Energy Mechanism went in five minutes after 152 of 156 raiders fell and did worse than the first.
+
 **Checked**
 - Automated: 3,223 server tests.
 - Live, on the owner's PC (new client, 650 bots online), first 39 minutes of the new build against the same 39

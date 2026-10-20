@@ -493,7 +493,7 @@ public static partial class AutonomousRvrEventLayer
         if (!SiegeScheduling) return Capacity(active);
         int cap = RealmEventPolicy.DefenderCap(active.RelicKeep);
         return active.MarchedAttackers <= 0 ? cap
-            : Math.Clamp((int)Math.Round(active.MarchedAttackers * Math.Clamp(RealmEventPolicy.EffectiveDefenseRatio, 0.25, 2.0)), 8, cap);
+            : RealmEventPolicy.DefendersFor(active.MarchedAttackers, active.Attackers.Values.Sum(), RealmEventPolicy.EffectiveDefenseRatio, cap);
     }
 
     private static int Capacity(ActiveEvent active) => active.DefenseReaction ? 240 : active.Retake ? active.RetakeCap :

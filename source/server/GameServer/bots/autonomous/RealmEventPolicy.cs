@@ -55,6 +55,15 @@ namespace DOL.GS
         public static double EffectiveDefenseRatio => SiegeDefenseBalance.Ratio(DefenseRatio);
 
         public static int AttackerCap(bool relic) => relic ? RelicAttackers : KeepAttackers;
+        /// <summary>
+        /// Defenders a siege takes: the defense share of the attacking army, measured on its larger size, when it marched or
+        /// now, at least 8 and at most the cap. 2026-10-19/20: the share was taken of the army that marched (10-60) while
+        /// attacker reinforcements grew it to 70-105, so Dun Bolg's defense was capped at 25 against 89 and the attackers won
+        /// every siege that finished.
+        /// </summary>
+        public static int DefendersFor(int marchedAttackers, int currentAttackers, double ratio, int cap) =>
+            Math.Clamp((int)Math.Round(Math.Max(marchedAttackers, currentAttackers) * Math.Clamp(ratio, 0.25, 2.0)), 8, Math.Max(8, cap));
+
         public static int DefenderCap(bool relic) => Math.Max(8, (int)Math.Round(AttackerCap(relic) * Math.Clamp(EffectiveDefenseRatio, 0.25, 2.0)));
         public static int ThirdRealmCap(bool relic) => AttackerCap(relic) / 2;
 

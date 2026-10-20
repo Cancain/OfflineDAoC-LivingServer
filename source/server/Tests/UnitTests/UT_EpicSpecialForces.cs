@@ -26,13 +26,36 @@ namespace DOL.UnitTests
         public void AWipeIsHalfTheAttemptFallenOrAResetAfterRealDamage(int engaged, int fallen, int health, int lowest, bool wipe) =>
             Assert.That(RealmRaidDungeonRoute.IsWipe(engaged, fallen, health, lowest), Is.EqualTo(wipe));
 
-        [TestCase(80, 0L, 48)]
-        [TestCase(80, 19 * 60_000L, 48)]
+        [TestCase(80, 0L, 56)]
+        [TestCase(80, 19 * 60_000L, 56)]
         [TestCase(80, 20 * 60_000L, 32)]   // after 20 minutes 40% will do
         [TestCase(10, 0L, 8)]              // never fewer than eight
         [TestCase(300, 0L, 150)]           // never more than 150
         public void ARegroupWaitsForMostOfTheRoster(int roster, long milliseconds, int needed) =>
             Assert.That(RealmRaidDungeonRoute.RegroupNeeded(roster, milliseconds), Is.EqualTo(needed));
+
+        [Test]
+        public void ARegroupRestsAtLeastFiveMinutes() =>
+            Assert.That(RealmRaidDungeonRoute.RegroupMinimumMilliseconds, Is.EqualTo(5 * 60_000L));
+
+        // An out-of-time scaled rally goes in with half of what it needs (at least 40); a full 200 raid keeps its own rule.
+        [TestCase(false, 103, 150, true)]   // Caer Sidi, 2026-10-20: 103 staged, about 60 more on the road
+        [TestCase(false, 90, 132, true)]
+        [TestCase(false, 74, 149, false)]   // under half
+        [TestCase(false, 39, 57, false)]    // half, but under the 40 minimum
+        [TestCase(false, 28, 57, false)]    // the Hibernian dragon rally that failed
+        [TestCase(false, 150, 200, false)]  // full raid
+        [TestCase(true, 150, 150, false)]   // forced raids never go in short
+        public void AnOutOfTimeRallyGoesInShortWithHalfTheRaid(bool forced, int present, int required, bool goes) =>
+            Assert.That(RealmRaidRecruitmentPolicy.GoesInShortAtDeadline(forced, present, required), Is.EqualTo(goes));
+
+        // Defenders follow the attacking army's size when it marched or now, whichever is larger.
+        [TestCase(25, 89, 0.75, 96, 67)]    // Dun Bolg, 2026-10-20: was capped at 25 against 89
+        [TestCase(60, 40, 0.75, 96, 45)]    // the marched size still counts after losses
+        [TestCase(10, 5, 0.75, 96, 8)]      // never fewer than 8
+        [TestCase(10, 200, 1.0, 96, 96)]    // never more than the cap
+        public void DefendersFollowTheLargerAttackingArmy(int marched, int now, double ratio, int cap, int defenders) =>
+            Assert.That(RealmEventPolicy.DefendersFor(marched, now, ratio, cap), Is.EqualTo(defenders));
 
         [Test]
         public void TwoFailedAttemptsEndTheRaid() =>
