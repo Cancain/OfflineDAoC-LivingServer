@@ -189,6 +189,13 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   (about 2,300 units from the pack) and the walk to Pheuloc's horse skipped the route checks. A bot that keeps dying
   in one place now releases to a bind at least 6,000 units from that spot, its walk to a horse bends around danger,
   and it won't board a horse that stands where it keeps dying.
+- **Parties clear dungeon bosses.** None of the 178 named monsters in the classic and Shrouded Isles dungeons was
+  ever a goal. Dungeons are not made more attractive: a party of three or more that has ground its dungeon camp for
+  ten minutes also goes for that dungeon's boss, once per task, when the boss is a kill target of a real quest at the
+  party's level (the quest table: Favonius Facilis for "Willing Sacrifice" at 15+, Te'Bui for "Lord Lauur's Wife"
+  at 35+, the Muire brothers for "Rest in Peace" at 17+) or has its own drop table, and the fight suits the party
+  (yellow at most for 3-5 bots, orange for six or more). It returns to its camp when the boss dies or after 15
+  minutes (`AUTONOMOUS_DUNGEON_BOSS_GOAL`, `AUTONOMOUS_DUNGEON_BOSS_RESULT`).
 - **Torst no longer disappears.** His eddies' brain set its body's speed before it had a body; the error removed
   Torst from the world the moment he summoned them.
 

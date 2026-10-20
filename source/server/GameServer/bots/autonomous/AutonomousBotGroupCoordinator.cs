@@ -120,6 +120,16 @@ public static partial class AutonomousBotGroupCoordinator
         // When the current camp was chosen, and whether the party's arrival there was logged (AUTONOMOUS_GROUP_ARRIVED).
         public long CampAssignedTick { get; set; }
         public string ArrivalLoggedCampId { get; set; } = string.Empty;
+        // Dungeon boss goal (AutonomousDungeonBossGoals): the boss being cleared, the camp to return to, and the bosses
+        // this task has already gone for.
+        public GameNPC DungeonBoss { get; set; }
+        public SharedCamp DungeonBossReturnCamp { get; set; }
+        public long DungeonBossUntilTick { get; set; }
+        public string DungeonBossReason { get; set; } = string.Empty;
+        public string GrindingCampId { get; set; } = string.Empty;
+        public long GrindingSinceTick { get; set; }
+        public long NextDungeonBossCheckTick { get; set; }
+        public HashSet<string> DungeonBossesTried { get; } = new(StringComparer.OrdinalIgnoreCase);
         public Dictionary<string, long> RejectedDungeonCamps { get; } = new(StringComparer.Ordinal);
         public int WipePenalty { get; set; }
         public long? NoCampSinceTick { get; set; }
@@ -591,6 +601,7 @@ public static partial class AutonomousBotGroupCoordinator
             if (!TryGetSession(bot.Group, out Session session) || session.Camp == null || session.Recovery.IsRegrouping)
                 return;
             session.Phase = "Grinding";
+            if (bot == session.Leader && TendDungeonBoss(session, bot)) return;
             // Group arrivals were never recorded (2026-10-17: 618 group goal attempts had kills but no arrival), so how
             // long parties take to reach their camps could not be measured.
             if (!string.Equals(session.ArrivalLoggedCampId, session.Camp.Id, StringComparison.Ordinal))
@@ -604,6 +615,79 @@ public static partial class AutonomousBotGroupCoordinator
             }
             WriteSessionMetadata(session, BotMembers(bot.Group));
         }
+    }
+
+    public static string DungeonBossCampId(GameNPC boss) => $"dungeon-boss:{boss.CurrentRegionID}:{boss.InternalID}";
+
+    /// <summary>
+    /// The leader of a party grinding a dungeon camp sends it after the dungeon's boss (once per task per boss) and
+    /// brings it back to the camp when the boss dies, disappears or 15 minutes pass. True when the camp changed.
+    /// </summary>
+    private static bool TendDungeonBoss(Session session, GameBot leader)
+    {
+        long now = GameLoop.GameLoopTime;
+        GameBot[] members = BotMembers(session.Group);
+        if (session.DungeonBoss is { } current)
+        {
+            if (!string.Equals(session.Camp?.Id, DungeonBossCampId(current), StringComparison.Ordinal))
+            { session.DungeonBoss = null; session.DungeonBossReturnCamp = null; return false; }
+            bool killed = !current.IsAlive;
+            if (!killed && current.ObjectState == GameObject.eObjectState.Active && now < session.DungeonBossUntilTick) return false;
+            Log.Info($"AUTONOMOUS_DUNGEON_BOSS_RESULT group={session.Id} boss=\"{current.Name}\" region={current.CurrentRegionID} " +
+                     $"result={(killed ? "killed" : now >= session.DungeonBossUntilTick ? "timed out" : "gone")} " +
+                     $"minutes={(now - (session.DungeonBossUntilTick - AutonomousDungeonBossGoals.BossAttemptMilliseconds)) / 60_000.0:0.0} " +
+                     $"back=\"{session.DungeonBossReturnCamp?.MonsterName}\"");
+            SharedCamp back = session.DungeonBossReturnCamp;
+            session.DungeonBoss = null; session.DungeonBossReturnCamp = null;
+            if (back == null) return false;
+            AssignCamp(session, back, members);
+            WriteSessionMetadata(session, members);
+            return true;
+        }
+        SharedCamp camp = session.Camp;
+        if (session.ObjectiveKind != eAutonomousObjectiveKind.GroupPve || camp == null || !camp.IsDungeon ||
+            leader.CurrentRegionID != camp.RegionId || leader.CurrentZone == null)
+            return false;
+        if (!string.Equals(session.GrindingCampId, camp.Id, StringComparison.Ordinal))
+        { session.GrindingCampId = camp.Id; session.GrindingSinceTick = now; return false; }
+        if (now - session.GrindingSinceTick < AutonomousDungeonBossGoals.GrindBeforeBossMilliseconds ||
+            now < session.NextDungeonBossCheckTick || members.Length == 0)
+            return false;
+        session.NextDungeonBossCheckTick = now + AutonomousDungeonBossGoals.BossCheckMilliseconds;
+        int level = (int)Math.Round(members.Average(member => member.Level));
+        GameNPC boss = null; string reason = string.Empty;
+        foreach (GameNPC npc in WorldMgr.GetNPCsFromRegion(camp.RegionId)
+                     .Where(npc => npc != null && npc.IsAlive && npc.ObjectState == GameObject.eObjectState.Active &&
+                                   npc.Realm == eRealm.None && npc is not GameBot && npc.Brain != null && !npc.InCombat &&
+                                   !string.IsNullOrEmpty(npc.Name) && char.IsUpper(npc.Name[0]) &&
+                                   (npc.Flags & (GameNPC.eFlags.PEACE | GameNPC.eFlags.CANTTARGET)) == 0 &&
+                                   !session.DungeonBossesTried.Contains(npc.Name) && !AutonomousAuditedCampPolicy.IsBotExcludedNpc(npc))
+                     .OrderBy(npc => leader.GetDistanceTo(npc)))
+        {
+            bool quest = AutonomousDungeonBossGoals.TryGetQuestBoss(camp.RegionId, npc.Name, out var known);
+            bool drops = AutonomousDungeonBossGoals.HasOwnDrops(npc.Name);
+            if (!AutonomousDungeonBossGoals.Qualifies(level, members.Length, npc.Level, quest ? known.QuestMinLevel : 0, drops)) continue;
+            var nav = PathfindingProvider.Instance;
+            Zone zone = npc.CurrentZone;
+            if (zone == null || zone != leader.CurrentZone || !nav.IsAvailable ||
+                !AutonomousDungeonTargetRoute.CanReach(nav, zone, new Vector3(leader.X, leader.Y, leader.Z), new Vector3(npc.X, npc.Y, npc.Z)))
+                continue;
+            boss = npc;
+            reason = AutonomousDungeonBossGoals.Reason(quest ? known : new AutonomousDungeonBossGoals.Boss(npc.Name, camp.RegionId, "", 0), drops);
+            break;
+        }
+        if (boss == null) return false;
+        session.DungeonBossesTried.Add(boss.Name);
+        session.DungeonBoss = boss;
+        session.DungeonBossReturnCamp = camp;
+        session.DungeonBossUntilTick = now + AutonomousDungeonBossGoals.BossAttemptMilliseconds;
+        session.DungeonBossReason = reason;
+        Log.Info($"AUTONOMOUS_DUNGEON_BOSS_GOAL group={session.Id} boss=\"{boss.Name}\" level={boss.Level} region={boss.CurrentRegionID} " +
+                 $"zone=\"{camp.ZoneName}\" party={members.Length} partyLevel={level} reason=\"{reason}\" from=\"{camp.MonsterName}\"");
+        AssignCamp(session, new SharedCamp(DungeonBossCampId(boss), boss.Name, camp.ZoneName, camp.RegionId, boss.X, boss.Y, boss.Z,
+            true, camp.IsFrontier, boss.Level), members);
+        WriteSessionMetadata(session, members);
+        return true;
     }
 
     /// <summary>The member that opens this party's pulls (route monsters included); null outside a coordinated party.</summary>
