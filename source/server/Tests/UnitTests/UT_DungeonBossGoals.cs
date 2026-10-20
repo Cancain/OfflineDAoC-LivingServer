@@ -13,7 +13,9 @@ namespace DOL.UnitTests
     {
         // party level, party size, boss level, quest minimum level (0 = no quest), own drops
         [TestCase(16, 6, 16, 15, false, true)]    // Favonius Facilis, "Willing Sacrifice" (15+), a level-16 party of six
-        [TestCase(14, 6, 16, 15, false, false)]   // under the quest's level
+        [TestCase(11, 6, 16, 15, false, false)]   // more than three levels under the quest's level
+        [TestCase(16, 5, 17, 17, false, true)]    // Muire Tomb: a level-16 party, "Rest in Peace" starts at 17
+        [TestCase(11, 5, 12, 13, false, true)]    // Nisse's Lair: Rygnol (12) at level 11, quest at 13
         [TestCase(16, 2, 16, 15, false, false)]   // a pair is not a boss party
         [TestCase(16, 6, 16, 0, false, false)]    // no quest and no drops: no reason to go
         [TestCase(36, 4, 39, 0, true, false)]     // Scratch (39) is orange to a party of four

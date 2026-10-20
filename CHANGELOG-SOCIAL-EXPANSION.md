@@ -185,7 +185,9 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   when that siege has begun and the defense is under half its cap, as long as the attack keeps half its army
   (`RVR_HOME_DEFENSE_BREAKOFF`). Raids are untouched: their members are not RvR forces. Albion took Midgard's
   Blendrake Faste with no defender ever arriving while about 80 Midgard bots kept attacking Caer Sursbrooke.
-- Committed attackers now actually re-check home defense every 30 seconds: a warband in a shared siege never
+- Committed attackers now actually re-check home defense every 30 seconds, also while mustering, marching or at
+  the siege (the first version only checked between plans; in the final test Hlidskialf Faste fell with no Albion
+  defense while Albion's army mustered against Dun Crimthain, and one solo bot was the only break-off): a warband in a shared siege never
   re-planned, so the break-off was never evaluated (Caer Hurbury fell in 13 minutes with no Albion defense while 62
   Albion bots attacked Dun Da Behnn).
 - **No defense muster once the attackers are at the keep.** Defenders go straight in. At Blendrake Faste the first
@@ -200,8 +202,8 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   and it won't board a horse that stands where it keeps dying.
 - **Parties clear dungeon bosses.** None of the 178 named monsters in the classic and Shrouded Isles dungeons was
   ever a goal. Dungeons are not made more attractive: a party of three or more that has ground its dungeon camp for
-  five minutes also goes for that dungeon's boss, once per task, when the boss is a kill target of a real quest at the
-  party's level (the quest table: Favonius Facilis for "Willing Sacrifice" at 15+, Te'Bui for "Lord Lauur's Wife"
+  five minutes also goes for that dungeon's boss, once per task, when the boss is a kill target of a real quest within
+  three levels of the party's (the quest table: Favonius Facilis for "Willing Sacrifice" at 15+, Te'Bui for "Lord Lauur's Wife"
   at 35+, the Muire brothers for "Rest in Peace" at 17+) or has its own drop table, and the fight suits the party
   (yellow at most for 3-5 bots, orange for six or more). It returns to its camp when the boss dies or after 15
   minutes (`AUTONOMOUS_DUNGEON_BOSS_GOAL`, `AUTONOMOUS_DUNGEON_BOSS_RESULT`).

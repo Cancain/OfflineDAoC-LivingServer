@@ -28,6 +28,10 @@ public static class AutonomousDungeonBossGoals
     /// <summary>Longest a party spends on one boss before returning to its camp.</summary>
     public const long BossAttemptMilliseconds = 15 * 60_000;
     public const long BossCheckMilliseconds = 2 * 60_000;
+    /// <summary>A party this many levels under a quest's level still goes for its boss (the con rule still decides).
+    /// Final test, 2026-10-20: a level-16 party ground Muire Tomb, whose "Rest in Peace" starts at 17, and a level-11
+    /// party ground Nisse's Lair for 55 minutes beside level 11-13 quest bosses whose quest starts at 13.</summary>
+    public const int QuestLevelTolerance = 3;
 
     private static readonly object Sync = new();
     private static Dictionary<(ushort Region, string Name), Boss> _questBosses;
@@ -44,7 +48,7 @@ public static class AutonomousDungeonBossGoals
     {
         bool quest = questMinLevel > 0;
         if (!quest && !hasOwnDrops) return false;
-        if (quest && partyLevel < questMinLevel) return false;
+        if (quest && partyLevel < questMinLevel - QuestLevelTolerance) return false;
         if (partySize < 3) return false;
         ConColor con = ConLevels.GetConColor(ConLevels.GetConLevel(Math.Clamp(partyLevel, 0, 127), Math.Clamp(bossLevel, 0, 127)));
         ConColor most = partySize >= 6 ? ConColor.ORANGE : ConColor.YELLOW;

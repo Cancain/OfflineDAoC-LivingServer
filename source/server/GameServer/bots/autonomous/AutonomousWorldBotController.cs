@@ -1770,6 +1770,20 @@ namespace DOL.GS
                                   _groupDirective.ObjectiveKind == eAutonomousObjectiveKind.RvR;
             string forceId = dynamicWarband ? _groupDirective.GroupId : $"rvr-{bot.DatabaseID}";
             bot.TempProperties.SetProperty("RvrEventForce", forceId);
+            // Home defense first: a warband committed to an attack (mustering, marching or at the siege) re-plans when
+            // its own realm's keep calls it home. The rally, march and siege paths below return before any re-plan, so
+            // the check runs here (2026-10-20: Hlidskialf Faste fell with no Albion defense while Albion's army
+            // mustered and marched on Dun Crimthain; one solo bot was the only break-off in two hours).
+            if (GameLoop.GameLoopTime >= _nextHomeDefenseCheck && !BotSiegeRuntime.Assigned(bot))
+            {
+                _nextHomeDefenseCheck = GameLoop.GameLoopTime + 30_000 + bot.ObjectID % 5_000;
+                if (AutonomousRvrEventLayer.HomeDefenseCalls(forceId, bot.Realm, dynamicWarband ? Math.Max(1, _groupDirective.BotMemberCount) : 1))
+                {
+                    _rvrDestination = ChooseRvrDestination(bot);
+                    _rvrApproachDestination = null;
+                    _nextRvrPlanReview = GameLoop.GameLoopTime + 45_000 + bot.ObjectID % 15_000;
+                }
+            }
             bool battleActive = AutonomousRvrEventLayer.IsBattleForce(forceId, GameLoop.GameLoopTime);
             var committedPlan = AutonomousRvrEventLayer.KeepPlan(forceId, bot.Realm, GameLoop.GameLoopTime);
             if (committedPlan != null)
@@ -1899,13 +1913,7 @@ namespace DOL.GS
                 _rvrDestination = null;
             }
 
-            // A warband in a shared siege re-plans only when its own realm's keep calls it home (RvR home defense).
-            bool homeCalls = _rvrSharedEvent && _rvrIntent is AutonomousRvrEventLayer.Intent.AssaultKeep or AutonomousRvrEventLayer.Intent.AssaultRelicKeep &&
-                             GameLoop.GameLoopTime >= _nextHomeDefenseCheck && !BotSiegeRuntime.Assigned(bot) &&
-                             (_nextHomeDefenseCheck = GameLoop.GameLoopTime + 30_000 + bot.ObjectID % 5_000) > 0 &&
-                             AutonomousRvrEventLayer.HomeDefenseCalls(_groupDirective?.GroupId ?? $"rvr-{bot.DatabaseID}", bot.Realm,
-                                 Math.Max(1, _groupDirective?.BotMemberCount ?? 1));
-            if (_rvrDestination == null || _rvrDestination.RegionId == 0 || homeCalls ||
+            if (_rvrDestination == null || _rvrDestination.RegionId == 0 ||
                 (!_rvrSharedEvent && GameLoop.GameLoopTime >= _nextRvrPlanReview && !BotSiegeRuntime.Assigned(bot)) ||
                 (_rvrIntent == AutonomousRvrEventLayer.Intent.Roam && bot.CurrentRegionID == _rvrDestination.RegionId &&
                  Distance(bot.X, bot.Y, _rvrDestination.X, _rvrDestination.Y) <= CampArrivalRadius))
