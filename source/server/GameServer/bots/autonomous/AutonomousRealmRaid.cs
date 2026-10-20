@@ -62,6 +62,10 @@ namespace DOL.GS
             public long NextPostWarning;
             /// <summary>Level-50 bots this raid must stage (200 when forced; scaled to the realm when automatic).</summary>
             public int Required = RealmRaidRecruitmentPolicy.AutonomousMinimumPresent;
+            /// <summary>This raid's members did most of the damage to its final encounter (LootOwner).</summary>
+            public bool FinalKillCredited;
+            /// <summary>Another realm's raid was credited with this raid's final encounter (a contested neutral dungeon).</summary>
+            public eRealm BeatenBy = eRealm.None;
         }
         private sealed class Party
         {
@@ -280,7 +284,7 @@ namespace DOL.GS
                         RealmRaidNeutralEvents.ApplyEncounterLevels(raid.Definition.Region, raid.Definition.Objectives);
                     raid.DungeonRoute?.ObserveCompletion();
                     if (raid.DungeonRoute?.Complete == true)
-                    { End(raid, now, "The final dungeon encounter has been defeated."); continue; }
+                    { End(raid, now, CompletionReason(raid, "The final dungeon encounter has been defeated.")); continue; }
                     if (raid.Started && RealmRaidRecruitmentPolicy.BattleExpired(raid.Forced, now, raid.Deadline))
                     { End(raid, now, "The four-hour expedition window ended."); continue; }
                     if (!raid.Started)
@@ -331,7 +335,7 @@ namespace DOL.GS
                         if (raid.DungeonRoute.Blocked)
                         { End(raid, now, "Route blocked: no remaining encounter was reachable from the raid's positions for 20 minutes."); continue; }
                         if (raid.DungeonRoute.Complete)
-                        { End(raid, now, $"The {raid.Definition.Name} expedition defeated the final encounter."); continue; }
+                        { End(raid, now, CompletionReason(raid, $"The {raid.Definition.Name} expedition defeated the final encounter.")); continue; }
                     }
                     foreach (Party party in raid.Parties.Values) UpdateView(raid, party);
                 }
@@ -1018,13 +1022,25 @@ namespace DOL.GS
 
         public static bool HasSharedSupport(GameBot bot) => GetView(bot?.Group) != null || RealmWarbandSupport.Get(bot) != null;
 
-        public static IGameStaticItemOwner LootOwner(GameNPC victim, IEnumerable<GameBot> contributors)
+        public static IGameStaticItemOwner LootOwner(GameNPC victim, IEnumerable<GameBot> contributors) =>
+            LootOwner(victim, contributors.Where(b => b != null).Distinct().ToDictionary(b => b, _ => 1.0));
+
+        /// <summary>
+        /// The expedition that did the most damage gets the drop. In a contested neutral dungeon two realms' raids can both
+        /// be on the final encounter; only the one credited here wins it (2026-10-20: Hibernia and Midgard were both in
+        /// Summoner's Hall, every Govannon drop went to Hibernians and both raids ended "Boss defeated").
+        /// </summary>
+        public static IGameStaticItemOwner LootOwner(GameNPC victim, IReadOnlyDictionary<GameBot, double> damageByBot)
         {
             lock (Sync)
             {
-                GameBot[] damaging = contributors.ToArray();
-                Raid raid = damaging.Select(b => b?.Group).Where(group => group != null).Select(group => Membership.GetValueOrDefault(group))
-                    .FirstOrDefault(r => r != null && r.Started && r.Definition.Region == victim.CurrentRegionID);
+                GameBot[] damaging = damageByBot.Keys.ToArray();
+                Raid raid = damageByBot.Where(p => p.Key?.Group != null)
+                    .Select(p => (Raid: Membership.GetValueOrDefault(p.Key.Group), Damage: p.Value))
+                    .Where(p => p.Raid != null && p.Raid.Started && p.Raid.Definition.Region == victim.CurrentRegionID)
+                    .GroupBy(p => p.Raid).OrderByDescending(g => g.Sum(p => p.Damage)).Select(g => g.Key).FirstOrDefault();
+                if (raid != null && raid.Definition.FinalTypes.Contains(victim.GetType().Name))
+                    CreditFinalKill(raid, victim);
                 if (raid == null)
                 {
                     // Completion can race the native death/loot callback. Keep
@@ -1039,6 +1055,26 @@ namespace DOL.GS
                 return nearby.Length == 0 ? null : new RealmRaidLootOwner(nearby, raid.LootLedger);
             }
         }
+
+        private static void CreditFinalKill(Raid winner, GameNPC victim)
+        {
+            winner.FinalKillCredited = true;
+            foreach (Raid rival in Raids.Values.Where(r => r != winner && r.Definition.Region == victim.CurrentRegionID &&
+                                                           r.Definition.FinalTypes.Contains(victim.GetType().Name)))
+                rival.BeatenBy = winner.Definition.Realm;
+            Log.Info($"REALM_RAID_FINAL_CREDIT event={winner.Definition.Id} boss=\"{victim.Name}\" region={victim.CurrentRegionID}");
+        }
+
+        /// <summary>"Boss defeated", unless another realm's raid was credited with this raid's final encounter.</summary>
+        public static string CompletionOutcome(bool credited, eRealm beatenBy) =>
+            !credited && beatenBy != eRealm.None ? "Beaten to it" : "Boss defeated";
+
+        private const string BeatenPrefix = "Beaten to it";
+
+        private static string CompletionReason(Raid raid, string won) =>
+            CompletionOutcome(raid.FinalKillCredited, raid.BeatenBy) == BeatenPrefix
+                ? $"{BeatenPrefix}: {GlobalConstants.RealmToName(raid.BeatenBy)}'s expedition killed the final encounter first."
+                : won;
 
         public static GameLiving[] SupportMembers(GameBot bot)
         {
@@ -1173,7 +1209,7 @@ namespace DOL.GS
             string outcome = stoppedByPlayer ? "Stopped by player" :
                 reason.StartsWith("Route blocked") ? "Route blocked" :
                 reason.StartsWith("Staging failed") ? "Failed rally" : reason.Contains("four-hour") ? "Timed out" :
-                reason.StartsWith("Defeated at") ? "Defeated" :
+                reason.StartsWith("Defeated at") ? "Defeated" : reason.StartsWith(BeatenPrefix) ? BeatenPrefix :
                 raid.Definition.IsDungeon ? raid.DungeonRoute?.Complete == true ? "Boss defeated" : "Ended (unconfirmed)" :
                 !raid.Boss.IsAlive ? "Boss defeated" : "Encounter unavailable";
             // Partial success: the named encounters the raid killed before it was stopped are part of its record.
@@ -1197,7 +1233,8 @@ namespace DOL.GS
                     finalBoss?.Name ?? raid.Definition.BossType, raid.Definition.Name));
             }
             GameBot[] recipients = raid.Support.OfType<GameBot>().ToArray();
-            foreach (GameNPC final in (raid.DungeonRoute?.FinalBosses ?? [raid.Boss]).Where(n => n != null && !n.IsAlive))
+            // A raid beaten to its final encounter has no share in its loot.
+            foreach (GameNPC final in (raid.DungeonRoute?.FinalBosses ?? [raid.Boss]).Where(n => n != null && !n.IsAlive && outcome != BeatenPrefix))
             {
                 if (CompletedLoot.Count >= 32) CompletedLoot.Remove(CompletedLoot.MinBy(p => p.Value.Expires).Key);
                 CompletedLoot[final] = new(recipients, raid.LootLedger, now + 60_000);

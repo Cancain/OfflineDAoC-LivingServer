@@ -30,6 +30,8 @@ namespace DOL.GS
                 return;
             if (killer is GameLiving deadly && AutonomousPveBossDanger.Marks(KillerKind(killer), deadly.Level, bot.Level))
                 AutonomousPveBossDanger.Record(bot.CurrentRegionID, bot.X, bot.Y, deadly.Level, DateTime.UtcNow);
+            if (string.Equals(KillerKind(killer), "monster", StringComparison.Ordinal))
+                AutonomousRepeatDeathSpots.Record(bot.DatabaseID, bot.CurrentRegionID, bot.X, bot.Y, DateTime.UtcNow);
             if (!Log.IsInfoEnabled)
                 return;
             try

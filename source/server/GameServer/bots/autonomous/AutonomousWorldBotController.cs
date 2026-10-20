@@ -3284,6 +3284,7 @@ namespace DOL.GS
             // Levelling solo bots weigh travel time (AutonomousBotDecisionEngine.TravelWeightPercent).
             bool weighTravel = !sharedGroup && bot.Level < 50;
             DateTime dangerUtc = DateTime.UtcNow;
+            var ownDeathSpots = sharedGroup ? [] : AutonomousRepeatDeathSpots.AllSpots(bot.DatabaseID, dangerUtc);
             var travelCrossings = new Dictionary<(eRealm Realm, ushort Region), DbZonePoint>();
 
             // The live world used to be regrouped by every individual bot.
@@ -3298,7 +3299,7 @@ namespace DOL.GS
                                         (sharedGroup || !AutonomousCampDangerBench.IsBenched(cell.Id)) &&
                                         IsZoneAccessible(bot.Realm, cell.Zone, bot.CurrentRegionID) &&
                                         AutonomousOrdinaryPveRealmPolicy.CanAssignCamp(bot.Realm, cell.RegionId,
-                                            cell.Zone?.ID ?? 0) &&
+                                            cell.Zone?.ID ?? 0, planningLevel) &&
                                         AutonomousAuditedCampPolicy.CanAssignToParty(cell.Id, groupSize)))
             {
                 // Filled into a reused buffer; only a camp that qualifies gets its own array (this per-cell
@@ -3314,6 +3315,9 @@ namespace DOL.GS
                     continue;
                 // No camp beside a spot where a monster far above this bot killed one recently (stefanrows' boss danger).
                 if (AutonomousPveBossDanger.IsNear(cell.RegionId, cell.X, cell.Y, planningLevel, dangerUtc))
+                    continue;
+                // Nor beside a place where this bot itself died again and again (AutonomousRepeatDeathSpots).
+                if (ownDeathSpots.Length > 0 && AutonomousRepeatDeathSpots.IsNear(ownDeathSpots, cell.RegionId, cell.X, cell.Y))
                     continue;
                 int[] validLevels = _campLevelScratch.AsSpan(0, validCount).ToArray();
 

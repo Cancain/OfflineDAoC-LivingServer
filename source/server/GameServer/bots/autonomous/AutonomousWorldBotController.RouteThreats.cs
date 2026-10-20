@@ -74,9 +74,10 @@ namespace DOL.GS
             }
             ReadOnlySpan<Vector3> corridor = route[..count];
 
-            // A solo levelling bot bends around monsters far above it and around remembered death spots before the
-            // one-monster rules below (stefanrows' route bends; AutonomousPveDangerBypass).
-            if (!grouped && !detouring && bot.Level < 50 && TryDangerBypass(bot, nav, zone, corridor))
+            // A solo bot bends around monsters far above it, remembered death spots and its own repeat-death spots
+            // before the one-monster rules below (stefanrows' route bends; AutonomousPveDangerBypass). Level 50s too
+            // since 2026-10-20: no level-50 bot ever bent a route, and two died 72 and 61 times to one glimmer pack.
+            if (!grouped && !detouring && TryDangerBypass(bot, nav, zone, corridor))
                 return false;
 
             eCharacterClass characterClass = (eCharacterClass)(bot.CharacterClass?.ID ?? 0);
@@ -256,8 +257,11 @@ namespace DOL.GS
                               mob.AggroRange > 0 && mob.AggroLevel > 0)
                 .Select(npc => new AutonomousPveDangerBypass.MobView(new(npc.X, npc.Y), npc.Level, npc.Name, true))
                 .ToArray();
-            var spots = AutonomousPveBossDanger.SpotsNear(bot.CurrentRegionID, bot.X, bot.Y, bot.Level, DateTime.UtcNow,
-                AutonomousPveDangerBypass.ScanRadius + AutonomousPveDangerBypass.RememberedSpotRadius);
+            DateTime utc = DateTime.UtcNow;
+            float spotScan = AutonomousPveDangerBypass.ScanRadius + AutonomousPveDangerBypass.RememberedSpotRadius;
+            var spots = AutonomousPveBossDanger.SpotsNear(bot.CurrentRegionID, bot.X, bot.Y, bot.Level, utc, spotScan);
+            foreach (var (x, y) in AutonomousRepeatDeathSpots.SpotsNear(bot.DatabaseID, bot.CurrentRegionID, bot.X, bot.Y, utc, spotScan))
+                spots.Add((x, y, bot.Level));
             List<AutonomousPveDangerBypass.Danger> dangers = AutonomousPveDangerBypass.BuildDangers(bot.Level, mobs, spots);
             if (dangers.Count == 0)
                 return false;

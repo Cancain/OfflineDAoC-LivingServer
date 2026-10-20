@@ -72,6 +72,13 @@ namespace DOL.GS
         // unrelated corridor mobs while never producing a valid haunt kill.
         // They remain real monsters and normal route threats, but are not a
         // reliable autonomous camp objective.
+        /// <summary>
+        /// Whether a corridor monster is pulled to clear the route. An epic monster is pulled only
+        /// by bots that came for it, or by a raid inside its own dungeon (where the raid fights it).
+        /// </summary>
+        public static bool PullsOnRoute(bool epic, bool ownTarget, bool inOwnRaidDungeon) =>
+            !epic || ownTarget || inOwnRaidDungeon;
+
         public static bool IsReliableAutonomousGoal(ushort region, string name) =>
             (region != AutonomousDarknessFallsPolicy.RegionId || AutonomousDarknessFallsNavigation.IsReady) &&
             !(region == 129 && string.Equals(name, "haunt", StringComparison.OrdinalIgnoreCase)) &&

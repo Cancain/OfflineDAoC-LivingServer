@@ -1,0 +1,91 @@
+using System;
+using System.Collections.Generic;
+using DOL.GS;
+using NUnit.Framework;
+
+namespace DOL.UnitTests
+{
+    /// <summary>Fixes from the 600-per-realm overnight run of 2026-10-19/20.</summary>
+    [TestFixture]
+    public class UT_OvernightRunFixes
+    {
+        // Contested raids stay; only the realm that landed the final kill wins (Summoner's Hall, 2026-10-20).
+        [TestCase(true, eRealm.None, "Boss defeated")]
+        [TestCase(false, eRealm.Hibernia, "Beaten to it")]
+        [TestCase(true, eRealm.Hibernia, "Boss defeated")]   // credited first; a later rival kill changes nothing
+        [TestCase(false, eRealm.None, "Boss defeated")]      // an uncontested kill with no damage record still counts
+        public void OnlyTheRealmThatKilledTheFinalBossWins(bool credited, eRealm beatenBy, string outcome) =>
+            Assert.That(AutonomousRealmRaid.CompletionOutcome(credited, beatenBy), Is.EqualTo(outcome));
+
+        // Tuscaran Glacier, 2026-10-20: the Birghir muster stayed at 0 for an hour while Suttung killed the raid.
+        [TestCase(0L, 60 * 60_000L, false)]                  // never empty
+        [TestCase(1L, 19 * 60_000L, false)]
+        [TestCase(1L, 20 * 60_000L + 1, true)]
+        [TestCase(10 * 60_000L, 25 * 60_000L, false)]
+        public void AMusterEmptyForTwentyMinutesIsSetAside(long emptySince, long now, bool unreachable) =>
+            Assert.That(RealmRaidDungeonRoute.MusterUnreachable(emptySince, now), Is.EqualTo(unreachable));
+
+        // Marfach Cavern, 2026-10-20: eight-bot parties pulled Black Lady as a corridor blocker.
+        [TestCase(false, false, false, true)]   // an ordinary corridor monster is still cleared
+        [TestCase(true, false, false, false)]   // an epic monster nobody came for is gone around or passed
+        [TestCase(true, true, false, true)]     // the bots' own target
+        [TestCase(true, false, true, true)]     // a raid inside its own dungeon fights its encounters
+        public void APartyPullsAnEpicOnlyWhenItCameForIt(bool epic, bool ownTarget, bool inOwnRaidDungeon, bool pulls) =>
+            Assert.That(AutonomousDungeonPolicy.PullsOnRoute(epic, ownTarget, inOwnRaidDungeon), Is.EqualTo(pulls));
+
+        [Test]
+        public void ThreeDeathsInOnePlaceMakeItTheBotsOwnDangerSpot()
+        {
+            DateTime now = new(2026, 10, 20, 4, 0, 0, DateTimeKind.Utc);
+            var deaths = new List<AutonomousRepeatDeathSpots.Death>
+            {
+                new(200, 368211, 652323, now.AddMinutes(-50)),
+                new(200, 367881, 653097, now.AddMinutes(-30)),
+            };
+            Assert.That(AutonomousRepeatDeathSpots.Spots(deaths, 200, now), Is.Empty, "two deaths are not a pattern yet");
+
+            deaths.Add(new(200, 368177, 652326, now.AddMinutes(-5)));
+            var spots = AutonomousRepeatDeathSpots.Spots(deaths, 200, now);
+            Assert.That(spots, Has.Count.EqualTo(1));
+            Assert.That(spots[0], Is.EqualTo((368177, 652326)), "the latest death marks the spot");
+            Assert.Multiple(() =>
+            {
+                Assert.That(AutonomousRepeatDeathSpots.Spots(deaths, 100, now), Is.Empty, "another region");
+                Assert.That(AutonomousRepeatDeathSpots.Spots(deaths, 200, now.AddHours(3)), Is.Empty, "deaths older than three hours are forgotten");
+            });
+
+            deaths.Add(new(200, 300000, 600000, now.AddMinutes(-1)));   // far away: not part of the cluster
+            Assert.That(AutonomousRepeatDeathSpots.Spots(deaths, 200, now), Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void ABotsOwnSpotsKeepItsCampsAwayAndForgetOtherBots()
+        {
+            AutonomousRepeatDeathSpots.Clear();
+            try
+            {
+                DateTime now = DateTime.UtcNow;
+                for (int i = 0; i < 3; i++)
+                    AutonomousRepeatDeathSpots.Record(42, 200, 368200 + i * 50, 652300, now.AddMinutes(-i));
+                var spots = AutonomousRepeatDeathSpots.AllSpots(42, now);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(AutonomousRepeatDeathSpots.IsNear(spots, 200, 369000, 652800), Is.True, "a camp beside the spot");
+                    Assert.That(AutonomousRepeatDeathSpots.IsNear(spots, 200, 380000, 652300), Is.False, "a camp well away");
+                    Assert.That(AutonomousRepeatDeathSpots.AllSpots(43, now), Is.Empty, "another bot's deaths are its own");
+                });
+            }
+            finally { AutonomousRepeatDeathSpots.Clear(); }
+        }
+
+        // Aegir's Landing, 2026-10-19: level-1 parties were sent to the Shrouded Isles and died to level 18-21 cats.
+        [TestCase(eRealm.Midgard, (ushort)151, 1, false)]
+        [TestCase(eRealm.Midgard, (ushort)151, 9, false)]
+        [TestCase(eRealm.Midgard, (ushort)151, 10, true)]
+        [TestCase(eRealm.Albion, (ushort)51, 5, false)]
+        [TestCase(eRealm.Hibernia, (ushort)181, 5, false)]
+        [TestCase(eRealm.Midgard, (ushort)100, 1, true)]     // classic Midgard is where new bots level
+        public void NewBotsLevelInTheClassicZonesFirst(eRealm realm, ushort region, int level, bool allowed) =>
+            Assert.That(AutonomousOrdinaryPveRealmPolicy.CanAssignCamp(realm, region, 0, level), Is.EqualTo(allowed));
+    }
+}

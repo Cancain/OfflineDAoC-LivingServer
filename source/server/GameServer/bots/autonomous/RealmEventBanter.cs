@@ -18,6 +18,7 @@ namespace DOL.GS
                 $"Word from {name}: the final foe has fallen! Honour to our realm and its brave company."),
             "Timed out" => Pick($"Our time at {name} is spent. We could not finish the fight; rally home and tend the wounded.",
                 $"The expedition to {name} must withdraw. No victory this time, but we shall return."),
+            "Beaten to it" => $"Another realm reached the end of {name} before us and took the prize. Fall back; next time we strike first.",
             "Defeated" => Pick($"We were beaten back at {name}. Carry the fallen home; we will be stronger when we return.",
                 $"{name} has broken our expedition. Fall back, companions, and remember what struck us down."),
             "Failed rally" => $"Not enough of our company reached {name} in time. The muster is called off; save your strength for another day.",

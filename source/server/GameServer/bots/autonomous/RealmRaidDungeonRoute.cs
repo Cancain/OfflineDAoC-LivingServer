@@ -57,6 +57,19 @@ namespace DOL.GS
         private Vector3 _musterPoint;
         private long _musterSince, _nextMusterLog, _musterEngagedTick;
         private bool _musterEngaged;
+        // Nobody stood at the muster since this tick (0 = someone is there).
+        private long _musterEmptySince;
+        private bool _musterUnreachable;
+
+        /// <summary>
+        /// 2026-10-20: Tuscaran Glacier's raid held "Mustering for Elder Council Birghir (0/xx)" for an hour while Elder
+        /// Icelord Suttung, beside the way there, killed 115 of its raiders; it never fought back and timed out. A raid
+        /// now turns on an epic encounter that is fighting its raiders, and gives up a muster nobody has reached for
+        /// <see cref="MusterUnreachableMilliseconds"/> (the encounter is set aside and tried again later).
+        /// </summary>
+        public const long MusterUnreachableMilliseconds = 20 * 60_000;
+        public static bool MusterUnreachable(long emptySince, long now) =>
+            emptySince > 0 && now - emptySince >= MusterUnreachableMilliseconds;
 
         /// <summary>
         /// Owner 2026-10-19: epic encounters stay at full strength ("high stakes and wow factor") but a wipe is not
@@ -104,6 +117,15 @@ namespace DOL.GS
             if (_wipes.TryDequeue(out var wipe)) { name = wipe.Name; failures = wipe.Failures; return true; }
             name = null; failures = 0;
             return false;
+        }
+
+        /// <summary>A live epic encounter (not the current target, not yet defeated) that is fighting one of the raiders.</summary>
+        private GameNPC HostileEncounter(GameNPC[] live, GameLiving[] participants)
+        {
+            var raiders = participants.Where(p => p.IsAlive && p.CurrentRegionID == _region).ToHashSet();
+            return live.FirstOrDefault(n => n != _target && n is IGameEpicNpc && n.IsAlive && n.InCombat &&
+                                            n.ObjectState == GameObject.eObjectState.Active && !_clearedNames.Contains(n.Name) &&
+                                            n.TargetObject is GameLiving victim && raiders.Contains(victim));
         }
 
         private bool IsMusteredEncounter(GameNPC npc) => npc is IGameEpicNpc || _finalTypes.Contains(npc.GetType().Name);
@@ -427,6 +449,8 @@ namespace DOL.GS
                 _musterEngaged = false;
                 _regrouping = false;
                 _engaged.Clear();
+                _musterEmptySince = 0;
+                _musterUnreachable = false;
                 _musterPoint = MusterPoint(participants);
             }
             // While the raid regroups, the survivors may still be fighting: arrivals wait at the muster point rather than
@@ -462,6 +486,13 @@ namespace DOL.GS
             GameLiving[] musteredRaiders = participants.Where(p => p.IsAlive && p.CurrentRegionID == _region &&
                                                    (p.IsWithinRadius(point, FinalMusterRadius) || p.IsWithinRadius(_target, TargetPresenceRadius))).ToArray();
             int mustered = musteredRaiders.Length;
+            if (mustered > 0) _musterEmptySince = 0;
+            else if (_musterEmptySince == 0) _musterEmptySince = now;
+            else if (MusterUnreachable(_musterEmptySince, now))
+            {
+                _musterUnreachable = true;
+                return true;
+            }
             // After a wipe the survivors rest and rebuff for a few minutes even when enough are already there.
             bool rested = !_regrouping || regroupMilliseconds >= RegroupMinimumMilliseconds;
             if (mustered >= needed && rested)
@@ -738,8 +769,29 @@ namespace DOL.GS
                 }
                 // Never switch a live grind objective because another party has not
                 // arrived, but never hold the whole expedition on a target nobody damages.
+                // An epic encounter fighting our raiders comes before one we are still gathering for.
+                if (!_target.InCombat && HostileEncounter(live, participants) is { } attacker)
+                {
+                    log.Warn($"REALM_EXPEDITION_TARGET_SWITCH region={_region} from=\"{_target.Name}\" to=\"{attacker.Name}\" level={attacker.Level} " +
+                             $"reason=\"it is fighting the raid\"");
+                    _target = attacker; TargetName = attacker.Name; TargetLevel = attacker.Level;
+                    Front = Destination = new(attacker.X, attacker.Y, attacker.Z);
+                    _targetProgressTick = _targetStartTick = now; _targetLowestHealth = attacker.Health;
+                    _targetClosest = float.MaxValue; _targetApproachTick = now;
+                    Hold = false; Status = "Clearing " + attacker.Name; return;
+                }
                 if (IsMusteredEncounter(_target) && MusterForFinal(participants, now))
-                    return;
+                {
+                    if (!_musterUnreachable) return;
+                    log.Warn($"REALM_EXPEDITION_MUSTER_UNREACHABLE region={_region} target=\"{_target.Name}\" " +
+                             $"at={(int)_musterPoint.X},{(int)_musterPoint.Y},{(int)_musterPoint.Z} minutes={MusterUnreachableMilliseconds / 60_000} " +
+                             $"reason=\"nobody reached the muster; the encounter is set aside and tried again later\"");
+                    _routeRetry[_target] = now + BlockedTargetRetryMilliseconds;
+                    _musterTarget = null;
+                    _target = null;
+                }
+                if (_target != null)
+                {
                 bool stalled = ShouldSkipTarget(_finalTypes.Contains(_target.GetType().Name), now - _targetProgressTick);
                 // A named encounter that stopped taking damage because the raid around it fell is a wipe, not a
                 // logistics problem: the raid regroups (or is defeated) instead of walking past it. While the raid
@@ -758,6 +810,7 @@ namespace DOL.GS
                 log.Warn($"REALM_EXPEDITION_TARGET_SKIPPED region={_region} target=\"{_target.Name}\" at={_target.X},{_target.Y},{_target.Z} " +
                          $"health={_target.HealthPercent} front={(int)Front.X},{(int)Front.Y},{(int)Front.Z} near={near} reason=\"no damage for five minutes\"");
                 _routeRetry[_target] = now + BlockedTargetRetryMilliseconds;
+                }
             }
             _target = null;
             GameLiving[] inside = participants.Where(p => p.IsAlive && p.CurrentRegionID == _region).ToArray();

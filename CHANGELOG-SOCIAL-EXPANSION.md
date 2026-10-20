@@ -152,6 +152,32 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - A regroup after a wipe waits for 70% of the raid (was 60%) and at least five minutes (was three): the second try at
   the Organic-Energy Mechanism went in five minutes after 152 of 156 raiders fell and did worse than the first.
 
+**From the overnight report (2026-10-20)**
+- **Contested raids stay; the kill decides.** Two realms' raids can still be in Summoner's Hall (or Darkness Falls)
+  together and fight each other. The final encounter's kill now goes to the raid that did the most damage to it
+  (`REALM_RAID_FINAL_CREDIT`); the other raid ends "Beaten to it" and gets no loot. Midgard had been credited with
+  Govannon while every drop went to Hibernians.
+- **Tuscaran Glacier.** When an epic monster that is not the raid's target attacks the raid, the raid turns on it
+  (`REALM_EXPEDITION_TARGET_SWITCH`): Elder Icelord Suttung killed 115 raiders while they waited at the Birghir muster.
+  A muster that stays empty for 20 minutes is set aside and tried later (`REALM_EXPEDITION_MUSTER_UNREACHABLE`)
+  instead of holding until the four hours run out.
+- **Parties no longer pull epic monsters they didn't come for.** In dungeons an epic monster on the route was pulled
+  like any corridor monster; eight-bot parties pulled Black Lady (level 65) in Marfach Cavern on the way to and from
+  Summoner's Hall, and she and her Ogress adds killed 195. Now they go around it when the navigation mesh has a way
+  outside its aggro, and otherwise walk past without pulling (`AUTONOMOUS_DUNGEON_EPIC_AVOIDED`). A raid inside its
+  own dungeon still fights its encounters.
+- **Raiders walking to their expedition alone bend around danger.** On the way to the Caer Sidi staging area 124
+  level-50 raiders died, mostly to dread liches and ancient zombies, and each death sent them 110,000 units back to
+  Fort Gwyntell; 25 to 37 were still walking when both rallies ran out of time.
+- **Level-50 bots use danger memory.** Route bends around monsters far above the bot were for levels 1-49 only, and a
+  bot now also remembers its own deadly places: three deaths within 1,200 units in three hours make a spot it bends
+  around and picks no camp beside (`AutonomousRepeatDeathSpots`). A level-50 Animist had died 72 times to one glimmer
+  pack near its Sheeroe Hills bind.
+- **New bots level in their classic zones first.** No XP camps in the Shrouded Isles below level 10: level-1 Midgard
+  parties were sent to Aegir's Landing, where scimitar cats (levels 18-21) killed level-1 bots 201 times in three hours.
+- **Torst no longer disappears.** His eddies' brain set its body's speed before it had a body; the error removed
+  Torst from the world the moment he summoned them.
+
 **Checked**
 - Automated: 3,223 server tests.
 - Live, on the owner's PC (new client, 650 bots online), first 39 minutes of the new build against the same 39

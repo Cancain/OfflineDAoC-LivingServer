@@ -777,7 +777,8 @@ namespace DOL.AI.Brain
             AggroLevel = 100;
             AggroRange = 800;
             ThinkInterval = 1500;
-            Body.MaxSpeedBase = 300;
+            // No Body yet in the constructor: TorstEddies.AddToWorld sets the speed (2026-10-20: this line threw
+            // every time Torst summoned his eddies, and the server removed Torst from the world).
         }
         private protected bool Point1check = false;
         private protected bool Point2check = false;
