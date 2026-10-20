@@ -93,6 +93,21 @@ namespace DOL.UnitTests
         public void DefendersGoStraightInOnceTheAttackersAreAtTheKeep(bool battleStarted, int attackersPresent, bool skip) =>
             Assert.That(RealmEventPolicy.DefendersSkipMuster(battleStarted, attackersPresent), Is.EqualTo(skip));
 
+        // Gjalpinulva, 2026-10-20: immune beyond 2,000 from her lair, but her tether is 2,500.
+        [TestCase(1237, -2291, true)]    // where Midgard raiders fought and died
+        [TestCase(1400, 1400, false)]    // about 1,980: still in the lair
+        [TestCase(0, 2001, true)]
+        public void ADragonOutsideItsLairIsTreatedAsOutOfTether(int dx, int dy, bool outside) =>
+            Assert.That(DragonLairPlacement.IsOutOfLair(dx, dy), Is.EqualTo(outside));
+
+        [Test]
+        public void EveryDragonIsImmuneOutsideTheSameLairRadius() => Assert.Multiple(() =>
+        {
+            Assert.That(MidGjalpinulva.LairRadius, Is.EqualTo(DragonLairPlacement.LairRadius));
+            Assert.That(AlbGolestandt.LairRadius, Is.EqualTo(DragonLairPlacement.LairRadius));
+            Assert.That(HibCuuldurach.LairRadius, Is.EqualTo(DragonLairPlacement.LairRadius));
+        });
+
         // Aegir's Landing, 2026-10-19: level-1 parties were sent to the Shrouded Isles and died to level 18-21 cats.
         [TestCase(eRealm.Midgard, (ushort)151, 1, false)]
         [TestCase(eRealm.Midgard, (ushort)151, 9, false)]

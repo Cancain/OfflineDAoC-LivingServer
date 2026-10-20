@@ -871,7 +871,11 @@ namespace DOL.GS
             }
             bool landed = DragonLanded(raid);
             bool hold = !raid.Started || !landed;
-            Vector3 point = hold ? party.Staging : new(raid.Boss.X, raid.Boss.Y, raid.Boss.Z);
+            // A dragon drawn out of its lair is immune there: the raid forms at the lair and draws it home
+            // (Gjalpinulva, 2026-10-20: the raid's posts followed her out and she stayed at 100% for an hour).
+            Vector3 point = hold ? party.Staging :
+                DragonLairPlacement.IsOutOfLair(raid.Boss) && DragonLairPlacement.Home(DragonLairPlacement.DragonRealm(raid.Boss)) is { } lair
+                    ? new(lair.X, lair.Y, lair.Z) : new(raid.Boss.X, raid.Boss.Y, raid.Boss.Z);
             if (!hold && !TryBattlePost(raid, party, point, raid.Definition.Region, out point))
             { point = party.Anchor ?? party.Staging; hold = true; }
             string state = !raid.Started ? !landed

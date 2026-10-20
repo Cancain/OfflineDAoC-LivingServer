@@ -181,6 +181,10 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   Blendrake Faste with no defender ever arriving while about 80 Midgard bots kept attacking Caer Sursbrooke.
 - **No defense muster once the attackers are at the keep.** Defenders go straight in. At Blendrake Faste the first
   defenders formed 26 minutes into the siege, mustered for six minutes, never marched, and the keep fell.
+- **Dragons drawn out of their lair go home.** A dragon takes no damage more than 2,000 units from its lair, but
+  its tether is 2,500, so bots kept fighting it in between. Gjalpinulva stayed at 100% for an hour with 130-170
+  Midgard raiders on her and killed 55. Bots now treat a dragon outside its lair like a boss outside its tether
+  (stop, lead it home), and the raid forms at the lair instead of following the dragon out.
 - **Torst no longer disappears.** His eddies' brain set its body's speed before it had a body; the error removed
   Torst from the world the moment he summoned them.
 

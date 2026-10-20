@@ -75,7 +75,8 @@ namespace DOL.GS
             npc is IGameEpicNpc || npc != null && npc.GetType() != typeof(GameNPC) && npc.TetherRange is > 0 and < ScriptedTetherBelow;
 
         public static bool IsOutOfTether(GameNPC npc) =>
-            HasEncounterTether(npc) && npc is { IsAlive: true, TetherRange: > 0 } && npc.Brain is not IControlledBrain && npc.IsOutOfTetherRange;
+            HasEncounterTether(npc) && npc is { IsAlive: true, TetherRange: > 0 } && npc.Brain is not IControlledBrain && npc.IsOutOfTetherRange ||
+            DragonLairPlacement.IsOutOfLair(npc);
 
         /// <summary>
         /// For an autonomous gamebot whose target is a boss outside its tether: stop attacking it, and if the
