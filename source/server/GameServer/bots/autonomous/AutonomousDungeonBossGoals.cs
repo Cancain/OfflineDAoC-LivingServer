@@ -22,8 +22,9 @@ public static class AutonomousDungeonBossGoals
 {
     public readonly record struct Boss(string Name, ushort RegionId, string Quest, int QuestMinLevel);
 
-    /// <summary>Minutes a party grinds its dungeon camp before it goes for the boss.</summary>
-    public const long GrindBeforeBossMilliseconds = 10 * 60_000;
+    /// <summary>Minutes a party grinds its dungeon camp before it goes for the boss (5: first hour on 88f7aea, the party
+    /// dungeon tasks seen ended after 1-11 minutes, most when the roster changed).</summary>
+    public const long GrindBeforeBossMilliseconds = 5 * 60_000;
     /// <summary>Longest a party spends on one boss before returning to its camp.</summary>
     public const long BossAttemptMilliseconds = 15 * 60_000;
     public const long BossCheckMilliseconds = 2 * 60_000;

@@ -700,17 +700,34 @@ public static partial class AutonomousRvrEventLayer
     /// 2026-10-20: about 80 Midgard bots kept attacking Caer Sursbrooke while Albion took Blendrake Faste with no
     /// Midgard defender ever arriving.
     /// </summary>
+    /// <summary>
+    /// Whether a warband committed to an attack should re-plan because its own realm's keep needs it (a committed
+    /// warband otherwise never re-plans during a siege). 2026-10-20: Caer Hurbury fell in 13 minutes with no Albion
+    /// defense while 62 Albion bots kept attacking Dun Da Behnn, and no break-off was ever evaluated.
+    /// </summary>
+    public static bool HomeDefenseCalls(string groupId, eRealm realm, int memberCount)
+    {
+        lock (Sync)
+        {
+            if (string.IsNullOrEmpty(groupId)) return false;
+            ActiveEvent attack = Events.Values.FirstOrDefault(active => active.Attackers.ContainsKey(groupId));
+            return attack != null && HomeDefenseTarget(attack, realm, memberCount) != null;
+        }
+    }
+
+    private static ActiveEvent HomeDefenseTarget(ActiveEvent attack, eRealm realm, int memberCount) =>
+        !SiegeScheduling || attack.Forced ? null : Events.Values
+            .Where(active => active != attack && active.DefenderRealm == realm && active.BattleStarted && IsLatestDefenseFocus(active))
+            .OrderBy(active => active.Defenders.Values.Sum())
+            .FirstOrDefault(active => RealmEventPolicy.BreaksOffToDefend(active.Defenders.Values.Sum(), DefenderCapFor(active),
+                attack.Attackers.Values.Sum(), attack.MarchedAttackers, memberCount));
+
     private static Plan HomeDefenseBreakOff(Force force, IReadOnlyCollection<LiveObjective> objectives, long nowTick)
     {
         if (!SiegeScheduling || force.AverageLevel < 50) return null;
         ActiveEvent attack = Events.Values.FirstOrDefault(active => active.Attackers.ContainsKey(force.GroupId));
-        if (attack == null || attack.Forced) return null;
-        ActiveEvent home = Events.Values
-            .Where(active => active != attack && active.DefenderRealm == force.Realm && active.BattleStarted &&
-                             IsLatestDefenseFocus(active))
-            .OrderBy(active => active.Defenders.Values.Sum())
-            .FirstOrDefault(active => RealmEventPolicy.BreaksOffToDefend(active.Defenders.Values.Sum(), DefenderCapFor(active),
-                attack.Attackers.Values.Sum(), attack.MarchedAttackers, force.MemberCount));
+        if (attack == null) return null;
+        ActiveEvent home = HomeDefenseTarget(attack, force.Realm, force.MemberCount);
         if (home == null || !TryJoin(home.Defenders, force, DefenderCapFor(home))) return null;
         attack.Attackers.Remove(force.GroupId);
         attack.Slots.Remove(force.GroupId);

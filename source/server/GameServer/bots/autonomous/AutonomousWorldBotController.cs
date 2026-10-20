@@ -1899,7 +1899,13 @@ namespace DOL.GS
                 _rvrDestination = null;
             }
 
-            if (_rvrDestination == null || _rvrDestination.RegionId == 0 ||
+            // A warband in a shared siege re-plans only when its own realm's keep calls it home (RvR home defense).
+            bool homeCalls = _rvrSharedEvent && _rvrIntent is AutonomousRvrEventLayer.Intent.AssaultKeep or AutonomousRvrEventLayer.Intent.AssaultRelicKeep &&
+                             GameLoop.GameLoopTime >= _nextHomeDefenseCheck && !BotSiegeRuntime.Assigned(bot) &&
+                             (_nextHomeDefenseCheck = GameLoop.GameLoopTime + 30_000 + bot.ObjectID % 5_000) > 0 &&
+                             AutonomousRvrEventLayer.HomeDefenseCalls(_groupDirective?.GroupId ?? $"rvr-{bot.DatabaseID}", bot.Realm,
+                                 Math.Max(1, _groupDirective?.BotMemberCount ?? 1));
+            if (_rvrDestination == null || _rvrDestination.RegionId == 0 || homeCalls ||
                 (!_rvrSharedEvent && GameLoop.GameLoopTime >= _nextRvrPlanReview && !BotSiegeRuntime.Assigned(bot)) ||
                 (_rvrIntent == AutonomousRvrEventLayer.Intent.Roam && bot.CurrentRegionID == _rvrDestination.RegionId &&
                  Distance(bot.X, bot.Y, _rvrDestination.X, _rvrDestination.Y) <= CampArrivalRadius))
@@ -2421,6 +2427,7 @@ namespace DOL.GS
 
         private AutonomousRvrEventLayer.Intent _rvrIntent;
         private long _nextRvrPlanReview;
+        private long _nextHomeDefenseCheck;
         // Removed world objects have ObjectID zero. Realm/type remains unique
         // while two or more relics are simultaneously carried or dropped.
         private static string RelicObjectiveId(GameRelic relic) =>
