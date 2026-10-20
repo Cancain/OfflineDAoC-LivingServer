@@ -205,7 +205,7 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   five minutes also goes for that dungeon's boss, once per task, when the boss is a kill target of a real quest within
   three levels of the party's (the quest table: Favonius Facilis for "Willing Sacrifice" at 15+, Te'Bui for "Lord Lauur's Wife"
   at 35+, the Muire brothers for "Rest in Peace" at 17+) or has its own drop table, and the fight suits the party
-  (yellow at most for 3-5 bots, orange for six or more). It returns to its camp when the boss dies or after 15
+  (orange at most for 3-5 bots, red for six or more; below level 20 one level up is already orange). It returns to its camp when the boss dies or after 15
   minutes (`AUTONOMOUS_DUNGEON_BOSS_GOAL`, `AUTONOMOUS_DUNGEON_BOSS_RESULT`).
 - **Torst no longer disappears.** His eddies' brain set its body's speed before it had a body; the error removed
   Torst from the world the moment he summoned them.

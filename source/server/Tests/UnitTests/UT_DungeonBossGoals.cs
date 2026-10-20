@@ -18,8 +18,8 @@ namespace DOL.UnitTests
         [TestCase(11, 5, 12, 13, false, true)]    // Nisse's Lair: Rygnol (12) at level 11, quest at 13
         [TestCase(16, 2, 16, 15, false, false)]   // a pair is not a boss party
         [TestCase(16, 6, 16, 0, false, false)]    // no quest and no drops: no reason to go
-        [TestCase(36, 4, 39, 0, true, false)]     // Scratch (39) is orange to a party of four
-        [TestCase(36, 6, 39, 0, true, true)]      // but fine for six
+        [TestCase(33, 4, 39, 0, true, false)]     // Scratch (39) is red to a party of four at 33
+        [TestCase(33, 6, 39, 0, true, true)]      // but a fight for six
         [TestCase(30, 6, 35, 35, false, false)]   // Te'Bui's quests start at 35
         [TestCase(35, 6, 35, 35, false, true)]
         [TestCase(50, 8, 20, 17, false, false)]   // grey: nothing left to gain

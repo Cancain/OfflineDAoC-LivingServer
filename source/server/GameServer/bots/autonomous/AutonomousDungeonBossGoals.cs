@@ -41,8 +41,8 @@ public static class AutonomousDungeonBossGoals
 
     /// <summary>
     /// Pure rule: whether a party goes for a boss. A quest boss needs the party at the quest's level; any boss needs
-    /// a reason (a quest or its own drops) and a fight the party can take: blue to yellow for 3-5 bots, up to orange
-    /// for six or more, never grey.
+    /// a reason (a quest or its own drops) and a fight the party can take: up to orange for 3-5 bots, up to red for
+    /// six or more (a named boss is a party fight; below level 20 one level up is already orange), never grey.
     /// </summary>
     public static bool Qualifies(int partyLevel, int partySize, int bossLevel, int questMinLevel, bool hasOwnDrops)
     {
@@ -51,7 +51,7 @@ public static class AutonomousDungeonBossGoals
         if (quest && partyLevel < questMinLevel - QuestLevelTolerance) return false;
         if (partySize < 3) return false;
         ConColor con = ConLevels.GetConColor(ConLevels.GetConLevel(Math.Clamp(partyLevel, 0, 127), Math.Clamp(bossLevel, 0, 127)));
-        ConColor most = partySize >= 6 ? ConColor.ORANGE : ConColor.YELLOW;
+        ConColor most = partySize >= 6 ? ConColor.RED : ConColor.ORANGE;
         return con > ConColor.GREY && con <= most;
     }
 
