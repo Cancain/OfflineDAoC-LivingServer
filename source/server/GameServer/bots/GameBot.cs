@@ -1166,9 +1166,19 @@ namespace DOL.GS
             }
         }
 
+        /// <summary>How far from a repeat-death spot a release bind must be when there is a choice.</summary>
+        public const float ReleaseClearanceFromDeathSpot = 6_000;
+
         private Point3D? FindNearestBindPoint()
         {
-            return BotReleaseBindPoints.Nearest(_deathRegionId, X, Y, IsAutonomousWorldBot ? Realm : eRealm.None);
+            if (!IsAutonomousWorldBot)
+                return BotReleaseBindPoints.Nearest(_deathRegionId, X, Y);
+            // A bot that keeps dying in one place releases to a bind well away from it, not to the stone it walks back
+            // into the same pack from (Sheeroe Hills, 2026-10-20: two bots died 72 and 61 times to one glimmer pack about
+            // 2,300 units from their release bind).
+            var spots = AutonomousRepeatDeathSpots.SpotsNear(DatabaseID, _deathRegionId, X, Y, DateTime.UtcNow,
+                AutonomousRepeatDeathSpots.AvoidRadius);
+            return BotReleaseBindPoints.NearestAwayFrom(_deathRegionId, X, Y, Realm, spots, ReleaseClearanceFromDeathSpot);
         }
 
         public void OnResurrectedBy(GameLiving caster)

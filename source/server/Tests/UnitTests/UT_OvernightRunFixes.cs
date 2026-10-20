@@ -108,6 +108,13 @@ namespace DOL.UnitTests
             Assert.That(HibCuuldurach.LairRadius, Is.EqualTo(DragonLairPlacement.LairRadius));
         });
 
+        // Sheeroe Hills, 2026-10-20: the release bind was about 2,300 units from the glimmer pack that killed the bot.
+        [TestCase(369726, 651032, false)]   // the bind they kept releasing to
+        [TestCase(380000, 651032, true)]    // a bind about 12,000 away
+        public void ABotThatKeepsDyingReleasesToABindWellAway(int bindX, int bindY, bool clear) =>
+            Assert.That(BotReleaseBindPoints.ClearOf(bindX, bindY, new List<(int X, int Y)> { (368010, 652514) },
+                GameBot.ReleaseClearanceFromDeathSpot), Is.EqualTo(clear));
+
         // Aegir's Landing, 2026-10-19: level-1 parties were sent to the Shrouded Isles and died to level 18-21 cats.
         [TestCase(eRealm.Midgard, (ushort)151, 1, false)]
         [TestCase(eRealm.Midgard, (ushort)151, 9, false)]

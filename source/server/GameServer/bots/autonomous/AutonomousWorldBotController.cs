@@ -4208,6 +4208,16 @@ namespace DOL.GS
             }
             if (!bot.IsWithinRadius(stable.BoardingPoint, AutonomousStableRoutePlanner.BoardingArrivalRadius))
             {
+                // A horse standing where this bot keeps dying is not a way out (Sheeroe Hills, 2026-10-20: bots died
+                // 15-20 times each to the glimmers on the walk from the bind to Pheuloc's horse).
+                if (AutonomousRepeatDeathSpots.SpotsNear(bot.DatabaseID, bot.CurrentRegionID, (int)stable.BoardingPoint.X,
+                        (int)stable.BoardingPoint.Y, DateTime.UtcNow, AutonomousRepeatDeathSpots.AvoidRadius).Count > 0)
+                {
+                    RejectPendingBoarding(bot, "This horse stands where this bot keeps dying; choosing another way");
+                    ResetRouteOrderState();
+                    return false;
+                }
+                GuardExpeditionDanger(bot, stable.BoardingPoint);
                 // Boarding uses a narrow 3-D check, tighter than ordinary
                 // travel arrival (48 horizontal / 96 vertical). Finish the
                 // validated approach instead of stopping outside boarding range. A bot already walking elsewhere turns
