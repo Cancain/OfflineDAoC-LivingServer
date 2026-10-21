@@ -43,6 +43,13 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - Bots no longer advertise the level 50 starter kits in /faction ("Does anybody want to make me an offer on Offline
   level 50 Cleric 41/33?").
 
+**New client: gates whose portcullis never rose (2026-10-21)**
+- The owner found Snowdonia Fortress's gate doors opening while the portcullis stayed down. The model converter took
+  only a door piece's swing, and a portcullis slides, so it was exported with the same open and closed position. The
+  converter now reads the slide too. Eight converted models were patched (the Albion and Midgard border keeps, two
+  stone halls, Caer Diogel's bars, a Galladoria root barrier); checked in game at Snowdonia: both gates open and the
+  north gate can be walked through. The new-client update must carry these eight files.
+
 **A boss could stop the server (2026-10-21)**
 - In the live run the Midgard raid (about 150 bots) fought Lydsyg in Iarnvidiur's Lair. His script recasts his area
   disease from OnAttackEnemy, and a spell landing on each target counts as an attack, so each cast set off dozens more:
