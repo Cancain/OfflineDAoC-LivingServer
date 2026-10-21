@@ -274,15 +274,66 @@ public static class AutonomousBotVoices
 
     /// <summary>A reply for the kind of question a player asked ("anyone on?" -> "here"), before replies by topic.</summary>
     public static bool TryShapedReply(GameBot bot, string incoming, out VC.Picked result, IReadOnlyDictionary<string, string> slots = null,
-        bool relax = false, bool requireVoices = true)
+        bool relax = false, bool requireVoices = true, GamePlayer asker = null)
     {
         result = null;
         string shape = AutonomousChatShortTalk.QuestionShape(incoming);
         // "hows it going" may read as no intent at all: it is still a how-are-you (live test 2026-10-18: it drew "hm?").
         if (shape == "ask_howareyou")
             return TryGreetingReply(bot, incoming, out result, slots, relax, requireVoices);
-        return shape is "ask_on" or "ask_permission" or "ask_choice" or "ask_guild" or "ask_next" or "ask_level" or "ask_xp" or "ask_doing" or "ask_plans" or "ask_whereall" &&
-               TryLine(bot, "reply", out result, answers: shape, slots: slots, relax: relax, requireVoices: requireVoices);
+        // Answers from the live world (chat audit 2026-10-21): where the bot is, whether it is in the place asked about, where
+        // people of the level hunt now, where the enemy is.
+        string live = shape switch
+        {
+            "ask_whereyou" => AutonomousChatLiveAnswers.WhereIAm(bot, asker, Random.Shared),
+            "ask_inplace" => AutonomousChatLiveAnswers.InPlace(bot, AutonomousChatShortTalk.PlaceAsked(incoming), Random.Shared),
+            "ask_hunt" => AutonomousChatLiveAnswers.WhereToHunt(bot, asker, incoming, Random.Shared),
+            "ask_enemy" => AutonomousChatLiveAnswers.EnemySighting(bot, Random.Shared),
+            _ => null,
+        };
+        if (live != null)
+        {
+            result = new VC.Picked(StyleFor(bot, live), null, null);
+            return true;
+        }
+        if (shape is null or "ack" or "ask_whereyou" or "ask_inplace" or "ask_hunt" or "ask_enemy")
+            return false;
+        // "can you help me?" is answered "sure, whats up?", not a random tip (the audit's drew "bind at the nearest town").
+        if (shape == "ask_help")
+            return TryLine(bot, "reply", out result, IntentName(eAutonomousChatIntent.Help), slots: slots, relax: relax, requireVoices: requireVoices,
+                filter: line => line.Text.TrimEnd().EndsWith('?') || line.Text.Contains("whats up", StringComparison.OrdinalIgnoreCase) ||
+                                line.Text.Contains("what do", StringComparison.OrdinalIgnoreCase));
+        string answers = shape == "ask_price" ? "trade" : shape;
+        return TryLine(bot, "reply", out result, answers: answers, slots: slots, relax: relax, requireVoices: requireVoices,
+            filter: line => ShapedFits(shape, incoming, line.Text));
+    }
+
+    /// <summary>
+    /// Replies of a shape's set that do not fit this question: an "anyone want to...?" is not answered "me me me" by a bot
+    /// that will not come, a price question not with "how much?", a yes-or-no question not with "whichever is faster".
+    /// </summary>
+    public static bool ShapedFits(string shape, string incoming, string reply)
+    {
+        string text = (reply ?? string.Empty).ToLowerInvariant();
+        switch (shape)
+        {
+            case "ask_anyone":
+                if (text is "here" or "im on" or "me, kind of" or "me me me" or "always" or "im around, whats up?")
+                    return false;
+                if (text.StartsWith("depends, what for") && incoming.Contains(" to ", StringComparison.OrdinalIgnoreCase))
+                    return false;
+                break;
+            case "ask_price":
+                if (!(text.Contains("exchange") || text.Contains("cheap") || text.Contains("crafter") || text.Contains("keep asking") ||
+                      text.Contains("twink")))
+                    return false;
+                break;
+            case "ask_opinion":
+                if (text.Contains("whichever") || text.Contains("both") || text.Contains("lots of practice"))
+                    return false;
+                break;
+        }
+        return AutonomousChatShortTalk.ReplyFits(incoming, reply);
     }
 
     /// <summary>A corpus line of a kind for this bot, or false (the caller keeps its old line).</summary>

@@ -119,6 +119,10 @@ public static class AutonomousChatShortTalk
     /// "ask_on", or null.</summary>
     public static string QuestionShape(string text)
     {
+        // "ok", "sure", "nice", "me too": an acknowledgement, which nobody answers (chat audit 2026-10-21: "yes" drew
+        // "interesting", "sure" drew "lol what", "nice" drew "ouch been there").
+        if (IsAcknowledgement(text))
+            return "ack";
         if (AsksHowAreYou(text))
             return "ask_howareyou";
         if (AsksWhoIsOn(text))
@@ -157,9 +161,104 @@ public static class AutonomousChatShortTalk
         if (HasPhrase(words, "mind if i", "ok if i", "okay if i", "is it ok if", "alright if i", "anyone mind if"))
             return "ask_permission";
         // "should i roll a cleric or a friar?"
-        if (text.Contains('?') && words.Contains("or") && !HasPhrase(words, "or something", "or anything", "or what", "or so", "or not"))
+        if (IsEitherOr(text))
             return "ask_choice";
+        // Chat audit 2026-10-21: these fell to replies by topic that did not answer them ("where is a good place to level at 24?"
+        // drew "take the horse from Camelot", "anyone in camelot?" "maybe maybe not", "how much is a bloodied sword worth?"
+        // "not my class sorry", "anyone want to do a dungeon?" "take it slow, one pull at a time", "i died again" "what?").
+        if (AutonomousBotChatCoordinator.AsksWhereYouAre(text))
+            return "ask_whereyou";
+        if (PlaceAsked(text) != null)
+            return "ask_inplace";
+        if (HasPhrase(words, "good place to level", "good place to hunt", "good spot to level", "good spot for", "good camp for",
+                "good place for", "good xp for", "where is good xp", "wheres good xp", "where to level", "where to hunt", "where should i level",
+                "where should i hunt", "where can i level", "where can i hunt", "where do i level", "where do i hunt", "where is a good camp",
+                "wheres a good camp", "where is a good spot", "wheres a good spot", "where is a good place", "wheres a good place",
+                "where do people level", "where do people hunt", "where is everyone leveling", "where are people leveling"))
+            return "ask_hunt";
+        if (HasPhrase(words, "where are the mids", "where are the hibs", "where are the albs", "where are the enemies", "where is the enemy",
+                "wheres the enemy", "where is the zerg", "wheres the zerg", "where did the zerg go", "any mids out", "any hibs out", "any albs out",
+                "seen any mids", "seen any hibs", "seen any albs", "any enemies out", "where is the fight", "wheres the fight", "where is the action",
+                "wheres the action"))
+            return "ask_enemy";
+        if (HasPhrase(words, "how much", "price check", "pc on", "what do they go for", "what does it go for", "what do these go for",
+                "what are they worth", "what is it worth") || words.Contains("worth") && HasPhrase(words, "what is", "whats", "what are"))
+            return "ask_price";
+        if (!words.Any(GroupWords.Contains) && HasPhrase(words, "anyone want to", "anyone wanna", "anyone going", "anyone up for",
+                "anyone feel like", "anybody want to", "anybody wanna", "anybody going", "anybody up for", "any1 want to", "any1 wanna",
+                "who wants to", "who wants", "who is up for", "whos up for", "anyone doing", "anyone running", "anyone heading", "anyone coming",
+                "anybody coming", "anyone interested in", "anyone keen"))
+            return "ask_anyone";
+        if (HasPhrase(words, "best spec", "what spec", "which spec", "how should i spec", "how do i spec", "how to spec", "any tips",
+                "any advice", "tips for", "advice for", "how do i make money", "how do i get money", "how to make money", "how do i get gold",
+                "how do i make gold", "how do i get coin", "how do i make coin", "how do i get plat", "how do i make plat", "how do i level",
+                "how do i solo", "how to level", "how to solo", "how do i get better", "how do i get good"))
+            return "ask_advice";
+        if (HasPhrase(words, "what should i do", "what do i do now", "what do i do next", "what should i do next", "what now"))
+            return "ask_advice";
+        if (HasPhrase(words, "can you help", "can someone help", "can anyone help", "can somebody help", "help me", "i need help", "need help",
+                "anyone help", "could use some help", "could use help") && words.Length <= 6)
+            return "ask_help";
+        if (text.Contains('?') && (words.Contains("worth") || HasPhrase(words, "do you think", "would you", "is it smart", "is it a good idea",
+                "good idea to") || HasPhrase(words, "should i") && !words.Any(word => word is "what" or "where" or "how" or "which" or "when" or "who")))
+            return "ask_opinion";
+        if (!text.Contains('?') && (HasPhrase(words, "i died", "died again", "keep dying", "we wiped", "i give up", "so slow", "hate this",
+                "this is hard", "fml", "lost my", "no drops", "nothing drops", "so tired of", "cant win", "can't win", "got ganked", "ganked again") ||
+                words.Any(word => word is "sucks" or "ugh" or "annoying" or "wiped" or "argh" or "sigh")))
+            return "complaint";
         return null;
+    }
+
+    /// <summary>"cleric or friar?", "polearm or two handed?": a question between two things. Not "is it just me or...",
+    /// "or am i doing it wrong", "or what" (chat audit 2026-10-21: "is the enchanter pet worth it or just a buffbot?" drew
+    /// "second one imo").</summary>
+    public static bool IsEitherOr(string text)
+    {
+        if (string.IsNullOrEmpty(text) || !text.Contains('?'))
+            return false;
+        string[] words = AutonomousChatIntentModel.Words(text).Select(word => word.Replace("'", string.Empty)).ToArray();
+        return words.Contains("or") && !HasPhrase(words, "or something", "or anything", "or what", "or so", "or not", "or is it just me",
+            "or is that just me", "or just me", "or is it me", "or am i", "or is that a myth", "or is that true", "or just a", "or no",
+            "or nah", "or is it", "or is that");
+    }
+
+    /// <summary>"really?", "what?", "why?", "srsly": a two-word follow-up to something else that was said, which only the
+    /// one it was said to can answer.</summary>
+    public static bool IsFollowUp(string text)
+    {
+        string[] words = AutonomousChatIntentModel.Words(text);
+        return words.Length is > 0 and <= 2 && words.All(word => word is "really" or "what" or "why" or "how" or "huh" or "srsly" or
+            "seriously" or "for" or "real" or "wait" or "who" or "when" or "where" or "which" or "rly" or "wut" or "wat" or "eh" or "sorry");
+    }
+
+    private static readonly HashSet<string> AckWords = Set("yes", "yeah", "yea", "ya", "yep", "yup", "no", "nope", "nah", "ok", "okay",
+        "k", "kk", "sure", "cool", "nice", "same", "true", "right", "agreed", "agree", "maybe", "alright", "aight", "fair", "indeed",
+        "exactly", "word", "mhm", "hm", "hmm", "oh", "ah", "ahh", "see", "me", "too", "got", "gotcha", "understood", "noted", "makes",
+        "sense", "sounds", "good", "fine", "neat", "great", "perfect", "def", "definitely", "probably", "prolly", "guess", "suppose",
+        "same", "here", "true", "ikr", "totally", "either", "neither", "thats", "that's", "is", "was", "really", "yeh", "ye");
+
+    /// <summary>"ok", "sure", "nice", "me too", "makes sense": a line that only acknowledges what was said.</summary>
+    public static bool IsAcknowledgement(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text) || text.Contains('?'))
+            return false;
+        string[] words = AutonomousChatIntentModel.Words(text);
+        return words.Length is > 0 and <= 5 && Only(words, AckWords) && !words.All(word => word is "i" or "me" or "is" or "was" or "here" or "see");
+    }
+
+    private static readonly System.Text.RegularExpressions.Regex PlacePattern = new(
+        @"^(?:is |are )?(?:there )?(?:anyone|anybody|any1|someone|somebody|any (?:albs?|mids?|hibs?|players?|people|one|body))(?: still)? (?:in|at|near|around|by|over in) (?:the )?([a-z' ]{3,40}?)\s*\??$",
+        System.Text.RegularExpressions.RegexOptions.CultureInvariant);
+
+    /// <summary>The place in "anyone in camelot?", "any albs near cotswold?", or null.</summary>
+    public static string PlaceAsked(string text)
+    {
+        string t = string.Join(' ', AutonomousChatIntentModel.Words(text));
+        var match = PlacePattern.Match(t + (text?.TrimEnd().EndsWith('?') == true ? "?" : ""));
+        if (!match.Success)
+            return null;
+        string place = match.Groups[1].Value.Trim();
+        return place is "a group" or "group" or "a guild" or "guild" or "game" or "the game" or "here" or "town" || place.Length < 3 ? null : place;
     }
 
     /// <summary>
@@ -183,8 +282,29 @@ public static class AutonomousChatShortTalk
         bool seeksGroup = (HasPhrase(said, "lfg", "looking for group", "looking for a group") || said.Contains("lf")) &&
                           !HasPhrase(said, "lfm", "looking for more", "lf1m", "lf2m", "lf3m");
         bool assumesGroup = HasPhrase(words, "how many do you have", "how many do u have", "need a healer still",
-            "still need someone", "if you still need someone", "how many u got");
-        return !(seeksGroup && assumesGroup);
+            "still need someone", "if you still need someone", "how many u got", "how many are u", "how many are you", "fill a spot",
+            "if u inv", "if you inv", "pst me when u form", "pst me when you form", "when u form up", "when you form up");
+        if (seeksGroup && assumesGroup)
+            return false;
+        // Chat audit 2026-10-21: "two handed or sword and board?" drew "imo yes"; "anyone selling a staff?" drew "i would just
+        // vendor it"; "how much is it worth?" drew "how much?".
+        string replyText = string.Join(' ', words);
+        bool eitherOr = IsEitherOr(incoming);
+        if (eitherOr && words.Length <= 4 && HasPhrase(words, "imo yes", "imo no", "yes do it", "i would", "i wouldnt", "go for it",
+                "worth it imo", "not worth it", "yes", "no", "do it"))
+            return false;
+        bool buying = HasPhrase(said, "wtb", "anyone selling", "anybody selling", "want to buy", "looking to buy", "looking for a", "need a",
+            "where can i buy", "where do i buy", "anyone have a", "anyone got a");
+        if (buying && HasPhrase(words, "vendor it", "worth something", "what its worth", "pst me the stats", "gl selling", "gl with the sale",
+                "is it still up", "what are you asking", "no idea what its worth", "someone will want it", "hold onto it", "post it on",
+                "upgrade for an alt", "list it", "sell it", "who is buying", "whos buying", "merchants pay half"))
+            return false;
+        if (HasPhrase(words, "wts or wtb") && (said.Any(word => word is "wts" or "wtb" or "selling" or "buying" or "sell" or "buy")))
+            return false;
+        bool asksPrice = HasPhrase(said, "how much", "price check", "pc on") || said.Contains("worth");
+        if (asksPrice && (HasPhrase(words, "how much", "whats the price", "what are you asking", "what price") || replyText == "price"))
+            return false;
+        return true;
     }
 
     public static bool HasPhrase(string[] words, params string[] phrases)

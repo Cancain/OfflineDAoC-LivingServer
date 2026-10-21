@@ -248,6 +248,15 @@ namespace DOL.GS
 
         public override int MaxMana => GetModified(eProperty.MaxMana);
 
+        /// <summary>A bot's /say, recorded in the chat transcript (CHAT_LINE) when a player is near enough to hear it.</summary>
+        public override bool Say(string str)
+        {
+            bool said = base.Say(str);
+            if (said && AutonomousLivingServer.PlayerHears(this))
+                BotChatTranscript.Bot("say", Name, Realm, str);
+            return said;
+        }
+
         public override int MaxConcentration => GetModified(eProperty.MaxConcentration);
         public override int Concentration => MaxConcentration - (effectListComponent?.UsedConcentration ?? 0);
 

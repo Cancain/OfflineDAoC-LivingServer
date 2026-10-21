@@ -43,6 +43,31 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - Bots no longer advertise the level 50 starter kits in /faction ("Does anybody want to make me an offer on Offline
   level 50 Cleric 41/33?").
 
+**Chat that answers what was said (2026-10-21)**
+- The owner found conversations still didn't make sense. Nothing in the log showed what was said, so the server log
+  now has a chat transcript: `CHAT_LINE` for every bot line a player can see (/say near a player, /faction, /gu,
+  /group, /send), with `via=` naming the code that chose it, and for every line a player says, with the intent the
+  chat model read in it.
+- An audit ran 55 typical player lines through the reply path. Many drew a reply that didn't answer them: "where is a
+  good place to level at 24?" drew "take the horse from Camelot", "yes" drew "interesting", "sure" drew "lol what",
+  "anyone in camelot?" drew "maybe maybe not", "i died again" drew "what?", "how much is a bloodied sword worth?" drew
+  "not my class sorry", and "anyone want to do a dungeon?" drew a dungeon tip. Now:
+  - "ok", "sure", "nice", "me too" and other acknowledgements draw no reply, and neither do "really?" and "why?" unless
+    you name a bot.
+  - A line nothing fits draws no reply, where it used to draw "huh", "lol what" or an old formal line ("Things seem
+    steady from where I am."). A question nothing fits draws an honest "not sure".
+  - Answers from the live world: "where should I level at 24?" names the zone where bots of that level are camping
+    right now and a dungeon for the level; "where are the mids?" names the frontier zone with the most enemy gamebots
+    in it (or says it's quiet); "anyone in camelot?" is answered only by bots that are there; "where are you?" in
+    /say, /faction, /gu and /group gets the bot's zone, level and class, as /send already did.
+  - "anyone want to...?" and "who wants to...?" get yes-or-no-to-coming answers (never "me me me" from a bot that won't
+    come), price questions get price answers, "should I...?" and "is it worth...?" an opinion, "can you help me?" "sure,
+    whats up?", and a complaint sympathy. An either-or question isn't answered "imo yes". A buyer isn't told to vendor it.
+  - A question or request is no longer dropped because bots answered another line in the last 10-12 seconds ("hi" then
+    "anyone want to group?" got nothing).
+- Bot-to-bot: an either-or question takes the choice answers, frontier news the frontier replies ("mids 8man in cathal"
+  drew "same :)"), and "anyone else...?" an opinion rather than "count me out this time".
+
 **Melee bots no longer stand under flying monsters**
 - A melee bot only picks a flying monster it can walk up to. A level 50 Midgard melee group timed out 45 times on
   griffon gliders in Gripklosa from 2,400-3,500 units away, and one member stood still for 15 minutes. Casters and

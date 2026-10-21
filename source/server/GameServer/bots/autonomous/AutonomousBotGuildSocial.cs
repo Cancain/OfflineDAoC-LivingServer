@@ -248,13 +248,27 @@ public static class AutonomousBotGuildSocial
     {
         if (!Enabled || player?.Guild == null || string.IsNullOrWhiteSpace(message))
             return;
+        BotChatTranscript.Player("guild", player, message, player.Guild.Name);
         Guild guild = player.Guild;
         GameBot[] speakers = Speakers(guild);
         if (speakers.Length == 0)
             return;
+        // Chat audit 2026-10-21: "ok" and "nice" draw no answer, "anyone in camelot?" only from guildmates who are there,
+        // and a question is not dropped by the reply cooldown.
+        string shape = AutonomousChatShortTalk.QuestionShape(message);
+        if (shape == "ack")
+            return;
+        if (shape == "ask_inplace")
+        {
+            string place = AutonomousChatShortTalk.PlaceAsked(message);
+            speakers = speakers.Where(bot => AutonomousChatLiveAnswers.IsIn(bot, place)).ToArray();
+            if (speakers.Length == 0)
+                return;
+        }
         lock (Sync)
         {
-            if (LastReplyByGuild.TryGetValue(guild.GuildID, out long last) && GameLoop.GameLoopTime - last < GuildReplyCooldownMs)
+            if (LastReplyByGuild.TryGetValue(guild.GuildID, out long last) && GameLoop.GameLoopTime - last < GuildReplyCooldownMs &&
+                !AutonomousBotChatCoordinator.NeedsAnswer(message))
                 return;
             LastReplyByGuild[guild.GuildID] = GameLoop.GameLoopTime;
         }
@@ -290,7 +304,7 @@ public static class AutonomousBotGuildSocial
             VC.Picked picked = null;
             // The question type first, whatever the intent ("anyone on?" reads as none; live test 2026-10-18: it drew
             // "hmm, i would ask a trainer").
-            string line = AutonomousBotVoices.TryShapedReply(bot, message, out picked, slots, relax: true, requireVoices: false) ||
+            string line = AutonomousBotVoices.TryShapedReply(bot, message, out picked, slots, relax: true, requireVoices: false, asker: player) ||
                           intent is not (eAutonomousChatIntent.Unknown or eAutonomousChatIntent.IgnoreOutOfWorld) &&
                           (intent == eAutonomousChatIntent.Greeting
                               ? AutonomousBotVoices.TryGreetingReply(bot, message, out picked, slots, relax: true, requireVoices: false)
@@ -691,6 +705,7 @@ public static class AutonomousBotGuildSocial
         if (safe.Length > Lines.MaxLength)
             safe = safe[..Lines.MaxLength];
         guild.SendMessageToGuildMembers($"[Guild] {speaker}: \"{safe}\"", eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+        BotChatTranscript.Bot("guild", speaker, (eRealm)guild.Realm, safe, guild.Name);
     }
 
     private static bool Eligible(GameBot bot) => bot?.IsAutonomousWorldBot == true && !bot.IsTemporaryGroupHelper && bot.IsAlive &&

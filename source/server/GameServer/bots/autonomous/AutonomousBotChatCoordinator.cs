@@ -132,7 +132,8 @@ public static class AutonomousBotChatCoordinator
     {
         if (player == null || string.IsNullOrWhiteSpace(message))
             return;
-        BroadcastFaction(player.Name, player.Realm, message);
+        BotChatTranscript.Player("faction", player, message);
+        SendFaction(player.Name, player.Realm, message);
         AutonomousBotDebates.PlayerSpoke(player.Realm);
         lock (Sync)
             LastPlayerFactionLine[player.Realm] = GameLoop.GameLoopTime;
@@ -140,7 +141,7 @@ public static class AutonomousBotChatCoordinator
             return;
         lock (Sync)
         {
-            if (LastFactionPlayerResponse.TryGetValue(player.Realm, out long last) && GameLoop.GameLoopTime - last < 12_000)
+            if (LastFactionPlayerResponse.TryGetValue(player.Realm, out long last) && GameLoop.GameLoopTime - last < 12_000 && !NeedsAnswer(message))
                 return;
             LastFactionPlayerResponse[player.Realm] = GameLoop.GameLoopTime;
         }
@@ -151,17 +152,34 @@ public static class AutonomousBotChatCoordinator
     {
         if (player == null || string.IsNullOrWhiteSpace(message) || player.CurrentRegion == null)
             return;
+        BotChatTranscript.Player("say", player, message);
         if (AutonomousChatIntentModel.Predict(message) == eAutonomousChatIntent.IgnoreOutOfWorld)
             return;
         if (AutonomousBotGuildSocial.TryAnswerGuildRequest(player, message, false))
             return;
         lock (Sync)
         {
-            if (LastLocalPlayerResponse.TryGetValue(player.CurrentRegionID, out long last) && GameLoop.GameLoopTime - last < 10_000)
+            if (LastLocalPlayerResponse.TryGetValue(player.CurrentRegionID, out long last) && GameLoop.GameLoopTime - last < 10_000 && !NeedsAnswer(message))
                 return;
             LastLocalPlayerResponse[player.CurrentRegionID] = GameLoop.GameLoopTime;
         }
         SchedulePlayerReplies(player, message, false);
+    }
+
+    /// <summary>
+    /// A line the reply cooldown must not drop: a question or a request. Chat audit 2026-10-21: "hi" then "anyone want to
+    /// group?" five seconds later got no answer, because any reply in the last 12 s silenced the next line.
+    /// </summary>
+    public static bool NeedsAnswer(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return false;
+        string shape = AutonomousChatShortTalk.QuestionShape(message);
+        if (shape == "ack")
+            return false;
+        return message.Contains('?') || shape != null ||
+               AutonomousChatIntentModel.Predict(message) is eAutonomousChatIntent.Grouping or eAutonomousChatIntent.Rez or
+                   eAutonomousChatIntent.Alarm or eAutonomousChatIntent.Help or eAutonomousChatIntent.Trading;
     }
 
     public const int TellMinGapMs = 3_000;
@@ -178,6 +196,7 @@ public static class AutonomousBotChatCoordinator
     {
         if (player == null || bot == null || string.IsNullOrWhiteSpace(message))
             return;
+        BotChatTranscript.Player("tell", player, message, bot.Name);
         lock (Sync)
         {
             string key = player.Name + "|" + bot.Name;
@@ -428,14 +447,22 @@ public static class AutonomousBotChatCoordinator
 
     public static void BroadcastFaction(string speakerName, eRealm realm, string message)
     {
+        string safe = SendFaction(speakerName, realm, message);
+        if (safe != null)
+            BotChatTranscript.Bot("faction", speakerName, realm, safe);
+    }
+
+    private static string SendFaction(string speakerName, eRealm realm, string message)
+    {
         string safe = (message ?? string.Empty).Trim();
         if (safe.Length == 0)
-            return;
+            return null;
         if (safe.Length > 240)
             safe = safe[..240];
         string formatted = $"({speakerName}) <Faction> {safe}";
         foreach (GamePlayer player in ClientService.Instance.GetPlayersOfRealm(realm))
             player.Out.SendMessage(formatted, eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
+        return safe;
     }
 
     /// <summary>
@@ -483,6 +510,18 @@ public static class AutonomousBotChatCoordinator
             .ToArray();
         GameBot[] mentioned = eligible.Where(bot => ContainsMention(message, bot.Name)).ToArray();
         bool directed = mentioned.Length > 0;
+        string shape = voices ? AutonomousChatShortTalk.QuestionShape(message) : null;
+        // "ok", "nice", "me too" draw no answer; "anyone in camelot?" is answered by bots that are there, or by nobody
+        // (chat audit 2026-10-21).
+        if (shape == "ack")
+            return;
+        if (shape == "ask_inplace" && !hasKnowledge)
+        {
+            string place = AutonomousChatShortTalk.PlaceAsked(message);
+            eligible = (directed ? mentioned : eligible).Where(bot => AutonomousChatLiveAnswers.IsIn(bot, place)).ToArray();
+            mentioned = mentioned.Where(eligible.Contains).ToArray();
+            directed = mentioned.Length > 0;
+        }
         if (directed)
             eligible = mentioned;
         else if (voices && intent == eAutonomousChatIntent.Congrats)
@@ -512,7 +551,9 @@ public static class AutonomousBotChatCoordinator
                 ? AutonomousBotVoices.StyleFor(responder, knowledge)
                 : directed
                     ? KnownOr(responder, player, message, () => VoicedReply(responder, message, () => GenerateDirectedReply(message), player, intent))
-                    : VoicedReply(responder, message, () => faction ? GenerateFactionReply(message) : GenerateLocalReply(responder, message),
+                    // With voices on, a line no reply fits gets none: the old formal lines ("Things seem steady from where I am.")
+                    // answered anything (chat audit 2026-10-21).
+                    : VoicedReply(responder, message, () => voices ? null : faction ? GenerateFactionReply(message) : GenerateLocalReply(responder, message),
                         player, intent);
             if (!TryAddDistinctResponse(scheduledResponses, response, out response))
                 continue;
@@ -690,6 +731,21 @@ public static class AutonomousBotChatCoordinator
         string[] chain = VC.AnswerChain(invites);
         if (chain.Length == 0)
             return;
+        // Chat audit 2026-10-21: "two handed or sword and board on a paladin?" drew "imo yes" (its set is ask_opinion), and
+        // "ram on the door at Caer Benowyc!" (set "chat") drew "cant disagree". An either-or question takes the choice
+        // answers first; an alarm takes the alarm replies.
+        string openingShape = AutonomousChatShortTalk.QuestionShape(opening);
+        if (openingShape == "ask_choice" && VC.InviteFamily(invites) == "ask" && !chain.Contains("ask_choice"))
+            chain = ["ask_choice", .. chain];
+        // "anyone else level their infil solo or am i doing it wrong?" (set ask_anyone) drew "count me out this time": only an
+        // invitation ("anyone want to...", "who wants to...") takes the yes-or-no-to-coming answers; the rest asks an opinion.
+        else if (invites == "ask_anyone" && openingShape is not ("ask_anyone" or "ask_on"))
+            chain = ["ask_opinion", "ask"];
+        eAutonomousChatIntent read = AutonomousChatIntentModel.Predict(opening);
+        // "mids 8man in cathal, stay grouped" (set "chat") drew "same :)": frontier news takes the frontier replies.
+        string alarmIntent = read == eAutonomousChatIntent.Alarm ? "alarm"
+            : read == eAutonomousChatIntent.RvR && VC.InviteFamily(invites) is "chat" or "news" ? "rvr" : null;
+        bool alarm = alarmIntent != null;
         bool asks = VC.InviteFamily(invites) == "ask";
         string knowledge = null;
         bool hasKnowledge = asks && AutonomousChatKnowledge.TryAnswer(starter.Realm, opening, out knowledge);
@@ -714,12 +770,18 @@ public static class AutonomousBotChatCoordinator
             string response = null;
             if (hasKnowledge)
                 response = AutonomousBotVoices.StyleFor(responder, knowledge);
+            else if (alarm)
+            {
+                if (AutonomousBotVoices.TryLine(responder, "reply", out VC.Picked alarmReply, alarmIntent, slots: slots,
+                        filter: line => AutonomousChatShortTalk.ReplyFits(opening, line.Text)))
+                    response = alarmReply.Text;
+            }
             else
             {
                 foreach (string answers in chain)
                 {
                     if (AutonomousBotVoices.TryLine(responder, "reply", out VC.Picked picked, answers: answers, slots: slots,
-                            filter: line => AutonomousChatShortTalk.ReplyFits(opening, line.Text)))
+                            filter: line => AutonomousBotVoices.ShapedFits(answers, opening, line.Text)))
                     {
                         response = picked.Text;
                         break;
@@ -798,8 +860,24 @@ public static class AutonomousBotChatCoordinator
         var slots = player == null ? null : new Dictionary<string, string>(StringComparer.Ordinal) { ["player"] = player.Name };
         // Only a bot that will really come says "omw" to "rez pls" ("will_rez"); one that can't rez at all says so ("!can_rez").
         string[] with = value == eAutonomousChatIntent.Rez && WillComeRez(responder, player) ? ["will_rez"] : null;
-        if (AutonomousBotVoices.TryShapedReply(responder, incoming, out VC.Picked shaped, slots, relax: player != null))
+        if (AutonomousBotVoices.TryShapedReply(responder, incoming, out VC.Picked shaped, slots, relax: player != null, asker: player))
             return shaped.Text;
+        string shape = AutonomousChatShortTalk.QuestionShape(incoming);
+        // An acknowledgement gets no answer; "anyone in camelot?" only from a bot that is there (chat audit 2026-10-21).
+        if (shape is "ack" or "ask_inplace")
+            return null;
+        // "really?", "why?": a follow-up only the one it was said to can answer (the audit's "really?" drew "good question").
+        if (AutonomousChatShortTalk.IsFollowUp(incoming))
+            return fallback();
+        if (value == eAutonomousChatIntent.Unknown)
+        {
+            // A question with no answer set gets an honest "not sure"; any other unread line no reply unless the bot was named
+            // (the audit's "what time is it" drew "lol ok", "is anyone in camelot?" "maybe maybe not").
+            if (incoming.Contains('?') && AutonomousBotVoices.TryLine(responder, "reply", out VC.Picked unsure, answers: "ask", slots: slots,
+                    relax: player != null, filter: line => !line.Text.Contains("trainer") && !line.Text.Contains("guard")))
+                return unsure.Text;
+            return fallback();
+        }
         // Class talk is about the class asked about, or about no class in particular (re-run 2026-10-18: "is friar good?"
         // drew "necro pets do all the work").
         if (value == eAutonomousChatIntent.ClassTalk)
@@ -821,10 +899,11 @@ public static class AutonomousBotChatCoordinator
         else if (AutonomousBotVoices.TryLine(responder, "reply", out VC.Picked voiced, intent, slots: slots, flags: with, relax: player != null,
                      filter: line => AutonomousChatShortTalk.ReplyFits(incoming, line.Text)))
             return voiced.Text;
-        VC.Picked fallbackLine;
-        if (player != null && value is not (eAutonomousChatIntent.Unknown or eAutonomousChatIntent.IgnoreOutOfWorld or eAutonomousChatIntent.Abuse) &&
-            AutonomousBotVoices.TryLine(responder, "reply", out fallbackLine, "unknown", slots: slots, relax: true))
-            return fallbackLine.Text;
+        // No reply of the line's kind fits. The corpus "unknown" set ("huh", "lol what", "maybe maybe not") read as nonsense to a
+        // real line (chat audit 2026-10-21); a question gets an honest "not sure", anything else the caller's fallback.
+        if (incoming.Contains('?') && AutonomousBotVoices.TryLine(responder, "reply", out VC.Picked notSure, answers: "ask", slots: slots,
+                relax: player != null, filter: line => !line.Text.Contains("trainer") && !line.Text.Contains("guard")))
+            return notSure.Text;
         return fallback();
     }
 
