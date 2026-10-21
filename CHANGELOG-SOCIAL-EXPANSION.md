@@ -209,6 +209,18 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   minutes (`AUTONOMOUS_DUNGEON_BOSS_GOAL`, `AUTONOMOUS_DUNGEON_BOSS_RESULT`).
 - **Torst no longer disappears.** His eddies' brain set its body's speed before it had a body; the error removed
   Torst from the world the moment he summoned them.
+- **Eight more raid dungeons.** Each realm also raids its other multi-group dungeons, on a fourth turn of the
+  schedule (dragon, epic dungeon, neutral raid, then one of these at random): Albion Krondon (Orylle), Avalon City
+  (Dura'ek the Empowered) and Hall of the Corrupt (Aidon the Archwizard and Lord Gildas); Midgard Trollheim
+  (Nosdoden), Iarnvidiur's Lair (Iarnvidiur) and Dodens Gruva (Aros the Spiritmaster); Hibernia Tur Suil (Balor) and
+  Marfach Caverns (Black Lady, Chieftain Caimheul and Avartack). They run like the epic dungeons: the way in is
+  cleared for the first hour, then the named encounters, the final boss last; ordinary monsters stay down ten minutes
+  while the raid is inside, and a wipe regroups with the Special Forces. Raid sizes are capped at 64-160 by dungeon.
+  Each musters at the nearest service settlement (Caer Diogel, Wearyall Village, Bjarken, Hagall, Aalid Feie; the
+  Catacombs dungeons by the way to Summoner's Hall use its hubs). On the installed navmeshes a path from each
+  entrance to the final room was proven offline. Not raided: Fomor City (its navmesh has no path from the entrance
+  to Myrddraxis's chamber) and Crystal Cave (entered only through Avalon City). Dragons, epic dungeons and neutral
+  raids now come every fourth turn instead of every third.
 - **Native memory leak in pathfinding.** In every 600-per-realm run the server's memory outside the .NET heap
   grew about 250 MB an hour (3.3 to 6.1 GB overnight; the working set went from 5.4 to 10 GB). The pathfinder kept
   one native Detour query (about 0.7 MB) for every thread and zone and never freed it: each .NET pool thread that

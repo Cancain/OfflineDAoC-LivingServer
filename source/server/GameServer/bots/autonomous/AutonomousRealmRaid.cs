@@ -11,7 +11,7 @@ namespace DOL.GS
     {
         public sealed record Definition(string Id, string Name, eRealm Realm, ushort Region, string BossType, int SuggestedBots)
         {
-            public bool IsDungeon => Region is 60 or 160 or 191 || IsNeutral;
+            public bool IsDungeon => Region is 60 or 160 or 191 || IsRaidDungeon(Region) || IsNeutral;
             /// <summary>
             /// Summoner's Hall and Darkness Falls belong to no realm: each realm runs its own
             /// expedition there (two or, rarely, all three at once) and they fight each other inside
@@ -23,16 +23,46 @@ namespace DOL.GS
                 60 => new(29462, 25240, 19490),
                 160 => new(34542, 57121, 11881),
                 191 => new(39652, 60831, 11893),
-                _ => RealmRaidNeutralEvents.FinalApproach(Region)
+                _ => RaidDungeons.FirstOrDefault(d => d.Region == Region) is { } raid ? raid.Final
+                    : RealmRaidNeutralEvents.FinalApproach(Region)
             };
             public string[] FinalTypes => Region switch
             {
                 60 => ["Apocalypse"], 160 => ["KingTuscar", "QueenKula"],
-                191 => ["Olcasgean"], _ => [BossType]
+                191 => ["Olcasgean"],
+                _ => RaidDungeons.FirstOrDefault(d => d.Region == Region)?.Finals ?? [BossType]
             };
             /// <summary>Named encounters a neutral expedition clears in order (the final boss last).</summary>
             public string[] Objectives => RealmRaidNeutralEvents.Objectives(Region);
         }
+        /// <summary>
+        /// The other multi-group dungeons (owner, 2026-10-20: "we have every multi group dungeon covered?"): each realm's
+        /// Shrouded Isles raid dungeons and its Catacombs dungeon by the way to Summoner's Hall. Raided like the epic
+        /// dungeons (clear the way in for the first hour, then the named encounters, the final boss last), on their own
+        /// turn of the schedule. Final = the final boss's room, where the route stages last.
+        /// Not here: Crystal Cave (Xanxicar), entered only through Avalon City, while a raid route starts from open ground; and
+        /// Fomor City (Myrddraxis), whose navmesh has no path from the entrance to the central chamber of Myrddraxis and
+        /// Anurigunda (installed zone180.nav, 2026-10-20: the path stops 3,000-3,600 units short on both sides).
+        /// </summary>
+        public sealed record RaidDungeon(string Id, string Name, eRealm Realm, ushort Region, string BossType, int SuggestedBots,
+            Vector3 Final, string[] Finals);
+
+        public static readonly RaidDungeon[] RaidDungeons =
+        [
+            new("dungeon-albion-krondon", "Krondon", eRealm.Albion, 61, "Orylle", 160, new(31413, 70773, 15765), ["Orylle"]),
+            new("dungeon-albion-avalon", "Avalon City", eRealm.Albion, 50, "DuraekEmpowered", 120, new(32425, 28962, 8756), ["DuraekEmpowered"]),
+            new("dungeon-albion-corrupt", "Hall of the Corrupt", eRealm.Albion, 277, "AidonTheArchwizard", 120, new(31353, 37634, 14873),
+                ["AidonTheArchwizard", "LordGildas"]),
+            new("dungeon-midgard-trollheim", "Trollheim", eRealm.Midgard, 150, "Nosdoden", 160, new(37538, 12262, 13377), ["Nosdoden"]),
+            new("dungeon-midgard-iarnvidiur", "Iarnvidiur's Lair", eRealm.Midgard, 161, "Iarnvidiur", 120, new(13848, 11523, 18263), ["Iarnvidiur"]),
+            new("dungeon-midgard-dodens", "Dodens Gruva", eRealm.Midgard, 246, "SpiritmasterAros", 96, new(39061, 36970, 15495), ["SpiritmasterAros"]),
+            new("dungeon-hibernia-tursuil", "Tur Suil", eRealm.Hibernia, 190, "Balor", 160, new(32032, 31048, 15984), ["Balor"]),
+            new("dungeon-hibernia-marfach", "Marfach Caverns", eRealm.Hibernia, 276, "BlackLady", 64, new(30086, 37378, 15001),
+                ["BlackLady", "ChieftainCaimheul", "Avartack"]),
+        ];
+
+        public static bool IsRaidDungeon(ushort region) => RaidDungeons.Any(d => d.Region == region);
+
         public sealed record View(string EventId, string State, AutonomousBotGroupCoordinator.SharedCamp Camp, bool Hold, bool Muster = false, bool Crossing = false);
         public sealed record Summary(string Id, string Name, string Realm, string State, int Assigned, int Present, int Suggested, long Remaining, string Phase = "");
         private sealed class Raid
@@ -112,7 +142,7 @@ namespace DOL.GS
         /// bosses, epic encounters and scripted adds keep their own timers, and nothing changes once the raid ends.
         /// </summary>
         public const int RaidTrashRespawnMilliseconds = 10 * 60_000;
-        public static readonly ushort[] SlowRespawnRegions = [249, 248, 60, 191];
+        public static readonly ushort[] SlowRespawnRegions = [249, 248, 60, 191, .. RaidDungeons.Select(d => d.Region)];
 
         public static int RaidRespawnInterval(GameNPC npc, int interval)
         {
@@ -175,12 +205,13 @@ namespace DOL.GS
         private static readonly eRealm[] ScheduledRealms = [eRealm.Albion, eRealm.Midgard, eRealm.Hibernia];
         private static readonly Dictionary<eRealm, long> NextScheduled = new();
         private static readonly Dictionary<eRealm, int> ScheduledKind = new();
-        private static readonly string[] ScheduleKinds = ["dragon-", "epic-", "neutral"];
+        private static readonly string[] ScheduleKinds = ["dragon-", "epic-", "neutral", "dungeon-"];
 
         private static bool IsKind(Definition definition, string kind) => kind == "neutral"
             ? definition.IsNeutral : definition.Id.StartsWith(kind, StringComparison.Ordinal);
 
-        /// <summary>Opens each realm's scheduled raid: dragon, then epic dungeon, then a neutral raid, skipping a kind with nothing available.</summary>
+        /// <summary>Opens each realm's scheduled raid: dragon, then epic dungeon, then a neutral raid, then another raid
+        /// dungeon (<see cref="RaidDungeons"/>), skipping a kind with nothing available.</summary>
         private static void PulseSchedule(long now)
         {
             int minutes = RealmRaidRecruitmentPolicy.ScheduleMinutes;
@@ -231,7 +262,8 @@ namespace DOL.GS
             new("summoners-hibernia", "Summoner's Hall", eRealm.Hibernia, 248, "GrandSummonerGovannon", 200),
             new("darkness-albion", "Darkness Falls", eRealm.Albion, 249, "Legion", 200),
             new("darkness-midgard", "Darkness Falls", eRealm.Midgard, 249, "Legion", 200),
-            new("darkness-hibernia", "Darkness Falls", eRealm.Hibernia, 249, "Legion", 200)
+            new("darkness-hibernia", "Darkness Falls", eRealm.Hibernia, 249, "Legion", 200),
+            ..RaidDungeons.Select(d => new Definition(d.Id, d.Name, d.Realm, d.Region, d.BossType, d.SuggestedBots))
         ];
 
         public static void Pulse(long now)

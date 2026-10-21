@@ -67,7 +67,7 @@ namespace DOL.GS
 
         public static bool IsScopedFlyingHandoff(ushort region, GameNPC.eFlags flags,
             bool designatedHasMeleeApproach, bool groupCanPull) =>
-            region is 248 or 249 or 60 or 160 or 191 &&
+            (region is 248 or 249 or 60 or 160 or 191 || AutonomousRealmRaid.IsRaidDungeon(region)) &&
             (flags & GameNPC.eFlags.FLYING) != 0 && !designatedHasMeleeApproach && groupCanPull;
 
         /// <summary>Only a DF/epic-dungeon flyer unreachable by the normal
