@@ -80,6 +80,9 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
     whats up?", and a complaint sympathy. An either-or question isn't answered "imo yes". A buyer isn't told to vendor it.
   - A question or request is no longer dropped because bots answered another line in the last 10-12 seconds ("hi" then
     "anyone want to group?" got nothing).
+- A guild no longer hears the same death or group line twice within the hour: in the live run "died. the run back is
+  the worst part" came three times in /gu in 17 minutes, and "guild warband forming, frontier bound" twice 30 seconds
+  apart. When every line of the set was heard lately, the bot says nothing.
 - Bot-to-bot: an either-or question takes the choice answers, frontier news the frontier replies ("mids 8man in cathal"
   drew "same :)"), and "anyone else...?" an opinion rather than "count me out this time".
 

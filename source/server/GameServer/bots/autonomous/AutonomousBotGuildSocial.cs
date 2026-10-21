@@ -37,6 +37,48 @@ public static class AutonomousBotGuildSocial
     private static readonly Dictionary<string, DateTime> LastNearbyOffer = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, long> LastTooLowAnswer = new(StringComparer.Ordinal);
 
+    /// <summary>
+    /// What each guild heard in the last hour. Live run of 2026-10-21: "died. the run back is the worst part" three times in /gu
+    /// within 17 minutes, and "guild warband forming, frontier bound" twice 30 seconds apart, from the short fixed lists for deaths
+    /// and new groups. Those lines are now picked from the ones the guild hasn't heard lately, or not said at all.
+    /// </summary>
+    public const int RecentGuildLineMs = 60 * 60_000;
+    private static readonly Dictionary<string, Dictionary<string, long>> RecentByGuild = new(StringComparer.Ordinal);
+
+    /// <summary>A line from <paramref name="line"/> this guild hasn't heard in the last hour (a few draws), or null.</summary>
+    public static string FreshLine(string guildId, Func<string> line, long now, int draws = 8)
+    {
+        lock (Sync)
+        {
+            RecentByGuild.TryGetValue(guildId ?? string.Empty, out Dictionary<string, long> heard);
+            for (int i = 0; i < draws; i++)
+            {
+                string text = line()?.Trim();
+                if (string.IsNullOrEmpty(text))
+                    continue;
+                if (heard == null || !heard.TryGetValue(text, out long at) || now - at >= RecentGuildLineMs)
+                    return text;
+            }
+            return null;
+        }
+    }
+
+    /// <summary>Notes a line the guild heard (every bot line in /gu goes through here).</summary>
+    public static void NoteHeard(string guildId, string text, long now)
+    {
+        if (string.IsNullOrEmpty(text))
+            return;
+        lock (Sync)
+        {
+            if (!RecentByGuild.TryGetValue(guildId ?? string.Empty, out Dictionary<string, long> heard))
+                RecentByGuild[guildId ?? string.Empty] = heard = new Dictionary<string, long>(StringComparer.Ordinal);
+            heard[text] = now;
+            if (heard.Count > 200)
+                foreach (string old in heard.Where(pair => now - pair.Value >= RecentGuildLineMs).Select(pair => pair.Key).ToList())
+                    heard.Remove(old);
+        }
+    }
+
     public static bool Enabled => AutonomousBotRealmGuilds.Enabled && Properties.BOT_GUILD_SOCIAL;
 
     private static bool InvitesEnabled => Enabled && Properties.BOT_GUILD_RECRUIT_PLAYER;
@@ -188,8 +230,11 @@ public static class AutonomousBotGuildSocial
         // A dead bot is still a member and can type; Eligible() below would refuse it, so send directly.
         _ = new ECSGameTimer(bot, _ =>
         {
-            if (bot.Guild == guild && bot.ObjectState == GameObject.eObjectState.Active && HasListener(guild))
-                SendGuildLine(guild, bot.Name, Lines.OwnDeath(zone, Random.Shared));
+            string text = bot.Guild == guild && bot.ObjectState == GameObject.eObjectState.Active && HasListener(guild)
+                ? FreshLine(guild.GuildID, () => Lines.OwnDeath(zone, Random.Shared), GameLoop.GameLoopTime)
+                : null;
+            if (text != null)
+                SendGuildLine(guild, bot.Name, text);
             return 0;
         }, 3_000 + Random.Shared.Next(3_000));
     }
@@ -221,7 +266,8 @@ public static class AutonomousBotGuildSocial
             return;
         int guildmates = members.Count(member => member?.Guild == guild);
         string zone = speaker.CurrentZone?.Description;
-        ScheduleGuildLine(speaker, guild, 3_000 + Random.Shared.Next(4_000), () => Lines.GuildGroup(guildmates, zone, rvr, Random.Shared));
+        ScheduleGuildLine(speaker, guild, 3_000 + Random.Shared.Next(4_000),
+            () => FreshLine(guild.GuildID, () => Lines.GuildGroup(guildmates, zone, rvr, Random.Shared), GameLoop.GameLoopTime));
     }
 
     /// <summary>Called when a bot guild claims a keep.</summary>
@@ -705,6 +751,7 @@ public static class AutonomousBotGuildSocial
         if (safe.Length > Lines.MaxLength)
             safe = safe[..Lines.MaxLength];
         guild.SendMessageToGuildMembers($"[Guild] {speaker}: \"{safe}\"", eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+        NoteHeard(guild.GuildID, safe, GameLoop.GameLoopTime);
         BotChatTranscript.Bot("guild", speaker, (eRealm)guild.Realm, safe, guild.Name);
     }
 
