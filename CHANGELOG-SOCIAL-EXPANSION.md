@@ -50,6 +50,14 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   way; with one player the chain dies out by itself. Now a monster can't ask for the same instant spell on the same
   target again within a second, or queue it twice, and keeps at most 16 cast requests. Bots and players are unchanged.
 
+**Effects that outlived their NPC (2026-10-21)**
+- The memory census found 2,755 spell effects still running on NPCs that had left the world, growing by about 400 an
+  hour: a Sluaghbinder pet's pulse went on pulsing after the pet was deleted, and a pulse's snares on monsters only end
+  when the pulse does. Each one kept its NPC in memory. Now an effect on a deleted monster, pet or bot ends, and so does
+  a pulse whose caster was deleted. Players' effects are unchanged.
+- The census also listed about 1,500 respawn timers on "deleted" monsters. Those are normal: a slain monster is
+  deleted while it waits to respawn, and the timer brings it back.
+
 **Chat that answers what was said (2026-10-21)**
 - The owner found conversations still didn't make sense. Nothing in the log showed what was said, so the server log
   now has a chat transcript: `CHAT_LINE` for every bot line a player can see (/say near a player, /faction, /gu,
