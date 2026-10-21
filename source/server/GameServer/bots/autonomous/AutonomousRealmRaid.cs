@@ -162,12 +162,15 @@ namespace DOL.GS
         private static readonly System.Collections.Concurrent.ConcurrentDictionary<Group, byte> DefenseGroups = new();
         private static readonly Dictionary<Group, string> Released = new();
         private static readonly Dictionary<string, long> Cooldowns = new();
-        // Each realm's last automatic event; the next automatic start picks the other one.
-        private static readonly Dictionary<eRealm, string> LastAutomatic = new();
+        // Each realm's last raid that killed its final boss (automatic or forced); the next automatic start rolls any other.
+        private static readonly Dictionary<eRealm, string> LastSuccessful = new();
 
-        /// <summary>A realm never runs the same automatic PvE event twice in a row (forced events are separate).</summary>
-        public static bool MayStartAutomatic(string id, string lastAutomaticId) =>
-            !string.Equals(id, lastAutomaticId, StringComparison.Ordinal);
+        /// <summary>
+        /// Owner, 2026-10-20: the schedule is a random roll among every raid the realm has available, setting aside only
+        /// the one it last won. A raid that failed may come straight back.
+        /// </summary>
+        public static bool MayStartAutomatic(string id, string lastSuccessfulId) =>
+            !string.Equals(id, lastSuccessfulId, StringComparison.Ordinal);
         private static readonly Dictionary<string, GameNPC> Bosses = new();
         private sealed record FinishedLoot(GameBot[] Members, RealmRaidLootOwner.Ledger Ledger, long Expires);
         private static readonly Dictionary<GameNPC, FinishedLoot> CompletedLoot = new();
@@ -204,14 +207,8 @@ namespace DOL.GS
 
         private static readonly eRealm[] ScheduledRealms = [eRealm.Albion, eRealm.Midgard, eRealm.Hibernia];
         private static readonly Dictionary<eRealm, long> NextScheduled = new();
-        private static readonly Dictionary<eRealm, int> ScheduledKind = new();
-        private static readonly string[] ScheduleKinds = ["dragon-", "epic-", "neutral", "dungeon-"];
-
-        private static bool IsKind(Definition definition, string kind) => kind == "neutral"
-            ? definition.IsNeutral : definition.Id.StartsWith(kind, StringComparison.Ordinal);
-
-        /// <summary>Opens each realm's scheduled raid: dragon, then epic dungeon, then a neutral raid, then another raid
-        /// dungeon (<see cref="RaidDungeons"/>), skipping a kind with nothing available.</summary>
+        /// <summary>Opens each realm's scheduled raid: a random roll among its available raids (dragon, epic dungeon,
+        /// neutral raids, the other raid dungeons), except the one it last won.</summary>
         private static void PulseSchedule(long now)
         {
             int minutes = RealmRaidRecruitmentPolicy.ScheduleMinutes;
@@ -224,16 +221,9 @@ namespace DOL.GS
                 if (!RealmRaidRecruitmentPolicy.ScheduledRaidDue(now, due, Raids.Values.Any(r => r.Definition.Realm == realm), online, minutes))
                     continue;
                 NextScheduled[realm] = now + RealmRaidRecruitmentPolicy.NextScheduleMilliseconds(minutes, Random.Shared.NextDouble());
-                int kind = ScheduledKind.GetValueOrDefault(realm);
-                Definition chosen = null;
-                for (int step = 0; step < ScheduleKinds.Length && chosen == null; step++)
-                {
-                    string wanted = ScheduleKinds[(kind + step) % ScheduleKinds.Length];
-                    chosen = Definitions.Where(d => d.Realm == realm && IsKind(d, wanted) && Available(d.Id) &&
-                            MayStartAutomatic(d.Id, LastAutomatic.GetValueOrDefault(realm)))
-                        .OrderBy(_ => Random.Shared.Next()).FirstOrDefault();
-                    if (chosen != null) ScheduledKind[realm] = (kind + step + 1) % ScheduleKinds.Length;
-                }
+                Definition chosen = Definitions.Where(d => d.Realm == realm && Available(d.Id) &&
+                        MayStartAutomatic(d.Id, LastSuccessful.GetValueOrDefault(realm)))
+                    .OrderBy(_ => Random.Shared.Next()).FirstOrDefault();
                 if (chosen == null)
                 {
                     Log.Info($"REALM_RAID_SCHEDULE_SKIPPED realm={realm} online={online} reason=\"no encounter available (respawning or on cooldown)\"");
@@ -241,7 +231,6 @@ namespace DOL.GS
                 }
                 if (Start(chosen.Id, realm, out string reason))
                 {
-                    LastAutomatic[realm] = chosen.Id;
                     Log.Info($"REALM_RAID_SCHEDULED event={chosen.Id} realm={realm} online={online} required={Raids[chosen.Id].Required} " +
                              $"recruitCap={RealmRaidRecruitmentPolicy.RecruitCap(Raids[chosen.Id].Required)} nextMinutes={minutes}");
                 }
@@ -410,10 +399,9 @@ namespace DOL.GS
                     if (Random.Shared.NextDouble() >= RealmRaidRecruitmentPolicy.NewEventChance) return false;
                     if (OnlineLevelFifty(leader.Realm) < RealmRaidRecruitmentPolicy.MinimumScaledBots * 2) return false;
                     var definition = Definitions.Where(d => d.Realm == leader.Realm && Available(d.Id) &&
-                            MayStartAutomatic(d.Id, LastAutomatic.GetValueOrDefault(leader.Realm)))
+                            MayStartAutomatic(d.Id, LastSuccessful.GetValueOrDefault(leader.Realm)))
                         .OrderBy(_ => Random.Shared.Next()).FirstOrDefault();
                     if (definition == null || !Start(definition.Id, leader.Realm, out _)) return false;
-                    LastAutomatic[leader.Realm] = definition.Id;
                     raid = Raids[definition.Id];
                 }
                 else if (Random.Shared.NextDouble() >= RealmRaidRecruitmentPolicy.JoinExistingChance) return false;
@@ -1253,6 +1241,7 @@ namespace DOL.GS
             if (outcome != "Boss defeated" && named.Length > 0)
                 reason += $" Named encounters defeated: {string.Join(", ", named)}.";
             RealmEventRecords.Finish(raid.Definition.Id, outcome, reason, raid.Support.Length);
+            if (outcome == "Boss defeated") LastSuccessful[raid.Definition.Realm] = raid.Definition.Id;
             AutonomousEpicSpecialForces.RaidEnded(raid.Definition.Id, outcome);
             Log.Info($"REALM_RAID_ENDED event={raid.Definition.Id} outcome=\"{outcome}\" support={raid.Support.Length} required={raid.Required} " +
                      $"forced={raid.Forced} minutes={(now - raid.Created) / 60_000} named={named.Length} " +

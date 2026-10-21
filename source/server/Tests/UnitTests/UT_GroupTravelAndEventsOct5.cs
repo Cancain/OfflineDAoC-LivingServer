@@ -25,8 +25,9 @@ namespace DOL.UnitTests
             AutonomousSoloCampFloor.CampQualifies(botLevel, qualifying, total);
 
         [Test]
-        public void ARealmNeverRunsTheSameAutomaticEventTwiceInARow()
+        public void ARealmNeverRollsTheRaidItLastWon()
         {
+            // 2026-10-20: the argument is the realm's last raid that killed its final boss; a failed raid may come back.
             Assert.Multiple(() =>
             {
                 Assert.That(AutonomousRealmRaid.MayStartAutomatic("dragon-midgard", "dragon-midgard"), Is.False);
