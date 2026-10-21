@@ -85,8 +85,10 @@ namespace DOL.GS
             if (effect.Owner != null && OutlivedItsLiving(effect.Owner.ObjectState, effect.Owner is GameNPC, effect is ECSPulseEffect,
                     pulseCaster?.ObjectState, pulseCaster is GameNPC))
             {
-                if (!effect.IsEnding)
-                    effect.End();
+                // An effect whose ending was lost (its owner's list no longer had it) can't be ended again: take it out of the
+                // service directly (2026-10-21 live run: orphan effects still grew by about 200 an hour with End() alone).
+                if (!effect.End())
+                    ServiceObjectStore.Remove(effect);
                 return;
             }
 

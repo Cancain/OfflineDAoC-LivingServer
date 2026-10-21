@@ -861,6 +861,10 @@ namespace DOL.GS
 
             if (result is not RemoveEffectResult.Failed)
                 OnEffectRemovedOrDisabled(this, result, effect);
+            // An ending effect this list no longer holds (it was cleared when its owner died or left) failed to remove and
+            // stayed in the effect service for good, ticking and holding its owner (orphan census, 2026-10-21).
+            else if (effect.IsEnding)
+                ServiceObjectStore.Remove(effect);
 
             static void OnEffectRemovedOrDisabled(EffectListComponent component, RemoveEffectResult result, ECSGameEffect effect)
             {
