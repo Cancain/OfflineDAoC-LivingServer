@@ -123,7 +123,12 @@ namespace DOL.GS
         private GameNPC HostileEncounter(GameNPC[] live, GameLiving[] participants)
         {
             var raiders = participants.Where(p => p.IsAlive && p.CurrentRegionID == _region).ToHashSet();
+            long now = GameLoop.GameLoopTime;
+            // An encounter just set aside for taking no damage is not switched back to because it attacks: Krondon,
+            // 2026-10-21, Scurceol Hyrde (immune while his four Lyft Miht orbs live) was skipped and re-picked every
+            // minute for over an hour, so the raid never turned to the orbs.
             return live.FirstOrDefault(n => n != _target && n is IGameEpicNpc && n.IsAlive && n.InCombat &&
+                                            _routeRetry.GetValueOrDefault(n) <= now &&
                                             n.ObjectState == GameObject.eObjectState.Active && !_clearedNames.Contains(n.Name) &&
                                             n.TargetObject is GameLiving victim && raiders.Contains(victim));
         }

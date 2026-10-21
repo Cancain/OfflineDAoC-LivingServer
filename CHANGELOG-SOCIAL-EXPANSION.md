@@ -229,6 +229,10 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   waited 90 minutes for an eighth: beside its portal in Aldland only 7 formation slots in a row had a staging post,
   and the raid only ever asked for the next slot. A slot with no post is now set aside and the next one tried, and
   each slot widens its search ring after twelve tries (25 of 38 slots find a post by the Krondon portal, from 19).
+- **An encounter that takes no damage stays set aside.** In Krondon the raid skipped Scurceol Hyrde (immune while
+  his four Lyft Miht orbs live) and switched straight back to him because he was attacking it, every minute for over
+  an hour. A skipped encounter is no longer picked again for attacking until its retry time.
+- **Deleted turret pets were kept in the bots' turret list** until the owner's next pet upkeep (252 held at once).
 - **Fixes from the first night on this build:** two healer crashes when a group was disbanded mid-check (a null
   resurrection scope and a null group in the cure check), and the launcher's status queue kept duplicate ids in its
   priority queue (65 to 5,079 overnight).
