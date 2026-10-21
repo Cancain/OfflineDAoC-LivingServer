@@ -62,7 +62,40 @@ namespace DOL.GS
         }
 
         public sealed record Result(int Targets, int Reached, int Roots, int Visits, int TruncatedRoots, bool OutOfBudget, double Seconds,
-            IReadOnlyList<(string Path, int Count, string Types)> Holders, IReadOnlyList<(string Root, int Visits)> HeaviestRoots = null);
+            IReadOnlyList<(string Path, int Count, string Types)> Holders, IReadOnlyList<(string Root, int Visits)> HeaviestRoots = null,
+            IReadOnlyList<(string Type, int Count)> Unreached = null);
+
+        /// <summary>
+        /// SERVER_ORPHAN_TIMERS and SERVER_ORPHAN_EFFECTS: game timers still running and effects still ticking for objects
+        /// no longer in the world, by callback and by effect (first full holder census, 2026-10-21: 1,181 left-the-world
+        /// NPCs were held by TimerService and about 250 by EffectService).
+        /// </summary>
+        public static void LogOrphans()
+        {
+            static object PrivateList(object service) =>
+                service?.GetType().GetField("_list", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(service);
+            var timers = new Dictionary<string, int>();
+            if (PrivateList(TimerService.Instance) is List<ECSGameTimer> timerList)
+                foreach (ECSGameTimer timer in timerList.ToArray())
+                {
+                    if (timer == null || !timer.IsAlive || timer.Owner == null || timer.Owner.ObjectState == GameObject.eObjectState.Active) continue;
+                    MethodInfo method = timer.CallbackInfo;
+                    string key = $"{method?.DeclaringType?.Name}.{method?.Name}/{timer.Owner.GetType().Name}:{timer.Owner.ObjectState}";
+                    timers[key] = timers.GetValueOrDefault(key) + 1;
+                }
+            var effects = new Dictionary<string, int>();
+            if (PrivateList(EffectService.Instance) is List<ECSGameEffect> effectList)
+                foreach (ECSGameEffect effect in effectList.ToArray())
+                {
+                    if (effect?.Owner == null || effect.Owner.ObjectState == GameObject.eObjectState.Active) continue;
+                    string spell = null;
+                    try { spell = effect.SpellHandler?.Spell?.Name; } catch { }
+                    string key = $"{effect.GetType().Name}/{effect.EffectType}/{spell ?? "-"}/{effect.Owner.GetType().Name}:{effect.Owner.ObjectState}";
+                    effects[key] = effects.GetValueOrDefault(key) + 1;
+                }
+            Log.Info($"SERVER_ORPHAN_TIMERS total={timers.Values.Sum()} byCallback=\"{string.Join(",", timers.OrderByDescending(p => p.Value).Take(12).Select(p => $"{p.Key}={p.Value}"))}\"");
+            Log.Info($"SERVER_ORPHAN_EFFECTS total={effects.Values.Sum()} byEffect=\"{string.Join(",", effects.OrderByDescending(p => p.Value).Take(12).Select(p => $"{p.Key}={p.Value}"))}\"");
+        }
 
         private static void Run(List<GameNPC> detachedNpcs)
         {
@@ -70,7 +103,8 @@ namespace DOL.GS
             if (result.Targets == 0) return;
             Log.Info($"SERVER_HOLDER_CENSUS targets={result.Targets} reached={result.Reached} unreached={result.Targets - result.Reached} " +
                      $"roots={result.Roots} visits={result.Visits} truncatedRoots={result.TruncatedRoots} outOfBudget={result.OutOfBudget} " +
-                     $"seconds={result.Seconds:F0} heaviestRoots=\"{string.Join(",", (result.HeaviestRoots ?? []).Select(r => $"{r.Root}:{r.Visits}"))}\" holders=\"{string.Join(" | ", result.Holders.Take(15).Select(h => $"{h.Path}={h.Count}({h.Types})"))}\"");
+                     $"seconds={result.Seconds:F0} unreachedTypes=\"{string.Join(",", (result.Unreached ?? []).Take(8).Select(u => $"{u.Type}:{u.Count}"))}\" " +
+                     $"heaviestRoots=\"{string.Join(",", (result.HeaviestRoots ?? []).Select(r => $"{r.Root}:{r.Visits}"))}\" holders=\"{string.Join(" | ", result.Holders.Take(15).Select(h => $"{h.Path}={h.Count}({h.Types})"))}\"");
         }
 
         /// <summary>Every active autonomous bot's own fields first, then the static fields of the server assembly (scripts included).</summary>
@@ -163,8 +197,10 @@ namespace DOL.GS
                 .Select(pair => (pair.Key, pair.Value.Targets.Count,
                     string.Join("/", pair.Value.Types.OrderByDescending(t => t.Value).Take(3).Select(t => $"{t.Key}:{t.Value}"))))
                 .ToList();
+            var unreached = targets.Where(target => !reached.Contains(target)).GroupBy(target => target.GetType().Name)
+                .Select(group => (group.Key, group.Count())).OrderByDescending(group => group.Item2).ToList();
             return new(targets.Count, reached.Count, rootCount, visits, truncatedRoots, outOfBudget, watch.Elapsed.TotalSeconds, top,
-                rootVisitTotals.OrderByDescending(pair => pair.Value).Take(6).Select(pair => (pair.Key, pair.Value)).ToList());
+                rootVisitTotals.OrderByDescending(pair => pair.Value).Take(6).Select(pair => (pair.Key, pair.Value)).ToList(), unreached);
         }
 
         private static void PushChildren(object value, PathNode path, int depth, Stack<(object, PathNode, int)> stack)

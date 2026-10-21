@@ -112,9 +112,13 @@ public static class RealmRaidRecruitmentPolicy
     public const int HubEarlyDepartureMinimum = 120;
     public const long PostDepartureStagingMilliseconds = 45 * 60_000L;
 
+    /// <remarks>2026-10-21 at 900 per realm: the Midgard Summoner's Hall rally recruited 102 for a full 200 raid, never
+    /// reached the 120 early departure and failed with nobody staged. After the hub's patience a raid leaves with half
+    /// of what it needs, the share it may go in short with at its deadline.</remarks>
     public static bool DepartHub(bool alreadyDeparted, int presentBots, long elapsed = 0, int required = AutonomousMinimumPresent) =>
         alreadyDeparted || presentBots >= required ||
-        elapsed >= HubPatienceMilliseconds && presentBots >= required * HubEarlyDepartureMinimum / AutonomousMinimumPresent;
+        elapsed >= HubPatienceMilliseconds && presentBots >= Math.Min(required * HubEarlyDepartureMinimum / AutonomousMinimumPresent,
+            Math.Max(MinimumScaledBots, (required * DeadlineStartPercent + 99) / 100));
 
     public static bool StagingExpired(bool forced, long elapsed, int present = 0, bool landed = true) =>
         !forced && elapsed >= AutonomousStagingLimitMilliseconds &&

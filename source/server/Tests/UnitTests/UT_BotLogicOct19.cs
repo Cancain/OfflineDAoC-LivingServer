@@ -146,7 +146,9 @@ namespace DOL.UnitTests
                 Assert.That(RealmRaidRecruitmentPolicy.DepartHub(false, 55, 0, 55), Is.True);
                 Assert.That(RealmRaidRecruitmentPolicy.DepartHub(false, 33, RealmRaidRecruitmentPolicy.HubPatienceMilliseconds, 55), Is.True,
                     "early departure at 60% after the hub's patience");
-                Assert.That(RealmRaidRecruitmentPolicy.DepartHub(false, 119, RealmRaidRecruitmentPolicy.HubPatienceMilliseconds), Is.False);
+                Assert.That(RealmRaidRecruitmentPolicy.DepartHub(false, 99, RealmRaidRecruitmentPolicy.HubPatienceMilliseconds), Is.False);
+                Assert.That(RealmRaidRecruitmentPolicy.DepartHub(false, 100, RealmRaidRecruitmentPolicy.HubPatienceMilliseconds), Is.True,
+                    "half of a full raid leaves after the hub's patience (2026-10-21)");
                 Assert.That(RealmRaidRecruitmentPolicy.RecruitCap(55), Is.EqualTo(72));
                 Assert.That(RealmRaidRecruitmentPolicy.RecruitCap(200), Is.EqualTo(RealmRaidRecruitmentPolicy.MaximumBots));
             });

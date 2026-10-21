@@ -171,6 +171,7 @@ namespace DOL.GS
             try { LogStaticCensus(); } catch (Exception exception) { Log.Warn("SERVER_STATIC_CENSUS failed", exception); }
             try { LogBotFieldCensus(); } catch (Exception exception) { Log.Warn("SERVER_BOT_FIELD_CENSUS failed", exception); }
             try { ServerHolderCensus.MaybeRun(DetachedNpcs); } catch (Exception exception) { Log.Warn("SERVER_HOLDER_CENSUS failed", exception); }
+            try { ServerHolderCensus.LogOrphans(); } catch (Exception exception) { Log.Warn("SERVER_ORPHAN_TIMERS failed", exception); }
             try { ServerHandleCensus.MaybeRun(); } catch (Exception exception) { Log.Warn("SERVER_HANDLE_CENSUS failed", exception); }
         }
 
