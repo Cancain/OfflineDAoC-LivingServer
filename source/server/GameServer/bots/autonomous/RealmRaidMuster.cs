@@ -82,6 +82,7 @@ public static class RealmRaidMuster
         // settlement's healer or teleporter. The Catacombs dungeons by the way to Summoner's Hall share its hubs.
         new("dungeon-albion-krondon", "Caer Diogel", 51, 56, 44, 58, new(403177,502596,4680)),
         new("dungeon-albion-avalon", "Wearyall Village", 51, 52, 52, 54, new(436356,492916,3088)),
+        new("dungeon-albion-crystal", "Wearyall Village", 51, 52, 52, 54, new(436356,492916,3088)),
         new("dungeon-albion-corrupt", "Snowdonia Station", 1, 3, 59, 45, new(523562,408847,4204)),
         new("dungeon-midgard-trollheim", "Bjarken", 151, 152, 34, 30, new(290227,301820,4160)),
         new("dungeon-midgard-iarnvidiur", "Hagall", 151, 154, 44, 40, new(379260,385996,7752)),

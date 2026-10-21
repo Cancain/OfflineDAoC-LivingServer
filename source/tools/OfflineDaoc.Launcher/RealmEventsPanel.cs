@@ -161,6 +161,7 @@ internal sealed partial class MainForm
             ("darkness-hibernia", "Darkness Falls", "Hibernia", "Neutral raid"),
             ("dungeon-albion-krondon", "Krondon", "Albion", "Epic dungeon"),
             ("dungeon-albion-avalon", "Avalon City", "Albion", "Epic dungeon"),
+            ("dungeon-albion-crystal", "Crystal Cave", "Albion", "Epic dungeon"),
             ("dungeon-albion-corrupt", "Hall of the Corrupt", "Albion", "Epic dungeon"),
             ("dungeon-midgard-trollheim", "Trollheim", "Midgard", "Epic dungeon"),
             ("dungeon-midgard-iarnvidiur", "Iarnvidiur's Lair", "Midgard", "Epic dungeon"),

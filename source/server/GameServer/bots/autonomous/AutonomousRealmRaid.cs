@@ -18,6 +18,11 @@ namespace DOL.GS
             /// and on the way.
             /// </summary>
             public bool IsNeutral => RealmRaidNeutralEvents.IsNeutralRegion(Region);
+            /// <summary>The dungeon walked through on the way in (Crystal Cave: Avalon City), or 0.</summary>
+            public ushort Through => RaidDungeons.FirstOrDefault(d => d.Region == Region)?.Through ?? 0;
+            /// <summary>The home region whose entrance a raid stages at when it goes in through another dungeon (neutral
+            /// raids, Crystal Cave), or 0 for a dungeon entered straight from open ground.</summary>
+            public ushort EntranceHome(RealmRaidMuster.Hub hub) => IsNeutral || Through != 0 ? hub.Region : (ushort)0;
             public Vector3 Trigger => Region switch
             {
                 60 => new(29462, 25240, 19490),
@@ -40,17 +45,19 @@ namespace DOL.GS
         /// Shrouded Isles raid dungeons and its Catacombs dungeon by the way to Summoner's Hall. Raided like the epic
         /// dungeons (clear the way in for the first hour, then the named encounters, the final boss last), on their own
         /// turn of the schedule. Final = the final boss's room, where the route stages last.
-        /// Not here: Crystal Cave (Xanxicar), entered only through Avalon City, while a raid route starts from open ground; and
-        /// Fomor City (Myrddraxis), whose navmesh has no path from the entrance to the central chamber of Myrddraxis and
+        /// Crystal Cave is entered only through Avalon City: its raid stages outside Avalon City and walks through it, the
+        /// way a Summoner's Hall raid walks through Hall of the Corrupt (<see cref="RaidDungeon.Through"/>).
+        /// Not here: Fomor City (Myrddraxis), whose navmesh has no path from the entrance to the central chamber of Myrddraxis and
         /// Anurigunda (installed zone180.nav, 2026-10-20: the path stops 3,000-3,600 units short on both sides).
         /// </summary>
         public sealed record RaidDungeon(string Id, string Name, eRealm Realm, ushort Region, string BossType, int SuggestedBots,
-            Vector3 Final, string[] Finals);
+            Vector3 Final, string[] Finals, ushort Through = 0);
 
         public static readonly RaidDungeon[] RaidDungeons =
         [
             new("dungeon-albion-krondon", "Krondon", eRealm.Albion, 61, "Orylle", 160, new(31413, 70773, 15765), ["Orylle"]),
             new("dungeon-albion-avalon", "Avalon City", eRealm.Albion, 50, "DuraekEmpowered", 120, new(32425, 28962, 8756), ["DuraekEmpowered"]),
+            new("dungeon-albion-crystal", "Crystal Cave", eRealm.Albion, 62, "Xanxicar", 120, new(31577, 35305, 14551), ["Xanxicar"], Through: 50),
             new("dungeon-albion-corrupt", "Hall of the Corrupt", eRealm.Albion, 277, "AidonTheArchwizard", 120, new(31353, 37634, 14873),
                 ["AidonTheArchwizard", "LordGildas"]),
             new("dungeon-midgard-trollheim", "Trollheim", eRealm.Midgard, 150, "Nosdoden", 160, new(37538, 12262, 13377), ["Nosdoden"]),
@@ -430,7 +437,7 @@ namespace DOL.GS
             Definition preview = forced ? Definitions.FirstOrDefault(d => d.Id == id && d.Realm == realm) : null;
             if (preview is { IsDungeon: true } && !RealmRaidMuster.Hubs.Where(h => h.Event == id).Any(h =>
                     RealmRaidDungeonRoute.TryCreate(preview.Region, preview.Trigger, preview.FinalTypes, out _, realm,
-                        preview.IsNeutral ? h.Region : (ushort)0, preview.Objectives, h.Center)))
+                        preview.EntranceHome(h), preview.Objectives, h.Center)))
             {
                 reason = $"The dungeon entrance/final approach could not be validated ({RealmRaidDungeonRoute.LastFailure}). No party was assigned.";
                 Log.Warn($"REALM_RAID_START_UNAVAILABLE event={id} reason=\"no validated entrance\" detail=\"{RealmRaidDungeonRoute.LastFailure}\"");
@@ -466,7 +473,7 @@ namespace DOL.GS
                     if (definition.IsDungeon)
                     {
                         if (!RealmRaidDungeonRoute.TryCreate(definition.Region, definition.Trigger, definition.FinalTypes, out var route,
-                                realm, definition.IsNeutral ? hub.Region : (ushort)0, definition.Objectives, hub.Center))
+                                realm, definition.EntranceHome(hub), definition.Objectives, hub.Center))
                         {
                             reason = "The dungeon entrance/final approach could not be validated. No party was assigned.";
                             Log.Warn($"REALM_RAID_START_UNAVAILABLE event={id} hub=\"{hub.Name}\" reason=\"no validated entrance\" detail=\"{RealmRaidDungeonRoute.LastFailure}\"");

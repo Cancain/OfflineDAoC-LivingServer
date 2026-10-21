@@ -32,7 +32,13 @@ namespace DOL.UnitTests
                         Is.True, $"{dungeon.Name}: boss script {type}");
             }
             Assert.That(AutonomousRealmRaid.Definitions.Select(d => d.Id), Is.Unique);
-            Assert.That(AutonomousRealmRaid.RaidDungeons.Select(d => d.Region), Is.EquivalentTo(new ushort[] { 61, 50, 277, 150, 161, 246, 190, 276 }));
+            Assert.That(AutonomousRealmRaid.RaidDungeons.Select(d => d.Region), Is.EquivalentTo(new ushort[] { 61, 50, 62, 277, 150, 161, 246, 190, 276 }));
+            var crystal = AutonomousRealmRaid.Definitions.Single(d => d.Id == "dungeon-albion-crystal");
+            var hub = RealmRaidMuster.Hubs.First(h => h.Event == crystal.Id);
+            Assert.That(crystal.Through, Is.EqualTo(50), "Crystal Cave is entered through Avalon City");
+            Assert.That(crystal.EntranceHome(hub), Is.EqualTo(51), "it stages outside Avalon City, in the Shrouded Isles");
+            var krondon = AutonomousRealmRaid.Definitions.Single(d => d.Id == "dungeon-albion-krondon");
+            Assert.That(krondon.EntranceHome(RealmRaidMuster.Hubs.First(h => h.Event == krondon.Id)), Is.EqualTo(0), "Krondon is entered from open ground");
         });
 
         [Test]
@@ -83,6 +89,7 @@ namespace DOL.UnitTests
         [TestCase(61, 33013, 31379, 15698)]     // Krondon
         [TestCase(50, 32366, 21177, 8071)]      // Avalon City (Albion-only entrance)
         [TestCase(50, 31159, 47380, 8307)]      // Avalon City
+        [TestCase(62, 28621, 31142, 16418)]     // Crystal Cave, from its entrance out of Avalon City
         [TestCase(277, 32395, 31847, 16158)]    // Hall of the Corrupt
         [TestCase(150, 28284, 47911, 16000)]    // Trollheim
         [TestCase(161, 34991, 37707, 17231)]    // Iarnvidiur's Lair
@@ -91,8 +98,17 @@ namespace DOL.UnitTests
         [TestCase(276, 32915, 29238, 16268)]    // Marfach Caverns
         [TestCase(191, 32072, 29524, 17051)]    // control: Galladoria
         [TestCase(160, 35612, 17899, 19050)]    // control: Tuscaran Glacier
-        public void TheFinalRoomIsReachableFromTheEntrance(int regionId, int x, int y, int z)
+        public void TheFinalRoomIsReachableFromTheEntrance(int regionId, int x, int y, int z) =>
+            Reach(regionId, new(x, y, z), AutonomousRealmRaid.Definitions.First(d => d.Region == regionId).Trigger);
+
+        // The Crystal Cave raid walks through Avalon City: from each entrance to the Crystal Cave portal.
+        [TestCase(32366, 21177, 8071)]
+        [TestCase(31159, 47380, 8307)]
+        public void AvalonCityLeadsToTheCrystalCavePortal(int x, int y, int z) => Reach(50, new(x, y, z), new(21094, 42184, 7909));
+
+        private void Reach(int regionId, Vector3 entrance, Vector3 trigger)
         {
+            int x = (int)entrance.X, y = (int)entrance.Y, z = (int)entrance.Z;
             var region = (Region)RuntimeHelpers.GetUninitializedObject(typeof(Region));
             typeof(Region).GetField("m_regionData", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
                 .SetValue(region, new RegionData { Id = (ushort)regionId });
@@ -105,7 +121,6 @@ namespace DOL.UnitTests
             LocalPathfindingMgr.LoadNavMesh(zone);
             var nav = PathfindingProvider.LocalPathfindingMgr;
             Assert.That(nav.HasNavmesh(zone), Is.True, "navmesh loaded");
-            Vector3 trigger = AutonomousRealmRaid.Definitions.First(d => d.Region == regionId).Trigger;
             Vector3? floor = nav.GetClosestPoint(zone, new(x, y, z), 48, 48, 64, nav.DefaultFilters);
             Assert.That(floor.HasValue, Is.True, "navmesh floor at the entrance arrival");
             Assert.That(AutonomousRendezvousNavigation.HasLocalExit(nav, zone, floor.Value), Is.True, "the arrival has a way out");

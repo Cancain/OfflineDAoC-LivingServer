@@ -281,7 +281,8 @@ namespace DOL.GS
                 if (!AutonomousRendezvousNavigation.HasLocalExit(nav, inside, floor.Value)) { why.Add($"{id}: inside arrival has no local exit"); continue; }
                 // A neutral dungeon is too large for one entrance-to-final-boss proof (Darkness
                 // Falls); the route proves each named encounter from the raid's positions instead.
-                if (homeRegion == 0 && !AutonomousZonePointApproach.TryResolve(nav, inside, floor.Value, trigger, 220, out _))
+                if ((homeRegion == 0 || !RealmRaidNeutralEvents.IsNeutralRegion(region)) &&
+                    !AutonomousZonePointApproach.TryResolve(nav, inside, floor.Value, trigger, 220, out _))
                 { why.Add($"{id}: no approach to the encounter"); continue; }
                 route = new(region, outer, floor.Value, trigger, finals, objectives, realm);
                 route.ObserveCompletion();

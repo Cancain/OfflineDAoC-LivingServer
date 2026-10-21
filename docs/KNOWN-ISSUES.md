@@ -87,10 +87,11 @@ meetup fix drop two no-shows (in the server log).
   bots don't count for your guild's merit, realm points, keep claims or buffs (the base game's choice); bots in
   a bot-run guild still do for theirs. With bot voices on, bots in your guild talk from the voices corpus;
   with them off, they use the base game's own lines. Not played in game yet.
-- **Raid dungeons (0.37-se.2):** Krondon, Avalon City, Hall of the Corrupt, Trollheim, Iarnvidiur's Lair,
+- **Raid dungeons (0.37-se.2):** Krondon, Avalon City, Crystal Cave, Hall of the Corrupt, Trollheim, Iarnvidiur's Lair,
   Dodens Gruva, Tur Suil and Marfach Caverns are raided on the schedule. Their entrance-to-boss paths were
   checked offline on the installed navmeshes, but no raid has run there in game yet; most of their bosses have
-  scripted fights above level 70 that bots don't play around. Fomor City and Crystal Cave are not raided.
+  scripted fights above level 70 that bots don't play around. Fomor City is not raided (no navmesh path to
+  Myrddraxis).
 - **Moving to 0.37:** `PREPARE-FOR-UPDATE.cmd` was used for a real update (the owner's 0.36c game to 0.37c).
   `carry_social_tables.py` was tested on test folders and databases only.
 
