@@ -106,6 +106,30 @@ namespace DOL.UnitTests
         [TestCase(31159, 47380, 8307)]
         public void AvalonCityLeadsToTheCrystalCavePortal(int x, int y, int z) => Reach(50, new(x, y, z), new(21094, 42184, 7909));
 
+        // Krondon, 2026-10-21: by its portal in Aldland only 7 slots in a row had a staging post, and the rally failed.
+        [Test]
+        public void KrondonsPortalHasRoomForItsRaid()
+        {
+            var region = (Region)RuntimeHelpers.GetUninitializedObject(typeof(Region));
+            var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+            typeof(Region).GetField("m_regionData", flags).SetValue(region, new RegionData { Id = 51 });
+            var zones = new List<Zone>();
+            typeof(Region).GetField("m_zones", flags).SetValue(region, zones);
+            var zone = new Zone(region, 56, "Aldland", 44 * 8192, 58 * 8192, 65536, 65536, 56, false, 0, false, 0, 0, 0, 0, 0);
+            zones.Add(zone);
+            _loaded.Add(zone);
+            LocalPathfindingMgr.LoadNavMesh(zone);
+            var nav = PathfindingProvider.LocalPathfindingMgr;
+            Assert.That(nav.HasNavmesh(zone), Is.True, "zone056.nav loaded");
+            var posts = new List<Vector3>();
+            for (int slot = 0; slot < RealmRaidRecruitmentPolicy.MaximumParties; slot++)
+                if (RealmRaidStaging.TryDungeonPost(nav, zone, new(386927, 479721, 3664), slot, posts, out Vector3 post))
+                    posts.Add(post);
+            TestContext.Out.WriteLine($"Krondon staging posts: {posts.Count}");
+            // Krondon raids up to 160: twenty eight-bot parties.
+            Assert.That(posts.Count, Is.GreaterThanOrEqualTo(20));
+        }
+
         private void Reach(int regionId, Vector3 entrance, Vector3 trigger)
         {
             int x = (int)entrance.X, y = (int)entrance.Y, z = (int)entrance.Z;

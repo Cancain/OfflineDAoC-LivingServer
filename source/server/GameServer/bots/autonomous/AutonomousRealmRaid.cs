@@ -89,6 +89,8 @@ namespace DOL.GS
             public Vector3[] OutboundSeams = [];
             public readonly List<GameBot[]> ForcedParties = new();
             public readonly Dictionary<int, Vector3> StagingPosts = new();
+            /// <summary>Formation slots with no staging or hub post (tight ground by the entrance); skipped from then on.</summary>
+            public readonly HashSet<int> UnusableSlots = new();
             public RealmRaidDungeonRoute DungeonRoute;
             public readonly RealmRaidLootOwner.Ledger LootLedger = new();
             public readonly Dictionary<Group, Party> Parties = new();
@@ -415,9 +417,7 @@ namespace DOL.GS
                 // Removing a party must not make its count reuse a surviving
                 // party's staging slot and pile reinforcements on top of it.
                 if (raid.Support.Length + members.Length > RealmRaidRecruitmentPolicy.MaximumBots) return false;
-                int slot = Enumerable.Range(0, RealmRaidRecruitmentPolicy.MaximumParties).FirstOrDefault(candidate =>
-                    raid.Parties.Values.All(p => p.FormationSlot != candidate), -1);
-                if (slot < 0 || !TryStaging(raid, slot, out Vector3 staging) || !TryHubPost(raid, slot, out var hubPost)) return false;
+                if (!TryFreeSlot(raid, out int slot, out Vector3 staging, out var hubPost)) return false;
                 var party = new Party { Members = members, FormationSlot = slot, Staging = staging, HubPost = hubPost, Target = members.Length };
                 raid.Parties[leader.Group] = party;
                 Membership[leader.Group] = raid;
@@ -531,6 +531,25 @@ namespace DOL.GS
         private static bool IsAtHub(Raid raid, Party party, GameBot b) => IsEligible(b) && b.IsAlive && !b.IsReturningAfterRelease && !b.IsOnStableMasterRoute &&
                 b.CurrentRegionID == raid.Hub.Region && b.Group != null &&
                 b.IsWithinRadius(new Point3D((int)party.HubPost.X, (int)party.HubPost.Y, (int)party.HubPost.Z), 600);
+
+        /// <summary>
+        /// The first free formation slot that has both a staging post and a hub post. A slot without one is set aside, so
+        /// a raid by tight ground fills the slots that fit instead of waiting on one that never will (Krondon, 2026-10-21:
+        /// the raid asked for slot 7 for 90 minutes with 7 parties gathered, and its rally failed).
+        /// </summary>
+        private static bool TryFreeSlot(Raid raid, out int slot, out Vector3 staging, out Vector3 hubPost)
+        {
+            staging = hubPost = default;
+            for (slot = 0; slot < RealmRaidRecruitmentPolicy.MaximumParties; slot++)
+            {
+                int candidate = slot;
+                if (raid.UnusableSlots.Contains(candidate) || raid.Parties.Values.Any(p => p.FormationSlot == candidate)) continue;
+                if (TryStaging(raid, candidate, out staging) && TryHubPost(raid, candidate, out hubPost)) return true;
+                raid.UnusableSlots.Add(candidate);
+            }
+            slot = -1;
+            return false;
+        }
 
         private static bool TryHubPost(Raid raid, int slot, out Vector3 post)
         {
@@ -728,14 +747,13 @@ namespace DOL.GS
             lock (Sync)
             {
                 if (!Raids.TryGetValue(id, out var raid) || raid.Parties.Count >= RealmRaidRecruitmentPolicy.MaximumParties) return false;
-                int slot = Enumerable.Range(0, RealmRaidRecruitmentPolicy.MaximumParties).First(i => raid.Parties.Values.All(p => p.FormationSlot != i));
-                if (!TryStaging(raid, slot, out _) || !TryHubPost(raid, slot, out var staging))
+                if (!TryFreeSlot(raid, out int slot, out _, out var staging))
                 {
                     if (GameLoop.GameLoopTime >= raid.NextPostWarning)
                     {
                         raid.NextPostWarning = GameLoop.GameLoopTime + 60_000;
-                        Log.Warn($"REALM_RAID_NO_MUSTER_POST event={id} hub=\"{raid.Hub.Name}\" slot={slot} parties={raid.Parties.Count} " +
-                                 $"staging={raid.StagingPosts.Count} hubPosts={raid.HubPosts.Count}");
+                        Log.Warn($"REALM_RAID_NO_MUSTER_POST event={id} hub=\"{raid.Hub.Name}\" parties={raid.Parties.Count} " +
+                                 $"staging={raid.StagingPosts.Count} hubPosts={raid.HubPosts.Count} unusableSlots={raid.UnusableSlots.Count}");
                     }
                     return false;
                 }
@@ -759,8 +777,7 @@ namespace DOL.GS
                     !specialForces && raid.Support.Length + members.Length > RealmRaidRecruitmentPolicy.MaximumBots ||
                     members.Any(b => !IsEligible(b) || b.Realm != raid.Definition.Realm ||
                     Reservations.GetValueOrDefault(b.DatabaseID) != id)) return false;
-                int slot = Enumerable.Range(0, RealmRaidRecruitmentPolicy.MaximumParties).First(i => raid.Parties.Values.All(p => p.FormationSlot != i));
-                if (!TryStaging(raid, slot, out var staging) || !TryHubPost(raid, slot, out var hubPost)) return false;
+                if (!TryFreeSlot(raid, out int slot, out var staging, out var hubPost)) return false;
                 var party = new Party { Members = members, FormationSlot = slot, Staging = staging, HubPost = hubPost, Target = members.Length };
                 // They arrive at the hub after the raid has left it, and walk in like late members.
                 if (specialForces && (raid.HubDeparted || raid.Started))

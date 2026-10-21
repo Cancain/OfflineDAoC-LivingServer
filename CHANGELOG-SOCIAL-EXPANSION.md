@@ -225,6 +225,13 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   outside Avalon City and walks through it, the way a Summoner's Hall raid walks through Hall of the Corrupt (the
   path from each Avalon City entrance to the Crystal Cave portal was proven too). Not raided: Fomor City (its
   navmesh has no path from the entrance to Myrddraxis's chamber).
+- **A raid by tight ground fills the slots that fit.** Krondon's first raid gathered 7 parties at Caer Diogel and
+  waited 90 minutes for an eighth: beside its portal in Aldland only 7 formation slots in a row had a staging post,
+  and the raid only ever asked for the next slot. A slot with no post is now set aside and the next one tried, and
+  each slot widens its search ring after twelve tries (25 of 38 slots find a post by the Krondon portal, from 19).
+- **Fixes from the first night on this build:** two healer crashes when a group was disbanded mid-check (a null
+  resurrection scope and a null group in the cure check), and the launcher's status queue kept duplicate ids in its
+  priority queue (65 to 5,079 overnight).
 - **Native memory leak in pathfinding.** In every 600-per-realm run the server's memory outside the .NET heap
   grew about 250 MB an hour (3.3 to 6.1 GB overnight; the working set went from 5.4 to 10 GB). The pathfinder kept
   one native Detour query (about 0.7 MB) for every thread and zone and never freed it: each .NET pool thread that

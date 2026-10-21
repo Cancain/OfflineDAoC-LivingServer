@@ -15,7 +15,9 @@ public static class RealmRaidStaging
         for (int attempt = 0; attempt < 36; attempt++)
         {
             double angle = (attempt * 30 + slot * 137.5) * Math.PI / 180;
-            float radius = 500 + slot % 5 * 200 + (slot >= 30 ? attempt / 12 * 250 : 0);
+            // Every slot widens its ring after each twelve tries (slots 30+ always did): beside the Krondon portal in Aldland,
+            // 19 of 38 slots found no post on their one ring, and the raid waited on slot 7 until its rally failed (2026-10-21).
+            float radius = 500 + slot % 5 * 200 + attempt / 12 * 250;
             Vector3 raw = portal + new Vector3((float)Math.Cos(angle) * radius, (float)Math.Sin(angle) * radius, 0);
             Vector3? floor = nav.GetClosestPoint(exterior, raw, 64, 64, 512, nav.DefaultFilters);
             if (!floor.HasValue || !AutonomousRendezvousNavigation.HasLocalExit(nav, exterior, floor.Value) ||

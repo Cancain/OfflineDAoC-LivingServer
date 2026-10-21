@@ -69,7 +69,10 @@ namespace DOL.GS
             // Keep at least half the available healers healing during combat.
             int critical = members.Count(m => m.IsAlive && m.CurrentRegionID == bot.CurrentRegionID && m.HealthPercent < 35);
             int budget = combat ? CombatResurrectionBudget(healers, critical) : healers;
-            State state = States.GetOrCreateValue(AutonomousRealmRaid.SupportScope(bot));
+            // The group can be disbanded by another worker mid-check (overnight run 2026-10-20: a null scope key).
+            object scope = AutonomousRealmRaid.SupportScope(bot);
+            if (scope == null) return null;
+            State state = States.GetOrCreateValue(scope);
             foreach (GameLiving corpse in members.Where(m => !m.IsAlive && m.ObjectState == GameObject.eObjectState.Active &&
                 m.CurrentRegionID == bot.CurrentRegionID && bot.IsWithinRadius(m, range)).OrderBy(m => m is GamePlayer ? 0 : 1).ThenBy(bot.GetDistanceTo))
             {

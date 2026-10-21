@@ -5186,9 +5186,11 @@ namespace DOL.AI.Brain
             // Cure Mezz/Disease/Poison
             if (spellToCast == null)
             {
-                if (Body.Group != null)
+                // Read the group once: another worker can disband it mid-check (overnight run 2026-10-20, CheckHeals NRE).
+                Group cureGroup = Body.Group;
+                if (cureGroup != null)
                 {
-                    foreach (GameLiving member in Body.Group.GetMembersInTheGroup().OrderBy(member => member == AssistedPlayer ? 0 : 1))
+                    foreach (GameLiving member in cureGroup.GetMembersInTheGroup().OrderBy(member => member == AssistedPlayer ? 0 : 1))
                     {
                         if (member.IsMezzed && member != Body && InSupportReach(member) && CheckHealSpell(BotBody.CureMezz))
                         {
@@ -5200,7 +5202,7 @@ namespace DOL.AI.Brain
 
                     if (spellToCast == null && nextCureTime < GameLoop.GameLoopTime)
                     {
-                        foreach (GameLiving member in Body.Group.GetMembersInTheGroup().OrderBy(member => member == AssistedPlayer ? 0 : 1))
+                        foreach (GameLiving member in cureGroup.GetMembersInTheGroup().OrderBy(member => member == AssistedPlayer ? 0 : 1))
                         {
                             if (!InSupportReach(member))
                                 continue;

@@ -170,6 +170,16 @@ namespace DOL.GS
             try { LogNpcCensus(); } catch (Exception exception) { Log.Warn("SERVER_NPC_CENSUS failed", exception); }
             try { LogStaticCensus(); } catch (Exception exception) { Log.Warn("SERVER_STATIC_CENSUS failed", exception); }
             try { LogBotFieldCensus(); } catch (Exception exception) { Log.Warn("SERVER_BOT_FIELD_CENSUS failed", exception); }
+            try { ServerHolderCensus.MaybeRun(DetachedNpcs); } catch (Exception exception) { Log.Warn("SERVER_HOLDER_CENSUS failed", exception); }
+        }
+
+        /// <summary>NPC objects still in memory but no longer in the world (census on only).</summary>
+        private static List<GameNPC> DetachedNpcs()
+        {
+            var detached = new List<GameNPC>();
+            foreach (var entry in NpcCensus)
+                if (entry.Key.ObjectState != GameObject.eObjectState.Active) detached.Add(entry.Key);
+            return detached;
         }
 
         private static int ThreadCount(Process process)
