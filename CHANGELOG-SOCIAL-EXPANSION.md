@@ -43,6 +43,13 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - Bots no longer advertise the level 50 starter kits in /faction ("Does anybody want to make me an offer on Offline
   level 50 Cleric 41/33?").
 
+**A boss could stop the server (2026-10-21)**
+- In the live run the Midgard raid (about 150 bots) fought Lydsyg in Iarnvidiur's Lair. His script recasts his area
+  disease from OnAttackEnemy, and a spell landing on each target counts as an attack, so each cast set off dozens more:
+  the server's memory went from 2.9 GB to 37 GB in ten minutes and the game stopped. 69 scripted encounters cast this
+  way; with one player the chain dies out by itself. Now a monster can't ask for the same instant spell on the same
+  target again within a second, or queue it twice, and keeps at most 16 cast requests. Bots and players are unchanged.
+
 **Chat that answers what was said (2026-10-21)**
 - The owner found conversations still didn't make sense. Nothing in the log showed what was said, so the server log
   now has a chat transcript: `CHAT_LINE` for every bot line a player can see (/say near a player, /faction, /gu,
