@@ -74,19 +74,24 @@ def quat_row_matrix(q):
 
 def door_spec(leaf, parent_m, m_closed, index):
     """{id, name, closed, open, seconds}: the leaf's model-space pose (Godot axes, metres, 4x3 basis + origin) when
-    closed and when open (its keyframe controller's first / last rotation key around the leaf's own pivot)."""
+    closed and when open: its keyframe controller's first / last rotation key around the leaf's own pivot, and its
+    first / last translation key. Owner 2026-10-21: a portcullis (Snowdonia Fortress, borderkeep1 'nopick portcullis')
+    only slides up - translation keys, no rotation - and was exported with open == closed, so it never moved."""
     c = leaf.get('controller')
     while c is not None and c.type != 'NiKeyframeController':
         c = c.get('next_controller')
     kd = c.get('data') if c is not None else None
     keys = (kd.get('quaternion_keys') or []) if kd is not None else []
+    tkeys = ((kd.get('translations') or {}).get('keys') or []) if kd is not None else []
     local = local_matrix(leaf)
     scale = float(leaf.get('scale', 1.0))
 
-    def pose(q):
+    def pose(q, t=None):
         m = local.copy()
         if q is not None:
             m[:3, :3] = quat_row_matrix(q) * scale
+        if t is not None:
+            m[3, :3] = [t['x'], t['y'], t['z']]
         return m @ parent_m
 
     def godot(m):
@@ -99,8 +104,11 @@ def door_spec(leaf, parent_m, m_closed, index):
     if keys:
         q0 = [keys[0]['value'][k] for k in ('x', 'y', 'z', 'w')]
         q1 = [keys[-1]['value'][k] for k in ('x', 'y', 'z', 'w')]
-    return {'id': index, 'name': leaf.get('name'), 'closed': godot(pose(q0) if q0 else m_closed),
-            'open': godot(pose(q1) if q1 else m_closed),
+    t0 = tkeys[0]['value'] if tkeys else None
+    t1 = tkeys[-1]['value'] if tkeys else None
+    keyed = q0 is not None or t0 is not None
+    return {'id': index, 'name': leaf.get('name'), 'closed': godot(pose(q0, t0) if keyed else m_closed),
+            'open': godot(pose(q1, t1) if keyed else m_closed),
             'seconds': float(c.get('stop_time', 1.0)) - float(c.get('start_time', 0.0)) if c is not None else 1.0}
 
 
