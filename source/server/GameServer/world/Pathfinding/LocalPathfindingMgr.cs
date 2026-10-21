@@ -21,12 +21,25 @@ namespace DOL.GS
             {
                 if (!CreateNavMeshQuery(navMesh, ref _query))
                     throw new Exception($"Can't create {nameof(NavMeshQuery)}");
+                Interlocked.Increment(ref _queriesCreated);
+                Interlocked.Increment(ref _queriesLive);
             }
 
             public void Dispose()
             {
-                if (_query != IntPtr.Zero)
-                    FreeNavMeshQuery(_query);
+                Free();
+                GC.SuppressFinalize(this);
+            }
+
+            // A query lost without its lease being returned (a thread killed mid-call) still gives its native memory back.
+            ~NavMeshQuery() => Free();
+
+            private void Free()
+            {
+                IntPtr query = Interlocked.Exchange(ref _query, IntPtr.Zero);
+                if (query == IntPtr.Zero) return;
+                FreeNavMeshQuery(query);
+                Interlocked.Decrement(ref _queriesLive);
             }
 
             public static implicit operator IntPtr(NavMeshQuery query)
@@ -45,7 +58,88 @@ namespace DOL.GS
         private static readonly Dictionary<GameDoorBase, ulong[]> _doorPolyRefs = new();
         private static readonly Lock _doorPolyRefsLock = new();
 
-        private static ThreadLocal<Dictionary<ushort, NavMeshQuery>> _navmeshQueries = new(() => []);
+        // Native Detour queries (about 0.7 MB each, MAX_NODES 16,384), pooled per zone and lent for one call.
+        // Owner, 2026-10-20: they were kept per thread and zone and never freed. Every .NET pool thread that ran a
+        // town-route check built its own set, which leaked when the thread retired, and every game-loop worker kept
+        // one for each zone it ever touched: native memory grew about 250 MB an hour in every 600-per-realm run.
+        private sealed class ZoneQueries
+        {
+            private readonly System.Collections.Concurrent.ConcurrentBag<NavMeshQuery> _idle = new();
+            private int _idleCount;
+            private volatile bool _retired;
+
+            public NavMeshQuery Rent(nint meshPtr)
+            {
+                if (_idle.TryTake(out NavMeshQuery query))
+                {
+                    Interlocked.Decrement(ref _idleCount);
+                    return query;
+                }
+                return new(meshPtr);
+            }
+
+            public void Return(NavMeshQuery query)
+            {
+                if (_retired)
+                {
+                    query.Dispose();
+                    return;
+                }
+                if (Interlocked.Increment(ref _idleCount) > MaxIdleQueriesPerZone)
+                {
+                    // More threads than usual met in this zone at once: keep the usual number, free the rest.
+                    Interlocked.Decrement(ref _idleCount);
+                    query.Dispose();
+                    return;
+                }
+                _idle.Add(query);
+                if (_retired) Drain();
+            }
+
+            /// <summary>The zone's navmesh is gone: free every idle query, and each lent one when it comes back.</summary>
+            public void Retire()
+            {
+                _retired = true;
+                Drain();
+            }
+
+            private void Drain()
+            {
+                while (_idle.TryTake(out NavMeshQuery query))
+                {
+                    Interlocked.Decrement(ref _idleCount);
+                    query.Dispose();
+                }
+            }
+        }
+
+        /// <summary>One query lent for one call; disposing it hands the query back to its zone's pool.</summary>
+        private readonly ref struct QueryLease
+        {
+            private readonly ZoneQueries _pool;
+            public readonly NavMeshQuery Query;
+
+            public QueryLease(ZoneQueries pool, NavMeshQuery query)
+            {
+                _pool = pool;
+                Query = query;
+            }
+
+            public void Dispose()
+            {
+                if (Query != null) _pool.Return(Query);
+            }
+        }
+
+        private static readonly int MaxIdleQueriesPerZone = Math.Max(4, Environment.ProcessorCount);
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<ushort, ZoneQueries> _queryPools = new();
+        private static long _queriesCreated;
+        private static long _queriesLive;
+
+        /// <summary>Native Detour queries alive now (SERVER_MEMORY).</summary>
+        public static long LiveQueries => Interlocked.Read(ref _queriesLive);
+        /// <summary>Native Detour queries made since start (SERVER_MEMORY).</summary>
+        public static long QueriesCreated => Interlocked.Read(ref _queriesCreated);
 
         private static readonly float[] _defaultHalfExtents = GetRecastFloats(new(32f, 32f, 64f)); // 1f, 2f, 1f in recast space.
         private static readonly EDtPolyFlags[] _doorMask = [EDtPolyFlags.Door, 0];
@@ -238,12 +332,18 @@ namespace DOL.GS
 
             zone.IsPathfindingEnabled = false;
             NavigationGeometryRevision.Changed(zone);
+            if (_queryPools.TryRemove(zone.ID, out ZoneQueries queries))
+                queries.Retire();
             FreeNavMesh(ptr);
             _navmeshPtrs.Remove(zone.ID);
         }
 
         public override void Stop()
         {
+            foreach (ushort zoneId in _queryPools.Keys)
+                if (_queryPools.TryRemove(zoneId, out ZoneQueries queries))
+                    queries.Retire();
+
             foreach (nint ptr in _navmeshPtrs.Values)
                 FreeNavMesh(ptr);
 
@@ -312,26 +412,19 @@ namespace DOL.GS
             return _navmeshPtrs.TryGetValue(zone.ID, out ptr);
         }
 
-        private static bool TryGetQuery(Zone zone, out NavMeshQuery query)
+        private static QueryLease RentQuery(Zone zone)
         {
             if (!TryGetMeshPtr(zone, out nint ptr))
-            {
-                query = null;
-                return false;
-            }
-
-            if (!_navmeshQueries.Value.TryGetValue(zone.ID, out query))
-            {
-                query = new(ptr);
-                _navmeshQueries.Value.Add(zone.ID, query);
-            }
-
-            return true;
+                return default;
+            ZoneQueries pool = _queryPools.GetOrAdd(zone.ID, static _ => new());
+            return new(pool, pool.Rent(ptr));
         }
 
         public override PathfindingResult GetPathStraight(Zone zone, Vector3 start, Vector3 end, EDtPolyFlags[] filters, Span<WrappedPathfindingNode> destination)
         {
-            if (!TryGetQuery(zone, out NavMeshQuery query))
+            using QueryLease lease = RentQuery(zone);
+            NavMeshQuery query = lease.Query;
+            if (query == null)
                 return new(PathfindingStatus.NoPathFound, 0);
 
             Span<float> startFloats = stackalloc float[3];
@@ -386,7 +479,9 @@ namespace DOL.GS
 
         public Vector3? GetMoveAlongSurfaceGrounded(Zone zone, Vector3 start, Vector3 end, EDtPolyFlags[] filters)
         {
-            if (!TryGetQuery(zone, out NavMeshQuery query)) return null;
+            using QueryLease lease = RentQuery(zone);
+            NavMeshQuery query = lease.Query;
+            if (query == null) return null;
             Span<float> a = stackalloc float[3], b = stackalloc float[3], result = stackalloc float[3];
             FillRecastFloats(start, a);
             FillRecastFloats(end, b);
@@ -400,7 +495,9 @@ namespace DOL.GS
             // Confusing name, see Detour docs for what it does.
             // Should not be used for pathfinding, only for small adjustments to positions.
 
-            if (!TryGetQuery(zone, out NavMeshQuery query))
+            using QueryLease lease = RentQuery(zone);
+            NavMeshQuery query = lease.Query;
+            if (query == null)
                 return null;
 
             Span<float> startFloats = stackalloc float[3];
@@ -419,7 +516,9 @@ namespace DOL.GS
 
         public override Vector3? GetRandomPoint(Zone zone, Vector3 position, float radius, EDtPolyFlags[] filters)
         {
-            if (!TryGetQuery(zone, out NavMeshQuery query))
+            using QueryLease lease = RentQuery(zone);
+            NavMeshQuery query = lease.Query;
+            if (query == null)
                 return null;
 
             Span<float> center = stackalloc float[3];
@@ -435,7 +534,9 @@ namespace DOL.GS
 
         public override Vector3? GetClosestPoint(Zone zone, Vector3 position, EDtPolyFlags[] filters)
         {
-            if (!TryGetQuery(zone, out NavMeshQuery query))
+            using QueryLease lease = RentQuery(zone);
+            NavMeshQuery query = lease.Query;
+            if (query == null)
                 return null;
 
             Span<float> center = stackalloc float[3];
@@ -451,7 +552,9 @@ namespace DOL.GS
 
         public override Vector3? GetClosestPoint(Zone zone, Vector3 position, float xRange, float yRange, float zRange, EDtPolyFlags[] filters)
         {
-            if (!TryGetQuery(zone, out NavMeshQuery query))
+            using QueryLease lease = RentQuery(zone);
+            NavMeshQuery query = lease.Query;
+            if (query == null)
                 return null;
 
             Span<float> center = stackalloc float[3];
@@ -473,7 +576,9 @@ namespace DOL.GS
             if (minOffset.X > maxOffset.X || minOffset.Y > maxOffset.Y || minOffset.Z > maxOffset.Z)
                 throw new ArgumentException($"{nameof(minOffset)} must be <= {nameof(maxOffset)} in all components");
 
-            if (!TryGetQuery(zone, out NavMeshQuery query))
+            using QueryLease lease = RentQuery(zone);
+            NavMeshQuery query = lease.Query;
+            if (query == null)
                 return null;
 
             Vector3 relativeCenter = (minOffset + maxOffset) * 0.5f;
@@ -538,7 +643,9 @@ namespace DOL.GS
 
         public override bool HasLineOfSight(Zone zone, Vector3 position, Vector3 target, EDtPolyFlags[] filters)
         {
-            if (!TryGetQuery(zone, out NavMeshQuery query))
+            using QueryLease lease = RentQuery(zone);
+            NavMeshQuery query = lease.Query;
+            if (query == null)
                 return false;
 
             Span<float> startFloats = stackalloc float[3];
@@ -593,7 +700,9 @@ namespace DOL.GS
         {
             polyRef = 0;
 
-            if (!TryGetQuery(zone, out NavMeshQuery query))
+            using QueryLease lease = RentQuery(zone);
+            NavMeshQuery query = lease.Query;
+            if (query == null)
                 return null;
 
             Span<float> center = stackalloc float[3];
@@ -607,7 +716,9 @@ namespace DOL.GS
 
         private static ulong[] GetNearestPolys(Zone zone, Vector3 point, EDtPolyFlags[] filters, int maxPolyCount)
         {
-            if (!TryGetQuery(zone, out NavMeshQuery query))
+            using QueryLease lease = RentQuery(zone);
+            NavMeshQuery query = lease.Query;
+            if (query == null)
                 return [];
 
             Span<float> center = stackalloc float[3];

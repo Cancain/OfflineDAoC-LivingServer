@@ -209,6 +209,13 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   minutes (`AUTONOMOUS_DUNGEON_BOSS_GOAL`, `AUTONOMOUS_DUNGEON_BOSS_RESULT`).
 - **Torst no longer disappears.** His eddies' brain set its body's speed before it had a body; the error removed
   Torst from the world the moment he summoned them.
+- **Native memory leak in pathfinding.** In every 600-per-realm run the server's memory outside the .NET heap
+  grew about 250 MB an hour (3.3 to 6.1 GB overnight; the working set went from 5.4 to 10 GB). The pathfinder kept
+  one native Detour query (about 0.7 MB) for every thread and zone and never freed it: each .NET pool thread that
+  checked a town route built its own set, lost when the thread retired, and each game-loop worker kept one for
+  every zone it had touched. Queries are now pooled per zone and lent for one call (at most one idle query per
+  processor thread is kept per zone). `SERVER_MEMORY` also logs `privateMB`, `nativeMB`, `threads`, `poolThreads`,
+  `handles` and the live and created query counts (`navQueries`, `navQueriesMade`).
 
 **Checked**
 - Automated: 3,223 server tests.
