@@ -103,6 +103,17 @@ namespace DOL.GS.Tests
         public void AQuestionIsNotDroppedByTheReplyCooldown(string text, bool needs) =>
             Assert.That(AutonomousBotChatCoordinator.NeedsAnswer(text), Is.EqualTo(needs));
 
+        // Live check 2026-10-21: "anyone in camelot?" drew "im in Camelot Hills".
+        [TestCase("camelot", "Camelot Hills", false)]
+        [TestCase("camelot", "City of Camelot", true)]
+        [TestCase("black mountains", "Black Mtns. North", false)]
+        [TestCase("cotswold", "Camelot Hills", false)]
+        [TestCase("lyonesse", "Lyonesse", true)]
+        [TestCase("salisbury", "Salisbury Plains", true)]
+        public void APlaceIsMatchedForWhatItIs(string place, string zone, bool matches) =>
+            Assert.That(AutonomousChatLiveAnswers.PlaceMatches(place, [zone],
+                ["City of Camelot", "Camelot Hills", "Salisbury Plains", "Lyonesse", "Black Mtns. North"]), Is.EqualTo(matches));
+
         [TestCase("good camp for 24?", 30, 24)]
         [TestCase("where should i hunt", 30, 30)]
         [TestCase("where do 35s level", 12, 35)]

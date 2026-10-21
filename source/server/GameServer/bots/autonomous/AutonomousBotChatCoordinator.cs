@@ -538,6 +538,10 @@ public static class AutonomousBotChatCoordinator
             : voices ? PlayerReplyCount(intent, faction, directed, eligible.Length, Random.Shared)
             : directed || intent is eAutonomousChatIntent.IgnoreOutOfWorld or eAutonomousChatIntent.Abuse ? Math.Min(1, eligible.Length)
             : RollResponseCount(eligible.Length);
+        // A question the live world answers gets one answer: two bots both saying "big group of mids in Uppland" read as an echo
+        // (live check 2026-10-21).
+        if (shape is "ask_hunt" or "ask_enemy" or "ask_price")
+            count = Math.Min(count, 1);
         // The real level-up already drew grats (Living Server): "ding!" typed right after gets one more at most.
         if (voices && intent == eAutonomousChatIntent.Ding && !directed && AutonomousLivingServer.GratsSaidRecently(player.Name, 60_000))
             count = Math.Min(count, Random.Shared.NextDouble() < 0.5 ? 1 : 0);

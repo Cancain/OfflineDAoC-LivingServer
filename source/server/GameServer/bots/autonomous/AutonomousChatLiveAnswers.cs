@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -59,8 +60,11 @@ public static class AutonomousChatLiveAnswers
             .Where(other => other.Realm != bot.Realm && other.Realm is eRealm.Albion or eRealm.Midgard or eRealm.Hibernia && other.IsAlive &&
                             other.CurrentZone != null && (other.CurrentZone.IsRvR || other.CurrentRegion?.IsRvR == true) &&
                             !string.IsNullOrWhiteSpace(other.CurrentZone.Description))
-            .GroupBy(other => (other.Realm, Zone: other.CurrentZone.Description))
-            .OrderByDescending(group => group.Count())
+            .GroupBy(other => (other.Realm, Zone: other.CurrentZone.Description, ZoneRealm: other.CurrentZone.Realm))
+            // Enemies on our side of the frontier first, then on neutral ground, then in their own homeland (live check
+            // 2026-10-21: "where are the mids?" drew "big group of mids in Uppland", Midgard's own frontier).
+            .OrderByDescending(group => group.Key.ZoneRealm == bot.Realm ? 2 : group.Key.ZoneRealm == group.Key.Realm ? 0 : 1)
+            .ThenByDescending(group => group.Count())
             .FirstOrDefault();
         if (seen == null)
             return random.Next(2) == 0 ? "havent seen any, quiet out there right now" : "quiet atm, no enemies that i know of";
@@ -77,8 +81,59 @@ public static class AutonomousChatLiveAnswers
             return false;
         if (place is "frontier" or "rvr" or "the frontier")
             return bot.CurrentZone?.IsRvR == true || bot.CurrentRegion?.IsRvR == true;
-        string[] texts = [bot.CurrentZone?.Description, bot.CurrentRegion?.Description, bot.PersistentRecord?.TravelDestination];
-        return texts.Any(text => !string.IsNullOrWhiteSpace(text) && text.Contains(place, StringComparison.OrdinalIgnoreCase));
+        return PlaceMatches(place, [bot.CurrentZone?.Description, bot.CurrentRegion?.Description, bot.PersistentRecord?.TravelDestination],
+            KnownPlaces());
+    }
+
+    /// <summary>
+    /// A place named in chat matches a name that is that place: "camelot" is the City of Camelot, not Camelot Hills (live check
+    /// 2026-10-21: "anyone in camelot?" drew "im in Camelot Hills"). When some zone or region is the place itself ("camelot",
+    /// "city of camelot", "camelot city"), only those count; otherwise any name containing the words does.
+    /// </summary>
+    public static bool PlaceMatches(string place, IEnumerable<string> names, IReadOnlyCollection<string> known)
+    {
+        string wanted = Normal(place);
+        if (wanted.Length == 0)
+            return false;
+        bool exactExists = known.Any(name => IsExactly(Normal(name), wanted));
+        foreach (string name in names)
+        {
+            string n = Normal(name);
+            if (n.Length == 0)
+                continue;
+            if (exactExists ? IsExactly(n, wanted) : (" " + n + " ").Contains(" " + wanted + " ", StringComparison.Ordinal))
+                return true;
+        }
+        return false;
+    }
+
+    private static bool IsExactly(string name, string wanted) => name == wanted || name == "city of " + wanted || name == wanted + " city";
+
+    private static string Normal(string text)
+    {
+        string t = Regex.Replace((text ?? string.Empty).ToLowerInvariant(), @"[^a-z0-9' ]", " ");
+        t = Regex.Replace(t, @"\s+", " ").Trim();
+        return t.StartsWith("the ") ? t[4..] : t;
+    }
+
+    private static string[] _knownPlaces;
+
+    /// <summary>Every zone and region name of the world, read once.</summary>
+    private static IReadOnlyCollection<string> KnownPlaces()
+    {
+        if (_knownPlaces != null)
+            return _knownPlaces;
+        try
+        {
+            _knownPlaces = WorldMgr.GetAllRegions()
+                .SelectMany(region => new[] { region.Description }.Concat(region.Zones.Select(zone => zone.Description)))
+                .Where(name => !string.IsNullOrWhiteSpace(name)).Distinct().ToArray();
+        }
+        catch
+        {
+            return [];
+        }
+        return _knownPlaces;
     }
 
     /// <summary>"anyone in camelot?" answered by a bot that is there; null from one that isn't.</summary>

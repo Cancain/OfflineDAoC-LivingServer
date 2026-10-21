@@ -80,6 +80,10 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
     whats up?", and a complaint sympathy. An either-or question isn't answered "imo yes". A buyer isn't told to vendor it.
   - A question or request is no longer dropped because bots answered another line in the last 10-12 seconds ("hi" then
     "anyone want to group?" got nothing).
+- In-game check the same evening: "anyone in camelot?" drew "im in Camelot Hills" (a place name now means that place
+  when a zone or region is called that: Camelot is the City of Camelot), and "where are the mids?" drew two bots both
+  naming Uppland, Midgard's own frontier (enemies on our side of the frontier are named first, then neutral ground,
+  then their homeland, and such a question gets one answer).
 - A guild no longer hears the same death or group line twice within the hour: in the live run "died. the run back is
   the worst part" came three times in /gu in 17 minutes, and "guild warband forming, frontier bound" twice 30 seconds
   apart. When every line of the set was heard lately, the bot says nothing.
