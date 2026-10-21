@@ -232,6 +232,8 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - **An encounter that takes no damage stays set aside.** In Krondon the raid skipped Scurceol Hyrde (immune while
   his four Lyft Miht orbs live) and switched straight back to him because he was attacking it, every minute for over
   an hour. A skipped encounter is no longer picked again for attacking until its retry time.
+- **A dungeon boss goal always logs its result** (`AUTONOMOUS_DUNGEON_BOSS_RESULT`), also when the party disbands or
+  takes another task first; before, the night's only goal (Mutilator Zurabo) left no result.
 - **Deleted turret pets were kept in the bots' turret list** until the owner's next pet upkeep (252 held at once).
 - **Fixes from the first night on this build:** two healer crashes when a group was disbanded mid-check (a null
   resurrection scope and a null group in the cure check), and the launcher's status queue kept duplicate ids in its

@@ -623,6 +623,17 @@ public static partial class AutonomousBotGroupCoordinator
     /// The leader of a party grinding a dungeon camp sends it after the dungeon's boss (once per task per boss) and
     /// brings it back to the camp when the boss dies, disappears or 15 minutes pass. True when the camp changed.
     /// </summary>
+    // Overnight run 2026-10-20/21: a party went for Mutilator Zurabo and no result was ever logged; the result was only
+    // written when the leader came back to this check, never when the party disbanded or took another task.
+    private static void LogDungeonBossResult(Session session, GameNPC boss, string result)
+    {
+        long now = GameLoop.GameLoopTime;
+        Log.Info($"AUTONOMOUS_DUNGEON_BOSS_RESULT group={session.Id} boss=\"{boss.Name}\" region={boss.CurrentRegionID} " +
+                 $"result=\"{(boss.IsAlive ? result : "killed")}\" " +
+                 $"minutes={(now - (session.DungeonBossUntilTick - AutonomousDungeonBossGoals.BossAttemptMilliseconds)) / 60_000.0:0.0} " +
+                 $"back=\"{session.DungeonBossReturnCamp?.MonsterName}\"");
+    }
+
     private static bool TendDungeonBoss(Session session, GameBot leader)
     {
         long now = GameLoop.GameLoopTime;
@@ -630,13 +641,13 @@ public static partial class AutonomousBotGroupCoordinator
         if (session.DungeonBoss is { } current)
         {
             if (!string.Equals(session.Camp?.Id, DungeonBossCampId(current), StringComparison.Ordinal))
-            { session.DungeonBoss = null; session.DungeonBossReturnCamp = null; return false; }
+            {
+                LogDungeonBossResult(session, current, $"left for another task ({session.Camp?.MonsterName ?? "none"})");
+                session.DungeonBoss = null; session.DungeonBossReturnCamp = null; return false;
+            }
             bool killed = !current.IsAlive;
             if (!killed && current.ObjectState == GameObject.eObjectState.Active && now < session.DungeonBossUntilTick) return false;
-            Log.Info($"AUTONOMOUS_DUNGEON_BOSS_RESULT group={session.Id} boss=\"{current.Name}\" region={current.CurrentRegionID} " +
-                     $"result={(killed ? "killed" : now >= session.DungeonBossUntilTick ? "timed out" : "gone")} " +
-                     $"minutes={(now - (session.DungeonBossUntilTick - AutonomousDungeonBossGoals.BossAttemptMilliseconds)) / 60_000.0:0.0} " +
-                     $"back=\"{session.DungeonBossReturnCamp?.MonsterName}\"");
+            LogDungeonBossResult(session, current, killed ? "killed" : now >= session.DungeonBossUntilTick ? "timed out" : "gone");
             SharedCamp back = session.DungeonBossReturnCamp;
             session.DungeonBoss = null; session.DungeonBossReturnCamp = null;
             if (back == null) return false;
@@ -1556,6 +1567,8 @@ public static partial class AutonomousBotGroupCoordinator
             AutonomousRealmRaid.RemoveParty(group);
             if (Sessions.TryGetValue(group, out Session ending) && ending.ObjectiveKind == eAutonomousObjectiveKind.RvR)
                 AutonomousRvrEventLayer.RemoveForce(ending.Id);
+            if (ending?.DungeonBoss is { } boss)
+                LogDungeonBossResult(ending, boss, "party disbanded");
             foreach (GameBot bot in AllBotMembers(group))
                 ClearMetadata(bot, true);
             Sessions.Remove(group);
