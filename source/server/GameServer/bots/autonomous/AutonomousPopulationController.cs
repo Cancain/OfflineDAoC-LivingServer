@@ -168,7 +168,7 @@ public static class AutonomousPopulationController
                     int generation = Volatile.Read(ref _loginGeneration);
                     string ownerId = AutonomousBotEconomy.GetOwnerId(next.BotId);
                     var inventory = new BotInventory(ownerId);
-                    var items = inventory.StartLoadFromDatabaseTask(ownerId).GetAwaiter().GetResult();
+                    var items = inventory.SelectPersonalItems(ownerId);
                     if (generation != Volatile.Read(ref _loginGeneration) || _timer == null)
                     {
                         PendingSpawns.TryRemove(next.BotId, out _);
