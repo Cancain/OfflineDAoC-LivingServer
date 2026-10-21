@@ -232,6 +232,8 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - **An encounter that takes no damage stays set aside.** In Krondon the raid skipped Scurceol Hyrde (immune while
   his four Lyft Miht orbs live) and switched straight back to him because he was attacking it, every minute for over
   an hour. A skipped encounter is no longer picked again for attacking until its retry time.
+- **A full 200 raid also goes in short at its deadline** with at least half staged. At 900 bots per realm every raid
+  is a full 200, and the Hibernian Darkness Falls rally failed with 170 staged (the late start needs 180).
 - **A dungeon boss goal always logs its result** (`AUTONOMOUS_DUNGEON_BOSS_RESULT`), also when the party disbands or
   takes another task first; before, the night's only goal (Mutilator Zurabo) left no result.
 - **Deleted turret pets were kept in the bots' turret list** until the owner's next pet upkeep (252 held at once).

@@ -93,12 +93,13 @@ public static class RealmRaidRecruitmentPolicy
     /// A raid scaled to the roster whose staging time has run out goes in short with half of what it needs (at least
     /// 40) instead of failing; the stragglers follow it in as late members. 2026-10-19/20 at 600 bots per realm: three
     /// Albion rallies failed with 90/132, 101/149 and 103/150 staged, and in each about 90 more recruits were still on
-    /// the road ("following the validated exterior corridor"), not lost. A full 200 raid keeps its 180 rule.
+    /// the road ("following the validated exterior corridor"), not lost. A full 200 raid goes in short the same way at
+    /// its deadline (2026-10-21 at 900 per realm, where every raid is a full 200: the Hibernian Darkness Falls rally
+    /// failed with 170 of 200 staged, short of the 180 late start).
     /// </summary>
     public const int DeadlineStartPercent = 50;
     public static bool GoesInShortAtDeadline(bool forced, int present, int required) =>
-        !forced && required < AutonomousMinimumPresent &&
-        present >= Math.Max(MinimumScaledBots, (required * DeadlineStartPercent + 99) / 100);
+        !forced && present >= Math.Max(MinimumScaledBots, (required * DeadlineStartPercent + 99) / 100);
     public static int LateStartMinimum(int required) => required >= AutonomousMinimumPresent
         ? required * AutonomousLateStartMinimumPresent / AutonomousMinimumPresent
         : (required * ScaledLateStartPercent + 99) / 100;

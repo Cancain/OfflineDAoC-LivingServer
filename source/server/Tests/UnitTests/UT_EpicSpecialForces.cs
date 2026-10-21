@@ -38,13 +38,14 @@ namespace DOL.UnitTests
         public void ARegroupRestsAtLeastFiveMinutes() =>
             Assert.That(RealmRaidDungeonRoute.RegroupMinimumMilliseconds, Is.EqualTo(5 * 60_000L));
 
-        // An out-of-time scaled rally goes in with half of what it needs (at least 40); a full 200 raid keeps its own rule.
+        // An out-of-time rally goes in with half of what it needs (at least 40), a full 200 raid too (2026-10-21).
         [TestCase(false, 103, 150, true)]   // Caer Sidi, 2026-10-20: 103 staged, about 60 more on the road
         [TestCase(false, 90, 132, true)]
         [TestCase(false, 74, 149, false)]   // under half
         [TestCase(false, 39, 57, false)]    // half, but under the 40 minimum
         [TestCase(false, 28, 57, false)]    // the Hibernian dragon rally that failed
-        [TestCase(false, 150, 200, false)]  // full raid
+        [TestCase(false, 170, 200, true)]   // Darkness Falls, 2026-10-21: a full raid, 170 staged at its deadline
+        [TestCase(false, 99, 200, false)]   // under half of a full raid
         [TestCase(true, 150, 150, false)]   // forced raids never go in short
         public void AnOutOfTimeRallyGoesInShortWithHalfTheRaid(bool forced, int present, int required, bool goes) =>
             Assert.That(RealmRaidRecruitmentPolicy.GoesInShortAtDeadline(forced, present, required), Is.EqualTo(goes));
