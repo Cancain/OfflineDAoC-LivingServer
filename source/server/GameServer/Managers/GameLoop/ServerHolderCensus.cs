@@ -26,8 +26,10 @@ namespace DOL.GS
 
         public const int FirstRunMinutes = 20;
         public const int IntervalMinutes = 60;
-        public const int MaxVisits = 3_000_000;
-        public const int MaxVisitsPerRoot = 1_000_000;
+        // First run on ba3cc93 (2026-10-21 03:59): 3 million visits took one second and reached only 194 of 2,246 held
+        // NPCs, with the active bots (walked last) never reached. The visited set is the cost: about 25 bytes an object.
+        public const int MaxVisits = 25_000_000;
+        public const int MaxVisitsPerRoot = 6_000_000;
         public const int MaxDepth = 24;
         public static readonly TimeSpan TimeBudget = TimeSpan.FromSeconds(150);
 
@@ -60,7 +62,7 @@ namespace DOL.GS
         }
 
         public sealed record Result(int Targets, int Reached, int Roots, int Visits, int TruncatedRoots, bool OutOfBudget, double Seconds,
-            IReadOnlyList<(string Path, int Count, string Types)> Holders);
+            IReadOnlyList<(string Path, int Count, string Types)> Holders, IReadOnlyList<(string Root, int Visits)> HeaviestRoots = null);
 
         private static void Run(List<GameNPC> detachedNpcs)
         {
@@ -68,12 +70,15 @@ namespace DOL.GS
             if (result.Targets == 0) return;
             Log.Info($"SERVER_HOLDER_CENSUS targets={result.Targets} reached={result.Reached} unreached={result.Targets - result.Reached} " +
                      $"roots={result.Roots} visits={result.Visits} truncatedRoots={result.TruncatedRoots} outOfBudget={result.OutOfBudget} " +
-                     $"seconds={result.Seconds:F0} holders=\"{string.Join(" | ", result.Holders.Take(15).Select(h => $"{h.Path}={h.Count}({h.Types})"))}\"");
+                     $"seconds={result.Seconds:F0} heaviestRoots=\"{string.Join(",", (result.HeaviestRoots ?? []).Select(r => $"{r.Root}:{r.Visits}"))}\" holders=\"{string.Join(" | ", result.Holders.Take(15).Select(h => $"{h.Path}={h.Count}({h.Types})"))}\"");
         }
 
-        /// <summary>Static fields of the server assembly (scripts included), then every active autonomous bot's own fields.</summary>
+        /// <summary>Every active autonomous bot's own fields first, then the static fields of the server assembly (scripts included).</summary>
         private static IEnumerable<(string Name, object Root, bool LeafStart)> Roots()
         {
+            foreach (GameBot bot in AutonomousBotRegistry.Snapshot())
+                if (bot != null && bot.ObjectState == GameObject.eObjectState.Active)
+                    yield return ("(active bot)", bot, false);
             foreach (Type type in SafeTypes(typeof(GameServer).Assembly))
             {
                 if (type.ContainsGenericParameters) continue;
@@ -88,9 +93,6 @@ namespace DOL.GS
                     if (value != null && !Skip(value.GetType())) yield return ($"{type.Name}.{field.Name}", value, true);
                 }
             }
-            foreach (GameBot bot in AutonomousBotRegistry.Snapshot())
-                if (bot != null && bot.ObjectState == GameObject.eObjectState.Active)
-                    yield return ("(active bot)", bot, false);
         }
 
         /// <summary>
@@ -102,6 +104,7 @@ namespace DOL.GS
             var targets = new HashSet<object>(targetObjects, ReferenceEqualityComparer.Instance);
             var watch = Stopwatch.StartNew();
             var visited = new HashSet<object>(ReferenceEqualityComparer.Instance);
+            var rootVisitTotals = new Dictionary<string, int>();
             var holders = new Dictionary<string, (HashSet<object> Targets, Dictionary<string, int> Types)>();
             var reached = new HashSet<object>(ReferenceEqualityComparer.Instance);
             int visits = 0, truncatedRoots = 0, rootCount = 0;
@@ -152,13 +155,16 @@ namespace DOL.GS
             {
                 if (outOfBudget) break;
                 rootCount++;
+                int before = visits;
                 Walk(root, new PathNode(name, null), leafStart);
+                rootVisitTotals[name] = rootVisitTotals.GetValueOrDefault(name) + visits - before;
             }
             var top = holders.OrderByDescending(pair => pair.Value.Targets.Count)
                 .Select(pair => (pair.Key, pair.Value.Targets.Count,
                     string.Join("/", pair.Value.Types.OrderByDescending(t => t.Value).Take(3).Select(t => $"{t.Key}:{t.Value}"))))
                 .ToList();
-            return new(targets.Count, reached.Count, rootCount, visits, truncatedRoots, outOfBudget, watch.Elapsed.TotalSeconds, top);
+            return new(targets.Count, reached.Count, rootCount, visits, truncatedRoots, outOfBudget, watch.Elapsed.TotalSeconds, top,
+                rootVisitTotals.OrderByDescending(pair => pair.Value).Take(6).Select(pair => (pair.Key, pair.Value)).ToList());
         }
 
         private static void PushChildren(object value, PathNode path, int depth, Stack<(object, PathNode, int)> stack)
