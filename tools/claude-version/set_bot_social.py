@@ -1,4 +1,4 @@
-"""Turn the Social Expansion's bot personalities, voices and debates on or off. Default is a read-only dry run.
+"""Turn the Living Server's bot personalities, voices and debates on or off. Default is a read-only dry run.
 
   python tools\\claude-version\\set_bot_social.py                          (show the current settings)
   python tools\\claude-version\\set_bot_social.py --all on --apply         (personalities, voices and debates on)
@@ -10,7 +10,7 @@ Parts (docs/BOT-PERSONALITIES.md, docs/bot-voices/DESIGN.md):
   --voices         pre-written period lines in each bot's own writing style
   --debates        debates and long threads in /faction (needs --voices)
 
-Needs the Social Expansion server build; older servers ignore these settings.
+Needs the Living Server server build; older servers ignore these settings.
 --apply needs the server, launcher and game closed; it backs up the database first.
 """
 import argparse

@@ -19,6 +19,11 @@ namespace DOL.GS
             _ => BotPartyRole.Damage
         };
 
+        /// <summary>Heavy melee that can hold a party's pulls when no real tank is available (AutonomousBotGroupCoordinator.UseOffTanks).</summary>
+        public static bool CanOffTank(eCharacterClass characterClass) => characterClass is
+            eCharacterClass.Mercenary or eCharacterClass.Berserker or eCharacterClass.Savage or
+            eCharacterClass.Blademaster or eCharacterClass.Valewalker;
+
         public static bool IsHealingClass(eCharacterClass characterClass) => characterClass is
             eCharacterClass.Cleric or eCharacterClass.Friar or eCharacterClass.Druid or
             eCharacterClass.Warden or eCharacterClass.Healer or eCharacterClass.Shaman or

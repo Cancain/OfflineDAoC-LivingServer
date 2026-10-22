@@ -105,6 +105,8 @@ public static class AutonomousBotGroupChatter
     /// </summary>
     public static void OnPlayerGroupChat(GamePlayer player, string message)
     {
+        if (player?.Group != null && !string.IsNullOrWhiteSpace(message))
+            BotChatTranscript.Player("group", player, message);
         if (!AutonomousBotVoices.Enabled || player?.Group == null || string.IsNullOrWhiteSpace(message))
             return;
         Group group = player.Group;
@@ -150,6 +152,9 @@ public static class AutonomousBotGroupChatter
     private static void Send(GameBot bot, string text)
     {
         if (bot.Group != null && AutonomousLivingServer.GroupHasPlayer(bot.Group))
+        {
             bot.Group.SendMessageToGroupMembers(bot, text, eChatType.CT_Group, eChatLoc.CL_ChatWindow);
+            BotChatTranscript.Bot("group", bot.Name, bot.Realm, text);
+        }
     }
 }

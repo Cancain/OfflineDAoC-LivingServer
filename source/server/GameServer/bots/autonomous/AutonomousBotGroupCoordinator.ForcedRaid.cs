@@ -15,7 +15,7 @@ public static partial class AutonomousBotGroupCoordinator
             b.Realm == realm && b.Group == null && b.IsAlive && b.PersistentRecord != null &&
             b.CurrentRegion != null && !b.InCombat && !b.IsAttacking && !b.IsOnStableMasterRoute &&
             !AutonomousRealmRaid.IsReserved(b) &&
-            AutonomousObjectiveAssignments.Is(b, eAutonomousObjectiveKind.GroupPve))
+            AutonomousRealmRaid.MayAnswerAutomaticRaid(b))
             .OrderBy(_ => Random.Shared.Next()).ToArray();
         if (size == 4) return candidates.Length >= 4 ? candidates.Take(4).ToArray() : null;
         if (size != 8) return null;
@@ -110,8 +110,7 @@ public static partial class AutonomousBotGroupCoordinator
         {
             // Reservations normally exclude these applicants from matchmaking.
             // Still fail closed if one acquired a party before this commit.
-            if (!forced && members.Any(b => b.Group != null ||
-                    !AutonomousObjectiveAssignments.Is(b, eAutonomousObjectiveKind.GroupPve))) return false;
+            if (!forced && members.Any(b => b.Group != null || !AutonomousRealmRaid.MayAnswerAutomaticRaid(b))) return false;
             foreach (Group previous in members.Select(b => b.Group).Where(g => g != null).Distinct().ToArray())
             {
                 if (AutonomousRealmRaid.GetView(previous) != null) return false;
@@ -170,7 +169,7 @@ public static partial class AutonomousBotGroupCoordinator
                     b.CurrentRegion != null && !b.InCombat && !b.IsAttacking && !releasedIds.Contains(b.DatabaseID) &&
                     !AutonomousRealmRaid.IsReserved(b) &&
                     !AutonomousRvrEventLayer.IsForceCommitted(RvrForceId(b), GameLoop.GameLoopTime) &&
-                    (forced || AutonomousObjectiveAssignments.Is(b, eAutonomousObjectiveKind.GroupPve)))
+                    (forced || AutonomousRealmRaid.MayAnswerAutomaticRaid(b)))
                 .OrderBy(b => ForcedRecruitDistance(b.CurrentRegionID, b.X, b.Y, hubRegion, hubCenter))
                 .Take(ForcedRecruitWindow).ToArray();
             if (candidates.Length == 0) return false;

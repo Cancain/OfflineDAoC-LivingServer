@@ -59,6 +59,9 @@ namespace DOL.GS
         public static string FinalBossDefeated(eRealm realm, string boss, string place) =>
             $"{GlobalConstants.RealmToName(realm)}'s forces have defeated {boss} in {place}!";
 
+        public static string RaidDefeated(eRealm realm, string boss, string place) =>
+            $"{GlobalConstants.RealmToName(realm)}'s expedition has been driven out of {place} by {boss}!";
+
         /// <summary>The line for a battleground keep siege starting ("Albion's forces have laid siege to Dun Abermenai in Abermenai!").</summary>
         public static string BattlegroundSiegeStarted(eRealm attacker, string keep, string battleground, eRealm holder) =>
             holder == eRealm.None

@@ -16,7 +16,7 @@
     <Compile Include="../../server/GameServer/bots/autonomous/BotGoalSettings.cs" Link="Configuration/BotGoalSettings.cs" />
     <Compile Include="../../server/GameServer/bots/autonomous/RealmEventRecordStore.cs" Link="Records/RealmEventRecordStore.cs" />
     <Compile Include="../../server/GameServer/Managers/GameLoop/BotAiDelayReport.cs" Link="Records/BotAiDelayReport.cs" />
-    <!-- Social Expansion: the server's own XP-by-level parser, so the launcher checks a setting by the same rules. -->
+    <!-- Living Server: the server's own XP-by-level parser, so the launcher checks a setting by the same rules. -->
     <Compile Include="../../server/GameServer/gameutils/LevelRangeXpRates.Parsing.cs" Link="SocialExpansion/LevelRangeXpRates.Parsing.cs" />
   </ItemGroup>
   <ItemGroup>

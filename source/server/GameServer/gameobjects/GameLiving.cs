@@ -731,6 +731,43 @@ namespace DOL.GS
 		}
 
 		public GameObject LastInterrupter { get; private set; }
+
+		/// <summary>True for an object that has left the world (deleted, or removed until it comes back).</summary>
+		public static bool HasDeparted(GameObject obj) => obj != null && obj.ObjectState != eObjectState.Active;
+
+		/// <summary>
+		/// Drops what this living still holds of objects that have left the world: its last interrupter, the targets its
+		/// attack actions remember, damage credit and the nearby-object lists it cached. Live run 2026-10-22: 2,424 scheduled
+		/// bot logouts left 1,500 deleted bots in memory, held by monsters' last interrupter and weapon and start-of-attack
+		/// targets (and deleted monsters by the same fields of bots); nothing cleared them after a fight, and each held bot
+		/// kept the Windows events its locks had made (Event handles grew about 1,000 an hour). Called every few minutes by
+		/// <see cref="DepartedReferenceSweep"/> on the game loop thread.
+		/// </summary>
+		public virtual void ForgetDeparted()
+		{
+			if (HasDeparted(LastInterrupter))
+				LastInterrupter = null;
+			attackComponent?.ForgetDeparted();
+			// Damage credit decides XP, loot and realm points, so only what can never earn any is dropped: departed neutral
+			// monsters on a bot's or player's own list (realm points ignore them). A monster's list, and the damage of a pet
+			// whose owner is still here (credited to the owner when the monster dies), are kept.
+			if (this is GamePlayer or GameBot)
+			lock (XpGainersLock)
+			{
+				if (m_xpGainers.Count > 0)
+				{
+					List<GameLiving> gone = null;
+					foreach (GameLiving gainer in m_xpGainers.Keys)
+						if (HasDeparted(gainer) && gainer is not (GamePlayer or GameBot) &&
+							(AutonomousBotRealmPointRewards.ResolveRootRewardOwner(gainer) ?? gainer).Realm == eRealm.None)
+							(gone ??= new()).Add(gainer);
+					if (gone != null)
+						foreach (GameLiving gainer in gone)
+							m_xpGainers.Remove(gainer);
+				}
+			}
+			ClearObjectsInRadiusCache();
+		}
 		public long InterruptTime { get; private set; }
 		public long SelfInterruptTime { get; private set; }
 		public long InterruptRemainingDuration => Math.Max(0, Math.Max(InterruptTime, SelfInterruptTime) - GameLoop.GameLoopTime);

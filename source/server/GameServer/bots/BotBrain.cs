@@ -143,6 +143,15 @@ namespace DOL.AI.Brain
         private GameLiving _recentDirectAttacker;
         private long _recentDirectAttackTick;
 
+        /// <summary>Forgets a recent attacker and the controller's remembered monsters that have left the world (see <see cref="GameLiving.ForgetDeparted"/>).</summary>
+        public void ForgetDeparted()
+        {
+            if (GameLiving.HasDeparted(_recentDirectAttacker))
+                _recentDirectAttacker = null;
+            ForgetDepartedAggro();
+            _autonomousWorldController?.ForgetDeparted();
+        }
+
         public const int MAX_AGGRO_DISTANCE = 3600;
         public const int MAX_AGGRO_LIST_DISTANCE = 6000;
         private const int EFFECTIVE_AGGRO_AMOUNT_CALCULATION_DISTANCE_THRESHOLD = 500;
@@ -260,6 +269,17 @@ namespace DOL.AI.Brain
         public virtual void RemoveFromAggroList(GameLiving living)
         {
             AggroList.TryRemove(living, out _);
+        }
+
+        private void ForgetDepartedAggro()
+        {
+            bool removed = false;
+            foreach (GameLiving held in AggroList.Keys)
+                if (GameLiving.HasDeparted(held))
+                    removed |= AggroList.TryRemove(held, out _);
+            if (removed)
+                lock (((ICollection)OrderedAggroList).SyncRoot)
+                    OrderedAggroList.RemoveAll(entry => GameLiving.HasDeparted(entry.Item1));
         }
 
         public long GetBaseAggroAmount(GameLiving living)
@@ -5186,9 +5206,11 @@ namespace DOL.AI.Brain
             // Cure Mezz/Disease/Poison
             if (spellToCast == null)
             {
-                if (Body.Group != null)
+                // Read the group once: another worker can disband it mid-check (overnight run 2026-10-20, CheckHeals NRE).
+                Group cureGroup = Body.Group;
+                if (cureGroup != null)
                 {
-                    foreach (GameLiving member in Body.Group.GetMembersInTheGroup().OrderBy(member => member == AssistedPlayer ? 0 : 1))
+                    foreach (GameLiving member in cureGroup.GetMembersInTheGroup().OrderBy(member => member == AssistedPlayer ? 0 : 1))
                     {
                         if (member.IsMezzed && member != Body && InSupportReach(member) && CheckHealSpell(BotBody.CureMezz))
                         {
@@ -5200,7 +5222,7 @@ namespace DOL.AI.Brain
 
                     if (spellToCast == null && nextCureTime < GameLoop.GameLoopTime)
                     {
-                        foreach (GameLiving member in Body.Group.GetMembersInTheGroup().OrderBy(member => member == AssistedPlayer ? 0 : 1))
+                        foreach (GameLiving member in cureGroup.GetMembersInTheGroup().OrderBy(member => member == AssistedPlayer ? 0 : 1))
                         {
                             if (!InSupportReach(member))
                                 continue;

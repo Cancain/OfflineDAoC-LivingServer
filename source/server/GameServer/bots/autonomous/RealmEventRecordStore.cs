@@ -56,6 +56,21 @@ public static class RealmEventRecordStore
         command.CommandText="DELETE FROM Events";
         return command.ExecuteNonQuery();
     }
+    /// <summary>The outcomes of an event's last <paramref name="limit"/> finished runs, oldest first.</summary>
+    public static List<string> Outcomes(string path,string eventId,int limit)
+    {
+        var outcomes=new List<string>();
+        if(!File.Exists(path))return outcomes;
+        using var connection=Open(path,true);using var command=connection.CreateCommand();
+        command.CommandText="SELECT count(*) FROM sqlite_master WHERE type='table' AND name='Events'";
+        if((long)command.ExecuteScalar()==0)return outcomes;
+        command.CommandText="SELECT Outcome FROM Events WHERE EventId=@event AND EndedUtc<>'' ORDER BY StartedUtc DESC,Id DESC LIMIT @limit";
+        command.Parameters.AddWithValue("@event",eventId);command.Parameters.AddWithValue("@limit",limit);
+        using var reader=command.ExecuteReader();
+        while(reader.Read())outcomes.Add(reader.GetString(0));
+        outcomes.Reverse();
+        return outcomes;
+    }
     public static (List<RealmEventRecord> Rows,long Total) Read(string path,string realm,string kind,string outcome,string search,int page,int pageSize=100)
     {
         if(!File.Exists(path))return (new(),0);

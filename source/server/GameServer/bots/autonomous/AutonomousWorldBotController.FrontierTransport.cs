@@ -73,7 +73,10 @@ public sealed partial class AutonomousWorldBotController
             // Faste). A bot staged at the other border keep walks into the frontier through that keep's gate, as players
             // do, instead of crossing the realm for a medallion (run 24: Hibernians at Druim Cain stood still for 15
             // minutes "collecting a frontier medallion" 110,000 units from Araisa).
-            if (bot.GetDistanceTo(_medallionMerchant) > FrontierMedallionReach) return false;
+            // Another realm's frontier has no walking route since the dungeon hub stopped being a hallway
+            // (AutonomousDungeonPolicy.MayRouteThrough), so a distant warband rides or walks to its porter.
+            if (bot.GetDistanceTo(_medallionMerchant) > FrontierMedallionReach &&
+                FindNextCrossing(bot, destination.RegionId, destination.X, destination.Y) != null) return false;
             // A ride (town teleporter or horse route) when clearly faster than walking to the merchant.
             if (TryBeginFasterStableRoute(bot, new(_medallionMerchant.X, _medallionMerchant.Y, _medallionMerchant.Z), _medallionMerchant.Name))
                 return true;

@@ -18,10 +18,17 @@ namespace DOL.GS
                 $"Word from {name}: the final foe has fallen! Honour to our realm and its brave company."),
             "Timed out" => Pick($"Our time at {name} is spent. We could not finish the fight; rally home and tend the wounded.",
                 $"The expedition to {name} must withdraw. No victory this time, but we shall return."),
+            "Beaten to it" => $"Another realm reached the end of {name} before us and took the prize. Fall back; next time we strike first.",
+            "Defeated" => Pick($"We were beaten back at {name}. Carry the fallen home; we will be stronger when we return.",
+                $"{name} has broken our expedition. Fall back, companions, and remember what struck us down."),
             "Failed rally" => $"Not enough of our company reached {name} in time. The muster is called off; save your strength for another day.",
             "Stopped by player" => $"The expedition to {name} is called off. Fall back and rest, companions.",
             _ => $"The expedition at {name} has ended without a confirmed victory. Return safely, companions."
         };
+
+        public static string RaidWipe(string name, string boss) =>
+            Pick($"{boss} has struck down our company in {name}! Regroup at the front: we go in once more together.",
+                $"We have fallen to {boss}. Rise, rebuff and gather; one more assault on {boss} awaits.");
 
         public static string SiegeReminder(string name, bool defender) => defender
             ? $"Stand ready at {name}! The enemy's muster has about twenty minutes left; keep shields and supplies close."

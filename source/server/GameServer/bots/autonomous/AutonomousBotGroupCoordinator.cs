@@ -25,7 +25,11 @@ public static partial class AutonomousBotGroupCoordinator
     // declared a pile at the rendezvous center "assembled" even though every
     // intended formation point was still inside that broad radius.
     private const int CohesionRadius = 500;
-    private const int MaximumPveRecruitmentDistance = 30_000;
+    // How far a party member may be from its leader, as travel time (zone crossings included). It used to be
+    // 30,000 units in the leader's own region: overnight 2026-10-19 the median distance between compatible waiting
+    // bots was 86,000, a full roster was within 30,000 only 1-16% of the time, and 963 of 1,210 waits timed out
+    // (48 PvE groups in 7 hours). The meetup already brings members from afar; 8 minutes fits the 20-minute staging.
+    public const double MaximumPveRecruitmentMinutes = 8;
     // A verified broken route gets one bounded retry. Initial attendance then
     // sheds that no-show; an active locked party ends its task instead of
     // holding every survivor in a permanent regroup.
@@ -116,6 +120,16 @@ public static partial class AutonomousBotGroupCoordinator
         // When the current camp was chosen, and whether the party's arrival there was logged (AUTONOMOUS_GROUP_ARRIVED).
         public long CampAssignedTick { get; set; }
         public string ArrivalLoggedCampId { get; set; } = string.Empty;
+        // Dungeon boss goal (AutonomousDungeonBossGoals): the boss being cleared, the camp to return to, and the bosses
+        // this task has already gone for.
+        public GameNPC DungeonBoss { get; set; }
+        public SharedCamp DungeonBossReturnCamp { get; set; }
+        public long DungeonBossUntilTick { get; set; }
+        public string DungeonBossReason { get; set; } = string.Empty;
+        public string GrindingCampId { get; set; } = string.Empty;
+        public long GrindingSinceTick { get; set; }
+        public long NextDungeonBossCheckTick { get; set; }
+        public HashSet<string> DungeonBossesTried { get; } = new(StringComparer.OrdinalIgnoreCase);
         public Dictionary<string, long> RejectedDungeonCamps { get; } = new(StringComparer.Ordinal);
         public int WipePenalty { get; set; }
         public long? NoCampSinceTick { get; set; }
@@ -170,6 +184,7 @@ public static partial class AutonomousBotGroupCoordinator
             RealmEventControls.Pulse();
             AutonomousRealmRaid.Pulse(now);
             AutonomousRealmRaid.RecruitForcedParty(now);
+            AutonomousEpicSpecialForces.Pulse(now);
             AutonomousRvrEventLayer.PulseDefense(now);
             RealmWarbandSupport.Pulse(now);
             AutonomousObjectiveAssignments.ReconcileIfDue();
@@ -586,6 +601,7 @@ public static partial class AutonomousBotGroupCoordinator
             if (!TryGetSession(bot.Group, out Session session) || session.Camp == null || session.Recovery.IsRegrouping)
                 return;
             session.Phase = "Grinding";
+            if (bot == session.Leader && TendDungeonBoss(session, bot)) return;
             // Group arrivals were never recorded (2026-10-17: 618 group goal attempts had kills but no arrival), so how
             // long parties take to reach their camps could not be measured.
             if (!string.Equals(session.ArrivalLoggedCampId, session.Camp.Id, StringComparison.Ordinal))
@@ -599,6 +615,90 @@ public static partial class AutonomousBotGroupCoordinator
             }
             WriteSessionMetadata(session, BotMembers(bot.Group));
         }
+    }
+
+    public static string DungeonBossCampId(GameNPC boss) => $"dungeon-boss:{boss.CurrentRegionID}:{boss.InternalID}";
+
+    /// <summary>
+    /// The leader of a party grinding a dungeon camp sends it after the dungeon's boss (once per task per boss) and
+    /// brings it back to the camp when the boss dies, disappears or 15 minutes pass. True when the camp changed.
+    /// </summary>
+    // Overnight run 2026-10-20/21: a party went for Mutilator Zurabo and no result was ever logged; the result was only
+    // written when the leader came back to this check, never when the party disbanded or took another task.
+    private static void LogDungeonBossResult(Session session, GameNPC boss, string result)
+    {
+        long now = GameLoop.GameLoopTime;
+        Log.Info($"AUTONOMOUS_DUNGEON_BOSS_RESULT group={session.Id} boss=\"{boss.Name}\" region={boss.CurrentRegionID} " +
+                 $"result=\"{(boss.IsAlive ? result : "killed")}\" " +
+                 $"minutes={(now - (session.DungeonBossUntilTick - AutonomousDungeonBossGoals.BossAttemptMilliseconds)) / 60_000.0:0.0} " +
+                 $"back=\"{session.DungeonBossReturnCamp?.MonsterName}\"");
+    }
+
+    private static bool TendDungeonBoss(Session session, GameBot leader)
+    {
+        long now = GameLoop.GameLoopTime;
+        GameBot[] members = BotMembers(session.Group);
+        if (session.DungeonBoss is { } current)
+        {
+            if (!string.Equals(session.Camp?.Id, DungeonBossCampId(current), StringComparison.Ordinal))
+            {
+                LogDungeonBossResult(session, current, $"left for another task ({session.Camp?.MonsterName ?? "none"})");
+                session.DungeonBoss = null; session.DungeonBossReturnCamp = null; return false;
+            }
+            bool killed = !current.IsAlive;
+            if (!killed && current.ObjectState == GameObject.eObjectState.Active && now < session.DungeonBossUntilTick) return false;
+            LogDungeonBossResult(session, current, killed ? "killed" : now >= session.DungeonBossUntilTick ? "timed out" : "gone");
+            SharedCamp back = session.DungeonBossReturnCamp;
+            session.DungeonBoss = null; session.DungeonBossReturnCamp = null;
+            if (back == null) return false;
+            AssignCamp(session, back, members);
+            WriteSessionMetadata(session, members);
+            return true;
+        }
+        SharedCamp camp = session.Camp;
+        if (session.ObjectiveKind != eAutonomousObjectiveKind.GroupPve || camp == null || !camp.IsDungeon ||
+            leader.CurrentRegionID != camp.RegionId || leader.CurrentZone == null)
+            return false;
+        if (!string.Equals(session.GrindingCampId, camp.Id, StringComparison.Ordinal))
+        { session.GrindingCampId = camp.Id; session.GrindingSinceTick = now; return false; }
+        if (now - session.GrindingSinceTick < AutonomousDungeonBossGoals.GrindBeforeBossMilliseconds ||
+            now < session.NextDungeonBossCheckTick || members.Length == 0)
+            return false;
+        session.NextDungeonBossCheckTick = now + AutonomousDungeonBossGoals.BossCheckMilliseconds;
+        int level = (int)Math.Round(members.Average(member => member.Level));
+        GameNPC boss = null; string reason = string.Empty;
+        foreach (GameNPC npc in WorldMgr.GetNPCsFromRegion(camp.RegionId)
+                     .Where(npc => npc != null && npc.IsAlive && npc.ObjectState == GameObject.eObjectState.Active &&
+                                   npc.Realm == eRealm.None && npc is not GameBot && npc.Brain != null && !npc.InCombat &&
+                                   !string.IsNullOrEmpty(npc.Name) && char.IsUpper(npc.Name[0]) &&
+                                   (npc.Flags & (GameNPC.eFlags.PEACE | GameNPC.eFlags.CANTTARGET)) == 0 &&
+                                   !session.DungeonBossesTried.Contains(npc.Name) && !AutonomousAuditedCampPolicy.IsBotExcludedNpc(npc))
+                     .OrderBy(npc => leader.GetDistanceTo(npc)))
+        {
+            bool quest = AutonomousDungeonBossGoals.TryGetQuestBoss(camp.RegionId, npc.Name, out var known);
+            bool drops = AutonomousDungeonBossGoals.HasOwnDrops(npc.Name);
+            if (!AutonomousDungeonBossGoals.Qualifies(level, members.Length, npc.Level, quest ? known.QuestMinLevel : 0, drops)) continue;
+            var nav = PathfindingProvider.Instance;
+            Zone zone = npc.CurrentZone;
+            if (zone == null || zone != leader.CurrentZone || !nav.IsAvailable ||
+                !AutonomousDungeonTargetRoute.CanReach(nav, zone, new Vector3(leader.X, leader.Y, leader.Z), new Vector3(npc.X, npc.Y, npc.Z)))
+                continue;
+            boss = npc;
+            reason = AutonomousDungeonBossGoals.Reason(quest ? known : new AutonomousDungeonBossGoals.Boss(npc.Name, camp.RegionId, "", 0), drops);
+            break;
+        }
+        if (boss == null) return false;
+        session.DungeonBossesTried.Add(boss.Name);
+        session.DungeonBoss = boss;
+        session.DungeonBossReturnCamp = camp;
+        session.DungeonBossUntilTick = now + AutonomousDungeonBossGoals.BossAttemptMilliseconds;
+        session.DungeonBossReason = reason;
+        Log.Info($"AUTONOMOUS_DUNGEON_BOSS_GOAL group={session.Id} boss=\"{boss.Name}\" level={boss.Level} region={boss.CurrentRegionID} " +
+                 $"zone=\"{camp.ZoneName}\" party={members.Length} partyLevel={level} reason=\"{reason}\" from=\"{camp.MonsterName}\"");
+        AssignCamp(session, new SharedCamp(DungeonBossCampId(boss), boss.Name, camp.ZoneName, camp.RegionId, boss.X, boss.Y, boss.Z,
+            true, camp.IsFrontier, boss.Level), members);
+        WriteSessionMetadata(session, members);
+        return true;
     }
 
     /// <summary>The member that opens this party's pulls (route monsters included); null outside a coordinated party.</summary>
@@ -1467,6 +1567,8 @@ public static partial class AutonomousBotGroupCoordinator
             AutonomousRealmRaid.RemoveParty(group);
             if (Sessions.TryGetValue(group, out Session ending) && ending.ObjectiveKind == eAutonomousObjectiveKind.RvR)
                 AutonomousRvrEventLayer.RemoveForce(ending.Id);
+            if (ending?.DungeonBoss is { } boss)
+                LogDungeonBossResult(ending, boss, "party disbanded");
             foreach (GameBot bot in AllBotMembers(group))
                 ClearMetadata(bot, true);
             Sessions.Remove(group);
@@ -1522,11 +1624,12 @@ public static partial class AutonomousBotGroupCoordinator
                             AutonomousRvrEventLayer.IsForceCommitted($"rvr-{bot.DatabaseID}", GameLoop.GameLoopTime)) &&
                           (objectiveKind != eAutonomousObjectiveKind.GroupPve ||
                            CanRecruitPveMember(bot.IsOnStableMasterRoute, bot.IsReturningAfterRelease,
-                               bot.InCombat, bot.IsAttacking, (bot.Brain as BotBrain)?.HasAggro == true, 0)) &&
+                               bot.InCombat, bot.IsAttacking, (bot.Brain as BotBrain)?.HasAggro == true, 0d)) &&
                           AutonomousObjectiveAssignments.Is(bot, objectiveKind))
             .OrderBy(_ => Random.Shared.Next())
             .ToArray();
         var claimed = new HashSet<GameBot>();
+        var recruitCrossings = new Dictionary<(eRealm Realm, ushort Region), DbZonePoint>();
         int rendezvousChecks = 0;
         // RvR stages at the realm's fixed border keep, so the leader is the
         // bot closest to it. PvE meets around its leader and keeps the
@@ -1578,23 +1681,34 @@ public static partial class AutonomousBotGroupCoordinator
             // below still guarantees that grouping pressure cannot consume
             // every solo RvR character.
             int rolledSize = objectiveKind == eAutonomousObjectiveKind.RvR
-                ? AutonomousRvrStaging.RollWarbandSize(largestAllowed, Random.Shared.NextDouble())
+                ? AutonomousRvrStaging.RollWarbandSize(largestAllowed, Random.Shared.NextDouble(), leader.Level)
                 : 8;
             if (rolledSize == 1)
                 continue;
+            // PvE recruits by travel time to the leader, from any region of the realm; RvR keeps the leader's region.
+            bool pve = objectiveKind == eAutonomousObjectiveKind.GroupPve;
+            var travel = new Dictionary<GameBot, double>();
+            double TravelToLeader(GameBot candidate)
+            {
+                if (!travel.TryGetValue(candidate, out double minutes))
+                    travel[candidate] = minutes = AutonomousWorldBotController.EstimateTravelMinutes(candidate,
+                        leader.CurrentRegionID, leader.X, leader.Y, recruitCrossings);
+                return minutes;
+            }
             GameBot[] compatiblePool = available
                 .Where(candidate => candidate != leader && !claimed.Contains(candidate) && candidate.Group == null &&
                                      AutonomousObjectiveAssignments.Is(candidate, objectiveKind) &&
-                                     candidate.Realm == leader.Realm && candidate.CurrentRegionID == leader.CurrentRegionID &&
+                                     candidate.Realm == leader.Realm &&
+                                     (pve || candidate.CurrentRegionID == leader.CurrentRegionID) &&
                                      LevelsCompatible(leader.Level, candidate.Level) &&
-                                     (objectiveKind != eAutonomousObjectiveKind.GroupPve ||
+                                     (!pve ||
                                       CanRecruitPveMember(candidate.IsOnStableMasterRoute,
                                           candidate.IsReturningAfterRelease, candidate.InCombat,
                                           candidate.IsAttacking, (candidate.Brain as BotBrain)?.HasAggro == true,
-                                          candidate.GetDistanceTo(leader))))
+                                          TravelToLeader(candidate))))
                 .OrderBy(candidate => AutonomousBotRealmGuilds.GuildmateRank(leader, candidate))
-                .ThenBy(candidate => Math.Abs(candidate.Level - leader.Level))
-                .ThenBy(candidate => candidate.GetDistanceTo(leader))
+                .ThenBy(candidate => pve ? 0 : Math.Abs(candidate.Level - leader.Level))
+                .ThenBy(candidate => pve ? TravelToLeader(candidate) : candidate.GetDistanceTo(leader))
                 .ToArray();
             Dictionary<long, BotPveGroupRole> pveRoles = null;
             GameBot[] compatible;
@@ -1608,8 +1722,9 @@ public static partial class AutonomousBotGroupCoordinator
             else
             {
                 compatible = compatiblePool.Take(rolledSize - 1).ToArray();
-                if (compatible.Length != rolledSize - 1)
+                if (!AutonomousRvrStaging.AcceptWarband(rolledSize, compatible.Length))
                     continue;
+                rolledSize = compatible.Length + 1;
             }
 
             var group = new Group(leader);
@@ -2752,9 +2867,9 @@ public static partial class AutonomousBotGroupCoordinator
         first >= 50 || second >= 50 ? first >= 50 && second >= 50 : Math.Abs(first - second) <= 5;
 
     public static bool CanRecruitPveMember(bool riding, bool returning, bool inCombat,
-        bool attacking, bool hasAggro, int distanceFromLeader) =>
+        bool attacking, bool hasAggro, double travelMinutesToLeader) =>
         !riding && !returning && !inCombat && !attacking && !hasAggro &&
-        distanceFromLeader >= 0 && distanceFromLeader <= MaximumPveRecruitmentDistance;
+        travelMinutesToLeader >= 0 && travelMinutesToLeader <= MaximumPveRecruitmentMinutes;
 
     private static bool TryBuildPveRoster(GameBot leader, GameBot[] candidates, out GameBot[] selected,
         out Dictionary<long, BotPveGroupRole> roles, int minimumSize = 8, int maximumSize = 8)
@@ -2762,12 +2877,16 @@ public static partial class AutonomousBotGroupCoordinator
         selected = [];
         roles = null;
         // Guildmates of the leader get the first claim on slots (docs/BOT-GUILDS.md, phase 3); roles still decide.
+        // The caller's order (nearest first) is kept within each guild rank, so the roster takes the closest bots
+        // that fill it; a random reshuffle here used to throw that order away (2026-10-19).
         GameBot[] pool = candidates.Where(candidate => candidate?.CharacterClass != null)
-            .OrderBy(candidate => AutonomousBotRealmGuilds.GuildmateRank(leader, candidate))
-            .ThenBy(_ => Random.Shared.Next()).ToArray();
+            .OrderBy(candidate => AutonomousBotRealmGuilds.GuildmateRank(leader, candidate)).ToArray();
         eCharacterClass[] poolClasses = pool.Select(candidate => (eCharacterClass)candidate.CharacterClass.ID).ToArray();
-        if (!TryMatchPveRoster((eCharacterClass)leader.CharacterClass.ID, poolClasses, minimumSize, maximumSize,
-                out BotPveGroupRole[] template, out int[] owners))
+        eCharacterClass leaderClass = (eCharacterClass)leader.CharacterClass.ID;
+        if (!TryMatchPveRoster(leaderClass, poolClasses, minimumSize, maximumSize,
+                out BotPveGroupRole[] template, out int[] owners) &&
+            !(UseOffTanks(leaderClass, poolClasses) && TryMatchPveRoster(leaderClass, poolClasses, minimumSize, maximumSize,
+                out template, out owners, offTanks: true)))
             return false;
         GameBot[] slotted = owners.Select(owner => owner < 0 ? leader : pool[owner]).ToArray();
         selected = slotted.Where(owner => owner != leader).ToArray();
@@ -2781,8 +2900,20 @@ public static partial class AutonomousBotGroupCoordinator
     /// Fills the first template (largest first) whose size is allowed. owners
     /// holds a pool index per slot, or -1 for the leader.
     /// </summary>
+    /// <summary>
+    /// Off-tanks (BotPartyRoles.CanOffTank) fill the tank slot only when nobody available is a real tank. Overnight
+    /// 2026-10-19 Warriors and Thanes were 12% of Midgard's waiting level 50s (23-29% in the other realms) and 14 of
+    /// them waited with no tank in reach.
+    /// </summary>
+    public static bool UseOffTanks(eCharacterClass leader, eCharacterClass[] pool) =>
+        !BotPartyRoles.CanFill(leader, BotPveGroupRole.Tank) && !pool.Any(c => BotPartyRoles.CanFill(c, BotPveGroupRole.Tank));
+
+    private static bool Fills(eCharacterClass characterClass, BotPveGroupRole role, bool offTanks) =>
+        BotPartyRoles.CanFill(characterClass, role) ||
+        offTanks && role == BotPveGroupRole.Tank && BotPartyRoles.CanOffTank(characterClass);
+
     private static bool TryMatchPveRoster(eCharacterClass leader, eCharacterClass[] pool, int minimumSize,
-        int maximumSize, out BotPveGroupRole[] template, out int[] owners)
+        int maximumSize, out BotPveGroupRole[] template, out int[] owners, bool offTanks = false)
     {
         foreach (BotPveGroupRole[] candidateTemplate in PveRosterTemplates)
         {
@@ -2790,13 +2921,13 @@ public static partial class AutonomousBotGroupCoordinator
                 continue;
             template = candidateTemplate;
             foreach (int leaderSlot in Enumerable.Range(0, template.Length)
-                         .Where(index => BotPartyRoles.CanFill(leader, candidateTemplate[index]))
+                         .Where(index => Fills(leader, candidateTemplate[index], offTanks))
                          .OrderBy(_ => Random.Shared.Next()))
             {
                 owners = Enumerable.Repeat(int.MinValue, template.Length).ToArray();
                 owners[leaderSlot] = -1;
                 for (int candidate = 0; candidate < pool.Length; candidate++)
-                    TryMatchPveSlot(candidate, pool, template, owners, new bool[template.Length], leaderSlot);
+                    TryMatchPveSlot(candidate, pool, template, owners, new bool[template.Length], leaderSlot, offTanks);
                 if (owners.All(owner => owner != int.MinValue))
                     return true;
             }
@@ -2818,15 +2949,15 @@ public static partial class AutonomousBotGroupCoordinator
     }
 
     private static bool TryMatchPveSlot(int candidate, eCharacterClass[] pool, BotPveGroupRole[] template,
-        int[] owners, bool[] visited, int reservedLeaderSlot)
+        int[] owners, bool[] visited, int reservedLeaderSlot, bool offTanks = false)
     {
         for (int slot = 0; slot < template.Length; slot++)
         {
-            if (slot == reservedLeaderSlot || visited[slot] || !BotPartyRoles.CanFill(pool[candidate], template[slot]))
+            if (slot == reservedLeaderSlot || visited[slot] || !Fills(pool[candidate], template[slot], offTanks))
                 continue;
             visited[slot] = true;
             if (owners[slot] == int.MinValue ||
-                TryMatchPveSlot(owners[slot], pool, template, owners, visited, reservedLeaderSlot))
+                TryMatchPveSlot(owners[slot], pool, template, owners, visited, reservedLeaderSlot, offTanks))
             {
                 owners[slot] = candidate;
                 return true;
@@ -2837,7 +2968,9 @@ public static partial class AutonomousBotGroupCoordinator
 
     /// <summary>Party size PvE formation would build from these classes (0 when none fits).</summary>
     public static int PveFormationSize(eCharacterClass leader, params eCharacterClass[] candidates) =>
-        TryMatchPveRoster(leader, candidates, MinimumPveFormationSize, 8, out BotPveGroupRole[] template, out _)
+        TryMatchPveRoster(leader, candidates, MinimumPveFormationSize, 8, out BotPveGroupRole[] template, out _) ||
+        UseOffTanks(leader, candidates) &&
+        TryMatchPveRoster(leader, candidates, MinimumPveFormationSize, 8, out template, out _, offTanks: true)
             ? template.Length : 0;
 
     private static bool HasActivePveComposition(Session session, GameBot[] members) =>

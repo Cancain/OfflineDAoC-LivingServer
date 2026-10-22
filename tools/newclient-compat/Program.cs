@@ -151,7 +151,7 @@ Send("brb-guild", "Breaks", GuildLine("Aoife", Line("session", "brb")), eChatTyp
 Send("back-guild", "Breaks", GuildLine("Aoife", Line("session", "back")), eChatType.CT_Guild, eChatLoc.CL_ChatWindow, "guild");
 Send("ld-gone", "Linkdeads", Party("Brannoc", Line("linkdead", "gone", extra: ("target", "Aoife"))), eChatType.CT_Group, eChatLoc.CL_ChatWindow, "group");
 Send("ld-back", "Linkdeads", Party("Aoife", Line("linkdead", "back")), eChatType.CT_Group, eChatLoc.CL_ChatWindow, "group");
-// Existing Social Expansion paths the new features build on (bot guild join notice: Guild.SendMessageToGuildMembers)
+// Existing Living Server paths the new features build on (bot guild join notice: Guild.SendMessageToGuildMembers)
 Send("guild-joined", "Bot guilds", "Brannoc has joined the guild!", eChatType.CT_Group, eChatLoc.CL_SystemWindow, "group");
 
 // Yes / no boxes: the exact bytes SendCustomDialog writes (PacketLib168: code CustomDialog, data1 the session,

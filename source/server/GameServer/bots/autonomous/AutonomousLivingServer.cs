@@ -215,7 +215,10 @@ public static partial class AutonomousLivingServer
                 break;
             case Channel.Group:
                 if (GroupHasPlayer(bot.Group))
+                {
                     bot.Group.SendMessageToGroupMembers(bot, text, eChatType.CT_Group, eChatLoc.CL_ChatWindow);
+                    BotChatTranscript.Bot("group", bot.Name, bot.Realm, text);
+                }
                 break;
             case Channel.Faction:
                 if (RealmHasPlayer(bot.Realm))
@@ -340,6 +343,7 @@ public static partial class AutonomousLivingServer
         if (string.IsNullOrWhiteSpace(text) || !IsSpeaker(bot) || player?.Client == null)
             return;
         ChatUtil.SendSendMessage(player.Client, "Social.ReceiveMessage.Private.Sends", bot.Name, text);
+        BotChatTranscript.Bot("tell", bot.Name, bot.Realm, text, player.Name);
     }
 
     #endregion

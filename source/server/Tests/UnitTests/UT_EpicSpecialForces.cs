@@ -1,0 +1,174 @@
+using System;
+using System.IO;
+using System.Linq;
+using DOL.GS;
+using NUnit.Framework;
+
+namespace DOL.UnitTests
+{
+    /// <summary>
+    /// Owner 2026-10-19: epic encounters stay at full strength; a wipe brings a regroup and one more attempt, and the
+    /// realm's Epic Special Forces (up to 24 extra level 50s, needed less as the realm wins) join the retry.
+    /// </summary>
+    [TestFixture]
+    public class UT_EpicSpecialForces
+    {
+        [SetUp]
+        public void Reset() => AutonomousEpicSpecialForces.ResetForTests();
+
+        // engaged, fallen, health now, lowest health during the attempt
+        [TestCase(60, 30, 100, 45, true)]   // half the raid fell
+        [TestCase(60, 29, 60, 45, false)]   // most still standing, the encounter still hurt: they broke off
+        [TestCase(60, 5, 100, 45, true)]    // it reset to full after being taken to 45%: nobody was left on it
+        [TestCase(60, 5, 100, 90, false)]   // barely touched and back to full: not a real attempt
+        [TestCase(7, 7, 100, 10, false)]    // a handful who wandered in is not the raid
+        [TestCase(8, 4, 50, 40, true)]
+        public void AWipeIsHalfTheAttemptFallenOrAResetAfterRealDamage(int engaged, int fallen, int health, int lowest, bool wipe) =>
+            Assert.That(RealmRaidDungeonRoute.IsWipe(engaged, fallen, health, lowest), Is.EqualTo(wipe));
+
+        [TestCase(80, 0L, 56)]
+        [TestCase(80, 19 * 60_000L, 56)]
+        [TestCase(80, 20 * 60_000L, 32)]   // after 20 minutes 40% will do
+        [TestCase(10, 0L, 8)]              // never fewer than eight
+        [TestCase(300, 0L, 150)]           // never more than 150
+        public void ARegroupWaitsForMostOfTheRoster(int roster, long milliseconds, int needed) =>
+            Assert.That(RealmRaidDungeonRoute.RegroupNeeded(roster, milliseconds), Is.EqualTo(needed));
+
+        [Test]
+        public void ARegroupRestsAtLeastFiveMinutes() =>
+            Assert.That(RealmRaidDungeonRoute.RegroupMinimumMilliseconds, Is.EqualTo(5 * 60_000L));
+
+        // An out-of-time rally goes in with half of what it needs (at least 40), a full 200 raid too (2026-10-21).
+        [TestCase(false, 103, 150, true)]   // Caer Sidi, 2026-10-20: 103 staged, about 60 more on the road
+        [TestCase(false, 90, 132, true)]
+        [TestCase(false, 74, 149, false)]   // under half
+        [TestCase(false, 39, 57, false)]    // half, but under the 40 minimum
+        [TestCase(false, 28, 57, false)]    // the Hibernian dragon rally that failed
+        [TestCase(false, 170, 200, true)]   // Darkness Falls, 2026-10-21: a full raid, 170 staged at its deadline
+        [TestCase(false, 99, 200, false)]   // under half of a full raid
+        [TestCase(true, 150, 150, false)]   // forced raids never go in short
+        public void AnOutOfTimeRallyGoesInShortWithHalfTheRaid(bool forced, int present, int required, bool goes) =>
+            Assert.That(RealmRaidRecruitmentPolicy.GoesInShortAtDeadline(forced, present, required), Is.EqualTo(goes));
+
+        // Defenders follow the attacking army's size when it marched or now, whichever is larger.
+        [TestCase(25, 89, 0.75, 96, 67)]    // Dun Bolg, 2026-10-20: was capped at 25 against 89
+        [TestCase(60, 40, 0.75, 96, 45)]    // the marched size still counts after losses
+        [TestCase(10, 5, 0.75, 96, 8)]      // never fewer than 8
+        [TestCase(10, 200, 1.0, 96, 96)]    // never more than the cap
+        public void DefendersFollowTheLargerAttackingArmy(int marched, int now, double ratio, int cap, int defenders) =>
+            Assert.That(RealmEventPolicy.DefendersFor(marched, now, ratio, cap), Is.EqualTo(defenders));
+
+        [Test]
+        public void TwoFailedAttemptsEndTheRaid() =>
+            Assert.That(RealmRaidDungeonRoute.MaximumFailedAttempts, Is.EqualTo(2));
+
+        [Test]
+        public void TheCallUpShrinksWithEveryWinAndGrowsWithEveryLoss()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(AutonomousEpicSpecialForces.CallUpSize([]), Is.EqualTo(24), "no record: the full guild");
+                Assert.That(AutonomousEpicSpecialForces.CallUpSize(["Boss defeated"]), Is.EqualTo(16));
+                Assert.That(AutonomousEpicSpecialForces.CallUpSize(["Boss defeated", "Boss defeated"]), Is.EqualTo(8));
+                Assert.That(AutonomousEpicSpecialForces.CallUpSize(["Boss defeated", "Boss defeated", "Boss defeated"]), Is.EqualTo(0),
+                    "a realm that keeps winning stops calling them");
+                Assert.That(AutonomousEpicSpecialForces.CallUpSize(["Boss defeated", "Boss defeated", "Boss defeated", "Defeated"]), Is.EqualTo(8));
+                Assert.That(AutonomousEpicSpecialForces.CallUpSize(["Defeated", "Timed out", "Defeated"]), Is.EqualTo(24), "never more than 24");
+                // Rallies that never fought, blocked routes and player stops say nothing about the fight.
+                Assert.That(AutonomousEpicSpecialForces.CallUpSize(["Boss defeated", "Failed rally", "Route blocked", "Stopped by player"]), Is.EqualTo(16));
+            });
+        }
+
+        [Test]
+        public void TheyComeFromTheStartOnlyAfterTwoDefeatsInARow()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(AutonomousEpicSpecialForces.ComesFromStart(new[] { "Defeated", "Timed out" }), Is.True);
+                Assert.That(AutonomousEpicSpecialForces.ComesFromStart(new[] { "Defeated", "Failed rally", "Defeated" }), Is.True);
+                Assert.That(AutonomousEpicSpecialForces.ComesFromStart(new[] { "Defeated", "Boss defeated" }), Is.False);
+                Assert.That(AutonomousEpicSpecialForces.ComesFromStart(new[] { "Defeated" }), Is.False);
+                Assert.That(AutonomousEpicSpecialForces.ComesFromStart(Array.Empty<string>()), Is.False);
+            });
+        }
+
+        [Test]
+        public void ARaidIsAnsweredOnceAndNotAtAllWhenTheRealmNoLongerNeedsThem()
+        {
+            AutonomousEpicSpecialForces.SetHistoryForTests("epic-hibernia");
+            AutonomousEpicSpecialForces.Request("epic-hibernia", "Galladoria", eRealm.Hibernia, "a wipe at Conservator");
+            AutonomousEpicSpecialForces.Request("epic-hibernia", "Galladoria", eRealm.Hibernia, "a wipe at Conservator");
+            Assert.That(AutonomousEpicSpecialForces.PendingCalls, Is.EqualTo(1));
+
+            AutonomousEpicSpecialForces.SetHistoryForTests("epic-albion", "Boss defeated", "Boss defeated", "Boss defeated");
+            AutonomousEpicSpecialForces.Request("epic-albion", "Caer Sidi", eRealm.Albion, "a wipe at Apocalypse");
+            Assert.That(AutonomousEpicSpecialForces.PendingCalls, Is.EqualTo(1), "three wins in a row: nobody is sent");
+        }
+
+        [Test]
+        public void AFinishedRaidJoinsTheRecordAndCanBeAnsweredAgainNextTime()
+        {
+            AutonomousEpicSpecialForces.SetHistoryForTests("epic-midgard", "Defeated");
+            AutonomousEpicSpecialForces.Request("epic-midgard", "Tuscaran Glacier", eRealm.Midgard, "a wipe");
+            AutonomousEpicSpecialForces.RaidEnded("epic-midgard", "Defeated");
+            Assert.That(AutonomousEpicSpecialForces.ComesFromStart("epic-midgard"), Is.True, "two defeats in a row");
+            AutonomousEpicSpecialForces.Request("epic-midgard", "Tuscaran Glacier", eRealm.Midgard, "start");
+            Assert.That(AutonomousEpicSpecialForces.PendingCalls, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void EachRealmsGuildPartyIsAFullExpeditionParty()
+        {
+            Assert.Multiple(() =>
+            {
+                foreach (var (realm, classes) in AutonomousEpicSpecialForces.PartyClasses)
+                {
+                    Assert.That(classes, Has.Length.EqualTo(AutonomousEpicSpecialForces.PartySize), realm.ToString());
+                    Assert.That(AutonomousBotGroupCoordinator.PveFormationSize(classes[0], classes.Skip(1).ToArray()), Is.EqualTo(8), realm.ToString());
+                    foreach (eCharacterClass characterClass in classes)
+                        Assert.That(AutonomousBotIdentityGenerator.GetEraClasses(realm), Does.Contain(characterClass), $"{realm} {characterClass}");
+                }
+            });
+        }
+
+        [Test]
+        public void TheirIdsNeverMeetARosterId() =>
+            Assert.That(AutonomousEpicSpecialForces.FirstBotId, Is.GreaterThan(1_000_000_000L).And.LessThan(int.MaxValue));
+
+        [Test]
+        public void TheLedgerGivesADungeonsFinishedOutcomesOldestFirst()
+        {
+            string path = Path.Combine(Path.GetTempPath(), $"ledger-{Guid.NewGuid():N}.sqlite3");
+            try
+            {
+                Assert.That(RealmEventRecordStore.Outcomes(path, "epic-hibernia", 6), Is.Empty, "no ledger yet");
+                RealmEventRecordStore.Save(path, new[]
+                {
+                    new RealmEventRecord("a", "epic-hibernia", "Galladoria", "Raid", "Hibernia", "2026-10-18T10:00:00Z", "2026-10-18T12:00:00Z", "Ended", "Timed out", "", 60, 50),
+                    new RealmEventRecord("b", "epic-hibernia", "Galladoria", "Raid", "Hibernia", "2026-10-19T10:00:00Z", "2026-10-19T12:00:00Z", "Ended", "Defeated", "", 60, 50),
+                    new RealmEventRecord("c", "epic-hibernia", "Galladoria", "Raid", "Hibernia", "2026-10-19T15:00:00Z", "", "Battle", "In progress", "", 60, 50),
+                    new RealmEventRecord("d", "epic-albion", "Caer Sidi", "Raid", "Albion", "2026-10-19T11:00:00Z", "2026-10-19T13:00:00Z", "Ended", "Boss defeated", "", 60, 50),
+                });
+                Assert.That(RealmEventRecordStore.Outcomes(path, "epic-hibernia", 6), Is.EqualTo(new[] { "Timed out", "Defeated" }));
+                Assert.That(RealmEventRecordStore.Outcomes(path, "epic-hibernia", 1), Is.EqualTo(new[] { "Defeated" }));
+            }
+            finally
+            {
+                System.Data.SQLite.SQLiteConnection.ClearAllPools();
+                if (File.Exists(path)) File.Delete(path);
+            }
+        }
+
+        [Test]
+        public void TheRealmHearsOfADefeatAndOfAWipe()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(RealmEventBanter.RaidOutcome("Galladoria", "Defeated"), Does.Contain("Galladoria"));
+                Assert.That(RealmEventBanter.RaidWipe("Galladoria", "Conservator"), Does.Contain("Conservator"));
+                Assert.That(GameWideAnnouncements.RaidDefeated(eRealm.Hibernia, "Conservator", "Galladoria"),
+                    Is.EqualTo("Hibernia's expedition has been driven out of Galladoria by Conservator!"));
+            });
+        }
+    }
+}

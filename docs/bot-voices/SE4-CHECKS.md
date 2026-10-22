@@ -63,7 +63,7 @@ These later fixes are covered by unit tests but were not simulated again.
 
 ## 5. Live headless test (2026-10-18)
 
-The se.4 server ran in a cloud workspace on a copy of a played database (150 bots, every Social Expansion
+The se.4 server ran in a cloud workspace on a copy of a played database (150 bots, every Living Server
 feature on). A scripted player (the 0.36c new client's network code without its window) logged in as a level
 5 Albion Scout, typed in /faction, /say, /send, /gu and /group on a timetable, and recorded every line it was
 sent. Five sessions: 40 minutes near Cotswold, then about 25, 20, 10 and 6 minutes in Camelot, each later one on

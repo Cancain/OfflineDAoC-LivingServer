@@ -55,6 +55,42 @@ namespace DOL.GS
                 (int)System.Math.Round(floor.Value.Y), (int)System.Math.Round(floor.Value.Z));
         }
 
+        /// <summary>
+        /// The nearest bind at least <paramref name="clearance"/> from every spot in <paramref name="avoid"/>; the plain
+        /// nearest bind when none is that far.
+        /// </summary>
+        public static Point3D? NearestAwayFrom(ushort region, int x, int y, eRealm realm,
+            IReadOnlyList<(int X, int Y)> avoid, float clearance)
+        {
+            if (avoid == null || avoid.Count == 0 || !Regions.TryGetValue(region, out Bind[] points))
+                return Nearest(region, x, y, realm);
+            Point3D? nearest = null;
+            double best = double.MaxValue;
+            foreach (Bind bind in points)
+            {
+                if (realm != eRealm.None && bind.Realm != realm) continue;
+                Point3D point = bind.Point;
+                if (!ClearOf(point.X, point.Y, avoid, clearance)) continue;
+                double dx = (double)x - point.X, dy = (double)y - point.Y;
+                double distance = dx * dx + dy * dy;
+                if (distance >= best) continue;
+                best = distance;
+                nearest = point;
+            }
+            return nearest == null ? Nearest(region, x, y, realm) : new Point3D(nearest.X, nearest.Y, nearest.Z);
+        }
+
+        /// <summary>Pure rule: a bind is clear when it is at least <paramref name="clearance"/> from every spot.</summary>
+        public static bool ClearOf(int x, int y, IReadOnlyList<(int X, int Y)> spots, float clearance)
+        {
+            foreach (var spot in spots)
+            {
+                double dx = (double)x - spot.X, dy = (double)y - spot.Y;
+                if (dx * dx + dy * dy < (double)clearance * clearance) return false;
+            }
+            return true;
+        }
+
         public static Point3D? Nearest(ushort region, int x, int y, eRealm realm = eRealm.None)
         {
             if (!Regions.TryGetValue(region, out Bind[] points)) return null;

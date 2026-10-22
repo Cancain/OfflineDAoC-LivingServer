@@ -1,6 +1,6 @@
-# New-client check for the Social Expansion
+# New-client check for the Living Server
 
-Checks that the Godot client (0.36c) shows what the Social Expansion and the Living Server send. It is a
+Checks that the Godot client (0.36c) shows what the Living Server sends. It is a
 network-level test with no game world, so it runs on any PC with no 0.36c download.
 
 - **Server side:** `FakeServer` accepts the client's real connection. It sends each feature's chat lines and yes / no

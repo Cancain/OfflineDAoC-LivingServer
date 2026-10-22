@@ -1083,7 +1083,8 @@ namespace DOL.GS.ServerRules
 
             // Snapshot the nearby expedition before completion can detach parties.
             // Support bots earn the same kill credit without duplicating XP awards.
-            var expeditionOwner = AutonomousRealmRaid.LootOwner(killedNpc, botCountAndDamage.Keys) as RealmRaidLootOwner;
+            var expeditionOwner = AutonomousRealmRaid.LootOwner(killedNpc,
+                botCountAndDamage.ToDictionary(pair => pair.Key, pair => pair.Value.Damage)) as RealmRaidLootOwner;
             var expeditionMembers = expeditionOwner?.Members.ToHashSet();
             foreach (var pair in botCountAndDamage)
             {

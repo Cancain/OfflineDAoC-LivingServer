@@ -113,6 +113,12 @@ public static class AutonomousFrontierTransport
         _ => null,
     };
 
+    /// <summary>The frontiers a bot standing in one of the three frontier regions can reach by its realm's porter.</summary>
+    public static ushort[] PorterFrontiers(eRealm realm, ushort currentRegion) =>
+        currentRegion is 1 or 100 or 200
+            ? new ushort[] { 1, 100, 200 }.Where(region => region != currentRegion && Destination(realm, region) != null).ToArray()
+            : [];
+
     public static DbInventoryItem Ticket(GameBot bot, Passage passage) => bot.Inventory.AllItems
         .FirstOrDefault(item => item.SlotPosition >= (int)eInventorySlot.FirstBackpack &&
             item.SlotPosition <= (int)eInventorySlot.LastBackpack && item.Count > 0 && item.Id_nb == passage.Medallion);

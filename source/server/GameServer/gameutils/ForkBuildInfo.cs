@@ -14,8 +14,11 @@ namespace DOL.GS;
 /// </summary>
 public static class ForkBuildInfo
 {
-    /// <summary>The fork's build name; bump it with each fork release.</summary>
-    public const string BuildName = "0.37-se.1";
+    /// <summary>The fork's build name (Living Server); bump it with each fork release.</summary>
+    public const string BuildName = "1.0-beta";
+
+    /// <summary>The Offline DAoC release this build installs on (the installer checks the game against it).</summary>
+    public const string BaseRelease = "0.37";
 
     private static readonly Logger Log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -52,7 +55,7 @@ public static class ForkBuildInfo
         {
             ("memory", Properties.BOT_LIVING_MEMORY), ("grats", Properties.BOT_LIVING_GRATS), ("firsts", Properties.BOT_LIVING_FIRSTS),
             ("death", Properties.BOT_LIVING_DEATH), ("alarms", Properties.BOT_LIVING_ALARMS), ("nemesis", Properties.BOT_LIVING_NEMESIS),
-            ("breaks", Properties.BOT_LIVING_BREAKS),
+            ("breaks", Properties.BOT_LIVING_BREAKS), ("body", Properties.BOT_LIVING_BODY_LANGUAGE),
         }.Where(part => part.Item2).Select(part => part.Item1));
         string Range(string spec) => string.IsNullOrWhiteSpace(spec) ? "off" : $"\"{spec.Trim()}\"";
         return $"FORK_BUILD name={BuildName} commit={Commit} " +

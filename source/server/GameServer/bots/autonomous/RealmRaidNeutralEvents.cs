@@ -121,8 +121,10 @@ public static class RealmRaidNeutralEvents
         bool Usable(DbZonePoint p) => p.Realm == 0 || p.Realm == (ushort)realm;
         foreach (DbZonePoint direct in crossings.Where(p => Usable(p) && p.SourceRegion == homeRegion && p.TargetRegion == target))
             yield return (direct, direct);
+        ushort[] approaches = target == SummonersHall ? SummonersHallApproaches
+            : AutonomousRealmRaid.RaidDungeons.Where(d => d.Region == target && d.Through != 0).Select(d => d.Through).ToArray();
         foreach (DbZonePoint outer in crossings.Where(p => Usable(p) && p.SourceRegion == homeRegion &&
-                     SummonersHallApproaches.Contains(p.TargetRegion)))
+                     approaches.Contains(p.TargetRegion)))
             foreach (DbZonePoint inner in crossings.Where(p => Usable(p) && p.SourceRegion == outer.TargetRegion && p.TargetRegion == target))
                 yield return (outer, inner);
     }

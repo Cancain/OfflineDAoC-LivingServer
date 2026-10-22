@@ -74,7 +74,7 @@ class CarrySocialTables(unittest.TestCase):
             "SELECT name FROM sqlite_master WHERE type='table'")])
 
     def test_copies_into_a_save_that_lacks_the_tables(self):
-        # The new 0.37 save, transferred by the game but never started with the Social Expansion build.
+        # The new 0.37 save, transferred by the game but never started with the Living Server build.
         make(self.new, social=False)
         code, out = self.run_tool('--apply')
         self.assertEqual(code, 0, out)

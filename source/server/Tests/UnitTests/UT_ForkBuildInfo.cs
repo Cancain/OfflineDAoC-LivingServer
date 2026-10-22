@@ -18,7 +18,8 @@ namespace DOL.GS.Tests
         [Test]
         public void BuildName_IsAForkBuildOfThisRelease()
         {
-            Assert.That(ForkBuildInfo.BuildName, Does.Match(@"^\d+\.\d+b?-se\.\d+$"));
+            Assert.That(ForkBuildInfo.BuildName, Does.Match(@"^\d+\.\d+(-beta(\.\d+)?)?$"));
+            Assert.That(ForkBuildInfo.BaseRelease, Does.Match(@"^0\.\d+$"));
         }
     }
 }

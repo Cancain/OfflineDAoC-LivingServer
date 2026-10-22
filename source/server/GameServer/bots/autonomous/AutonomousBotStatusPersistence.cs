@@ -39,7 +39,7 @@ public static class AutonomousBotStatusPersistence
 
     public static void Queue(GameBot bot, bool includeInventory = false)
     {
-        if (bot?.IsAutonomousWorldBot == true && bot.DatabaseID > 0 && bot.PersistentRecord != null)
+        if (bot?.IsAutonomousWorldBot == true && bot.DatabaseID > 0 && bot.PersistentRecord != null && !bot.IsEpicSpecialForce)
         {
             lock (PendingGate)
             {
@@ -59,7 +59,7 @@ public static class AutonomousBotStatusPersistence
     /// </summary>
     public static void QueueGroupMetadata(GameBot bot)
     {
-        if (bot?.IsAutonomousWorldBot != true || bot.DatabaseID <= 0 || bot.PersistentRecord == null)
+        if (bot?.IsAutonomousWorldBot != true || bot.DatabaseID <= 0 || bot.PersistentRecord == null || bot.IsEpicSpecialForce)
             return;
         lock (PendingGate)
         {
@@ -140,7 +140,9 @@ public static class AutonomousBotStatusPersistence
                     if (!Pending.Remove(botId, out GameBot bot))
                         continue;
                     drained[botId] = bot;
-                    PendingPriority.Remove(botId);
+                    // PendingPriority is left alone: its id is still in PendingPriorityOrder, and removing it here let the
+                    // next group update enqueue the id again (65 to 5,079 ids overnight, 2026-10-20/21). DrainPriority
+                    // drops the id when it comes up; the bot was already saved.
                     if (PendingInventory.Remove(botId))
                         inventoryIds.Add(botId);
                 }

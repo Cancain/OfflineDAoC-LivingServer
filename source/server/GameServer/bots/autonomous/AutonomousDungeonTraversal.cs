@@ -20,6 +20,43 @@ namespace DOL.GS
         private bool _dungeonRouteResting;
         private readonly Dictionary<string, long> _rejectedDungeonCamps = new(StringComparer.Ordinal);
         private long _nextSharedDungeonEnemyScan;
+        // Epic monsters this bot is going around or walking past instead of pulling (Black Lady, 2026-10-20).
+        private readonly HashSet<GameNPC> _dungeonEpicsAvoided = new();
+        private GameNPC _dungeonEpicDetour;
+        public const long DungeonEpicAvoidMilliseconds = 10 * 60_000;
+        private long _dungeonEpicsAvoidedUntil;
+
+        /// <summary>
+        /// An epic monster that is not this bot's target is gone around when the navmesh has a way
+        /// outside its aggro, and otherwise walked past: an eight-bot party never opens on it. Marfach
+        /// Cavern, 2026-10-20: parties pulled Black Lady (level 65) as an ordinary corridor blocker
+        /// on their way to and from Summoner's Hall, 195 deaths to her and her Ogress adds.
+        /// </summary>
+        private void AvoidDungeonEpic(GameBot bot, IPathfindingMgr nav, ReadOnlySpan<Vector3> corridor, GameNPC epic,
+            Vector3 destination, GameNPC[] threats)
+        {
+            int aggro = (epic.Brain as StandardMobBrain)?.AggroRange ?? 0;
+            Vector3? detour = FindRouteThreatDetour(nav, bot.CurrentZone, corridor, epic, aggro,
+                AutonomousRouteThreatPolicy.MeleeMargin, destination, threats);
+            _dungeonEpicsAvoidedUntil = GameLoop.GameLoopTime + DungeonEpicAvoidMilliseconds;
+            if (detour.HasValue)
+            {
+                _dungeonEpicDetour = epic;
+                _routeRecoveryWaypoint = detour.Value;
+                _routeRecoveryArrivalRadius = 60;
+                _nextMoveOrderTick = 0;
+                bot.ForcePathReplot();
+            }
+            else _dungeonEpicsAvoided.Add(epic);
+            if (Log.IsInfoEnabled)
+                Log.Info($"AUTONOMOUS_DUNGEON_EPIC_AVOIDED bot={bot.Name} id={bot.DatabaseID} level={bot.Level} target=\"{epic.Name}\" " +
+                         $"targetLevel={epic.Level} aggro={aggro} action={(detour.HasValue ? "detour" : "pass")} region={bot.CurrentRegionID} " +
+                         $"at={epic.X},{epic.Y},{epic.Z} group={Math.Max(1, _groupDirective?.BotMemberCount ?? 1)}");
+            SetStatus(bot, detour.HasValue ? $"Going around {epic.Name}" : $"Passing {epic.Name}", GoalText(),
+                detour.HasValue ? "Taking a way around an epic monster instead of pulling it"
+                    : "Walking past an epic monster without pulling it; the party defends itself if it comes",
+                epic.Name, _camp?.ZoneName ?? string.Empty);
+        }
 
         private void RejectDungeonRoute(GameBot bot, string reason)
         {
@@ -90,6 +127,12 @@ namespace DOL.GS
 
             GameNPC blocker = null;
             float first = float.MaxValue;
+            GameNPC epicInWay = null;
+            float epicAlong = float.MaxValue;
+            if (_dungeonEpicsAvoided.Count > 0 && now >= _dungeonEpicsAvoidedUntil) _dungeonEpicsAvoided.Clear();
+            if (_dungeonEpicDetour != null && !_routeRecoveryWaypoint.HasValue) _dungeonEpicDetour = null;
+            AutonomousRealmRaid.View raidView = AutonomousRealmRaid.GetTravelView(bot);
+            bool inOwnRaidDungeon = raidView?.Camp != null && raidView.Camp.RegionId == bot.CurrentRegionID;
             bool botFloorResolved = AutonomousNavigationSurface.TryFloor(
                 nav, bot.CurrentZone, route[0], out Vector3 botFloor);
             // The same natural aggro eligibility/radius as the NPC's existing
@@ -114,8 +157,20 @@ namespace DOL.GS
                 if (!AutonomousDungeonPolicy.CanSelectRouteBlocker(
                         botFloorResolved, blockerFloorResolved, completeCorridor))
                     continue;
+                if (!AutonomousDungeonPolicy.PullsOnRoute(npc is IGameEpicNpc,
+                        string.Equals(_camp?.MonsterName, npc.Name, StringComparison.OrdinalIgnoreCase), inOwnRaidDungeon))
+                {
+                    if (!_dungeonEpicsAvoided.Contains(npc) && npc != _dungeonEpicDetour && along < epicAlong)
+                    { epicInWay = npc; epicAlong = along; }
+                    continue;
+                }
                 blocker = npc;
                 first = along;
+            }
+            if (epicInWay != null && epicAlong < first)
+            {
+                AvoidDungeonEpic(bot, nav, route[..count], epicInWay, destination, threats);
+                return false;
             }
             if (blocker == null) return false;
             _dungeonTravelHeld = true;

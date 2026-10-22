@@ -160,6 +160,29 @@ public static class AutonomousRvrStaging
         return 1 + (int)(bounded * maximum);
     }
 
+    /// <summary>The smallest warband that can open a keep siege (AutonomousRvrEventLayer).</summary>
+    public const int SiegeWarbandSize = 4;
+    /// <summary>Share of level 50 RvR leaders that stay independent roamers.</summary>
+    public const double LevelFiftySoloRoamerShare = 0.25;
+
+    /// <summary>
+    /// Level 50 leaders form siege-sized warbands (4-8) or roam alone. With an even 1-8 roll and the
+    /// leader's region rarely holding enough free members, 234 of 250 overnight warbands were pairs and a
+    /// realm opened one siege in 7.7 hours (2026-10-19). Levelling leaders keep the even roll.
+    /// </summary>
+    public static int RollWarbandSize(int maximumSize, double roll, int leaderLevel)
+    {
+        int maximum = Math.Clamp(maximumSize, 1, 8);
+        if (leaderLevel < 50 || maximum < SiegeWarbandSize) return RollWarbandSize(maximumSize, roll);
+        double bounded = Math.Clamp(roll, 0d, Math.BitDecrement(1d));
+        if (bounded < LevelFiftySoloRoamerShare) return 1;
+        double scaled = (bounded - LevelFiftySoloRoamerShare) / (1 - LevelFiftySoloRoamerShare);
+        return SiegeWarbandSize + (int)(scaled * (maximum - SiegeWarbandSize + 1));
+    }
+
+    /// <summary>A warband forms with the free members it finds, down to a pair, instead of not at all.</summary>
+    public static bool AcceptWarband(int rolledSize, int found) => rolledSize >= 2 && found >= 1 && found <= rolledSize - 1;
+
     /// <summary>
     /// Spreads a warband deterministically across the closest visible enemies.
     /// Limiting the window to party size keeps the force converged instead of

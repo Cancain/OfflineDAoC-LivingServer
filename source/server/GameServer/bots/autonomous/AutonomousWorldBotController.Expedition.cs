@@ -1,4 +1,6 @@
+using System;
 using System.Numerics;
+using DOL.AI.Brain;
 
 namespace DOL.GS;
 
@@ -13,6 +15,8 @@ public sealed partial class AutonomousWorldBotController
     private ushort _expeditionRegion;
     private Vector3 _expeditionGoal;
     private Vector3? _expeditionLastPosition;
+    private Vector3? _expeditionOrdinaryFrom;
+    private int _expeditionOrdinaryStill;
     private RvrPlanningNavigation _dragonRallyPlanning;
     private Vector3[] _dragonRallyRoute;
     private Vector3 _dragonRallyOrigin, _dragonRallyGoal;
@@ -55,8 +59,16 @@ public sealed partial class AutonomousWorldBotController
                     {
                         _expeditionRouteFailures = 0;
                         _expeditionOrdinaryUntil = GameLoop.GameLoopTime + 120_000;
+                        // Live run 2026-10-22: 23 Hibernian raiders stood at one Cruachan Gorge spot for 33 minutes logging
+                        // this every three minutes, and nothing said why (the same route proves offline). The reason, the
+                        // goal and how many windows in a row the bot has not moved say where to look next time.
+                        _expeditionOrdinaryStill = _expeditionOrdinaryFrom.HasValue &&
+                            Vector3.DistanceSquared(position, _expeditionOrdinaryFrom.Value) < 64 * 64 ? _expeditionOrdinaryStill + 1 : 0;
+                        _expeditionOrdinaryFrom = position;
                         Log.Warn($"REALM_EXPEDITION_ORDINARY_TRAVEL bot={bot.Name} id={bot.DatabaseID} region={bot.CurrentRegionID} " +
-                            $"position={bot.X},{bot.Y},{bot.Z} event={order.EventId}");
+                            $"position={bot.X},{bot.Y},{bot.Z} event={order.EventId} goal={(int)exterior.X},{(int)exterior.Y},{(int)exterior.Z} " +
+                            $"via={(via.HasValue ? $"{(int)via.Value.X},{(int)via.Value.Y}" : "-")} stillWindows={_expeditionOrdinaryStill} " +
+                            $"reason=\"{RealmRaidMuster.LastRouteFailure}\" status=\"{bot.PersistentRecord?.Activity}: {bot.PersistentRecord?.ObjectiveProgress}\"");
                         return true;
                     }
                     _expeditionRouteRetry = GameLoop.GameLoopTime + 15_000;
@@ -72,6 +84,7 @@ public sealed partial class AutonomousWorldBotController
                 _expeditionLeg++;
             if (_expeditionLeg < _expeditionSeams.Length)
             {
+                GuardExpeditionDanger(bot, _expeditionSeams[_expeditionLeg]);
                 if (!IssuePath(bot, _expeditionSeams[_expeditionLeg], preciseArrival: true))
                 { _expeditionSeams = null; _expeditionRouteRetry = GameLoop.GameLoopTime + 15_000; }
                 SetStatus(bot, "Traveling to expedition", c.MonsterName, "Following the validated exterior corridor; no town attendance required");
@@ -87,7 +100,10 @@ public sealed partial class AutonomousWorldBotController
         {
             if (FollowDarknessFallsRaidChain(bot, post, c.MonsterName)) return true;
             if (!TryBeginFasterStableRoute(bot,post,c.ZoneName))
+            {
+                GuardExpeditionDanger(bot, post);
                 IssuePath(bot,post,preciseArrival:order.Crossing);
+            }
             SetStatus(bot,order.State,c.MonsterName,"Traveling to the expedition; late members rejoin without town staging");
             return true;
         }
@@ -96,6 +112,31 @@ public sealed partial class AutonomousWorldBotController
         bot.StopMoving();
         SetStatus(bot,order.State,c.MonsterName,"Present at expedition staging; waiting for the expedition order");
         return true;
+    }
+
+    /// <summary>
+    /// A raider walking to its expedition on its own (late, or back from a release) bends around monsters far
+    /// above it and remembered death spots, as a solo bot does on any road. Caer Sidi rallies, 2026-10-19/20:
+    /// 124 level-50 raiders died on the walk to the staging area, most to dread liches (57-61) and ancient
+    /// zombies (60), and released 110,000 units back at Fort Gwyntell each time; 25-37 were still on the
+    /// corridor when both rallies ran out of time.
+    /// </summary>
+    private void GuardExpeditionDanger(GameBot bot, Vector3 destination)
+    {
+        if (!AutonomousRouteThreatPolicy.Enabled || bot.CurrentZone == null || bot.CurrentZone.IsDungeon ||
+            bot.CurrentRegion?.IsDungeon == true || bot.InCombat || _routeRecoveryWaypoint.HasValue ||
+            bot.Brain is not BotBrain { HasAggro: false })
+            return;
+        long now = GameLoop.GameLoopTime;
+        if (now < _nextRouteThreatScanTick) return;
+        _nextRouteThreatScanTick = now + AutonomousRouteThreatPolicy.ScanMilliseconds + bot.ObjectID % 500;
+        IPathfindingMgr nav = PathfindingProvider.Instance;
+        if (!nav.IsAvailable || !nav.HasNavmesh(bot.CurrentZone)) return;
+        Span<Vector3> route = stackalloc Vector3[257];
+        route[0] = new(bot.X, bot.Y, bot.Z);
+        int count = bot.movementComponent.CopyUpcomingPath(destination, route[1..]) + 1;
+        if (count < 2) { route[1] = destination; count = 2; }
+        TryDangerBypass(bot, nav, bot.CurrentZone, route[..count]);
     }
 
     private bool TravelDragonRally(GameBot bot, AutonomousRealmRaid.View order, Vector3 home)

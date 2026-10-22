@@ -25,6 +25,13 @@ namespace DOL.GS
             _npcOwner = owner;
         }
 
+        public override void ForgetDeparted()
+        {
+            base.ForgetDeparted();
+            if (GameLiving.HasDeparted(_losCheckTarget))
+                _losCheckTarget = null;
+        }
+
         public override void OnAimInterrupt(GameObject attacker)
         {
             // Use the follow target or current target (maybe redundant) instead of the interrupter.

@@ -2,7 +2,7 @@
 # Windows PowerShell 5.1 compatible.
 
 $Script:ServerFolders = @('runtime/server', 'runtime/server/lib', 'runtime/server/win-x64')
-# The launcher (its Social Expansion tab): the game's own copy, and the 0.37c new client's copy when present.
+# The launcher (its Living Server tab): the game's own copy, and the 0.37c new client's copy when present.
 $Script:LauncherFolders = @('runtime', 'new-client/runtime')
 $Script:LauncherFiles = @('OfflineDAoC.dll', 'OfflineDAoC.exe', 'OfflineDAoC.pdb', 'OfflineDAoC.deps.json', 'OfflineDAoC.runtimeconfig.json')
 # Also the 0.37c new client and its launcher, which share the game's runtime.
@@ -109,3 +109,30 @@ function Get-InstallRecords([string]$Game) {
 }
 
 function Get-BackupName([string]$Folder) { return ($Folder -replace '[\\/]', '_') }
+
+# Game files this build fixes in place (content-patches.json, made by make_content_patch.py): byte patches against the
+# released file, so no game file ships whole. A file is changed only when it has the released fingerprint, and the
+# result must have the fixed one. Beta 1.0: Hall of the Corrupt's navmesh and eight new-client gate models.
+function Read-ContentPatches([string]$BuildDir) {
+    $path = Join-Path $BuildDir 'content-patches.json'
+    if (!(Test-Path -LiteralPath $path)) { return @() }
+    return @(Get-Content -LiteralPath $path -Raw | ConvertFrom-Json)
+}
+
+function Expand-ContentPatch($Patch, [byte[]]$Released) {
+    $out = New-Object IO.MemoryStream
+    foreach ($op in @($Patch.Ops)) {
+        if ($null -ne $op.copy) { $out.Write($Released, [int]$op.copy[0], [int]$op.copy[1]) }
+        else { $bytes = [Convert]::FromBase64String([string]$op.data); $out.Write($bytes, 0, $bytes.Length) }
+    }
+    return ,$out.ToArray()
+}
+
+function Get-BytesSha256([byte[]]$Bytes) {
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try { return (($sha.ComputeHash($Bytes) | ForEach-Object { $_.ToString('x2') }) -join '') } finally { $sha.Dispose() }
+}
+
+function Get-ContentPath([string]$Game, [string]$Relative) {
+    return (Join-Path $Game ($Relative.Replace('/', [IO.Path]::DirectorySeparatorChar)))
+}

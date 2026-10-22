@@ -50,7 +50,8 @@ public sealed class LauncherPresentationTests
         var names = ((System.Collections.IEnumerable)grid.DataSource!).Cast<object>()
             .Select(row => row.GetType().GetProperty("Name")!.GetValue(row)).ToArray();
         Assert.That(names, Is.EquivalentTo(new[] { "Caer Benowyc", "Castle Excalibur", "Golestandt", "Gjalpinulva", "Cuuldurach", "Caer Sidi", "Tuscaran Glacier", "Galladoria",
-            "Darkness Falls", "Darkness Falls", "Darkness Falls", "Summoner's Hall", "Summoner's Hall", "Summoner's Hall" }));
+            "Darkness Falls", "Darkness Falls", "Darkness Falls", "Summoner's Hall", "Summoner's Hall", "Summoner's Hall",
+            "Krondon", "Avalon City", "Crystal Cave", "Hall of the Corrupt", "Trollheim", "Iarnvidiur's Lair", "Dodens Gruva", "Tur Suil", "Marfach Caverns" }));
     }
 
     [Test]

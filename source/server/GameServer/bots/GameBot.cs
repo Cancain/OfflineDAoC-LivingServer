@@ -46,7 +46,15 @@ namespace DOL.GS
         public long DatabaseID { get; set; }
         public bool IsAutonomousWorldBot { get; private set; }
         public bool IsTemporaryGroupHelper { get; private set; }
-        public bool IsEndgameCompanion => TemporaryCompanionBalance.IsEndgame(IsTemporaryGroupHelper, Level);
+        /// <summary>
+        /// A member of a realm's Epic Special Forces (AutonomousEpicSpecialForces): a level-50 gamebot made for one raid
+        /// with the /spawn companions' endgame kit, the owner's one exception (2026-10-19) to gamebots earning their
+        /// armor. It lives in memory only: nothing about it is ever saved, and it leaves when the raid ends.
+        /// </summary>
+        public bool IsEpicSpecialForce { get; private set; }
+        public bool IsEndgameCompanion => TemporaryCompanionBalance.IsEndgame(IsTemporaryGroupHelper || IsEpicSpecialForce, Level);
+        /// <summary>Equipment is generated from the companion endgame kit (temporary helpers and the Special Forces).</summary>
+        public bool UsesCompanionKit => IsTemporaryGroupHelper || IsEpicSpecialForce;
         private bool _endgameCompanionEquipped;
         public bool SuppressLootAndProgress => IsTemporaryGroupHelper;
         internal int EquipmentLevelFloor { get; private set; }
@@ -239,6 +247,15 @@ namespace DOL.GS
         }
 
         public override int MaxMana => GetModified(eProperty.MaxMana);
+
+        /// <summary>A bot's /say, recorded in the chat transcript (CHAT_LINE) when a player is near enough to hear it.</summary>
+        public override bool Say(string str)
+        {
+            bool said = base.Say(str);
+            if (said && AutonomousLivingServer.PlayerHears(this))
+                BotChatTranscript.Bot("say", Name, Realm, str);
+            return said;
+        }
 
         public override int MaxConcentration => GetModified(eProperty.MaxConcentration);
         public override int Concentration => MaxConcentration - (effectListComponent?.UsedConcentration ?? 0);
@@ -953,6 +970,7 @@ namespace DOL.GS
 
             if (IsAutonomousWorldBot && PersistentRecord != null)
             {
+                AutonomousDeathDiagnostics.Record(this, killer, PersistentRecord.Activity);
                 PersistentRecord.DeathCount++;
                 GoalDiagnosticAttempt?.Died();
                 PersistentRecord.TargetName = (TargetObject as GameLiving)?.Name ?? killer?.Name ?? string.Empty;
@@ -1157,9 +1175,19 @@ namespace DOL.GS
             }
         }
 
+        /// <summary>How far from a repeat-death spot a release bind must be when there is a choice.</summary>
+        public const float ReleaseClearanceFromDeathSpot = 6_000;
+
         private Point3D? FindNearestBindPoint()
         {
-            return BotReleaseBindPoints.Nearest(_deathRegionId, X, Y, IsAutonomousWorldBot ? Realm : eRealm.None);
+            if (!IsAutonomousWorldBot)
+                return BotReleaseBindPoints.Nearest(_deathRegionId, X, Y);
+            // A bot that keeps dying in one place releases to a bind well away from it, not to the stone it walks back
+            // into the same pack from (Sheeroe Hills, 2026-10-20: two bots died 72 and 61 times to one glimmer pack about
+            // 2,300 units from their release bind).
+            var spots = AutonomousRepeatDeathSpots.SpotsNear(DatabaseID, _deathRegionId, X, Y, DateTime.UtcNow,
+                AutonomousRepeatDeathSpots.AvoidRadius);
+            return BotReleaseBindPoints.NearestAwayFrom(_deathRegionId, X, Y, Realm, spots, ReleaseClearanceFromDeathSpot);
         }
 
         public void OnResurrectedBy(GameLiving caster)
@@ -1533,7 +1561,8 @@ namespace DOL.GS
             money.AssertLockAcquisition();
             long share = AutonomousBotGuildEconomy.ShareAfterDues(this, money.Value, out long dues);
             // The whole coin must fit in the purse before it is split, so returned dues can never be lost (audit 2026-10-16).
-            if (!IsAutonomousWorldBot || IsTemporaryGroupHelper || DatabaseID <= 0 ||
+            // The Epic Special Forces take nothing: the realm's own raiders keep every coin and drop.
+            if (!IsAutonomousWorldBot || IsTemporaryGroupHelper || IsEpicSpecialForce || DatabaseID <= 0 ||
                 PersistentRecord != null && PersistentRecord.MoneyCopper > long.MaxValue - money.Value ||
                 !AutonomousBotEconomy.AddMoney(DatabaseID, share))
                 return TryPickUpResult.DoesNotWant;
@@ -1552,7 +1581,7 @@ namespace DOL.GS
         public TryPickUpResult TryAutoPickUpItem(WorldInventoryItem item)
         {
             item.AssertLockAcquisition();
-            if (!IsAutonomousWorldBot || IsTemporaryGroupHelper)
+            if (!IsAutonomousWorldBot || IsTemporaryGroupHelper || IsEpicSpecialForce)
                 return TryPickUpResult.DoesNotWant;
             if (Inventory == null)
             {
@@ -2372,9 +2401,17 @@ namespace DOL.GS
         {
         }
 
-        public GameBot(OfflineWorldBotRecord record, System.Collections.IList preparedInventory)
+        /// <summary>An Epic Special Forces member from an in-memory record (never saved; see <see cref="IsEpicSpecialForce"/>).</summary>
+        public static GameBot CreateEpicSpecialForce(OfflineWorldBotRecord record) => new(record, null, true);
+
+        public GameBot(OfflineWorldBotRecord record, System.Collections.IList preparedInventory) : this(record, preparedInventory, false)
+        {
+        }
+
+        private GameBot(OfflineWorldBotRecord record, System.Collections.IList preparedInventory, bool epicSpecialForce)
         {
             PersistentRecord = record ?? throw new ArgumentNullException(nameof(record));
+            IsEpicSpecialForce = epicSpecialForce;
             AutonomousBotGoalPolicy.ReconcileSavedAssignment(record);
             // Autonomous Group instances are process-local and are rebuilt
             // after every server start. Never expose a former process's leader,
@@ -2419,14 +2456,17 @@ namespace DOL.GS
                     BotSpec.ChoosePersistentSpecialization(persistentClass, record.BotId)),
             };
             LoadClassSpecializations(false);
-            LoadPersistedSpecs(record.SerializedSpecs);
-            bool buildLocked = BotLifetimeBuild.Restore(BotSpec, record.SerializedBuildPlan);
+            if (IsEpicSpecialForce)
+                SpendSpecPoints(Level, 0); // fully trained on arrival, like a level-50 /spawn companion
+            else
+                LoadPersistedSpecs(record.SerializedSpecs);
+            bool buildLocked = IsEpicSpecialForce || BotLifetimeBuild.Restore(BotSpec, record.SerializedBuildPlan);
             if (!buildLocked)
                 BotLifetimeBuild.AlignWithInvestedWeapons(BotSpec, GetBaseSpecLevel);
             // A saved build can predate the Savage's trained weapon line. Its
             // old weapon field must not override the specialization restored
             // from the character record.
-            bool savagePlanCorrected = persistentClass == eCharacterClass.Savage &&
+            bool savagePlanCorrected = !IsEpicSpecialForce && persistentClass == eCharacterClass.Savage &&
                 SavageBotSpec.AlignWithPersistedSpecs(BotSpec, record.SerializedSpecs);
             if (!buildLocked || savagePlanCorrected)
             {
@@ -2434,23 +2474,28 @@ namespace DOL.GS
                 MarkAutonomousStateDirty();
             }
             m_leftOverSpecPoints = Math.Max(0, record.UnspentSpecPoints);
-            _lastAutonomousTrainedLevel = ParseLastTrainedLevel(record.SerializedAbilities, Level, record.SerializedSpecs);
+            _lastAutonomousTrainedLevel = IsEpicSpecialForce ? Level : ParseLastTrainedLevel(record.SerializedAbilities, Level, record.SerializedSpecs);
             RefreshSpecDependantSkills(false);
             SetBotSpells();
             SortStyles();
             SortSpells();
 
-            Inventory = new BotInventory(InternalID);
-            if (preparedInventory == null)
-                Inventory.LoadFromDatabase(InternalID);
+            if (IsEpicSpecialForce)
+                EquipBot(50); // the endgame kit, in an inventory that is never saved
             else
-                Inventory.LoadInventory(InternalID, preparedInventory);
-            bool starterWeaponAdded = EnsureAutonomousStarterWeapon();
-            starterWeaponAdded |= BotRangedCombat.EnsureStarter(this);
-            starterWeaponAdded |= BotStarterInstruments.Ensure(this);
-            RefreshItemBonuses();
-            if (starterWeaponAdded || !buildLocked)
-                AutonomousBotStatusPersistence.Queue(this, starterWeaponAdded);
+            {
+                Inventory = new BotInventory(InternalID);
+                if (preparedInventory == null)
+                    Inventory.LoadFromDatabase(InternalID);
+                else
+                    Inventory.LoadInventory(InternalID, preparedInventory);
+                bool starterWeaponAdded = EnsureAutonomousStarterWeapon();
+                starterWeaponAdded |= BotRangedCombat.EnsureStarter(this);
+                starterWeaponAdded |= BotStarterInstruments.Ensure(this);
+                RefreshItemBonuses();
+                if (starterWeaponAdded || !buildLocked)
+                    AutonomousBotStatusPersistence.Queue(this, starterWeaponAdded);
+            }
             Experience = Math.Max(0, record.Experience);
             AutonomousRealmPoints = Math.Max(0, record.RealmPoints);
             RealmLevel = AutonomousBotRealmPointRewards.RealmLevelFor(AutonomousRealmPoints);
@@ -2459,9 +2504,9 @@ namespace DOL.GS
             X = record.X;
             Y = record.Y;
             Z = record.Z;
-            Health = Math.Clamp(record.Health, 1, MaxHealth);
-            Mana = Math.Clamp(record.Mana, 0, MaxMana);
-            Endurance = Math.Clamp(record.Endurance, 0, MaxEndurance);
+            Health = IsEpicSpecialForce ? MaxHealth : Math.Clamp(record.Health, 1, MaxHealth);
+            Mana = IsEpicSpecialForce ? MaxMana : Math.Clamp(record.Mana, 0, MaxMana);
+            Endurance = IsEpicSpecialForce ? MaxEndurance : Math.Clamp(record.Endurance, 0, MaxEndurance);
             RespawnInterval = -1;
 
             var brain = persistentClass == eCharacterClass.Sluaghbinder
@@ -2811,6 +2856,12 @@ namespace DOL.GS
             }
         }
 
+        public override void ForgetDeparted()
+        {
+            base.ForgetDeparted();
+            (Brain as BotBrain)?.ForgetDeparted();
+        }
+
         public override void Delete()
         {
             if (ObjectState is eObjectState.Deleted)
@@ -2869,7 +2920,7 @@ namespace DOL.GS
             {
                 AutonomousStuckWatchdog.Unregister(this);
                 AutonomousBotRegistry.Unregister(this);
-                if (PersistentRecord != null)
+                if (PersistentRecord != null && !IsEpicSpecialForce)
                 {
                     PersistentRecord.IsOnline = false;
                     PersistentRecord.Activity = "Offline";
@@ -3205,6 +3256,11 @@ namespace DOL.GS
 
         public bool SaveAutonomousState(bool includeInventory)
         {
+            if (IsEpicSpecialForce)
+            {
+                AutonomousStateDirty = false; // nothing about a Special Forces member is ever saved
+                return true;
+            }
             OfflineWorldBotRecord record = PrepareAutonomousStateSnapshot();
             if (record == null)
                 return false;
@@ -3985,14 +4041,14 @@ namespace DOL.GS
                 bool mayUseOffhand = !sluaghbinderScythePlan &&
                     (BotSpec?.SpecType is eSpecType.DualWield or eSpecType.DualWieldAndShield or eSpecType.LeftAxe ||
                      BestShieldLevel > 0);
-                bool includeOffhand = TemporaryCompanionBalance.EquipOffhand(IsTemporaryGroupHelper, characterLevel, mayUseOffhand, Random.Shared.NextDouble());
+                bool includeOffhand = TemporaryCompanionBalance.EquipOffhand(UsesCompanionKit, characterLevel, mayUseOffhand, Random.Shared.NextDouble());
                 SetWeapons(includeOffhand);
                 if (includeOffhand)
                     SetShield();
                 SetRanged();
                 BotRangedCombat.EnsureStarter(this);
                 BotStarterInstruments.Ensure(this);
-                if (IsTemporaryGroupHelper)
+                if (UsesCompanionKit)
                     EnsureTemporaryHelperWeapon();
                 Level = equipmentLevel;
                 SetArmor();

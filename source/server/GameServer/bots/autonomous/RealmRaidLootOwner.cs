@@ -11,6 +11,7 @@ namespace DOL.GS
         {
             internal readonly Dictionary<long, int> ItemsReceived = new();
         }
+        private static readonly Logging.Logger Log = Logging.LoggerManager.Create(typeof(RealmRaidLootOwner));
         private readonly GameBot[] _members;
         private readonly Ledger _ledger;
         internal IReadOnlyList<GameBot> Members => _members;
@@ -29,9 +30,17 @@ namespace DOL.GS
                     TryPickUpResult result = bot.TryAutoPickUpItem(item);
                     if (result != TryPickUpResult.Success) continue;
                     _ledger.ItemsReceived[bot.DatabaseID] = _ledger.ItemsReceived.GetValueOrDefault(bot.DatabaseID) + 1;
+                    // Raid loot is the reward the whole endgame turns on; record every piece (2026-10-19: the first two
+                    // dragon kills left no trace of who received what).
+                    if (Log.IsInfoEnabled)
+                        Log.Info($"REALM_RAID_LOOT item=\"{item.Name}\" bot=\"{bot.Name}\" id={bot.DatabaseID} class=\"{bot.ClassName}\" " +
+                                 $"region={item.CurrentRegionID} raiders={_members.Length}");
                     return result;
                 }
             }
+            if (Log.IsInfoEnabled)
+                Log.Info($"REALM_RAID_LOOT_UNCLAIMED item=\"{item.Name}\" region={item.CurrentRegionID} raiders={_members.Length} " +
+                         $"nearby={_members.Count(b => Eligible(b, item))} reason=\"no nearby raider could carry it\"");
             return TryPickUpResult.Blocked;
         }
 
@@ -45,6 +54,8 @@ namespace DOL.GS
                 GameBot[] recipients = _members.Where(b => Eligible(b, money) && b.PersistentRecord != null).ToArray();
                 if (!TryAllocateMoney(recipients.Select(b => b.PersistentRecord).ToArray(), money.Value))
                     return TryPickUpResult.Blocked;
+                if (Log.IsInfoEnabled)
+                    Log.Info($"REALM_RAID_LOOT_MONEY copper={money.Value} recipients={recipients.Length} region={money.CurrentRegionID}");
                 money.Value = 0; // Paid bags can never be paid again, including after a save-queue failure.
                 money.RemoveFromWorld();
                 foreach (GameBot bot in recipients)
@@ -72,7 +83,8 @@ namespace DOL.GS
             return true;
         }
 
-        private static bool Eligible(GameBot bot, GameObject drop) => bot.IsAutonomousWorldBot && !bot.IsTemporaryGroupHelper &&
+        // The Epic Special Forces receive nothing; with only them nearby a drop stays where it fell.
+        private static bool Eligible(GameBot bot, GameObject drop) => bot.IsAutonomousWorldBot && !bot.IsTemporaryGroupHelper && !bot.IsEpicSpecialForce &&
             bot.ObjectState == GameObject.eObjectState.Active && bot.CurrentRegionID == drop.CurrentRegionID &&
             bot.IsWithinRadius(drop, WorldMgr.VISIBILITY_DISTANCE) &&
             AutonomousBotRegistry.TryGet(bot.DatabaseID, out var current) && ReferenceEquals(current, bot);

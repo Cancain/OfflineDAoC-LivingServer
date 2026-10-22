@@ -39,15 +39,39 @@ namespace DOL.GS
         /// monster or a pack is avoided when a way around exists (at most twice per monster);
         /// otherwise a manageable one is pulled anyway, and only a hopeless one makes the bot
         /// give up the camp (at most once per 10 minutes, else it carries on as before).
+        /// Solo bots (2026-10-18 play logs, 6,579 route pulls in a day): 34-54% of solo bots that
+        /// pulled an orange on the way were dead within 150 seconds, and 21-27% after a yellow,
+        /// against 7-18% for green and blue. So a solo bot goes around a yellow when it can, and
+        /// gives up the camp rather than fight an orange (a single orange is still fought when it
+        /// may not give up again yet). A <paramref name="cautious"/> solo bot (one that died in the
+        /// last half hour) treats a yellow like an orange.
         /// </summary>
         public static RouteThreatAction Decide(ConColor con, bool grouped, int packSize, bool bossLike,
-            bool detourAvailable, int detoursSoFar, bool mayRetarget)
+            bool detourAvailable, int detoursSoFar, bool mayRetarget, bool cautious = false)
         {
             // A grey monster is no threat (and in DAoC rarely aggroes); lower cons are fought in
             // bigger packs. Run 7 (2026-10-06): 14% of give-ups were greys 6+ levels below the
             // bot and many more were green or blue packs of three to five.
             if (con <= ConColor.GREY && !bossLike)
                 return RouteThreatAction.Ignore;
+            bool canDetour = detourAvailable && detoursSoFar < MaxDetoursPerThreat;
+            if (!grouped && !bossLike)
+            {
+                ConColor felt = cautious && con == ConColor.YELLOW ? ConColor.ORANGE : con;
+                int easySolo = felt <= ConColor.GREEN ? 3 : felt <= ConColor.BLUE ? 2 : 0;
+                int fightableSolo = felt <= ConColor.GREEN ? 5 : felt <= ConColor.BLUE ? 3 : felt <= ConColor.ORANGE ? 1 : 0;
+                if (packSize <= easySolo)
+                    return RouteThreatAction.Pull;
+                if (canDetour)
+                    return RouteThreatAction.Detour;
+                if (felt == ConColor.YELLOW && packSize <= 1)
+                    return RouteThreatAction.Pull;
+                if (felt == ConColor.ORANGE && mayRetarget)
+                    return RouteThreatAction.Retarget;
+                if (packSize <= fightableSolo)
+                    return RouteThreatAction.Pull;
+                return mayRetarget ? RouteThreatAction.Retarget : RouteThreatAction.Ignore;
+            }
             int easyPack = grouped ? con <= ConColor.BLUE ? 5 : 3
                 : con <= ConColor.GREEN ? 3 : con <= ConColor.BLUE ? 2 : 1;
             int manageablePack = grouped ? con <= ConColor.BLUE ? 6 : 4
@@ -57,7 +81,7 @@ namespace DOL.GS
                 : con <= ConColor.YELLOW && packSize <= easyPack);
             if (easy)
                 return RouteThreatAction.Pull;
-            if (detourAvailable && detoursSoFar < MaxDetoursPerThreat)
+            if (canDetour)
                 return RouteThreatAction.Detour;
             bool manageable = !bossLike && (grouped
                 ? con <= ConColor.RED && packSize <= manageablePack

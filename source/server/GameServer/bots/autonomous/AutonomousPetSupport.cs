@@ -1242,8 +1242,12 @@ public static class AutonomousPetSupport
     {
         if (owner == null || turret == null)
             return;
-        FieldTurrets.GetOrAdd(owner, _ => new ConcurrentDictionary<TurretPet, long>())[turret] =
-            GameLoop.GameLoopTime + Math.Max(1_000, lifetimeMilliseconds);
+        var turrets = FieldTurrets.GetOrAdd(owner, _ => new ConcurrentDictionary<TurretPet, long>());
+        // Turrets that ended on their own stayed listed until the owner's next pet upkeep, which a bot that stopped
+        // fighting never ran (SERVER_HOLDER_CENSUS, 2026-10-21: 63 deleted turrets held here).
+        foreach (TurretPet gone in turrets.Select(entry => entry.Key).Where(t => t?.ObjectState is not GameObject.eObjectState.Active).ToArray())
+            turrets.TryRemove(gone, out _);
+        turrets[turret] = GameLoop.GameLoopTime + Math.Max(1_000, lifetimeMilliseconds);
     }
 
     /// <summary>This owner's live field turrets and when each one expires.</summary>

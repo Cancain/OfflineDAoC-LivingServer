@@ -16,6 +16,7 @@ namespace DOL.GS;
 /// </summary>
 public static partial class AutonomousRvrEventLayer
 {
+    private static readonly Logging.Logger Log = Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
     public const long BattleLifetimeMilliseconds = 4 * 60 * 60_000L;
     /// <summary>Time a marching relic army has to reach its keep (a keep siege has the usual hour).</summary>
     public const long RelicMarchMilliseconds = 2 * 60 * 60_000L;
@@ -236,8 +237,7 @@ public static partial class AutonomousRvrEventLayer
     // Chance-based concurrent sieges (one attack per realm). Off in the legacy event-layer tests, which
     // document the one-siege-at-a-time ChooseIntent rules.
     public static bool SiegeScheduling = true;
-    private static long _nextSiegeRoll, _lastSiegeActiveTick;
-    private static bool _siegeStartReady;
+    private static long _lastSiegeActiveTick;
 
     /// <summary>Chance per minute that a new siege starts, by how many are running and how long none has.</summary>
     public static double SiegeStartChancePerMinute(int active, double idleMinutes) => active switch
@@ -248,17 +248,35 @@ public static partial class AutonomousRvrEventLayer
         _ => 0,
     };
 
-    // Called under Sync. One roll a minute server-wide; a won roll waits for the next siege-capable force.
-    private static bool SiegeStartAllowed(long nowTick)
+    /// <summary>
+    /// A realm's own catch-up chance per minute once it has gone 30 minutes without opening a siege (2% more per minute,
+    /// at most 50%). On 2026-10-19 one server-wide roll let Albion open all four sieges: its warbands formed first
+    /// after each raid (Albion's raids run ten minutes ahead), and with one siege running the next had a 4% chance a minute.
+    /// </summary>
+    public static double RealmCatchUpChance(double realmIdleMinutes) =>
+        realmIdleMinutes <= 30 ? 0 : Math.Min(0.5, (realmIdleMinutes - 30) * 0.02);
+
+    public static double RealmSiegeStartChancePerMinute(int active, double idleMinutes, double realmIdleMinutes) =>
+        Math.Min(1, SiegeStartChancePerMinute(active, idleMinutes) + RealmCatchUpChance(realmIdleMinutes));
+
+    private static readonly Dictionary<eRealm, long> NextRealmSiegeRoll = new();
+    private static readonly Dictionary<eRealm, long> RealmLastAttackTick = new();
+    private static readonly HashSet<eRealm> RealmSiegeReady = new();
+
+    // Called under Sync. Each realm rolls once a minute for its own next attack; a won roll waits for that realm's next
+    // siege-capable force (one attack per realm at a time is enforced by the caller).
+    private static bool SiegeStartAllowed(long nowTick, eRealm realm)
     {
         int active = Events.Values.Count(entry => !entry.DefenseReaction);
         if (active > 0) _lastSiegeActiveTick = nowTick;
-        if (_siegeStartReady) return true;
-        if (nowTick < _nextSiegeRoll) return false;
-        _nextSiegeRoll = nowTick + 60_000;
+        if (RealmSiegeReady.Contains(realm)) return true;
+        if (nowTick < NextRealmSiegeRoll.GetValueOrDefault(realm)) return false;
+        NextRealmSiegeRoll[realm] = nowTick + 60_000;
         double idleMinutes = active == 0 ? (nowTick - _lastSiegeActiveTick) / 60_000d : 0;
-        _siegeStartReady = Random.Shared.NextDouble() < SiegeStartChancePerMinute(active, idleMinutes);
-        return _siegeStartReady;
+        double realmIdleMinutes = (nowTick - RealmLastAttackTick.GetValueOrDefault(realm)) / 60_000d;
+        bool ready = Random.Shared.NextDouble() < RealmSiegeStartChancePerMinute(active, idleMinutes, realmIdleMinutes);
+        if (ready) RealmSiegeReady.Add(realm);
+        return ready;
     }
 
     public static Plan ChooseOrJoin(Force force, IReadOnlyCollection<LiveObjective> objectives, long nowTick, double roll)
@@ -301,7 +319,7 @@ public static partial class AutonomousRvrEventLayer
                 return ReservePlan(force, objectives.Where(o => !o.IsRelicCarrier && o.Kind is not Intent.AssaultKeep and not Intent.AssaultRelicKeep).ToArray());
             if (ReleasedForces.ContainsKey(force.GroupId)) return null;
 
-            Plan committed = CommittedPlan(force, objectives);
+            Plan committed = CommittedPlan(force, objectives, nowTick);
             if (committed != null)
                 return committed;
 
@@ -357,6 +375,7 @@ public static partial class AutonomousRvrEventLayer
                         TryJoin(active.Defenders, force, DefenderCapFor(active)))
                     {
                         if (SiegeScheduling && !active.DefenseMustering) BeginDefenseMuster(active, nowTick);
+                        GoStraightInWhenUnderFire(active, nowTick);
                         return ToPlan(Intent.DefendEvent, target, true,
                             "Choosing to converge to defend the live opposing-realm assault; participation is capped.");
                     }
@@ -388,7 +407,7 @@ public static partial class AutonomousRvrEventLayer
                                                               objective.OwningRealm != force.Realm && !Events.ContainsKey(objective.Id) && !OnCooldown(objective.Id, nowTick))
                 , SelectedKeeps);
             bool siegeCapable = force.MemberCount >= 4 && force.AverageLevel >= 50 && force.CanSupplySiege;
-            if (SiegeScheduling && (keep != null || relic != null) && siegeCapable && !SiegeStartAllowed(nowTick))
+            if (SiegeScheduling && (keep != null || relic != null) && siegeCapable && !SiegeStartAllowed(nowTick, force.Realm))
                 return ReservePlan(force, objectives);
             // Relic sieges are the larger, rarer event: about one new siege in eight, strong warbands only.
             Intent intent = !SiegeScheduling ? ChooseIntent(force, hasEnemy, keep != null, relic != null, roll)
@@ -421,7 +440,10 @@ public static partial class AutonomousRvrEventLayer
                 };
                 active.Attackers[force.GroupId] = force.MemberCount;
                 Events[selected.Id] = active;
-                _siegeStartReady = false;
+                RealmSiegeReady.Remove(force.Realm);
+                RealmLastAttackTick[force.Realm] = nowTick;
+                if (Log.IsInfoEnabled) Log.Info($"RVR_EVENT_OPENED target={selected.Id} name=\"{selected.Name}\" relic={selected.IsRelicKeep} " +
+                         $"attacker={force.Realm} defender={selected.OwningRealm} warband={force.GroupId} size={force.MemberCount}");
                 RealmEventRecords.Begin(selected.Id, selected.Name, selected.IsRelicKeep ? "Relic keep" : "Keep", GlobalConstants.RealmToName(force.Realm), "Automatic continuous siege; defender: " + GlobalConstants.RealmToName(selected.OwningRealm));
                 if (!StagedAssault)
                     StartBattle(active, nowTick, "automatic assault opened; each assigned bot converges without formation staging");
@@ -472,7 +494,7 @@ public static partial class AutonomousRvrEventLayer
         if (!SiegeScheduling) return Capacity(active);
         int cap = RealmEventPolicy.DefenderCap(active.RelicKeep);
         return active.MarchedAttackers <= 0 ? cap
-            : Math.Clamp((int)Math.Round(active.MarchedAttackers * Math.Clamp(RealmEventPolicy.DefenseRatio, 0.25, 2.0)), 8, cap);
+            : RealmEventPolicy.DefendersFor(active.MarchedAttackers, active.Attackers.Values.Sum(), RealmEventPolicy.EffectiveDefenseRatio, cap);
     }
 
     private static int Capacity(ActiveEvent active) => active.DefenseReaction ? 240 : active.Retake ? active.RetakeCap :
@@ -485,8 +507,9 @@ public static partial class AutonomousRvrEventLayer
         : RealmEventPolicy.SiegeReady(active.RelicKeep, deadline, Attendance(active, active.AttackerRealm, nowTick),
             Attendance(active, active.DefenderRealm, nowTick));
 
-    private static Plan CommittedPlan(Force force, IReadOnlyCollection<LiveObjective> objectives)
+    private static Plan CommittedPlan(Force force, IReadOnlyCollection<LiveObjective> objectives, long nowTick)
     {
+        if (HomeDefenseBreakOff(force, objectives, nowTick) is { } home) return home;
         foreach (ActiveEvent active in Events.Values)
         {
             // A local route/candidate refresh is not an event cancellation.
@@ -656,6 +679,66 @@ public static partial class AutonomousRvrEventLayer
         var log = DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
         if (log.IsInfoEnabled) log.Info($"RVR_DEFENSE_MUSTER target={active.TargetId} defenders={GlobalConstants.RealmToName(active.DefenderRealm)} " +
             $"cap={(active.DefenseReaction ? ResponseCap(true, active.DefenseScale) : DefenderCapFor(active))} minutes={milliseconds / 60_000}");
+    }
+
+    /// <summary>
+    /// Owner, 2026-10-20: once the attackers are at the keep there is no defense muster; defenders go straight in.
+    /// Blendrake Faste: the first Midgard defenders formed 26 minutes into the siege, mustered for six minutes, never
+    /// marched, and the keep fell eleven minutes later with no defender there.
+    /// </summary>
+    private static void GoStraightInWhenUnderFire(ActiveEvent active, long nowTick)
+    {
+        if (active.DefenseMustering && !active.DefenseMarching &&
+            RealmEventPolicy.DefendersSkipMuster(active.BattleStarted, Attendance(active, active.AttackerRealm, nowTick)))
+            GiveDefenseMarch(active, nowTick, "the attackers are already at the keep; defenders go straight in");
+    }
+
+    /// <summary>
+    /// Owner, 2026-10-20: home defense comes first. A warband committed to attacking an enemy keep breaks off to
+    /// defend its own realm's keep when that siege has begun and the defense is under half its cap, as long as the
+    /// attack keeps at least half its army. Raid members are never RvR forces, so this never pulls from a raid.
+    /// 2026-10-20: about 80 Midgard bots kept attacking Caer Sursbrooke while Albion took Blendrake Faste with no
+    /// Midgard defender ever arriving.
+    /// </summary>
+    /// <summary>
+    /// Whether a warband committed to an attack should re-plan because its own realm's keep needs it (a committed
+    /// warband otherwise never re-plans during a siege). 2026-10-20: Caer Hurbury fell in 13 minutes with no Albion
+    /// defense while 62 Albion bots kept attacking Dun Da Behnn, and no break-off was ever evaluated.
+    /// </summary>
+    public static bool HomeDefenseCalls(string groupId, eRealm realm, int memberCount)
+    {
+        lock (Sync)
+        {
+            if (string.IsNullOrEmpty(groupId)) return false;
+            ActiveEvent attack = Events.Values.FirstOrDefault(active => active.Attackers.ContainsKey(groupId));
+            return attack != null && HomeDefenseTarget(attack, realm, memberCount) != null;
+        }
+    }
+
+    private static ActiveEvent HomeDefenseTarget(ActiveEvent attack, eRealm realm, int memberCount) =>
+        !SiegeScheduling || attack.Forced ? null : Events.Values
+            .Where(active => active != attack && active.DefenderRealm == realm && active.BattleStarted && IsLatestDefenseFocus(active))
+            .OrderBy(active => active.Defenders.Values.Sum())
+            .FirstOrDefault(active => RealmEventPolicy.BreaksOffToDefend(active.Defenders.Values.Sum(), DefenderCapFor(active),
+                attack.Attackers.Values.Sum(), attack.MarchedAttackers, memberCount));
+
+    private static Plan HomeDefenseBreakOff(Force force, IReadOnlyCollection<LiveObjective> objectives, long nowTick)
+    {
+        if (!SiegeScheduling || force.AverageLevel < 50) return null;
+        ActiveEvent attack = Events.Values.FirstOrDefault(active => active.Attackers.ContainsKey(force.GroupId));
+        if (attack == null) return null;
+        ActiveEvent home = HomeDefenseTarget(attack, force.Realm, force.MemberCount);
+        if (home == null || !TryJoin(home.Defenders, force, DefenderCapFor(home))) return null;
+        attack.Attackers.Remove(force.GroupId);
+        attack.Slots.Remove(force.GroupId);
+        if (!home.DefenseMustering) BeginDefenseMuster(home, nowTick);
+        GoStraightInWhenUnderFire(home, nowTick);
+        var log = DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
+        if (log.IsInfoEnabled) log.Info($"RVR_HOME_DEFENSE_BREAKOFF force={force.GroupId} realm={GlobalConstants.RealmToName(force.Realm)} " +
+            $"from={attack.TargetId} to={home.TargetId} size={force.MemberCount} defenders={home.Defenders.Values.Sum()}/{DefenderCapFor(home)} " +
+            $"attackLeft={attack.Attackers.Values.Sum()}");
+        LiveObjective target = objectives.FirstOrDefault(objective => objective.Id == home.TargetId) ?? home.Target;
+        return ToPlan(Intent.DefendEvent, target, true, "Breaking off the attack to defend our own keep under siege.");
     }
 
     private static int DefenseMusterAttendance(ActiveEvent active, long nowTick) => active.DefenseMustered.Values
@@ -1262,6 +1345,8 @@ public static partial class AutonomousRvrEventLayer
 
     private static void EndEvent(ActiveEvent active, long nowTick, string reason, eRealm winner = eRealm.None)
     {
+        if (!active.DefenseReaction && (reason.StartsWith("Keep captured") || reason.StartsWith("Siege defended")))
+            SiegeDefenseBalance.Record(reason.StartsWith("Keep captured") && (winner == eRealm.None || winner == active.AttackerRealm));
         foreach (eRealm realm in new[] { active.AttackerRealm, active.DefenderRealm, OtherRealm(active) })
             RealmEventNotices.Queue(active.TargetId, realm, RealmEventBanter.SiegeOutcome(Place(active.Target.Name),
                 realm == active.DefenderRealm, reason.StartsWith("Siege defended"), reason.StartsWith("Rally failed"), winner, realm));

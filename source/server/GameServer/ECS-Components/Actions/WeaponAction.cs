@@ -26,6 +26,9 @@ namespace DOL.GS
         public eRangedAttackType RangedAttackType { get; }
         public DbInventoryItem Ammo { get; }
 
+        /// <summary>The target this attack was made against.</summary>
+        public GameObject Target => _target;
+
         public bool HasAmmoReachedTarget { get; private set; } // Used to not cancel the release animation. A bit clunky, may not work perfectly.
 
         public WeaponAction(GameLiving owner, GameObject target, DbInventoryItem attackWeapon, DbInventoryItem leftWeapon, double effectiveness, int interval, Style combatStyle)

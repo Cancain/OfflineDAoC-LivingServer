@@ -21,6 +21,28 @@ namespace DOL.GS
             dragon.Flags = GroundFlags(dragon.Flags);
         }
 
+        /// <summary>Each dragon takes no damage beyond this distance from its lair (its LairRadius).</summary>
+        public const int LairRadius = 2000;
+
+        /// <summary>The dragon's realm, or None for anything that is not one of the three dragons.</summary>
+        public static eRealm DragonRealm(GameNPC npc) => npc switch
+        {
+            AlbGolestandt => eRealm.Albion,
+            MidGjalpinulva => eRealm.Midgard,
+            HibCuuldurach => eRealm.Hibernia,
+            _ => eRealm.None
+        };
+
+        /// <summary>
+        /// A dragon outside its lair, where it is immune. 2026-10-20: Gjalpinulva stood at 100% for an hour with
+        /// 130-170 Midgard raiders on her aggro list; the fight was 2,600 units from her lair, inside her 2,500
+        /// tether (so the tether rule never applied) but outside the 2,000 lair where she takes damage.
+        /// </summary>
+        public static bool IsOutOfLair(GameNPC npc) =>
+            DragonRealm(npc) is var realm && realm != eRealm.None && npc.IsAlive && !npc.IsWithinRadius(Home(realm), LairRadius);
+
+        public static bool IsOutOfLair(int dx, int dy) => (long)dx * dx + (long)dy * dy > (long)LairRadius * LairRadius;
+
         public static GameNPC.eFlags GroundFlags(GameNPC.eFlags flags) => flags & ~GameNPC.eFlags.FLYING;
         public static bool CanReceiveDamageFrom(GameObject source) => source != null && CanReceiveDamageType(source.GetType());
         public static bool CanReceiveDamageType(System.Type type) => type != null && typeof(GameLiving).IsAssignableFrom(type);

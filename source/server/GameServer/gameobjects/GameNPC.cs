@@ -1010,6 +1010,18 @@ namespace DOL.GS
 
 		public int AggroHolderCount => _aggroHolders?.Count ?? 0;
 
+		/// <summary>Also drops the aggro holders (monster brains) whose monster has left the world.</summary>
+		public override void ForgetDeparted()
+		{
+			base.ForgetDeparted();
+			(Brain as StandardMobBrain)?.ForgetDeparted();
+			ConcurrentDictionary<StandardMobBrain, byte> holders = _aggroHolders;
+			if (holders == null) return;
+			foreach (StandardMobBrain holder in holders.Keys)
+				if (holder?.Body == null || HasDeparted(holder.Body))
+					holders.TryRemove(holder, out _);
+		}
+
 		private void ForgetFromAggroHolders()
 		{
 			ConcurrentDictionary<StandardMobBrain, byte> holders = _aggroHolders;

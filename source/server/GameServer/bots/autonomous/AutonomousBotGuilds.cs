@@ -40,7 +40,7 @@ namespace DOL.GS
         public static Guild ShownGuild(GameBot bot)
         {
             if (bot == null) return null;
-            // Social Expansion: a member of a bot-run guild (AutonomousBotRealmGuilds) shows that guild.
+            // Living Server: a member of a bot-run guild (AutonomousBotRealmGuilds) shows that guild.
             if (bot.IsAutonomousWorldBot) return GuildOf(bot.DatabaseID) ?? bot.Guild;
             return bot.Owner?.Guild;
         }
@@ -260,7 +260,7 @@ namespace DOL.GS
         public static void Present(GameBot bot)
         {
             if (bot == null) return;
-            string name = ShownGuild(bot)?.Name ?? string.Empty;
+            string name = GuildNameFor(bot);
             if (!string.Equals(bot.GuildName ?? string.Empty, name, StringComparison.Ordinal))
                 bot.GuildName = name; // re-sends the bot to nearby players when it is in the world
             if (bot.ObjectState == GameObject.eObjectState.Active)
@@ -268,7 +268,8 @@ namespace DOL.GS
         }
 
         /// <summary>The guild name before the bot enters the world (no broadcast needed).</summary>
-        public static string GuildNameFor(GameBot bot) => ShownGuild(bot)?.Name ?? string.Empty;
+        public static string GuildNameFor(GameBot bot) =>
+            bot?.IsEpicSpecialForce == true ? AutonomousEpicSpecialForces.GuildName : ShownGuild(bot)?.Name ?? string.Empty;
 
         #region Guild chat
 
@@ -324,7 +325,7 @@ namespace DOL.GS
                 if (talkers.Length == 0) continue;
                 LastGuildChat[guildId] = now;
                 GameBot starter = talkers[Random.Shared.Next(talkers.Length)];
-                // Social Expansion: with bot voices on, a corpus line, answered in kind (AutonomousBotGuildSocial).
+                // Living Server: with bot voices on, a corpus line, answered in kind (AutonomousBotGuildSocial).
                 string opener = AutonomousBotGuildSocial.VoicedPlayerGuildOpener(starter, out string invites);
                 SpeakInGuild(starter, guild, opener ?? Pick(GuildOpeners));
                 ScheduleReplies(guild, starter, null, opener == null ? Random.Shared.Next(0, 3)
@@ -359,7 +360,7 @@ namespace DOL.GS
             var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             for (int index = 0; index < talkers.Length; index++)
             {
-                // Social Expansion: with bot voices on, corpus answers (AutonomousBotGuildSocial); else the base game's lines.
+                // Living Server: with bot voices on, corpus answers (AutonomousBotGuildSocial); else the base game's lines.
                 string reply = incoming != null
                     ? AutonomousBotGuildSocial.VoicedPlayerGuildReply(talkers[index], player, incoming) ??
                       AutonomousBotChatCoordinator.GenerateFactionReply(incoming)

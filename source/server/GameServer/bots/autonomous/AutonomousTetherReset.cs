@@ -65,10 +65,18 @@ namespace DOL.GS
                      $"tether={boss.TetherRange} reason=\"out of its tether {StrandedLeashMilliseconds / 1000} s with nobody fighting it in reach\"");
         }
 
-        // Epic encounters only: ordinary monsters also carry a 4,500 tether but simply walk home when they leave it
-        // (run 18 led a small hill cat home).
+        // Epic encounters, and scripted named monsters with their own short tether: ordinary monsters also carry a
+        // 4,500 tether but simply walk home when they leave it (run 18 led a small hill cat home). Overnight 2026-10-19
+        // bots stood "Fighting Lieutenant Saxe" (Hall of the Corrupt, a scripted GameNPC with a 1,500 tether and the
+        // same out-of-tether immunity) until the 15-minute watchdog moved them, 88 times, and he killed 43 more.
+        public const int ScriptedTetherBelow = 4_500;
+
+        public static bool HasEncounterTether(GameNPC npc) =>
+            npc is IGameEpicNpc || npc != null && npc.GetType() != typeof(GameNPC) && npc.TetherRange is > 0 and < ScriptedTetherBelow;
+
         public static bool IsOutOfTether(GameNPC npc) =>
-            npc is IGameEpicNpc && npc is { IsAlive: true, TetherRange: > 0 } && npc.Brain is not IControlledBrain && npc.IsOutOfTetherRange;
+            HasEncounterTether(npc) && npc is { IsAlive: true, TetherRange: > 0 } && npc.Brain is not IControlledBrain && npc.IsOutOfTetherRange ||
+            DragonLairPlacement.IsOutOfLair(npc);
 
         /// <summary>
         /// For an autonomous gamebot whose target is a boss outside its tether: stop attacking it, and if the

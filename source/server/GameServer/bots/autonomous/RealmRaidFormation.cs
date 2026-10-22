@@ -15,7 +15,7 @@ namespace DOL.GS
         {
             position = default;
             if (slot < 0 || slot >= RealmRaidRecruitmentPolicy.MaximumParties || nav == null || zone == null || !nav.IsAvailable || !nav.HasNavmesh(zone)) return false;
-            bool epicInterior = zone.ID is 60 or 160 or 191 or 248 or 249;
+            bool epicInterior = zone.ID is 60 or 160 or 191 or 248 or 249 || AutonomousRealmRaid.IsRaidDungeon(zone.ID);
             bool Valid(Vector3 floor) => nav.HasLineOfSight(zone, center, floor, nav.DefaultFilters) &&
                 AutonomousZoneItinerary.HasCompleteCorridor(nav, zone, center, floor) &&
                 AutonomousZoneItinerary.HasCompleteCorridor(nav, zone, floor, center);

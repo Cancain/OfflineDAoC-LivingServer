@@ -23,7 +23,7 @@ public readonly record struct BotPersonalityTraits(int Curiosity, int Risk, int 
 public readonly record struct BotPersonality(BotPersonalityType Type, BotPersonalityTraits Traits);
 
 /// <summary>
-/// Bot personalities (docs/BOT-PERSONALITIES.md, part of the Social Expansion). Every autonomous
+/// Bot personalities (docs/BOT-PERSONALITIES.md, part of the Living Server). Every autonomous
 /// gamebot has a type and traits, fixed from its database id, that tilt how it spends its time:
 /// town breaks, solo versus group goals, dungeon versus outdoor, which legal camp it picks, and how
 /// often it talks. Hard rules never change: realm, reachability, level and con legality, recovery,

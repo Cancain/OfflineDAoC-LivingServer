@@ -5,7 +5,7 @@ using DOL.GS;
 namespace OfflineDaoc.Launcher;
 
 /// <summary>
-/// The Social Expansion's server settings (docs/BOT-GUILDS.md, docs/BOT-PERSONALITIES.md,
+/// The Living Server's server settings (docs/BOT-GUILDS.md, docs/BOT-PERSONALITIES.md,
 /// docs/XP-BY-LEVEL-RANGE.md), read from and written to the world database's ServerProperty table,
 /// as the launcher's Options tab does for the flat XP rates. The server reads them at startup.
 /// A setting without a row uses the server's default, which is the default here too.
@@ -35,10 +35,11 @@ public sealed record SocialExpansionSettings
     /// <summary>off, session or clock (AutonomousBotSchedule).</summary>
     public string ScheduleMode { get; init; } = "off";
     public bool LivingBreaks { get; init; }
+    public bool LivingBodyLanguage { get; init; }
     public string PlayerXpByLevel { get; init; } = "";
     public string BotXpByLevel { get; init; } = "";
 
-    /// <summary>The server's defaults: every Social Expansion feature off.</summary>
+    /// <summary>The server's defaults: every Living Server feature off.</summary>
     public static SocialExpansionSettings Defaults { get; } = new();
 
     // Key, category and description of each setting, as the server and the Python helpers write them.
@@ -55,16 +56,17 @@ public sealed record SocialExpansionSettings
         ("bot_personalities_enabled", "bots", "Autonomous gamebots get a personality and traits that tilt town breaks, goals, dungeons, camps and chattiness (see docs/BOT-PERSONALITIES.md)."),
         ("bot_voices_enabled", "bots", "Autonomous gamebots say pre-written, period lines in their own writing style (docs/bot-voices/DESIGN.md)."),
         ("bot_voices_debates", "bots", "When bot voices are on: bots of a realm play debates and long threads in /faction while you are online."),
-        ("bot_living_memory", "bots", "Living Server: autonomous gamebots of your realm remember grouping with you, your rezzes and rude words; they greet you by name, thank you for an old rez, answer you by name, mention you in /faction now and then, and stay cool after insults. Chat only. False keeps today's bots."),
-        ("bot_living_grats", "bots", "Living Server: when you or a bot gains a level, groupmates say grats in /group and bots nearby in /say, and a realm's bots cheer a new level 50 in /faction."),
-        ("bot_living_firsts", "bots", "Living Server: the first character on the server (you or a bot) to reach level 50, the first of each class to reach 50 and the first to each realm rank from 2 up are announced to everyone and recorded for the Camelot Herald."),
-        ("bot_living_death", "bots", "Living Server: a bot that dies near you asks you for a rez if your class can rez, waits longer for it and thanks you after; a bot healer that is not in your group may rez you (you still accept or decline); bots talk about corpse runs and resurrection sickness."),
-        ("bot_living_alarms", "bots", "Living Server: a bot in the frontier that sees 3 or more enemies calls it out in /faction (rough size, classes, place), at most one call per realm every 2 minutes."),
-        ("bot_living_nemesis", "bots", "Living Server: a bot killed by an enemy remembers its killer, names it (by race and class) in /faction after the second kill, and celebrates when it kills that enemy back. Kills are recorded for the Camelot Herald's Most Wanted."),
-        ("bot_schedule_mode", "bots", "Living Server: when autonomous gamebots are online. off = the whole roster (today's behavior); session = each bot plays sessions of 1-4 hours with 20 minutes to 2 hours away, timed from server start; clock = your PC's time of day (busiest 7-11pm and weekends, quiet overnight)."),
-        ("bot_living_breaks", "bots", "Living Server: an idle bot now and then says brb and logs off for 5-25 minutes, and a bot grouped with you rarely goes linkdead for 30-90 seconds (the group hears about it) and comes back with an apology. Never during a fight, siege or relic march."),
-        ("xp_rate_by_level", "rates", "Optional XP rate by level range for real player characters (set in the launcher's Social Expansion tab)."),
-        ("bot_xp_rate_by_level", "rates", "Optional XP rate by level range for autonomous gamebots (set in the launcher's Social Expansion tab)."),
+        ("bot_living_memory", "bots", "Server life: autonomous gamebots of your realm remember grouping with you, your rezzes and rude words; they greet you by name, thank you for an old rez, answer you by name, mention you in /faction now and then, and stay cool after insults. Chat only. False keeps today's bots."),
+        ("bot_living_grats", "bots", "Server life: when you or a bot gains a level, groupmates say grats in /group and bots nearby in /say, and a realm's bots cheer a new level 50 in /faction."),
+        ("bot_living_firsts", "bots", "Server life: the first character on the server (you or a bot) to reach level 50, the first of each class to reach 50 and the first to each realm rank from 2 up are announced to everyone and recorded for the Camelot Herald."),
+        ("bot_living_death", "bots", "Server life: a bot that dies near you asks you for a rez if your class can rez, waits longer for it and thanks you after; a bot healer that is not in your group may rez you (you still accept or decline); bots talk about corpse runs and resurrection sickness."),
+        ("bot_living_alarms", "bots", "Server life: a bot in the frontier that sees 3 or more enemies calls it out in /faction (rough size, classes, place), at most one call per realm every 2 minutes."),
+        ("bot_living_nemesis", "bots", "Server life: a bot killed by an enemy remembers its killer, names it (by race and class) in /faction after the second kill, and celebrates when it kills that enemy back. Kills are recorded for the Camelot Herald's Most Wanted."),
+        ("bot_schedule_mode", "bots", "Server life: when autonomous gamebots are online. off = the whole roster (today's behavior); session = each bot plays sessions of 1-4 hours with 20 minutes to 2 hours away, timed from server start; clock = your PC's time of day (busiest 7-11pm and weekends, quiet overnight)."),
+        ("bot_living_breaks", "bots", "Server life: an idle bot now and then says brb and logs off for 5-25 minutes, and a bot grouped with you rarely goes linkdead for 30-90 seconds (the group hears about it) and comes back with an apology. Never during a fight, siege or relic march."),
+        ("bot_living_body_language", "bots", "Server life: autonomous gamebots standing around in town, waiting for their group or resting look around, emote now and then (ponder, shrug, laugh, stretch their legs with a step or two in town), turn and wave at you when you walk up, and cheer when someone dings nearby. Only where a real player can see it; never in a fight. Bots cannot jump or sit (the game sends no such state for them)."),
+        ("xp_rate_by_level", "rates", "Optional XP rate by level range for real player characters (set in the launcher's Living Server tab)."),
+        ("bot_xp_rate_by_level", "rates", "Optional XP rate by level range for autonomous gamebots (set in the launcher's Living Server tab)."),
     ];
 
     /// <summary>The value the server would read for each key.</summary>
@@ -89,6 +91,7 @@ public sealed record SocialExpansionSettings
         ["bot_living_nemesis"] = Bool(LivingNemesis),
         ["bot_schedule_mode"] = ScheduleMode,
         ["bot_living_breaks"] = Bool(LivingBreaks),
+        ["bot_living_body_language"] = Bool(LivingBodyLanguage),
         ["xp_rate_by_level"] = PlayerXpByLevel.Trim(),
         ["bot_xp_rate_by_level"] = BotXpByLevel.Trim(),
     };
@@ -180,6 +183,7 @@ public sealed record SocialExpansionSettings
             LivingNemesis = ReadBool("bot_living_nemesis", d.LivingNemesis),
             ScheduleMode = schedule,
             LivingBreaks = ReadBool("bot_living_breaks", d.LivingBreaks),
+            LivingBodyLanguage = ReadBool("bot_living_body_language", d.LivingBodyLanguage),
             // Kept as written: an invalid range setting shows its own error in the tab (the server ignores it).
             PlayerXpByLevel = stored.TryGetValue("xp_rate_by_level", out string? player) ? player?.Trim() ?? "" : "",
             BotXpByLevel = stored.TryGetValue("bot_xp_rate_by_level", out string? bots) ? bots?.Trim() ?? "" : "",
@@ -191,7 +195,7 @@ public sealed record SocialExpansionSettings
 
     /// <summary>True when any Living Server part is on.</summary>
     public bool AnyLiving => LivingMemory || LivingGrats || LivingFirsts || LivingDeath || LivingAlarms || LivingNemesis ||
-                             ScheduleMode != "off" || LivingBreaks;
+                             ScheduleMode != "off" || LivingBreaks || LivingBodyLanguage;
 
     /// <summary>
     /// "All off": the three features, every Living Server part and both XP ranges off. The share, lowest level and each part keep their
@@ -201,7 +205,7 @@ public sealed record SocialExpansionSettings
     {
         BotGuilds = false, Personalities = false, Voices = false, PlayerXpByLevel = "", BotXpByLevel = "",
         LivingMemory = false, LivingGrats = false, LivingFirsts = false, LivingDeath = false, LivingAlarms = false,
-        LivingNemesis = false, ScheduleMode = "off", LivingBreaks = false,
+        LivingNemesis = false, ScheduleMode = "off", LivingBreaks = false, LivingBodyLanguage = false,
     };
 
     /// <summary>True when every feature and both XP ranges are off.</summary>

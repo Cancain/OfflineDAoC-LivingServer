@@ -68,8 +68,30 @@ namespace DOL.GS
             }
         }
 
+        /// <summary>
+        /// An effect on a monster, pet or bot that was deleted, or a pulse whose caster was, ends. Census of 2026-10-21: 2,755 effects
+        /// stayed in the service on deleted NPCs and grew by about 400 an hour (a Sluaghbinder pet's Cairn Boneplate pulse went on
+        /// pulsing after the pet was gone, and a pulse's child effects only end when their pulse does), keeping every one of those
+        /// NPCs in memory. A monster awaiting respawn is deleted too, but its effects were cancelled when it died.
+        /// </summary>
+        public static bool OutlivedItsLiving(GameObject.eObjectState ownerState, bool ownerIsNpc, bool isPulse, GameObject.eObjectState? casterState,
+            bool casterIsNpc) =>
+            ownerIsNpc && ownerState == GameObject.eObjectState.Deleted ||
+            isPulse && casterIsNpc && casterState == GameObject.eObjectState.Deleted;
+
         private static void TickEffect(ECSGameEffect effect)
         {
+            GameLiving pulseCaster = (effect as ECSPulseEffect)?.SpellHandler?.Caster;
+            if (effect.Owner != null && OutlivedItsLiving(effect.Owner.ObjectState, effect.Owner is GameNPC, effect is ECSPulseEffect,
+                    pulseCaster?.ObjectState, pulseCaster is GameNPC))
+            {
+                // An effect whose ending was lost (its owner's list no longer had it) can't be ended again: take it out of the
+                // service directly (2026-10-21 live run: orphan effects still grew by about 200 an hour with End() alone).
+                if (!effect.End())
+                    ServiceObjectStore.Remove(effect);
+                return;
+            }
+
             if (effect is ECSGameAbilityEffect abilityEffect)
                 TickAbilityEffect(abilityEffect);
             else if (effect is ECSGameSpellEffect spellEffect)

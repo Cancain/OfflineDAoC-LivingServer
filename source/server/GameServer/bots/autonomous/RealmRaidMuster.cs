@@ -77,7 +77,19 @@ public static class RealmRaidMuster
         new("summoners-hibernia", "Druim Ligen", 200, 207, 35, 51, new(334804,419842,5187)),
         new("darkness-albion", "Camelot Hills camp by the Darkness Falls entrance", 1, 0, 67, 59, new(588797,515656,2885)),
         new("darkness-midgard", "Svasud Faste", 100, 111, 88, 74, new(765706,668538,5736)),
-        new("darkness-hibernia", "Basar", 200, 207, 35, 51, new(338400,444017,5077))
+        new("darkness-hibernia", "Basar", 200, 207, 35, 51, new(338400,444017,5077)),
+        // The other raid dungeons (2026-10-20): the nearest service settlement to each entrance; centres are the
+        // settlement's healer or teleporter. The Catacombs dungeons by the way to Summoner's Hall share its hubs.
+        new("dungeon-albion-krondon", "Caer Diogel", 51, 56, 44, 58, new(403177,502596,4680)),
+        new("dungeon-albion-avalon", "Wearyall Village", 51, 52, 52, 54, new(436356,492916,3088)),
+        new("dungeon-albion-crystal", "Wearyall Village", 51, 52, 52, 54, new(436356,492916,3088)),
+        new("dungeon-albion-corrupt", "Snowdonia Station", 1, 3, 59, 45, new(523562,408847,4204)),
+        new("dungeon-midgard-trollheim", "Bjarken", 151, 152, 34, 30, new(290227,301820,4160)),
+        new("dungeon-midgard-iarnvidiur", "Hagall", 151, 154, 44, 40, new(379260,385996,7752)),
+        new("dungeon-midgard-dodens", "Svasud Faste", 100, 111, 88, 74, new(765706,668538,5736)),
+        new("dungeon-hibernia-tursuil", "Aalid Feie", 181, 183, 32, 40, new(312698,352420,3573)),
+        new("dungeon-hibernia-marfach", "Druim Cain", 200, 206, 47, 59, new(421782,485582,1824)),
+        new("dungeon-hibernia-marfach", "Druim Ligen", 200, 207, 35, 51, new(334804,419842,5187))
     ];
 
     public const int MusterPostAttempts = 160;

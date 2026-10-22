@@ -101,6 +101,8 @@ namespace DOL.GS
             _lastReportTicks = Stopwatch.GetTimestamp();
             RegisterCache("zoneRoutes", () => AutonomousZoneRoads.RememberedRoutes);
             RegisterCache("zoneSteps", () => AutonomousZoneItinerary.RememberedSteps);
+            RegisterCache("navQueries", () => LocalPathfindingMgr.LiveQueries);
+            RegisterCache("navQueriesMade", () => LocalPathfindingMgr.QueriesCreated);
             RegisterCache("npcObjects", () => CountNpcs(_ => true));
             RegisterCache("npcDetached", () => CountNpcs(npc => npc.ObjectState != GameObject.eObjectState.Active));
             RegisterCache("botDetached", () => CountNpcs(npc => npc is GameBot && npc.ObjectState != GameObject.eObjectState.Active));
@@ -154,6 +156,9 @@ namespace DOL.GS
             Log.Info(FormattableString.Invariant(
                 $"SERVER_MEMORY heapMB={info.HeapSizeBytes / 1048576} liveMB={LiveAfterFullCollectionMegabytes()} gen0MB={Gen(0)} gen1MB={Gen(1)} gen2MB={Gen(2)} lohMB={Gen(3)} pohMB={Gen(4)} ") +
                 FormattableString.Invariant($"fragmentedMB={info.FragmentedBytes / 1048576} committedMB={info.TotalCommittedBytes / 1048576} workingSetMB={process.WorkingSet64 / 1048576} ") +
+                // Native side (2026-10-20): private bytes beyond the GC's committed memory, and what could hold it.
+                FormattableString.Invariant($"privateMB={process.PrivateMemorySize64 / 1048576} nativeMB={(process.PrivateMemorySize64 - info.TotalCommittedBytes) / 1048576} ") +
+                FormattableString.Invariant($"threads={ThreadCount(process)} poolThreads={ThreadPool.ThreadCount} handles={process.HandleCount} ") +
                 FormattableString.Invariant($"memoryLoadMB={info.MemoryLoadBytes / 1048576} availableMB={info.TotalAvailableMemoryBytes / 1048576} pauseTimePct={info.PauseTimePercentage:F1} ") +
                 FormattableString.Invariant($"allocMBperMin={allocMbPerMin:F0} gcs={gen0 - _lastGen0}/{gen1 - _lastGen1}/{gen2 - _lastGen2} {pauses} reasons=\"{reasons}\" ") +
                 FormattableString.Invariant($"pinned={info.PinnedObjectsCount} finalizable={info.FinalizationPendingCount} caches=\"{caches}\" ") +
@@ -165,6 +170,43 @@ namespace DOL.GS
             try { LogNpcCensus(); } catch (Exception exception) { Log.Warn("SERVER_NPC_CENSUS failed", exception); }
             try { LogStaticCensus(); } catch (Exception exception) { Log.Warn("SERVER_STATIC_CENSUS failed", exception); }
             try { LogBotFieldCensus(); } catch (Exception exception) { Log.Warn("SERVER_BOT_FIELD_CENSUS failed", exception); }
+            try { ServerHolderCensus.MaybeRun(DetachedNpcs, ActiveNpcs); } catch (Exception exception) { Log.Warn("SERVER_HOLDER_CENSUS failed", exception); }
+            try { ServerHolderCensus.LogOrphans(); } catch (Exception exception) { Log.Warn("SERVER_ORPHAN_TIMERS failed", exception); }
+            try { ServerHandleCensus.MaybeRun(); } catch (Exception exception) { Log.Warn("SERVER_HANDLE_CENSUS failed", exception); }
+            try { ServerLockEventCensus.MaybeRun(() => ServerLockEventCensus.DefaultRoots(CensusNpcs())); }
+            catch (Exception exception) { Log.Warn("SERVER_LOCK_EVENTS failed", exception); }
+        }
+
+        /// <summary>NPC objects still in memory but no longer in the world (census on only).</summary>
+        private static List<GameNPC> DetachedNpcs()
+        {
+            var detached = new List<GameNPC>();
+            foreach (var entry in NpcCensus)
+                if (entry.Key.ObjectState != GameObject.eObjectState.Active) detached.Add(entry.Key);
+            return detached;
+        }
+
+        /// <summary>Every NPC object still in memory, in or out of the world (census on only).</summary>
+        private static List<GameNPC> CensusNpcs()
+        {
+            var all = new List<GameNPC>();
+            foreach (var entry in NpcCensus) all.Add(entry.Key);
+            return all;
+        }
+
+        /// <summary>NPC objects in the world now (census on only): the holder census walks their fields too.</summary>
+        private static List<GameNPC> ActiveNpcs()
+        {
+            var active = new List<GameNPC>();
+            foreach (var entry in NpcCensus)
+                if (entry.Key.ObjectState == GameObject.eObjectState.Active) active.Add(entry.Key);
+            return active;
+        }
+
+        private static int ThreadCount(Process process)
+        {
+            try { return process.Threads.Count; }
+            catch { return -1; }
         }
 
         private static readonly Dictionary<Type, FieldInfo[]> InstanceCollectionFields = new();

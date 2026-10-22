@@ -12,8 +12,12 @@ namespace DOL.UnitTests
         [TestCase(ConColor.YELLOW, false, 1, false, false, 0, true, ExpectedResult = RouteThreatAction.Pull, TestName = "Solo: a yellow single is pulled")]
         [TestCase(ConColor.ORANGE, false, 1, false, true, 0, true, ExpectedResult = RouteThreatAction.Detour, TestName = "Solo: an orange is avoided when possible")]
         [TestCase(ConColor.BLUE, false, 3, false, true, 0, true, ExpectedResult = RouteThreatAction.Detour, TestName = "Solo: a pack is avoided when possible")]
-        [TestCase(ConColor.ORANGE, false, 1, false, false, 0, true, ExpectedResult = RouteThreatAction.Pull, TestName = "Solo: no way around, a single orange is fought")]
-        [TestCase(ConColor.ORANGE, false, 1, false, true, 2, true, ExpectedResult = RouteThreatAction.Pull, TestName = "Solo: after two detours, a single orange is fought")]
+        [TestCase(ConColor.ORANGE, false, 1, false, false, 0, true, ExpectedResult = RouteThreatAction.Retarget, TestName = "Solo: no way around, a single orange ends the camp")]
+        [TestCase(ConColor.ORANGE, false, 1, false, false, 0, false, ExpectedResult = RouteThreatAction.Pull, TestName = "Solo: no way around and no second give-up yet, a single orange is fought")]
+        [TestCase(ConColor.ORANGE, false, 2, false, false, 0, false, ExpectedResult = RouteThreatAction.Ignore, TestName = "Solo: an orange pair is never pulled")]
+        [TestCase(ConColor.YELLOW, false, 1, false, true, 0, true, ExpectedResult = RouteThreatAction.Detour, TestName = "Solo: a yellow single is gone around when possible")]
+        [TestCase(ConColor.YELLOW, false, 2, false, false, 0, true, ExpectedResult = RouteThreatAction.Retarget, TestName = "Solo: a yellow pair with no way around ends the camp")]
+        [TestCase(ConColor.ORANGE, false, 1, false, true, 2, true, ExpectedResult = RouteThreatAction.Retarget, TestName = "Solo: after two detours, a single orange ends the camp")]
         [TestCase(ConColor.RED, false, 1, false, false, 0, true, ExpectedResult = RouteThreatAction.Retarget, TestName = "Solo: a red with no way around ends the camp")]
         [TestCase(ConColor.RED, false, 1, false, false, 0, false, ExpectedResult = RouteThreatAction.Ignore, TestName = "Solo: no second give-up within 10 minutes")]
         [TestCase(ConColor.BLUE, false, 1, true, true, 0, true, ExpectedResult = RouteThreatAction.Detour, TestName = "An epic monster is never pulled on the way")]
@@ -31,6 +35,15 @@ namespace DOL.UnitTests
         public RouteThreatAction TheFirstThreatOnTheRouteIsHandled(ConColor con, bool grouped, int pack, bool boss,
             bool detour, int detoursSoFar, bool mayRetarget) =>
             AutonomousRouteThreatPolicy.Decide(con, grouped, pack, boss, detour, detoursSoFar, mayRetarget);
+
+        // A solo bot that died in the last half hour treats a yellow like an orange; groups and lower cons are unchanged.
+        [TestCase(ConColor.YELLOW, false, 1, false, true, true, ExpectedResult = RouteThreatAction.Retarget)]
+        [TestCase(ConColor.YELLOW, false, 1, false, false, false, ExpectedResult = RouteThreatAction.Pull)]
+        [TestCase(ConColor.YELLOW, false, 1, true, true, true, ExpectedResult = RouteThreatAction.Detour)]
+        [TestCase(ConColor.BLUE, false, 1, false, true, true, ExpectedResult = RouteThreatAction.Pull)]
+        [TestCase(ConColor.YELLOW, true, 1, false, true, true, ExpectedResult = RouteThreatAction.Pull)]
+        public RouteThreatAction ARecentlyDeadSoloBotIsMoreCareful(ConColor con, bool grouped, int pack, bool detour, bool mayRetarget, bool cautious) =>
+            AutonomousRouteThreatPolicy.Decide(con, grouped, pack, false, detour, 0, mayRetarget, cautious);
 
         [Test]
         public void TheNearestRoutePointAndDirectionAreFound()

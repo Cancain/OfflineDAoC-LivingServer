@@ -28,12 +28,21 @@ namespace DOL.GS
             string ownerId = string.IsNullOrWhiteSpace(inventoryId) ? _persistenceOwnerId : inventoryId;
             if (string.IsNullOrWhiteSpace(ownerId))
                 return Task.FromResult<IList>(Array.Empty<DbInventoryItem>());
-
-            WhereClause personalSlots = DB.Column("SlotPosition").IsLessOrEqualTo((int)eInventorySlot.LastVault)
-                .Or(DB.Column("SlotPosition").IsGreaterOrEqualTo(500).And(DB.Column("SlotPosition").IsLessThan(600)));
-            return DOLDB<DbInventoryItem>.SelectObjectsAsync(DB.Column("OwnerID").IsEqualTo(ownerId).And(personalSlots))
-                .ContinueWith(task => task.Result as IList);
+            return DOLDB<DbInventoryItem>.SelectObjectsAsync(PersonalItems(ownerId)).ContinueWith(task => task.Result as IList);
         }
+
+        /// <summary>
+        /// The bot's own items, read on the calling thread (a background thread: never the game loop). Handle census of
+        /// 2026-10-21: the server's Event handles grew by about 1,500 an hour while every other kind stayed flat; the bot
+        /// login poller blocked on the asynchronous load for every login, and a blocking wait on an unfinished task makes a
+        /// kernel event that lives until the task is finalized.
+        /// </summary>
+        public IList SelectPersonalItems(string ownerId) =>
+            string.IsNullOrWhiteSpace(ownerId) ? Array.Empty<DbInventoryItem>() : DOLDB<DbInventoryItem>.SelectObjects(PersonalItems(ownerId)) as IList;
+
+        private static WhereClause PersonalItems(string ownerId) =>
+            DB.Column("OwnerID").IsEqualTo(ownerId).And(DB.Column("SlotPosition").IsLessOrEqualTo((int)eInventorySlot.LastVault)
+                .Or(DB.Column("SlotPosition").IsGreaterOrEqualTo(500).And(DB.Column("SlotPosition").IsLessThan(600))));
 
         public override bool LoadFromDatabase(string inventoryId)
         {

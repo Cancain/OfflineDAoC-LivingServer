@@ -22,6 +22,27 @@ namespace DOL.GS
         private readonly Queue<CastSpellRequest> _castSpellRequestPool = new();
         private readonly Queue<UseAbilityRequest> _useAbilityRequestPool = new();
         private readonly Lock _startSkillRequestsLock = new();
+
+        /// <summary>
+        /// A monster's instant spell may not be asked for again on the same target within this time, nor queued twice, and a
+        /// monster keeps at most <see cref="MaxNpcPendingRequests"/> requests. Live run of 2026-10-21: 69 scripted encounters cast
+        /// from OnAttackEnemy, and a spell's hit on each target is reported as an attack too. Lydsyg (Iarnvidiur's Lair) recast his
+        /// area disease on every one of 150 raiders it landed on (45% each): the queue grew without end, the server took 35 GB in
+        /// ten minutes and stopped. With one player and a few targets the chain died out by itself.
+        /// </summary>
+        public const int NpcInstantRecastGapMs = 1_000;
+        public const int MaxNpcPendingRequests = 16;
+        private int _lastNpcSpellId = -1;
+        private int _lastNpcSpellTarget; // the target's ObjectID: no reference is kept
+        private long _lastNpcSpellTime;
+
+        /// <summary>True when a monster's request repeats the instant spell it just cast, or one already waiting (see the fields above).</summary>
+        public static bool NpcRecastBlocked(bool instant, int spellId, int target, int lastSpellId, int lastTarget, long lastTime,
+            long now, int pending, bool duplicatePending) =>
+            pending >= MaxNpcPendingRequests || duplicatePending ||
+            instant && spellId == lastSpellId && target == lastTarget && now - lastTime < NpcInstantRecastGapMs;
+
+        private bool IsGuardedNpc => Owner is GameNPC and not GameBot;
         private readonly DuringCastLosCheckListener _duringCastLosCheckListener;
         private readonly EndOfCastLosCheckListener _endOfCastLosCheckListener;
 
@@ -93,6 +114,12 @@ namespace DOL.GS
                 {
                     if (!_startSkillRequests.TryDequeue(out startSkillRequest))
                         break;
+                    if (IsGuardedNpc && startSkillRequest is CastSpellRequest starting && starting.Spell != null)
+                    {
+                        _lastNpcSpellId = starting.Spell.ID;
+                        _lastNpcSpellTarget = starting.Target?.ObjectID ?? 0;
+                        _lastNpcSpellTime = GameLoop.GameLoopTime;
+                    }
                 }
                 startSkillRequest.StartSkill();
                 startSkillRequest.ResetAndReturn();
@@ -131,6 +158,22 @@ namespace DOL.GS
                 if (Owner is GameBot bot && (_startSkillRequests.Count != 0 ||
                     BotSpellPower.IsOffensiveCaster(bot) && IsCasting))
                     return false;
+
+                if (IsGuardedNpc && spell != null)
+                {
+                    bool duplicate = false;
+                    foreach (StartSkillRequest pending in _startSkillRequests)
+                    {
+                        if (pending is CastSpellRequest queued && queued.Spell?.ID == spell.ID && queued.Target == target)
+                        {
+                            duplicate = true;
+                            break;
+                        }
+                    }
+                    if (NpcRecastBlocked(spell.IsInstantCast, spell.ID, target?.ObjectID ?? 0, _lastNpcSpellId, _lastNpcSpellTarget, _lastNpcSpellTime,
+                            GameLoop.GameLoopTime, _startSkillRequests.Count, duplicate))
+                        return false;
+                }
 
                 if (!_castSpellRequestPool.TryDequeue(out CastSpellRequest request))
                     request = new();

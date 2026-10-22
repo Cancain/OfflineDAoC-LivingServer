@@ -251,6 +251,22 @@ public static class AutonomousBotDecisionEngine
     /// </summary>
     public const int OutdoorSpawnWeightCap = 6;
 
+    /// <summary>
+    /// Travel time's share of a levelling solo bot's camp draw, in percent: full weight within a few minutes, a
+    /// third at 10 minutes, never under a tenth. The overnight log of 2026-10-19 (5,046 solo tasks of levels 1-9):
+    /// camps under 10,000 units away were productive 65% of the time with 3% of tasks ending in a death on the way;
+    /// camps 50,000+ away (most draws, as distance played no part) 38-41% and 13-15%, with a third less experience a
+    /// task. A real player levels near where they are; the live-spawn weight still spreads bots over nearby camps.
+    /// </summary>
+    public const double NearTravelMinutes = 7;
+
+    public static int TravelWeightPercent(double travelMinutes)
+    {
+        if (double.IsNaN(travelMinutes) || travelMinutes < 0) return 100;
+        double ratio = travelMinutes / NearTravelMinutes;
+        return (int)Math.Round(Math.Clamp(100 / (1 + ratio * ratio), 10, 100));
+    }
+
     public static int OutdoorSpawnWeight(Camp camp) => Math.Clamp(camp.LiveMobCount, 1, OutdoorSpawnWeightCap);
 
     /// <summary>A camp's draw weight: live spawns, times an optional personal taste (percent, AutonomousBotPersonality).</summary>

@@ -126,7 +126,7 @@ namespace DOL.GS
 
         public static void SetWeaponROG(GameLiving living, eRealm realm, eCharacterClass charClass, byte level, eObjectType objectType, eInventorySlot slot, eDamageType damageType)
         {
-            DbItemTemplate itemToCreate = living is GameBot { IsTemporaryGroupHelper: true }
+            DbItemTemplate itemToCreate = living is GameBot { UsesCompanionKit: true }
                 ? CreateCompanionItem(realm, charClass, level, objectType, slot, (eWeaponDamageType)damageType)
                 : new GeneratedUniqueItem(false, realm, charClass, level, objectType, slot, damageType);
             PrepareEndgameItem(living as IGamePlayer, itemToCreate);
@@ -191,7 +191,7 @@ namespace DOL.GS
 
         public static void SetMeleeWeapon(IGamePlayer player, eObjectType weapType, eHand hand, eWeaponDamageType damageType = 0)
         {
-            if (player is GameBot { IsTemporaryGroupHelper: true } companion)
+            if (player is GameBot { UsesCompanionKit: true } companion)
             {
                 if (weapType == 0) return;
                 eInventorySlot slot = hand == eHand.twoHand ? eInventorySlot.TwoHandWeapon :
@@ -250,7 +250,7 @@ namespace DOL.GS
         public static void SetRangedWeapon(IGamePlayer player, eObjectType weapType)
         {
             if (player.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null) return;
-            if (player is GameBot { IsTemporaryGroupHelper: true } companion)
+            if (player is GameBot { UsesCompanionKit: true } companion)
             {
                 EquipCompanionWeapon(companion, weapType, eInventorySlot.DistanceWeapon);
                 return;
@@ -282,7 +282,7 @@ namespace DOL.GS
             if (shieldSize < 1)
                 return;
 
-            if (player is GameBot { IsTemporaryGroupHelper: true } companion)
+            if (player is GameBot { UsesCompanionKit: true } companion)
             {
                 EquipCompanionWeapon(companion, eObjectType.Shield, eInventorySlot.LeftHandWeapon, shieldSize: shieldSize);
                 return;
@@ -354,7 +354,7 @@ namespace DOL.GS
             else
                 log.Info("No armor found for " + player.Name);
 
-            if (player is GameBot { IsTemporaryGroupHelper: true } companion)
+            if (player is GameBot { UsesCompanionKit: true } companion)
             {
                 // Sparse low-level template tables must not leave armor holes.
                 for (int i = Slot.HELM; i <= Slot.ARMS; i++)

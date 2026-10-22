@@ -50,10 +50,10 @@ These come from the Living World plan (model v4):
 
 ## Setting them
 
-The easy way is the launcher's **Social Expansion** tab (with the server stopped; it applies at the next start): pick **Off**, the **suggested** rates or **custom** ranges, for
+The easy way is the launcher's **Living Server** tab (with the server stopped; it applies at the next start): pick **Off**, the **suggested** rates or **custom** ranges, for
 you and for bots. It checks the ranges by the server's own rules before it saves.
 
-The helper script does the same from a command line. The Social Expansion installer puts it in your playable
+The helper script does the same from a command line. The Living Server installer puts it in your playable
 folder's `tools\claude-version\`.
 
 **Close the server, launcher and game first.** Then, from the playable folder:

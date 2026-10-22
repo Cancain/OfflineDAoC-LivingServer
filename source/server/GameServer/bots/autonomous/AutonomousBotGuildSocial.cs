@@ -37,6 +37,55 @@ public static class AutonomousBotGuildSocial
     private static readonly Dictionary<string, DateTime> LastNearbyOffer = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, long> LastTooLowAnswer = new(StringComparer.Ordinal);
 
+    /// <summary>
+    /// What each guild heard in the last hour. Live run of 2026-10-21: "died. the run back is the worst part" three times in /gu
+    /// within 17 minutes, and "guild warband forming, frontier bound" twice 30 seconds apart, from the short fixed lists for deaths
+    /// and new groups. Those lines are now picked from the ones the guild hasn't heard lately, or not said at all.
+    /// </summary>
+    public const int RecentGuildLineMs = 60 * 60_000;
+    private static readonly Dictionary<string, Dictionary<string, long>> RecentByGuild = new(StringComparer.Ordinal);
+
+    /// <summary>A line from <paramref name="line"/> this guild hasn't heard in the last hour (a few draws), or null.</summary>
+    public static string FreshLine(string guildId, Func<string> line, long now, int draws = 8)
+    {
+        lock (Sync)
+        {
+            RecentByGuild.TryGetValue(guildId ?? string.Empty, out Dictionary<string, long> heard);
+            for (int i = 0; i < draws; i++)
+            {
+                string text = line()?.Trim();
+                if (string.IsNullOrEmpty(text))
+                    continue;
+                if (heard == null || !heard.TryGetValue(LineKey(text), out long at) || now - at >= RecentGuildLineMs)
+                    return text;
+            }
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// The line as the guild hears it: numbers don't make it new (live run 2026-10-22: "2 of us heading out to the frontier"
+    /// then "3 of us heading out to the frontier" a minute later).
+    /// </summary>
+    public static string LineKey(string text) =>
+        System.Text.RegularExpressions.Regex.Replace((text ?? string.Empty).Trim().ToLowerInvariant(), @"\d+", "#");
+
+    /// <summary>Notes a line the guild heard (every bot line in /gu goes through here).</summary>
+    public static void NoteHeard(string guildId, string text, long now)
+    {
+        if (string.IsNullOrEmpty(text))
+            return;
+        lock (Sync)
+        {
+            if (!RecentByGuild.TryGetValue(guildId ?? string.Empty, out Dictionary<string, long> heard))
+                RecentByGuild[guildId ?? string.Empty] = heard = new Dictionary<string, long>(StringComparer.Ordinal);
+            heard[LineKey(text)] = now;
+            if (heard.Count > 200)
+                foreach (string old in heard.Where(pair => now - pair.Value >= RecentGuildLineMs).Select(pair => pair.Key).ToList())
+                    heard.Remove(old);
+        }
+    }
+
     public static bool Enabled => AutonomousBotRealmGuilds.Enabled && Properties.BOT_GUILD_SOCIAL;
 
     private static bool InvitesEnabled => Enabled && Properties.BOT_GUILD_RECRUIT_PLAYER;
@@ -134,7 +183,9 @@ public static class AutonomousBotGuildSocial
         for (int i = 0; i < count; i++)
         {
             GameBot bot = speakers[i];
-            ScheduleGuildLine(bot, guild, 4_000 + i * 2_500 + Random.Shared.Next(4_000), () => Lines.Greeting(player.Name, Random.Shared));
+            ScheduleGuildLine(bot, guild, 4_000 + i * 2_500 + Random.Shared.Next(4_000), 
+                // live run 2026-10-22: two guildmates both said "hey Claudecheck, good timing" 2 s apart
+                () => FreshLine(guild.GuildID, () => Lines.Greeting(player.Name, Random.Shared), GameLoop.GameLoopTime));
         }
     }
 
@@ -149,7 +200,8 @@ public static class AutonomousBotGuildSocial
         for (int i = 0; i < count; i++)
         {
             GameBot bot = speakers[i];
-            ScheduleGuildLine(bot, guild, 2_000 + i * 1_800 + Random.Shared.Next(2_500), () => Lines.Congratulate(player.Name, level, Random.Shared));
+            ScheduleGuildLine(bot, guild, 2_000 + i * 1_800 + Random.Shared.Next(2_500), 
+                () => FreshLine(guild.GuildID, () => Lines.Congratulate(player.Name, level, Random.Shared), GameLoop.GameLoopTime));
         }
     }
 
@@ -168,7 +220,8 @@ public static class AutonomousBotGuildSocial
         for (int i = 0; i < count; i++)
         {
             GameBot other = others[i];
-            ScheduleGuildLine(other, guild, 4_500 + i * 1_800 + Random.Shared.Next(2_500), () => Lines.Congratulate(bot.Name, level, Random.Shared));
+            ScheduleGuildLine(other, guild, 4_500 + i * 1_800 + Random.Shared.Next(2_500), 
+                () => FreshLine(guild.GuildID, () => Lines.Congratulate(bot.Name, level, Random.Shared), GameLoop.GameLoopTime));
         }
     }
 
@@ -188,8 +241,11 @@ public static class AutonomousBotGuildSocial
         // A dead bot is still a member and can type; Eligible() below would refuse it, so send directly.
         _ = new ECSGameTimer(bot, _ =>
         {
-            if (bot.Guild == guild && bot.ObjectState == GameObject.eObjectState.Active && HasListener(guild))
-                SendGuildLine(guild, bot.Name, Lines.OwnDeath(zone, Random.Shared));
+            string text = bot.Guild == guild && bot.ObjectState == GameObject.eObjectState.Active && HasListener(guild)
+                ? FreshLine(guild.GuildID, () => Lines.OwnDeath(zone, Random.Shared), GameLoop.GameLoopTime)
+                : null;
+            if (text != null)
+                SendGuildLine(guild, bot.Name, text);
             return 0;
         }, 3_000 + Random.Shared.Next(3_000));
     }
@@ -221,7 +277,8 @@ public static class AutonomousBotGuildSocial
             return;
         int guildmates = members.Count(member => member?.Guild == guild);
         string zone = speaker.CurrentZone?.Description;
-        ScheduleGuildLine(speaker, guild, 3_000 + Random.Shared.Next(4_000), () => Lines.GuildGroup(guildmates, zone, rvr, Random.Shared));
+        ScheduleGuildLine(speaker, guild, 3_000 + Random.Shared.Next(4_000),
+            () => FreshLine(guild.GuildID, () => Lines.GuildGroup(guildmates, zone, rvr, Random.Shared), GameLoop.GameLoopTime));
     }
 
     /// <summary>Called when a bot guild claims a keep.</summary>
@@ -248,13 +305,27 @@ public static class AutonomousBotGuildSocial
     {
         if (!Enabled || player?.Guild == null || string.IsNullOrWhiteSpace(message))
             return;
+        BotChatTranscript.Player("guild", player, message, player.Guild.Name);
         Guild guild = player.Guild;
         GameBot[] speakers = Speakers(guild);
         if (speakers.Length == 0)
             return;
+        // Chat audit 2026-10-21: "ok" and "nice" draw no answer, "anyone in camelot?" only from guildmates who are there,
+        // and a question is not dropped by the reply cooldown.
+        string shape = AutonomousChatShortTalk.QuestionShape(message);
+        if (shape == "ack")
+            return;
+        if (shape == "ask_inplace")
+        {
+            string place = AutonomousChatShortTalk.PlaceAsked(message);
+            speakers = speakers.Where(bot => AutonomousChatLiveAnswers.IsIn(bot, place)).ToArray();
+            if (speakers.Length == 0)
+                return;
+        }
         lock (Sync)
         {
-            if (LastReplyByGuild.TryGetValue(guild.GuildID, out long last) && GameLoop.GameLoopTime - last < GuildReplyCooldownMs)
+            if (LastReplyByGuild.TryGetValue(guild.GuildID, out long last) && GameLoop.GameLoopTime - last < GuildReplyCooldownMs &&
+                !AutonomousBotChatCoordinator.NeedsAnswer(message))
                 return;
             LastReplyByGuild[guild.GuildID] = GameLoop.GameLoopTime;
         }
@@ -290,12 +361,14 @@ public static class AutonomousBotGuildSocial
             VC.Picked picked = null;
             // The question type first, whatever the intent ("anyone on?" reads as none; live test 2026-10-18: it drew
             // "hmm, i would ask a trainer").
-            string line = AutonomousBotVoices.TryShapedReply(bot, message, out picked, slots, relax: true, requireVoices: false) ||
+            string line = AutonomousBotVoices.TryShapedReply(bot, message, out picked, slots, relax: true, requireVoices: false, asker: player) ||
                           intent is not (eAutonomousChatIntent.Unknown or eAutonomousChatIntent.IgnoreOutOfWorld) &&
                           (intent == eAutonomousChatIntent.Greeting
                               ? AutonomousBotVoices.TryGreetingReply(bot, message, out picked, slots, relax: true, requireVoices: false)
                               : AutonomousBotVoices.TryLine(bot, "reply", out picked, AutonomousBotVoices.IntentName(intent),
-                                  slots: slots, relax: true, requireVoices: false))
+                                  slots: slots, relax: true, requireVoices: false,
+                                  // in-game check 2026-10-18: "lfg, anyone want a 50 cleric?" drew "what level and class?"
+                                  filter: candidate => AutonomousChatShortTalk.ReplyFits(message, candidate.Text)))
                 ? picked.Text
                 : Lines.Reply(kind, player.Name, bot.Level, bot.CurrentZone?.Description, Random.Shared);
             if (!AutonomousBotChatCoordinator.TryAddDistinctResponse(used, line, out line))
@@ -640,7 +713,7 @@ public static class AutonomousBotGuildSocial
             int count = Math.Min(speakers.Length, 1 + (Random.Shared.NextDouble() < 0.5 ? 1 : 0));
             for (int i = 0; i < count; i++)
                 ScheduleGuildLine(speakers[i], target, 2_500 + i * 2_000 + Random.Shared.Next(2_000),
-                    () => Lines.Welcome(answering.Name, target.Name, Random.Shared));
+                    () => FreshLine(target.GuildID, () => Lines.Welcome(answering.Name, target.Name, Random.Shared), GameLoop.GameLoopTime));
         });
     }
 
@@ -689,6 +762,8 @@ public static class AutonomousBotGuildSocial
         if (safe.Length > Lines.MaxLength)
             safe = safe[..Lines.MaxLength];
         guild.SendMessageToGuildMembers($"[Guild] {speaker}: \"{safe}\"", eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+        NoteHeard(guild.GuildID, safe, GameLoop.GameLoopTime);
+        BotChatTranscript.Bot("guild", speaker, (eRealm)guild.Realm, safe, guild.Name);
     }
 
     private static bool Eligible(GameBot bot) => bot?.IsAutonomousWorldBot == true && !bot.IsTemporaryGroupHelper && bot.IsAlive &&

@@ -42,6 +42,7 @@ public static partial class AutonomousLivingServer
             }
             if (GratsOn)
                 Grats(who, level);
+            AutonomousBotBodyLanguage.CheerDing(who);
         }
         catch (Exception exception)
         {
@@ -152,6 +153,9 @@ public static partial class AutonomousLivingServer
     /// <summary>Claims a first once. The achiever's realm cheers in /faction; everyone gets one system line.</summary>
     public static bool TryClaimFirst(string title, GameLiving who, string what)
     {
+        // Server firsts belong to the realm's own characters, never a visiting Epic Special Forces member.
+        if (who is GameBot { IsEpicSpecialForce: true })
+            return false;
         var row = new OfflineServerFirstRecord
         {
             Title = title, Realm = (int)who.Realm, Name = who.Name, ClassName = ClassOf(who), IsPlayer = who is GamePlayer,
@@ -341,7 +345,7 @@ public static partial class AutonomousLivingServer
         try
         {
             GameLiving killer = KillerOf(killerObject);
-            if (NemesisOn && killer is GamePlayer or GameBot { IsAutonomousWorldBot: true } &&
+            if (NemesisOn && !bot.IsEpicSpecialForce && killer is GamePlayer or GameBot { IsAutonomousWorldBot: true } &&
                 killer.Realm != bot.Realm && killer.Realm != eRealm.None)
                 RecordKill(bot, killer);
             if (DeathOn)
