@@ -196,7 +196,7 @@ namespace DOL.GS
                 RemoveGuild(guild);
             }
 
-            // Social Expansion: guilded gamebots leave a deleted guild at once, so no dues go into a guild
+            // Living Server: guilded gamebots leave a deleted guild at once, so no dues go into a guild
             // that no longer exists (audit 2026-10-16). Outside _lock: bot guild reconciles take their own
             // lock first and then call into GuildMgr, so nesting them here could deadlock (review 2026-10-16).
             foreach (GameBot bot in deleted.GetOnlineBotMembers())

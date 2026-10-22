@@ -1,7 +1,7 @@
 namespace OfflineDaoc.Launcher;
 
 /// <summary>
-/// The launcher's Social Expansion tab: switches for bot guilds, personalities, voices and debates, and the
+/// The launcher's Living Server tab: switches for bot guilds, personalities, voices and debates, and the
 /// XP-by-level-range rates, saved like the Options tab's settings (server stopped; used at the next start).
 /// It replaces the set_bot_guilds.py, set_bot_social.py and set_xp_by_level.py helpers for players.
 ///
@@ -96,7 +96,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         Dependent(_debates, Add(voices, _debates, null, "Spec arguments, relic alerts and long threads in /faction, every 30–45 minutes while you play. Needs bot voices."),
             v => v.Voices);
 
-        var living = Card("LIVING SERVER", DaocTheme.Gold, 9);
+        var living = Card("SERVER LIFE", DaocTheme.Gold, 9);
         Add(living, _memory, null, "Bots of your realm remember grouping with you, your rezzes and rude words: they greet and thank you by name.");
         Add(living, _grats, null, "Dings get grats from the group and bots nearby; a new level 50 gets cheers in /faction.");
         Add(living, _firsts, null, "The first to level 50, to 50 in each class and to each realm rank is announced and goes in the Herald.");
@@ -364,7 +364,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         if (s.Voices) on.Add(s.Debates ? "voices and debates" : "voices");
         int living = new[] { s.LivingMemory, s.LivingGrats, s.LivingFirsts, s.LivingDeath, s.LivingAlarms, s.LivingNemesis,
             s.ScheduleMode != "off", s.LivingBreaks, s.LivingBodyLanguage }.Count(x => x);
-        if (living > 0) on.Add($"Living Server ({living} of 9 parts)");
+        if (living > 0) on.Add($"Server life ({living} of 9 parts)");
         if (s.PlayerXpByLevel != "" || s.BotXpByLevel != "") on.Add("XP by level");
         return on.Count == 0
             ? "Settings are loaded from the saved server settings. Everything is off: the game plays like the normal release."

@@ -24,7 +24,7 @@ public sealed class OfflineBotSceneHeardRecord : DataObject
 }
 
 /// <summary>
-/// Debates and long threads (docs/bot-voices/DESIGN.md 3.5, part of the Social Expansion): the
+/// Debates and long threads (docs/bot-voices/DESIGN.md 3.5, part of the Living Server): the
 /// corpus's scenes play in /faction, cast from online bots of the realm by personality and class,
 /// one scene at a time per realm, 30-45 minutes apart, only while a real player of the realm is
 /// online, cast from bots on a town break first. Lines arrive at typing pace. A speaker who is

@@ -5,8 +5,8 @@
 #   ROLLBACK.cmd -DryRun
 #   PREPARE-FOR-UPDATE.cmd     (= ROLLBACK.cmd -ToRelease)
 #
-# Restores the GameServer.dll/.pdb files, the launcher files and helper scripts the last install replaced, from its
-# backup, and checks every restored file by SHA-256. It refuses if the installed files changed since
+# Restores the GameServer.dll/.pdb files, the launcher files, helper scripts and game files the last install replaced or
+# fixed, from its backup, and checks every restored file by SHA-256. It refuses if the installed files changed since
 # (unless -Force). Run it again to undo the install before that one.
 #
 # -ToRelease puts back the game's released server and launcher files whatever was installed over them (fork builds,
@@ -61,6 +61,20 @@ if ($ToRelease) {
         if ($copies.ContainsKey($released)) { $restore += [pscustomobject]@{ Path = $rel; From = $copies[$released]; Hash = $released } }
         else { $missing += $rel }
     }
+    # Game files an install fixed in place (content-patches.json) go back to the released copy it backed up.
+    foreach ($record in Get-InstallRecords $game) {
+        foreach ($entry in @($record.ContentFiles)) {
+            if ($null -eq $entry) { continue }
+            $path = Get-ContentPath $game $entry.Path
+            if (!(Test-Path -LiteralPath $path) -or (Get-Sha256 $path) -ne $entry.NewHash) { continue }
+            $saved = Join-Path (Join-Path $record.BackupFolder 'content') ($entry.Path.Replace('/', [IO.Path]::DirectorySeparatorChar))
+            if ((Test-Path -LiteralPath $saved) -and (Get-Sha256 $saved) -eq $entry.OldHash) {
+                if (!($restore | Where-Object { $_.Path -eq $entry.Path })) {
+                    $restore += [pscustomobject]@{ Path = $entry.Path; From = $saved; Hash = $entry.OldHash }
+                }
+            } else { $missing += $entry.Path }
+        }
+    }
     if ($missing.Count -gt 0) {
         Stop-WithMessage ("No backup holds the released copy of:`n  " + ($missing -join "`n  ") +
             "`nThe update's downloader can repair the game (or install it fresh and bring your progress over).")
@@ -69,7 +83,7 @@ if ($ToRelease) {
     foreach ($item in $restore) { Write-Host "  $($item.Path)  <-  $($item.From)" }
     if ($DryRun) { Write-Host ''; Write-Host 'Dry run: every check passed. Nothing was changed.' -ForegroundColor Green; exit 0 }
     foreach ($item in $restore) {
-        $target = Join-Path $game $item.Path
+        $target = Get-ContentPath $game $item.Path
         Copy-Item -LiteralPath $item.From -Destination $target -Force
         if ((Get-Sha256 $target) -ne $item.Hash) {
             Write-Host "RESTORE STOPPED PART-WAY: $($item.Path) failed verification. Close everything and run it again." -ForegroundColor Red
@@ -81,7 +95,7 @@ if ($ToRelease) {
     }
     Write-Host ''
     Write-Host "The released server and launcher are back ($($restore.Count) file(s)). Now update the game, then run INSTALL.cmd of the" -ForegroundColor Green
-    Write-Host 'Social Expansion build for the new version. Your settings stay in the database.' -ForegroundColor Green
+    Write-Host 'Living Server build for the new version. Your settings stay in the database.' -ForegroundColor Green
     exit 0
 }
 
@@ -109,6 +123,17 @@ foreach ($entry in @($record.LauncherFolders)) {
     foreach ($file in @($entry.Files)) {
         if ($file.OldHash -and (Get-Sha256 (Join-Path $saved $file.Name)) -ne $file.OldHash) { Stop-WithMessage "The launcher backup of $($entry.Folder) is damaged." }
     }
+}
+$contentRestore = @()
+foreach ($entry in @($record.ContentFiles)) {
+    if ($null -eq $entry) { continue }
+    $path = Get-ContentPath $game $entry.Path
+    $current = if (Test-Path -LiteralPath $path) { Get-Sha256 $path } else { '' }
+    if ($current -eq $entry.OldHash) { continue }
+    if ($current -ne $entry.NewHash) { Write-Host "  $($entry.Path) changed since that install; left as it is." -ForegroundColor Yellow; continue }
+    $saved = Join-Path (Join-Path $record.BackupFolder 'content') ($entry.Path.Replace('/', [IO.Path]::DirectorySeparatorChar))
+    if (!(Test-Path -LiteralPath $saved) -or (Get-Sha256 $saved) -ne $entry.OldHash) { Stop-WithMessage "The backup of $($entry.Path) is damaged." }
+    $contentRestore += [pscustomobject]@{ Entry = $entry; Path = $path; Saved = $saved }
 }
 if ($DryRun) {
     Write-Host ''
@@ -147,9 +172,13 @@ foreach ($helper in @($record.Helpers)) {
         Remove-Item -LiteralPath $target
     }
 }
+foreach ($item in $contentRestore) {
+    Copy-Item -LiteralPath $item.Saved -Destination $item.Path -Force
+    if ((Get-Sha256 $item.Path) -ne $item.Entry.OldHash) { Stop-RestoreFailed "Restoring $($item.Entry.Path) failed verification." }
+}
 Set-Content -LiteralPath (Join-Path $record.BackupFolder 'rolled-back.txt') -Value "Rolled back at $(Get-Date -Format o)."
 Write-Host ''
 Write-Host "Rolled back $($record.BuildName). The files it replaced are back." -ForegroundColor Green
 Write-Host 'Settings it switched on stay in the database, where the original server ignores them. To clear them, turn'
-Write-Host 'everything off in the Social Expansion tab before you roll back.'
+Write-Host 'everything off in the Living Server tab before you roll back.'
 exit 0

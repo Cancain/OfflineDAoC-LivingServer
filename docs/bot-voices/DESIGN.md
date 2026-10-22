@@ -117,7 +117,7 @@ follow, until changed:
 
 ```
 @kind ambient            # ambient | reply | lfg | trade | rvr | greet | thanks | grudge | gossip | ding | death | camp |
-                         # group | guild | closing (and the Living Server kinds, docs/LIVING-SERVER.md)
+                         # group | guild | closing (and the server life kinds, docs/LIVING-SERVER.md)
 @topic leveling          # free label for weighting and variety
 @who Leveler,Socialite   # personality types, or *
 @realm *                 # alb | mid | hib | *

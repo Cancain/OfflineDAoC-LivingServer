@@ -1,14 +1,14 @@
-"""Bring the Social Expansion's own tables from an old Offline DAoC save into a new one (0.36 -> 0.37).
+"""Bring the Living Server's own tables from an old Offline DAoC save into a new one (0.36 -> 0.37).
 
 The game's own transfer (IMPORT PROGRESS FROM OLD OFFLINE DAOC.cmd) moves your account, characters, bots and
-guilds, but not the tables only the Social Expansion uses: which guilds bots run and who is in them, what bots
+guilds, but not the tables only the Living Server uses: which guilds bots run and who is in them, what bots
 remember about you, server firsts, nemeses, and which chat lines and /faction scenes you have already heard.
 Without them, your bots' guilds turn into empty guilds and bots forget you.
 
   python tools\\claude-version\\carry_social_tables.py --from "C:\\Games\\OfflineDAoC\\playable-v0.36c"          (show)
   python tools\\claude-version\\carry_social_tables.py --from "C:\\Games\\OfflineDAoC\\playable-v0.36c" --apply  (copy)
 
-Order: install the new game, run its IMPORT PROGRESS FROM OLD OFFLINE DAOC.cmd, install the Social Expansion
+Order: install the new game, run its IMPORT PROGRESS FROM OLD OFFLINE DAOC.cmd, install the Living Server
 build, then run this from the NEW game folder, before you start the new server with bot guilds on. The server,
 launcher and game must be closed. --apply backs up the new database first and replaces these tables in it with
 the old ones; running it again copies the same rows again. The old save is only read.

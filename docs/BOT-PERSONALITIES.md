@@ -1,7 +1,7 @@
 # Bot personalities, voices and debates: design and status
 
 Goal: autonomous gamebots that feel like different people. Some grind, some hang around town, some
-go looking for trouble, and each one writes in its own style. These are the "Social Expansion"
+go looking for trouble, and each one writes in its own style. These are the "Living Server"
 features, alongside [BOT-GUILDS.md](BOT-GUILDS.md).
 
 They affect only **autonomous gamebots**. Companion bots (`/spawn`, `/raid`) and real players keep
@@ -16,7 +16,7 @@ from the always-on changes listed in [KNOWN-ISSUES.md](KNOWN-ISSUES.md).
 | `bot_voices_enabled` | False | Bots say lines from the bot-voices corpus in their own writing style (section 3). |
 | `bot_voices_debates` | True | When voices are on, bots hold debates and long threads in /faction (section 4). |
 
-To change them, use the launcher's **Social Expansion** tab (with the server stopped; it applies at the next start). The same switches are in a script, for those who prefer it: close the
+To change them, use the launcher's **Living Server** tab (with the server stopped; it applies at the next start). The same switches are in a script, for those who prefer it: close the
 server, launcher and game, then run (Python 3):
 
 ```
@@ -121,7 +121,7 @@ typo-prone 5%.
 When no corpus line fits, the bot uses its old line.
 
 **Lines that name you,** a place you met or your class (`{player}`, `{place}`, `{player_class}`) need
-bot memory of the player. They're used by the Living Server's "Bots remember you" part (greetings,
+bot memory of the player. They're used by server life's "Bots remember you" part (greetings,
 thanks, gossip, grudges; see [LIVING-SERVER.md](LIVING-SERVER.md)); with that part off they're
 skipped.
 

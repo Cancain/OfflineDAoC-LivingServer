@@ -10,10 +10,12 @@
 #   the game's own PACKAGE MANIFEST.sha256;
 # - replaces only a GameServer.dll that is the original release file or a fork build this script
 #   installed; anything else is refused unless -Force;
-# - the same for the launcher (OfflineDAoC.exe and its files, with the Social Expansion tab) in runtime\
+# - the same for the launcher (OfflineDAoC.exe and its files, with the Living Server tab) in runtime\
 #   and, on 0.37c, in new-client\runtime\ (checked against new-client\PACKAGE MANIFEST.sha256);
 # - backs up every file it replaces under runtime\server\deployment-backups\fork-build-<time>\ and
-#   verifies every copy by SHA-256. ROLLBACK.cmd restores the backup.
+#   verifies every copy by SHA-256. ROLLBACK.cmd restores the backup;
+# - fixes game files listed in content-patches.json in place, only where the file is the released one (anything else is
+#   left alone and reported), backed up the same way.
 param(
     [string]$GameFolder = '',
     [switch]$DryRun,
@@ -37,6 +39,14 @@ foreach ($name in @('GameServer.dll', 'GameServer.pdb')) {
     if (!(Test-Path -LiteralPath $path)) { Stop-WithMessage "$name is missing from this build folder." }
     if ((Get-Sha256 $path) -ne $info[$name].ToLowerInvariant()) {
         Stop-WithMessage "$name doesn't match BUILD-INFO.txt (damaged download?). Download the build again."
+    }
+}
+
+$contentPatches = Read-ContentPatches $buildDir
+if (Test-Path -LiteralPath (Join-Path $buildDir 'content-patches.json')) {
+    $expected = $info['content-patches.json']
+    if (!$expected -or (Get-Sha256 (Join-Path $buildDir 'content-patches.json')) -ne $expected.ToLowerInvariant()) {
+        Stop-WithMessage "content-patches.json doesn't match BUILD-INFO.txt (damaged download?). Download the build again."
     }
 }
 
@@ -129,8 +139,24 @@ if (@($launcherPlan | Where-Object { $_.State -eq 'unknown' }).Count -gt 0 -and 
     Stop-WithMessage ("A launcher (OfflineDAoC.dll) above is neither the original $base file nor a fork build this script installed. " +
         'Restore the original first, or run with -Force to replace it anyway (it is still backed up).')
 }
+# Game files this build fixes in place: only the released file is changed.
+$contentPlan = @()
+foreach ($patch in $contentPatches) {
+    $path = Get-ContentPath $game $patch.Path
+    if (!(Test-Path -LiteralPath $path)) { $state = 'not in this game, skipped' }
+    else {
+        $hash = Get-Sha256 $path
+        if ($hash -eq $patch.Fixed) { $state = 'fixed already' }
+        elseif ($hash -eq $patch.Released) {
+            $state = 'released file, will be fixed'
+            $contentPlan += [pscustomobject]@{ Patch = $patch; Path = $path; Hash = $hash }
+        }
+        else { $state = 'not the released file, left alone' }
+    }
+    Write-Host "  $($patch.Path): $state"
+}
 if (@($plan | Where-Object { $_.State -ne 'this build' }).Count -eq 0 -and
-    @($launcherPlan | Where-Object { $_.State -ne 'this build' }).Count -eq 0) {
+    @($launcherPlan | Where-Object { $_.State -ne 'this build' }).Count -eq 0 -and $contentPlan.Count -eq 0) {
     Write-Host ''
     Write-Host "Already installed: $($info['BuildName']). Nothing to do." -ForegroundColor Green
     exit 0
@@ -179,6 +205,15 @@ foreach ($item in $launcherPlan) {
     $launcherEntries += [pscustomobject]@{ Folder = $item.Folder; OldDll = $item.Hash; NewDll = $launcherNew['OfflineDAoC.dll']; Files = $files }
 }
 
+$contentEntries = @()
+foreach ($item in $contentPlan) {
+    $saved = Join-Path (Join-Path $backup 'content') ($item.Patch.Path.Replace('/', [IO.Path]::DirectorySeparatorChar))
+    New-Item -ItemType Directory -Path (Split-Path -Parent $saved) -Force | Out-Null
+    Copy-Item -LiteralPath $item.Path -Destination $saved
+    if ((Get-Sha256 $saved) -ne $item.Hash) { Stop-WithMessage "Backup of $($item.Patch.Path) failed verification." }
+    $contentEntries += [pscustomobject]@{ Path = $item.Patch.Path; OldHash = $item.Hash; NewHash = $item.Patch.Fixed }
+}
+
 # Helper scripts (settings switches) go to tools\claude-version, where they find the database.
 $helpers = @()
 $helperSource = Join-Path $buildDir 'tools\claude-version'
@@ -199,7 +234,7 @@ if (Test-Path -LiteralPath $helperSource) {
 $record = [pscustomobject]@{
     BuildName = $info['BuildName']; BaseRelease = $base; Commit = $info['Commit']
     Installed = (Get-Date).ToString('o'); GameFolder = $game; Folders = $entries; Helpers = $helpers
-    LauncherFolders = $launcherEntries
+    LauncherFolders = $launcherEntries; ContentFiles = $contentEntries
 }
 $record | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $backup 'install-record.json') -Encoding UTF8
 
@@ -218,6 +253,12 @@ try {
             Copy-Item -LiteralPath (Join-Path $launcherBuild $file.Name) -Destination $target -Force
             if ((Get-Sha256 (Join-Path $target $file.Name)) -ne $file.NewHash) { throw "Copy of the launcher into $($entry.Folder) failed verification." }
         }
+    }
+    foreach ($item in $contentPlan) {
+        $fixed = Expand-ContentPatch $item.Patch ([IO.File]::ReadAllBytes($item.Path))
+        if ((Get-BytesSha256 $fixed) -ne $item.Patch.Fixed) { throw "The fix for $($item.Patch.Path) didn't come out right." }
+        [IO.File]::WriteAllBytes($item.Path, $fixed)
+        if ((Get-Sha256 $item.Path) -ne $item.Patch.Fixed) { throw "Writing $($item.Patch.Path) failed verification." }
     }
     if ($helpers.Count -gt 0) {
         New-Item -ItemType Directory -Path (Join-Path $game 'tools\claude-version') -Force | Out-Null
@@ -248,14 +289,19 @@ try {
             elseif (Test-Path -LiteralPath (Join-Path $target $file.Name)) { Remove-Item -LiteralPath (Join-Path $target $file.Name) }
         }
     }
+    foreach ($entry in $contentEntries) {
+        $saved = Join-Path (Join-Path $backup 'content') ($entry.Path.Replace('/', [IO.Path]::DirectorySeparatorChar))
+        Copy-Item -LiteralPath $saved -Destination (Get-ContentPath $game $entry.Path) -Force
+    }
     Set-Content -LiteralPath (Join-Path $backup 'rolled-back.txt') -Value "Install failed and was undone at $(Get-Date -Format o)."
     Write-Host 'The original files are back in place.'
     exit 1
 }
 
 Write-Host ''
-Write-Host "Installed $($info['BuildName']): the server into $($entries.Count) folder(s), the launcher into $($launcherEntries.Count)." -ForegroundColor Green
+Write-Host ("Installed $($info['BuildName']): the server into $($entries.Count) folder(s), the launcher into $($launcherEntries.Count), " +
+    "$($contentEntries.Count) game file(s) fixed.") -ForegroundColor Green
 Write-Host "Backup: $backup"
 Write-Host "Start the game as usual. The server log shows: FORK_BUILD name=$($info['BuildName']) commit=$($info['Commit'])"
-Write-Host 'Every new feature is OFF until you switch it on: launcher -> Social Expansion tab (server stopped). To undo: ROLLBACK.cmd'
+Write-Host 'Every new feature is OFF until you switch it on: launcher -> Living Server tab (server stopped). To undo: ROLLBACK.cmd'
 exit 0

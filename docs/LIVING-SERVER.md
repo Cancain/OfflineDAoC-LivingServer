@@ -1,13 +1,13 @@
-# Living Server
+# Server life
 
-Part of the Social Expansion fork. The goal (Chris, 2026-10-16): make the autonomous gamebots feel
+Part of the Living Server fork. The goal (Chris, 2026-10-16): make the autonomous gamebots feel
 like players on a 2003 server, through continuity and consequence more than through more chat.
 
 **Status:** released in 0.36-se.1. Automated tests pass (see "Tests" below). **Partly checked in
 game** (2026-10-17, see "In-game check" below). Every part starts **off**. With everything off, the
 only changes left are the always-on ones listed in [KNOWN-ISSUES.md](KNOWN-ISSUES.md).
 
-The Living Server parts change only autonomous gamebots; your `/spawn` companions and real players
+The server life parts change only autonomous gamebots; your `/spawn` companions and real players
 are not affected by them. (One always-on fix does reach companions: a dead bot's corpse now stays
 where it fell until it releases.)
 Lines come from the bot-voices corpus (`living_server.lines` and `memory.lines`), in each bot's
@@ -17,7 +17,7 @@ in it).
 
 ## Switches
 
-All are in the launcher's **Social Expansion** tab, card **LIVING SERVER**. Save with the server
+All are in the launcher's **Living Server** tab, card **SERVER LIFE**. Save with the server
 stopped; they are used at the next start. The server keys (category `bots`) are:
 
 | Switch | Key | Default |
@@ -32,7 +32,7 @@ stopped; they are used at the next start. The server keys (category `bots`) are:
 | Breaks and linkdeads | `bot_living_breaks` | False |
 | Body language | `bot_living_body_language` | False |
 
-**ALL OFF** in the tab switches every part off, along with the other Social Expansion features.
+**ALL OFF** in the tab switches every part off, along with the other Living Server features.
 
 ## What each part does
 
@@ -201,7 +201,7 @@ hasn't been tried.
 
 Everything here runs in the server and the launcher, so it works the same with the original client and the Godot
 client. Checked on 2026-10-17 with `tools/newclient-compat` (network level, no game world): the Godot client's own
-network code and interface received every Living Server chat line and both yes / no boxes from the server's own
+network code and interface received every server life chat line and both yes / no boxes from the server's own
 packet code. Every line landed in the right channel and chat box, server firsts showed on screen, and the server
 read the ACCEPT answers. Result: 30 of 30 passed.
 
@@ -210,7 +210,7 @@ browsed there. Guild chat, guild names over heads and the invite box work.
 
 ## Camelot Herald
 
-**CAMELOT HERALD** in the Social Expansion tab writes a news page from the game database and
+**CAMELOT HERALD** in the Living Server tab writes a news page from the game database and
 opens it in your browser. It reads only and is safe while the server runs.
 - **Where:** one self-contained file at `runtime\herald\herald.html`. Nothing is loaded from the
   internet.
@@ -243,7 +243,7 @@ Automated (no running world):
   - nemesis and alarm lines fill every slot; greetings follow mood;
   - this document lists every key.
 - **Server, `UT_AutonomousBotVoices`:**
-  - every Living Server kind has lines for every personality;
+  - every server life kind has lines for every personality;
   - topic filtering;
   - the six-hour no-repeat window.
 - **Launcher:**
@@ -362,7 +362,7 @@ rather than my own reaction times.
   - **Guild gossip.** "we should get Claudecheck into a guild" was said while I was in a bot
     guild. It is now said only about a player with no guild; a starting guild counts as none.
     (Unit test only: gossip comes about once every 30–60 minutes.)
-- **Found in stock 0.36 code (not Living Server), fixed in 0.36-chris.11, not yet seen in game:**
+- **Found in stock 0.36 code (not server life), fixed in 0.36-chris.11, not yet seen in game:**
   - **A group could die on its way to a meetup.** A Midgard group of five bots, levels 1 to 3, spent
     the full 15-minute meetup wait dying near its meetup point: about 70 deaths in all. Then it was
     dropped as no-shows. Now a member that dies 3 times during one meetup wait counts as a no-show

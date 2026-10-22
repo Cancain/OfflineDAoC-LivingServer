@@ -529,8 +529,8 @@ internal sealed partial class MainForm : Form
             Path.Combine(_serverDirectory, OfflineDaoc.Configuration.BotGoalSettings.FileName), BotGoalsServerStopped);
         botGoals.Controls.Add(_botGoalsSettings);
         tabs.TabPages.Add(botGoals);
-        // Social Expansion fork (chris4aker/OfflineDAoC-SocialExpansion): its settings tab. SocialExpansionSettingsControl.cs.
-        var socialExpansion = new TabPage("Social Expansion") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
+        // Living Server fork (chris4aker/OfflineDAoC-SocialExpansion): its settings tab. SocialExpansionSettingsControl.cs.
+        var socialExpansion = new TabPage("Living Server") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
         _socialExpansionSettings = new SocialExpansionSettingsControl(_database, BotGoalsServerStopped);
         socialExpansion.Controls.Add(_socialExpansionSettings);
         tabs.TabPages.Add(socialExpansion);
@@ -2648,7 +2648,7 @@ internal sealed partial class MainForm : Form
         }
         if (_socialExpansionSettings?.HasUnsavedChanges == true)
         {
-            MessageBox.Show(this, "Save or undo your edits in Social Expansion before starting the server.", "Unsaved Social Expansion settings");
+            MessageBox.Show(this, "Save or undo your edits in Living Server before starting the server.", "Unsaved Living Server settings");
             return;
         }
         try { OfflineDaoc.Configuration.BotGoalSettings.Load(Path.Combine(_serverDirectory, OfflineDaoc.Configuration.BotGoalSettings.FileName)); }

@@ -14,8 +14,11 @@ namespace DOL.GS;
 /// </summary>
 public static class ForkBuildInfo
 {
-    /// <summary>The fork's build name; bump it with each fork release.</summary>
-    public const string BuildName = "0.37-se.2";
+    /// <summary>The fork's build name (Living Server); bump it with each fork release.</summary>
+    public const string BuildName = "1.0-beta";
+
+    /// <summary>The Offline DAoC release this build installs on (the installer checks the game against it).</summary>
+    public const string BaseRelease = "0.37";
 
     private static readonly Logger Log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
 

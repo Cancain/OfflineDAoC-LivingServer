@@ -379,7 +379,7 @@ namespace DOL.GS.Commands
 								: client.Player.TargetObject as GameBot;
 							if (invitedBot != null)
 							{
-								// Social Expansion: a member of a bot guild answers for itself first; a leader or officer stays
+								// Living Server: a member of a bot guild answers for itself first; a leader or officer stays
 								// with its guild (docs/BOT-GUILDS.md).
 								if (AutonomousBotRealmGuilds.RefusesPlayerGuild(client.Player, invitedBot))
 									return;

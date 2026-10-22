@@ -6,7 +6,7 @@ using System.Globalization;
 namespace DOL.GS
 {
     // The parsing half of LevelRangeXpRates. It has no server dependencies, so the launcher compiles this
-    // same file (its Social Expansion tab checks a setting with exactly the server's rules).
+    // same file (its Living Server tab checks a setting with exactly the server's rules).
     public static partial class LevelRangeXpRates
     {
         public const double MaximumRate = 1000.0;

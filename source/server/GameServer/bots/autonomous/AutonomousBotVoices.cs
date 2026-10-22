@@ -14,7 +14,7 @@ using VC = DOL.GS.AutonomousBotVoiceCorpus;
 namespace DOL.GS;
 
 /// <summary>
-/// Bot voices (docs/bot-voices/DESIGN.md, part of the Social Expansion): live bots say lines from
+/// Bot voices (docs/bot-voices/DESIGN.md, part of the Living Server): live bots say lines from
 /// the embedded corpus instead of the generic phrase lists, chosen by kind, realm, class, level,
 /// personality and situation, written in the bot's own style, never repeating a line in a realm
 /// within 6 hours. Every caller keeps its old line when nothing fits or the setting is off.

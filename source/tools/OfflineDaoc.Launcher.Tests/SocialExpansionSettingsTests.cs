@@ -276,7 +276,7 @@ public class SocialExpansionSettingsTests
     }
 
     /// <summary>
-    /// Renders the real launcher (Options, Bot Goals Setting and Social Expansion tabs) and the tab in several
+    /// Renders the real launcher (Options, Bot Goals Setting and Living Server tabs) and the tab in several
     /// states to PNG files in TestResults' work folder (ui-preview\), so the look can be checked against the
     /// other settings screens. CI uploads them as an artifact.
     /// </summary>
@@ -293,8 +293,8 @@ public class SocialExpansionSettingsTests
             form.Location = new Point(-20_000, -20_000);
             form.Show();
             Application.DoEvents();
-            TabControl tabs = All(form).OfType<TabControl>().First(t => t.TabPages.Cast<TabPage>().Any(p => p.Text == "Social Expansion"));
-            foreach (var (tab, file) in new[] { ("Options", "1-options.png"), ("Bot Goals Setting", "2-bot-goals.png"), ("Social Expansion", "3-social-expansion-in-launcher.png") })
+            TabControl tabs = All(form).OfType<TabControl>().First(t => t.TabPages.Cast<TabPage>().Any(p => p.Text == "Living Server"));
+            foreach (var (tab, file) in new[] { ("Options", "1-options.png"), ("Bot Goals Setting", "2-bot-goals.png"), ("Living Server", "3-living-server-in-launcher.png") })
             {
                 tabs.SelectedTab = tabs.TabPages.Cast<TabPage>().First(p => p.Text == tab);
                 Application.DoEvents();

@@ -255,7 +255,7 @@ something (docs/bot-voices/DESIGN.md 3.7). The lines in `AutonomousBotGuildChatL
 Phase 3 (grouping) has no switch of its own; it follows `bot_guilds_enabled`.
 
 **To turn on:**
-- **Launcher:** the launcher's **Social Expansion** tab (with the server stopped; it applies at the next start). Every part has its own switch there.
+- **Launcher:** the launcher's **Living Server** tab (with the server stopped; it applies at the next start). Every part has its own switch there.
 - **Script:** `python tools/claude-version/set_bot_guilds.py --on --apply`, with the server
   closed. It backs up the database first.
 - **One part off:** for example `--claims off --apply`.
