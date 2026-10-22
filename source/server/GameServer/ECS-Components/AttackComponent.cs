@@ -25,6 +25,20 @@ namespace DOL.GS
         public ServiceObjectId ServiceObjectId { get; } = new(ServiceObjectType.AttackComponent);
         public AttackerTracker AttackerTracker { get; private set; }
 
+        /// <summary>
+        /// Out of a fight, forgets the start-of-attack target and the last weapon action when their target has left the world
+        /// (see <see cref="GameLiving.ForgetDeparted"/>). A fight in progress keeps them: its own code clears them.
+        /// </summary>
+        public void ForgetDeparted()
+        {
+            if (AttackState) return;
+            if (GameLiving.HasDeparted(_startAttackTarget))
+                _startAttackTarget = null;
+            if (GameLiving.HasDeparted(weaponAction?.Target))
+                weaponAction = null;
+            attackAction?.ForgetDeparted();
+        }
+
         private BlockRoundHandler _blockRoundHandler;
         private GameObject _startAttackTarget;
         private bool _startAttackRequested;

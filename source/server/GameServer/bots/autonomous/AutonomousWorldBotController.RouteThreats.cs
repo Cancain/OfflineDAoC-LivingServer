@@ -21,6 +21,14 @@ namespace DOL.GS
         // The last route pull: the same monster found again, still out of combat, means the pull
         // never landed. After three it is passed by like an unreachable one.
         private GameNPC _lastRouteThreatPull;
+
+        /// <summary>Forgets a route pull whose monster has left the world (see <see cref="GameLiving.ForgetDeparted"/>).</summary>
+        public void ForgetDeparted()
+        {
+            if (GameLiving.HasDeparted(_lastRouteThreatPull))
+                _lastRouteThreatPull = null;
+            _unreachableRouteThreats.RemoveWhere(GameLiving.HasDeparted);
+        }
         private int _routeThreatPullRepeats;
         private long _lastRouteThreatPullTick;
         private const int RouteThreatPullAttempts = 3;

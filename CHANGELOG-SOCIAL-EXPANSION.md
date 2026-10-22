@@ -102,6 +102,15 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - Bot-to-bot: an either-or question takes the choice answers, frontier news the frontier replies ("mids 8man in cathal"
   drew "same :)"), and "anyone else...?" an opinion rather than "count me out this time".
 
+**Bots that logged out stayed in memory (2026-10-22)**
+- The overnight run's 2,424 scheduled bot logouts left 1,500 deleted bots in memory, and Windows Event handles grew
+  with them (about 1,000 an hour, from 2,200 to 9,800). The extended holder census found what held them: monsters'
+  last interrupter and the attack targets they remember (and the same fields of bots holding deleted monsters), which
+  nothing cleared after a fight. Every two minutes each living in the world now forgets objects that have left it:
+  its last interrupter, remembered attack targets out of a fight, damage credit of departed attackers, aggro holders
+  and cached nearby-object lists, and a bot's recent attacker and route-threat pull. Automated tests only so far; the
+  live check is the `botDetached` and `handles` trend over the next run.
+
 **Raid routes found broken in the overnight run (2026-10-22)**
 - Hall of the Corrupt: Lord Gildas is reachable. The raid killed Aidon, then stood above Lord Gildas's room for 37
   minutes and ended "Route blocked". The ramp up from his room meets the main floor at a single 32-unit step, a little

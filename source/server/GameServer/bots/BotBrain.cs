@@ -143,6 +143,14 @@ namespace DOL.AI.Brain
         private GameLiving _recentDirectAttacker;
         private long _recentDirectAttackTick;
 
+        /// <summary>Forgets a recent attacker and the controller's remembered monsters that have left the world (see <see cref="GameLiving.ForgetDeparted"/>).</summary>
+        public void ForgetDeparted()
+        {
+            if (GameLiving.HasDeparted(_recentDirectAttacker))
+                _recentDirectAttacker = null;
+            _autonomousWorldController?.ForgetDeparted();
+        }
+
         public const int MAX_AGGRO_DISTANCE = 3600;
         public const int MAX_AGGRO_LIST_DISTANCE = 6000;
         private const int EFFECTIVE_AGGRO_AMOUNT_CALCULATION_DISTANCE_THRESHOLD = 500;

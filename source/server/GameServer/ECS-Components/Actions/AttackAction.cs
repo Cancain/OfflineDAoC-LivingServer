@@ -435,5 +435,12 @@ namespace DOL.GS
             _target = null;
             _firstTick = true;
         }
+
+        /// <summary>Forgets a remembered target that has left the world (see <see cref="GameLiving.ForgetDeparted"/>).</summary>
+        public virtual void ForgetDeparted()
+        {
+            if (GameLiving.HasDeparted(_target))
+                _target = null;
+        }
     }
 }
