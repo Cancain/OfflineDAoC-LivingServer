@@ -148,6 +148,7 @@ namespace DOL.AI.Brain
         {
             if (GameLiving.HasDeparted(_recentDirectAttacker))
                 _recentDirectAttacker = null;
+            ForgetDepartedAggro();
             _autonomousWorldController?.ForgetDeparted();
         }
 
@@ -268,6 +269,17 @@ namespace DOL.AI.Brain
         public virtual void RemoveFromAggroList(GameLiving living)
         {
             AggroList.TryRemove(living, out _);
+        }
+
+        private void ForgetDepartedAggro()
+        {
+            bool removed = false;
+            foreach (GameLiving held in AggroList.Keys)
+                if (GameLiving.HasDeparted(held))
+                    removed |= AggroList.TryRemove(held, out _);
+            if (removed)
+                lock (((ICollection)OrderedAggroList).SyncRoot)
+                    OrderedAggroList.RemoveAll(entry => GameLiving.HasDeparted(entry.Item1));
         }
 
         public long GetBaseAggroAmount(GameLiving living)

@@ -1014,6 +1014,7 @@ namespace DOL.GS
 		public override void ForgetDeparted()
 		{
 			base.ForgetDeparted();
+			(Brain as StandardMobBrain)?.ForgetDeparted();
 			ConcurrentDictionary<StandardMobBrain, byte> holders = _aggroHolders;
 			if (holders == null) return;
 			foreach (StandardMobBrain holder in holders.Keys)
