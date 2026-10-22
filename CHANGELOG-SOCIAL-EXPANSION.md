@@ -114,8 +114,13 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - Live, two hours on the owner's PC: deleted bots still in memory after each full collection stay at 50-125 (overnight
   they only rose, to 1,500), and deleted monsters and pets level off too. The sweep takes about 60 ms every two
   minutes. Event handles still grow about 1,700 an hour, so they had another cause: a .NET Lock makes a Windows event
-  the first time a thread waits for it and keeps it for the Lock's life. A test-run census (`SERVER_LOCK_EVENTS`) now
-  counts which fields hold such Locks; not fixed yet.
+  the first time a thread waits for it and keeps it for the Lock's life. A test-run census (`SERVER_LOCK_EVENTS`)
+  counts which fields hold such Locks. Live: of 2.1 million Locks, 342 had an event 20 minutes after start and 1,026
+  after 50; from 12:08 to 12:38 they rose by 684 while handles rose by 858. Two thirds are the stat tables every monster
+  and bot carries (`PropertyIndexer._lock`), then ability lists, stat multipliers and effect lists. These belong to
+  objects still in the world, each Lock adds at most one handle, and the handle closes when its object is freed: about
+  40,000 handles and a few MB of Windows memory a day, against a limit of millions. Not changed for this release; a
+  lighter lock for the stat table is the candidate fix afterwards.
 
 **Raid routes found broken in the overnight run (2026-10-22)**
 - Hall of the Corrupt: Lord Gildas is reachable. The raid killed Aidon, then stood above Lord Gildas's room for 37
