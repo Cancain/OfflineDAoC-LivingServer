@@ -25,6 +25,21 @@ Builder note: zone 200 rebuilds byte-identical to the installed mesh, zones 000/
 (their installed meshes have raised "New Towns" plazas around the portals that this client
 does not have).
 
+# Walk links over a step the builder left (add_offmesh.py)
+
+Recast drops any step higher than the walkable climb (28.8 units), so a room reached by one taller step becomes a
+separate area: `navcomp` shows it, and Detour stops above it. `add_offmesh.py` appends two-way Detour off-mesh
+connections (flagged Walk) to the tile both ends stand in and keeps every other byte:
+
+```
+python add_offmesh.py zone277.nav zone277.patched.nav 28780,39095,13670:28733,39097,13702
+```
+
+Find the step with `navcomp` (two areas whose open edges lie 20-30 units apart, 30-40 units in height), put each end
+10-15 units inside its own floor, then check with navcomp (one area) and a real-Detour probe
+(`UT_RaidDungeonRoutesProbe.LordGildasIsReachable`). Used on 2026-10-22 for Lord Gildas's room in Hall of the Corrupt.
+Zone 277 has no seams, roads or pockets entries; for a mesh that does, regenerate those files afterwards.
+
 # Zone road graph (navmesh/roads.json)
 
 Detour's search stops at a dead end when the only way to a far point first leads away from it.

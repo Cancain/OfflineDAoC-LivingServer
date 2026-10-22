@@ -15,6 +15,8 @@ public sealed partial class AutonomousWorldBotController
     private ushort _expeditionRegion;
     private Vector3 _expeditionGoal;
     private Vector3? _expeditionLastPosition;
+    private Vector3? _expeditionOrdinaryFrom;
+    private int _expeditionOrdinaryStill;
     private RvrPlanningNavigation _dragonRallyPlanning;
     private Vector3[] _dragonRallyRoute;
     private Vector3 _dragonRallyOrigin, _dragonRallyGoal;
@@ -57,8 +59,16 @@ public sealed partial class AutonomousWorldBotController
                     {
                         _expeditionRouteFailures = 0;
                         _expeditionOrdinaryUntil = GameLoop.GameLoopTime + 120_000;
+                        // Live run 2026-10-22: 23 Hibernian raiders stood at one Cruachan Gorge spot for 33 minutes logging
+                        // this every three minutes, and nothing said why (the same route proves offline). The reason, the
+                        // goal and how many windows in a row the bot has not moved say where to look next time.
+                        _expeditionOrdinaryStill = _expeditionOrdinaryFrom.HasValue &&
+                            Vector3.DistanceSquared(position, _expeditionOrdinaryFrom.Value) < 64 * 64 ? _expeditionOrdinaryStill + 1 : 0;
+                        _expeditionOrdinaryFrom = position;
                         Log.Warn($"REALM_EXPEDITION_ORDINARY_TRAVEL bot={bot.Name} id={bot.DatabaseID} region={bot.CurrentRegionID} " +
-                            $"position={bot.X},{bot.Y},{bot.Z} event={order.EventId}");
+                            $"position={bot.X},{bot.Y},{bot.Z} event={order.EventId} goal={(int)exterior.X},{(int)exterior.Y},{(int)exterior.Z} " +
+                            $"via={(via.HasValue ? $"{(int)via.Value.X},{(int)via.Value.Y}" : "-")} stillWindows={_expeditionOrdinaryStill} " +
+                            $"reason=\"{RealmRaidMuster.LastRouteFailure}\" status=\"{bot.PersistentRecord?.Activity}: {bot.PersistentRecord?.ObjectiveProgress}\"");
                         return true;
                     }
                     _expeditionRouteRetry = GameLoop.GameLoopTime + 15_000;

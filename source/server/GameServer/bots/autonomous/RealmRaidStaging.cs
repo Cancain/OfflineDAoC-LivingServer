@@ -12,6 +12,10 @@ public static class RealmRaidStaging
     {
         staging = default;
         if (exterior == null || nav == null || !nav.IsAvailable || !nav.HasNavmesh(exterior)) return false;
+        // A post must be on the ground the portal stands on. Beside the Trollheim portal in Gripklosa Mountains every
+        // ring post fell on a shelf a short drop below it: close enough to the portal (220) but on ground that joins
+        // neither the portal nor Bjarken, so no raid there was ever scheduled (2026-10-22).
+        Vector3? portalFloor = nav.GetClosestPoint(exterior, portal, 64, 64, 128, nav.DefaultFilters);
         for (int attempt = 0; attempt < 36; attempt++)
         {
             double angle = (attempt * 30 + slot * 137.5) * Math.PI / 180;
@@ -23,7 +27,8 @@ public static class RealmRaidStaging
             if (!floor.HasValue || !AutonomousRendezvousNavigation.HasLocalExit(nav, exterior, floor.Value) ||
                 occupied.Any(p => Vector3.DistanceSquared(p, floor.Value) < 200 * 200) ||
                 (occupied.Count > 0 && !AutonomousZoneItinerary.HasCompleteCorridor(nav,exterior,occupied.First(),floor.Value)) ||
-                !AutonomousZonePointApproach.TryResolve(nav, exterior, floor.Value, portal, 220, out _)) continue;
+                !AutonomousZonePointApproach.TryResolve(nav, exterior, floor.Value, portal, 220, out _) ||
+                portalFloor.HasValue && !AutonomousZoneItinerary.HasCompleteCorridor(nav, exterior, portalFloor.Value, floor.Value)) continue;
             staging = floor.Value;
             return true;
         }

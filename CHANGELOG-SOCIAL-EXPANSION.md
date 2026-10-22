@@ -102,6 +102,22 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - Bot-to-bot: an either-or question takes the choice answers, frontier news the frontier replies ("mids 8man in cathal"
   drew "same :)"), and "anyone else...?" an opinion rather than "count me out this time".
 
+**Raid routes found broken in the overnight run (2026-10-22)**
+- Hall of the Corrupt: Lord Gildas is reachable. The raid killed Aidon, then stood above Lord Gildas's room for 37
+  minutes and ended "Route blocked". The ramp up from his room meets the main floor at a single 32-unit step, a little
+  higher than the navmesh's walkable climb, so the mesh had his room as a separate area. Three short two-way walk links
+  over that step in `zone277.nav` (one tile changed; new tool `tools/navmesh_splice/add_offmesh.py`). The patched mesh
+  ships with the update; checked offline with the real Detour library (from the entrance, from where the raid gave up
+  and from Aidon's room, there and back), not yet in a raid.
+- Trollheim is raided again. Every staging post beside its portal in Gripklosa Mountains lay on a shelf next to the
+  portal that joins neither the portal nor Bjarken, so the raid was never scheduled ("no corridor inside zone 152 to
+  the staging post"). A post now has to be walkable from the portal. Offline: all 20 posts route from Bjarken; the
+  Darkness Falls posts and Krondon's are unchanged.
+- Cruachan Gorge: 23 Hibernian raiders late for Darkness Falls stood at one spot on the Breifine border for 33
+  minutes before they found their own way. Their route proves offline from that exact spot, so the cause is not
+  found yet; the warning they logged now says why the route failed, where it was going and how long the bot has
+  not moved.
+
 **Melee bots no longer stand under flying monsters**
 - A melee bot only picks a flying monster it can walk up to. A level 50 Midgard melee group timed out 45 times on
   griffon gliders in Gripklosa from 2,400-3,500 units away, and one member stood still for 15 minutes. Casters and
