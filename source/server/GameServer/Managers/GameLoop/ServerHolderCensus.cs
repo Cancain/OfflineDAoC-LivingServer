@@ -40,7 +40,7 @@ namespace DOL.GS
         private static readonly Dictionary<Type, FieldInfo[]> FieldCache = new();
         private static readonly Dictionary<Type, bool> StructHoldsReferences = new();
 
-        public static void MaybeRun(Func<List<GameNPC>> detached)
+        public static void MaybeRun(Func<List<GameNPC>> detached, Func<List<GameNPC>> activeNpcs = null)
         {
             long now = Stopwatch.GetTimestamp();
             if (_nextRunTicks == 0) _nextRunTicks = now + FirstRunMinutes * 60 * Stopwatch.Frequency;
@@ -48,7 +48,7 @@ namespace DOL.GS
             _nextRunTicks = now + IntervalMinutes * 60 * Stopwatch.Frequency;
             var thread = new Thread(() =>
             {
-                try { Run(detached()); }
+                try { Run(detached(), activeNpcs?.Invoke()); }
                 catch (Exception exception) { Log.Warn("SERVER_HOLDER_CENSUS failed", exception); }
                 finally { Volatile.Write(ref _running, 0); }
             }) { IsBackground = true, Priority = ThreadPriority.BelowNormal, Name = "HolderCensus" };
@@ -97,9 +97,9 @@ namespace DOL.GS
             Log.Info($"SERVER_ORPHAN_EFFECTS total={effects.Values.Sum()} byEffect=\"{string.Join(",", effects.OrderByDescending(p => p.Value).Take(12).Select(p => $"{p.Key}={p.Value}"))}\"");
         }
 
-        private static void Run(List<GameNPC> detachedNpcs)
+        private static void Run(List<GameNPC> detachedNpcs, List<GameNPC> activeNpcs)
         {
-            Result result = Scan(Roots(), detachedNpcs.Take(200_000));
+            Result result = Scan(Roots(activeNpcs), detachedNpcs.Take(200_000));
             if (result.Targets == 0) return;
             Log.Info($"SERVER_HOLDER_CENSUS targets={result.Targets} reached={result.Reached} unreached={result.Targets - result.Reached} " +
                      $"roots={result.Roots} visits={result.Visits} truncatedRoots={result.TruncatedRoots} outOfBudget={result.OutOfBudget} " +
@@ -107,8 +107,13 @@ namespace DOL.GS
                      $"heaviestRoots=\"{string.Join(",", (result.HeaviestRoots ?? []).Select(r => $"{r.Root}:{r.Visits}"))}\" holders=\"{string.Join(" | ", result.Holders.Take(15).Select(h => $"{h.Path}={h.Count}({h.Types})"))}\"");
         }
 
-        /// <summary>Every active autonomous bot's own fields first, then the static fields of the server assembly (scripts included).</summary>
-        private static IEnumerable<(string Name, object Root, bool LeafStart)> Roots()
+        /// <summary>
+        /// Every active autonomous bot's own fields first, then the static fields of the server assembly (scripts included),
+        /// then every other active NPC's own fields (monsters, guards, pets). Overnight run of 2026-10-22: 2,424 scheduled logouts left
+        /// 1,500 deleted bots in memory, and 1,402 of them were reached from neither the bots nor the statics; game objects
+        /// are leaves of the walk, so whatever a monster's own fields hold was never looked at.
+        /// </summary>
+        private static IEnumerable<(string Name, object Root, bool LeafStart)> Roots(List<GameNPC> activeNpcs = null)
         {
             foreach (GameBot bot in AutonomousBotRegistry.Snapshot())
                 if (bot != null && bot.ObjectState == GameObject.eObjectState.Active)
@@ -127,6 +132,10 @@ namespace DOL.GS
                     if (value != null && !Skip(value.GetType())) yield return ($"{type.Name}.{field.Name}", value, true);
                 }
             }
+            // Last, within what is left of the budget: anything held only by a monster's own fields.
+            foreach (GameNPC npc in activeNpcs ?? [])
+                if (npc is not GameBot && npc.ObjectState == GameObject.eObjectState.Active)
+                    yield return (npc is GameSummonedPet ? "(active pet)" : "(active npc)", npc, false);
         }
 
         /// <summary>
