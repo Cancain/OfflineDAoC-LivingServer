@@ -194,7 +194,7 @@ $fixedText = $releasedText.Substring(0, 10) + 'LINKS' + $releasedText.Substring(
 function TextSha([string]$text) { $s = [Security.Cryptography.SHA256]::Create(); (($s.ComputeHash([Text.Encoding]::ASCII.GetBytes($text)) | ForEach-Object { $_.ToString('x2') }) -join '') }
 $patches = @(
     [pscustomobject]@{ Path = 'runtime/server/navmesh/zone999.nav'; Released = (TextSha $releasedText); Fixed = (TextSha $fixedText); Size = $fixedText.Length
-        Ops = @(@{ copy = @(0, 10) }, @{ data = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes('LINKS')) }, @{ copy = @(10, $releasedText.Length - 10) }) },
+        Ops = @(@{ copy = @(0, 10) }, @{ data = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes('LINKS')) }, @{ copy = @(10, ($releasedText.Length - 10)) }) },
     [pscustomobject]@{ Path = 'new-client/godot/content/zones/zone998/models/gate.gltf'; Released = (TextSha 'x'); Fixed = (TextSha 'y'); Size = 1
         Ops = @(@{ data = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes('y')) }) },
     [pscustomobject]@{ Path = 'runtime/server/navmesh/zone997.nav'; Released = (TextSha 'r'); Fixed = (TextSha 'f'); Size = 1
