@@ -109,8 +109,13 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   nothing cleared after a fight. Every two minutes each living in the world now forgets objects that have left it:
   its last interrupter, remembered attack targets out of a fight, aggro holders and cached nearby-object lists, and a
   bot's recent attacker and route-threat pull. Damage credit (XP, loot, realm points) is left as it was: only a bot's
-  or player's record of departed neutral monsters is dropped, which earns nothing. Automated tests only so far; the
-  live check is the `botDetached` and `handles` trend over the next run.
+  or player's record of departed neutral monsters is dropped, which earns nothing. The first live run of the sweep
+  still found monsters' aggro lists holding deleted bots; those are cleared too now.
+- Live, two hours on the owner's PC: deleted bots still in memory after each full collection stay at 50-125 (overnight
+  they only rose, to 1,500), and deleted monsters and pets level off too. The sweep takes about 60 ms every two
+  minutes. Event handles still grow about 1,700 an hour, so they had another cause: a .NET Lock makes a Windows event
+  the first time a thread waits for it and keeps it for the Lock's life. A test-run census (`SERVER_LOCK_EVENTS`) now
+  counts which fields hold such Locks; not fixed yet.
 
 **Raid routes found broken in the overnight run (2026-10-22)**
 - Hall of the Corrupt: Lord Gildas is reachable. The raid killed Aidon, then stood above Lord Gildas's room for 37
