@@ -90,7 +90,10 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
 - In-game check the same evening: "anyone in camelot?" drew "im in Camelot Hills" (a place name now means that place
   when a zone or region is called that: Camelot is the City of Camelot), and "where are the mids?" drew two bots both
   naming Uppland, Midgard's own frontier (enemies on our side of the frontier are named first, then neutral ground,
-  then their homeland, and such a question gets one answer).
+  then their homeland, and such a question gets one answer). Re-checked in game on that build: still wrong. A bot on
+  its way to Camelot counted as in Camelot (now only where a bot is counts), and the world data gives every frontier
+  zone realm 0, so Uppland didn't read as Midgard's (the twelve frontier zones are now mapped to their realms, and
+  enemies all at home are reported as "back home in Uppland").
 - A guild no longer hears the same death or group line twice within the hour: in the live run "died. the run back is
   the worst part" came three times in /gu in 17 minutes, and "guild warband forming, frontier bound" twice 30 seconds
   apart. When every line of the set was heard lately, the bot says nothing.

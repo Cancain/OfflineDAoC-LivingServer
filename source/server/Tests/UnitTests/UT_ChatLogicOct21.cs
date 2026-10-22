@@ -114,6 +114,13 @@ namespace DOL.GS.Tests
             Assert.That(AutonomousChatLiveAnswers.PlaceMatches(place, [zone],
                 ["City of Camelot", "Camelot Hills", "Salisbury Plains", "Lyonesse", "Black Mtns. North"]), Is.EqualTo(matches));
 
+        [TestCase("Uppland", eRealm.Midgard)]
+        [TestCase("Hadrian's Wall", eRealm.Albion)]
+        [TestCase("Breifine", eRealm.Hibernia)]
+        [TestCase("Thidranki", eRealm.None)]
+        public void AFrontierZoneBelongsToItsRealm(string zone, eRealm realm) =>
+            Assert.That(AutonomousChatLiveAnswers.FrontierHome(zone), Is.EqualTo(realm));
+
         [TestCase("good camp for 24?", 30, 24)]
         [TestCase("where should i hunt", 30, 30)]
         [TestCase("where do 35s level", 12, 35)]

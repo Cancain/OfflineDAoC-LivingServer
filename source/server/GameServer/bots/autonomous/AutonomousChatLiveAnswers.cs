@@ -60,7 +60,7 @@ public static class AutonomousChatLiveAnswers
             .Where(other => other.Realm != bot.Realm && other.Realm is eRealm.Albion or eRealm.Midgard or eRealm.Hibernia && other.IsAlive &&
                             other.CurrentZone != null && (other.CurrentZone.IsRvR || other.CurrentRegion?.IsRvR == true) &&
                             !string.IsNullOrWhiteSpace(other.CurrentZone.Description))
-            .GroupBy(other => (other.Realm, Zone: other.CurrentZone.Description, ZoneRealm: other.CurrentZone.Realm))
+            .GroupBy(other => (other.Realm, Zone: other.CurrentZone.Description, ZoneRealm: FrontierHome(other.CurrentZone.Description)))
             // Enemies on our side of the frontier first, then on neutral ground, then in their own homeland (live check
             // 2026-10-21: "where are the mids?" drew "big group of mids in Uppland", Midgard's own frontier).
             .OrderByDescending(group => group.Key.ZoneRealm == bot.Realm ? 2 : group.Key.ZoneRealm == group.Key.Realm ? 0 : 1)
@@ -69,10 +69,27 @@ public static class AutonomousChatLiveAnswers
         if (seen == null)
             return random.Next(2) == 0 ? "havent seen any, quiet out there right now" : "quiet atm, no enemies that i know of";
         string enemy = seen.Key.Realm switch { eRealm.Albion => "albs", eRealm.Midgard => "mids", _ => "hibs" };
+        // All of them home in their own frontier: say so, rather than "zerg in Uppland" as if they were coming.
+        if (seen.Key.ZoneRealm == seen.Key.Realm)
+            return random.Next(2) == 0 ? $"{enemy} are sitting in their own frontier, around {seen.Key.Zone}"
+                : $"none on our side, {enemy} are back home in {seen.Key.Zone}";
         return seen.Count() >= 8
             ? random.Next(2) == 0 ? $"big group of {enemy} in {seen.Key.Zone}" : $"{enemy} zerg in {seen.Key.Zone} last i heard"
             : random.Next(2) == 0 ? $"saw some {enemy} around {seen.Key.Zone}" : $"a few {enemy} in {seen.Key.Zone}";
     }
+
+    /// <summary>
+    /// Whose side of the frontier a zone is (the world data leaves every zone's realm at 0): Albion's Forest Sauvage, Snowdonia,
+    /// Pennine Mountains and Hadrian's Wall; Midgard's Uppland, Yggdra Forest, Jamtland Mountains and Odin's Gate; Hibernia's
+    /// Emain Macha, Breifine, Cruachan Gorge and Mount Collory. None for battlegrounds and the rest.
+    /// </summary>
+    public static eRealm FrontierHome(string zone) => zone switch
+    {
+        "Forest Sauvage" or "Snowdonia" or "Pennine Mountains" or "Hadrian's Wall" => eRealm.Albion,
+        "Uppland" or "Yggdra Forest" or "Jamtland Mountains" or "Odin's Gate" => eRealm.Midgard,
+        "Emain Macha" or "Breifine" or "Cruachan Gorge" or "Mount Collory" => eRealm.Hibernia,
+        _ => eRealm.None,
+    };
 
     /// <summary>True when the bot is in the place a player named ("camelot", "black mountains", "the frontier").</summary>
     public static bool IsIn(GameBot bot, string place)
@@ -81,7 +98,9 @@ public static class AutonomousChatLiveAnswers
             return false;
         if (place is "frontier" or "rvr" or "the frontier")
             return bot.CurrentZone?.IsRvR == true || bot.CurrentRegion?.IsRvR == true;
-        return PlaceMatches(place, [bot.CurrentZone?.Description, bot.CurrentRegion?.Description, bot.PersistentRecord?.TravelDestination],
+        // Where the bot is, not where it is going (in-game check 2026-10-21: a bot in Camelot Hills on its way to Camelot
+        // answered "anyone in camelot?").
+        return PlaceMatches(place, [bot.CurrentZone?.Description, bot.CurrentRegion?.Description],
             KnownPlaces());
     }
 
