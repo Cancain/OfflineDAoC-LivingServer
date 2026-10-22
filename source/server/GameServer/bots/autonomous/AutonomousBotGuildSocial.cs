@@ -56,12 +56,19 @@ public static class AutonomousBotGuildSocial
                 string text = line()?.Trim();
                 if (string.IsNullOrEmpty(text))
                     continue;
-                if (heard == null || !heard.TryGetValue(text, out long at) || now - at >= RecentGuildLineMs)
+                if (heard == null || !heard.TryGetValue(LineKey(text), out long at) || now - at >= RecentGuildLineMs)
                     return text;
             }
             return null;
         }
     }
+
+    /// <summary>
+    /// The line as the guild hears it: numbers don't make it new (live run 2026-10-22: "2 of us heading out to the frontier"
+    /// then "3 of us heading out to the frontier" a minute later).
+    /// </summary>
+    public static string LineKey(string text) =>
+        System.Text.RegularExpressions.Regex.Replace((text ?? string.Empty).Trim().ToLowerInvariant(), @"\d+", "#");
 
     /// <summary>Notes a line the guild heard (every bot line in /gu goes through here).</summary>
     public static void NoteHeard(string guildId, string text, long now)
@@ -72,7 +79,7 @@ public static class AutonomousBotGuildSocial
         {
             if (!RecentByGuild.TryGetValue(guildId ?? string.Empty, out Dictionary<string, long> heard))
                 RecentByGuild[guildId ?? string.Empty] = heard = new Dictionary<string, long>(StringComparer.Ordinal);
-            heard[text] = now;
+            heard[LineKey(text)] = now;
             if (heard.Count > 200)
                 foreach (string old in heard.Where(pair => now - pair.Value >= RecentGuildLineMs).Select(pair => pair.Key).ToList())
                     heard.Remove(old);
@@ -176,7 +183,9 @@ public static class AutonomousBotGuildSocial
         for (int i = 0; i < count; i++)
         {
             GameBot bot = speakers[i];
-            ScheduleGuildLine(bot, guild, 4_000 + i * 2_500 + Random.Shared.Next(4_000), () => Lines.Greeting(player.Name, Random.Shared));
+            ScheduleGuildLine(bot, guild, 4_000 + i * 2_500 + Random.Shared.Next(4_000), 
+                // live run 2026-10-22: two guildmates both said "hey Claudecheck, good timing" 2 s apart
+                () => FreshLine(guild.GuildID, () => Lines.Greeting(player.Name, Random.Shared), GameLoop.GameLoopTime));
         }
     }
 
@@ -191,7 +200,8 @@ public static class AutonomousBotGuildSocial
         for (int i = 0; i < count; i++)
         {
             GameBot bot = speakers[i];
-            ScheduleGuildLine(bot, guild, 2_000 + i * 1_800 + Random.Shared.Next(2_500), () => Lines.Congratulate(player.Name, level, Random.Shared));
+            ScheduleGuildLine(bot, guild, 2_000 + i * 1_800 + Random.Shared.Next(2_500), 
+                () => FreshLine(guild.GuildID, () => Lines.Congratulate(player.Name, level, Random.Shared), GameLoop.GameLoopTime));
         }
     }
 
@@ -210,7 +220,8 @@ public static class AutonomousBotGuildSocial
         for (int i = 0; i < count; i++)
         {
             GameBot other = others[i];
-            ScheduleGuildLine(other, guild, 4_500 + i * 1_800 + Random.Shared.Next(2_500), () => Lines.Congratulate(bot.Name, level, Random.Shared));
+            ScheduleGuildLine(other, guild, 4_500 + i * 1_800 + Random.Shared.Next(2_500), 
+                () => FreshLine(guild.GuildID, () => Lines.Congratulate(bot.Name, level, Random.Shared), GameLoop.GameLoopTime));
         }
     }
 
@@ -702,7 +713,7 @@ public static class AutonomousBotGuildSocial
             int count = Math.Min(speakers.Length, 1 + (Random.Shared.NextDouble() < 0.5 ? 1 : 0));
             for (int i = 0; i < count; i++)
                 ScheduleGuildLine(speakers[i], target, 2_500 + i * 2_000 + Random.Shared.Next(2_000),
-                    () => Lines.Welcome(answering.Name, target.Name, Random.Shared));
+                    () => FreshLine(target.GuildID, () => Lines.Welcome(answering.Name, target.Name, Random.Shared), GameLoop.GameLoopTime));
         });
     }
 

@@ -96,7 +96,9 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   enemies all at home are reported as "back home in Uppland").
 - A guild no longer hears the same death or group line twice within the hour: in the live run "died. the run back is
   the worst part" came three times in /gu in 17 minutes, and "guild warband forming, frontier bound" twice 30 seconds
-  apart. When every line of the set was heard lately, the bot says nothing.
+  apart. When every line of the set was heard lately, the bot says nothing. Greetings, congratulations and welcomes
+  follow the same rule, and a number doesn't make a line new: on the next live run two guildmates both said "hey
+  Claudecheck, good timing" 2 seconds apart, and "2 of us heading out to the frontier" was followed by "3 of us...".
 - Bot-to-bot: an either-or question takes the choice answers, frontier news the frontier replies ("mids 8man in cathal"
   drew "same :)"), and "anyone else...?" an opinion rather than "count me out this time".
 

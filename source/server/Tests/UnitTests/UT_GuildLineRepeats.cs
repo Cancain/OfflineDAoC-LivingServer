@@ -22,5 +22,18 @@ namespace DOL.UnitTests
             Assert.That(AutonomousBotGuildSocial.FreshLine("ut-other-guild", () => "died. the run back is the worst part", 60_000), Is.Not.Null,
                 "another guild never heard it");
         });
+
+        // Live run 2026-10-22: "2 of us heading out to the frontier" then "3 of us heading out to the frontier" a minute later,
+        // and two guildmates both greeting with "hey Claudecheck, good timing".
+        [Test]
+        public void ANumberDoesNotMakeALineNew() => Assert.Multiple(() =>
+        {
+            const string guild = "ut-guild-numbers";
+            AutonomousBotGuildSocial.NoteHeard(guild, "2 of us heading out to the frontier, join up if you can", 1_000);
+            Assert.That(AutonomousBotGuildSocial.FreshLine(guild, () => "3 of us heading out to the frontier, join up if you can", 60_000), Is.Null);
+            AutonomousBotGuildSocial.NoteHeard(guild, "hey Claudecheck, good timing", 1_000);
+            Assert.That(AutonomousBotGuildSocial.FreshLine(guild, () => "hey Claudecheck, good timing", 3_000), Is.Null);
+            Assert.That(AutonomousBotGuildSocial.FreshLine(guild, () => "o/ Claudecheck", 3_000), Is.EqualTo("o/ Claudecheck"));
+        });
     }
 }
