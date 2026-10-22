@@ -55,6 +55,8 @@ namespace DOL.UnitTests
         {
             var obj = (T)RuntimeHelpers.GetUninitializedObject(typeof(T));
             obj.ObjectState = state;
+            if (obj is GameNPC)
+                Field(typeof(GameNPC), "m_brains").SetValue(obj, new ArrayList());
             return obj;
         }
 
@@ -97,10 +99,31 @@ namespace DOL.UnitTests
             Assert.Multiple(() =>
             {
                 Assert.That(monster.LastInterrupter, Is.Null);
-                Assert.That(monster.XPGainers.Keys, Is.EquivalentTo(new GameLiving[] { alive }), "damage credit of a bot still in the world stays");
+                Assert.That(monster.XPGainers.Keys, Is.EquivalentTo(new GameLiving[] { deleted, alive }),
+                    "a monster's damage credit decides XP and loot: it is never pruned");
                 Assert.That(Field(typeof(AttackAction), "_target").GetValue(action), Is.Null);
                 Assert.That(Field(typeof(NpcAttackAction), "_losCheckTarget").GetValue(action), Is.Null);
             });
+        }
+
+        [Test]
+        public void ABotForgetsTheDamageOfDeletedMonstersOnly()
+        {
+            GameBot bot = Bare<GameBot>(GameObject.eObjectState.Active);
+            GameNPC deletedMonster = Bare<GameNPC>(GameObject.eObjectState.Deleted);
+            GameBot deletedBot = Bare<GameBot>(GameObject.eObjectState.Deleted);
+            GameNPC liveMonster = Bare<GameNPC>(GameObject.eObjectState.Active);
+            Field(typeof(GameLiving), "XpGainersLock").SetValue(bot, new System.Threading.Lock());
+            Field(typeof(GameLiving), "m_xpGainers").SetValue(bot, new Dictionary<GameLiving, double>
+                { [deletedMonster] = 10, [deletedBot] = 20, [liveMonster] = 5 });
+            Field(typeof(GameObject), "_objectInRadiusCachesLock").SetValue(bot, new System.Threading.Lock());
+            Field(typeof(GameObject), "_objectsInRadiusCaches").SetValue(bot, Field(typeof(GameObject), "_objectsInRadiusCaches").FieldType
+                .GetConstructor(Type.EmptyTypes).Invoke(null));
+
+            bot.ForgetDeparted();
+
+            Assert.That(bot.XPGainers.Keys, Is.EquivalentTo(new GameLiving[] { deletedBot, liveMonster }),
+                "a bot or player that hit it can still be owed realm points");
         }
 
         [Test]

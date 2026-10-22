@@ -107,8 +107,9 @@ evening's earlier 0.37-se.1 session; see "Checked" below).
   with them (about 1,000 an hour, from 2,200 to 9,800). The extended holder census found what held them: monsters'
   last interrupter and the attack targets they remember (and the same fields of bots holding deleted monsters), which
   nothing cleared after a fight. Every two minutes each living in the world now forgets objects that have left it:
-  its last interrupter, remembered attack targets out of a fight, damage credit of departed attackers, aggro holders
-  and cached nearby-object lists, and a bot's recent attacker and route-threat pull. Automated tests only so far; the
+  its last interrupter, remembered attack targets out of a fight, aggro holders and cached nearby-object lists, and a
+  bot's recent attacker and route-threat pull. Damage credit (XP, loot, realm points) is left as it was: only a bot's
+  or player's record of departed neutral monsters is dropped, which earns nothing. Automated tests only so far; the
   live check is the `botDetached` and `handles` trend over the next run.
 
 **Raid routes found broken in the overnight run (2026-10-22)**

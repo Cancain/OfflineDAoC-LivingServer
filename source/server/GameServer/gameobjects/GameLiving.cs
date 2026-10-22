@@ -748,13 +748,18 @@ namespace DOL.GS
 			if (HasDeparted(LastInterrupter))
 				LastInterrupter = null;
 			attackComponent?.ForgetDeparted();
+			// Damage credit decides XP, loot and realm points, so only what can never earn any is dropped: departed neutral
+			// monsters on a bot's or player's own list (realm points ignore them). A monster's list, and the damage of a pet
+			// whose owner is still here (credited to the owner when the monster dies), are kept.
+			if (this is GamePlayer or GameBot)
 			lock (XpGainersLock)
 			{
 				if (m_xpGainers.Count > 0)
 				{
 					List<GameLiving> gone = null;
 					foreach (GameLiving gainer in m_xpGainers.Keys)
-						if (HasDeparted(gainer))
+						if (HasDeparted(gainer) && gainer is not (GamePlayer or GameBot) &&
+							(AutonomousBotRealmPointRewards.ResolveRootRewardOwner(gainer) ?? gainer).Realm == eRealm.None)
 							(gone ??= new()).Add(gainer);
 					if (gone != null)
 						foreach (GameLiving gainer in gone)
