@@ -38,6 +38,9 @@ published on their own.
   started with `FORK_BUILD name=1.0-beta commit=71250e2aa711` and the same 390 start-up errors as before, the memory
   census was switched off, and the owner's character logged in.
 - Raids in the last two days on the builds before this one (all scheduled by the bots): 28 ended, 17 won.
+- First raid on Beta 1.0: Albion's scheduled Hall of the Corrupt raid killed Aidon the Archwizard and then Lord Gildas
+  (180 bots, 61 minutes). The night before, the same raid had stopped above his room with "Route blocked": the
+  `zone277.nav` walk links work in game.
 
 ## Developed as 0.37-se.2 — 2026-10-20 to 2026-10-22
 
