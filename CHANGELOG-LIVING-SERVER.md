@@ -27,6 +27,18 @@ published on their own.
   one, and the original is backed up; `ROLLBACK.cmd` and `PREPARE-FOR-UPDATE.cmd` put it back. Installer tests
   cover a fixed, a missing and a hand-changed file, rollback, the return to the release and a damaged patch list.
 
+**Checked (Beta 1.0)**
+- Automated: 3,444 server tests, the launcher tests and the installer tests (Windows PowerShell 5.1) on the build
+  from `main` (`71250e2`), the one in the release zip.
+- The patches were applied to the released `zone277.nav` and the eight released gate models with the installer's own
+  PowerShell code; every result matched its fixed fingerprint.
+- On the owner's PC (0.37c game, 900 bots per realm, every switch on): the release zip installed over 0.37-se.2. It
+  found the earlier build, backed it up, and reported the navmesh and gate files as "fixed already" (the test builds
+  had fixed them by hand). The launcher shows the **Living Server** tab and "Server life (9 of 9 parts)". The server
+  started with `FORK_BUILD name=1.0-beta commit=71250e2aa711` and the same 390 start-up errors as before, the memory
+  census was switched off, and the owner's character logged in.
+- Raids in the last two days on the builds before this one (all scheduled by the bots): 28 ended, 17 won.
+
 ## Developed as 0.37-se.2 — 2026-10-20 to 2026-10-22
 
 The endgame now runs without a player directing it: warbands open and defend keep sieges, each realm raids its
