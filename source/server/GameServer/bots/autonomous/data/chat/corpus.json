@@ -543998,9 +543998,9 @@
     },
     {
      "role": "H",
-     "text": "i think he wants to spec 50 in horse",
+     "text": "i think they want to spec 50 in horse",
      "variants": [
-      "i think he wants to spec 50 in horse",
+      "i think they want to spec 50 in horse",
       "50 in horse, 1 in common sense"
      ],
      "optional": false
@@ -544034,10 +544034,10 @@
     },
     {
      "role": "B",
-     "text": "aw leave him alone. he just wants a fast pony",
+     "text": "aw leave them alone. they just want a fast pony",
      "variants": [
-      "aw leave him alone. he just wants a fast pony",
-      "dont be mean, he just wants a pony with talents"
+      "aw leave them alone. they just want a fast pony",
+      "dont be mean, they just want a pony with talents"
      ],
      "optional": false
     },
@@ -544155,10 +544155,10 @@
     },
     {
      "role": "E",
-     "text": "did he actually log",
+     "text": "did they actually log",
      "variants": [
-      "did he actually log",
-      "he's gone. he actually left"
+      "did they actually log",
+      "they're gone. they actually left"
      ],
      "optional": false
     },
@@ -544173,10 +544173,10 @@
     },
     {
      "role": "G",
-     "text": "ten gold says he's back before the stablemaster's horse gets to the next town",
+     "text": "ten gold says they're back before the stablemaster's horse gets to the next town",
      "variants": [
-      "ten gold says he's back before the stablemaster's horse gets to the next town",
-      "he'll be back by morning asking how to level his cloak"
+      "ten gold says they're back before the stablemaster's horse gets to the next town",
+      "they'll be back by morning asking how to level their cloak"
      ],
      "optional": false
     },
@@ -544392,10 +544392,10 @@
     },
     {
      "role": "F",
-     "text": "he has more realm points than your realm has realm points",
+     "text": "they have more realm points than your realm has realm points",
      "variants": [
-      "he has more realm points than your realm has realm points",
-      "his realm points have realm points"
+      "they have more realm points than your realm has realm points",
+      "their realm points have realm points"
      ],
      "optional": false
     },
@@ -544413,7 +544413,7 @@
      "text": "careful, the abuse filter will catch you before the enemy does",
      "variants": [
       "careful, the abuse filter will catch you before the enemy does",
-      "look at that, he learned to fight. in chat"
+      "look at that, they learned to fight. in chat"
      ],
      "optional": false
     },
@@ -544480,7 +544480,7 @@
      "text": "fair question for the first day. not for day forty",
      "variants": [
       "fair question for the first day. not for day forty",
-      "in fairness he was new. in unfairness, not that new"
+      "in fairness they were new. in unfairness, not that new"
      ],
      "optional": false
     }
@@ -544608,9 +544608,9 @@
     },
     {
      "role": "G",
-     "text": "lol he was really going to send it",
+     "text": "lol they were really going to send it",
      "variants": [
-      "lol he was really going to send it",
+      "lol they were really going to send it",
       "and that's how you lose 40 gold in one evening"
      ],
      "optional": false
@@ -544765,9 +544765,9 @@
     },
     {
      "role": "E",
-     "text": "he'll be back. they always come back",
+     "text": "they'll be back. they always come back",
      "variants": [
-      "he'll be back. they always come back",
+      "they'll be back. they always come back",
       "give it two hours"
      ],
      "optional": false
@@ -544860,9 +544860,9 @@
     },
     {
      "role": "D",
-     "text": "a traitor. in our own faction chat. at least he's honest",
+     "text": "a traitor. in our own faction chat. at least they're honest",
      "variants": [
-      "a traitor. in our own faction chat. at least he's honest",
+      "a traitor. in our own faction chat. at least they're honest",
       "a deserter announcing it in faction. respect, honestly"
      ],
      "optional": false
@@ -544899,7 +544899,7 @@
      "text": "we're not even losing. we lost ONE keep",
      "variants": [
       "we're not even losing. we lost ONE keep",
-      "we lose one keep and he's packing his bags"
+      "we lose one keep and they're packing their bags"
      ],
      "optional": false
     },
@@ -544908,7 +544908,7 @@
      "text": "imagine being a fair weather fan of a realm",
      "variants": [
       "imagine being a fair weather fan of a realm",
-      "he'd switch back the second we took a relic"
+      "they'd switch back the second we took a relic"
      ],
      "optional": false
     },
@@ -544986,9 +544986,9 @@
     },
     {
      "role": "G",
-     "text": "someone report him to the king",
+     "text": "someone report them to the king",
      "variants": [
-      "someone report him to the king",
+      "someone report them to the king",
       "someone call the guards, we have a traitor"
      ],
      "optional": false
@@ -545035,19 +545035,19 @@
     },
     {
      "role": "D",
-     "text": "he'll be back here tomorrow, same name with an extra letter",
+     "text": "they'll be back here tomorrow, same name with an extra letter",
      "variants": [
-      "he'll be back here tomorrow, same name with an extra letter",
+      "they'll be back here tomorrow, same name with an extra letter",
       "tomorrow: a new character, same name plus an x"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "the enemy is welcome to him. our gift",
+     "text": "the enemy is welcome to them. our gift",
      "variants": [
-      "the enemy is welcome to him. our gift",
-      "gift to the enemy. they can keep him"
+      "the enemy is welcome to them. our gift",
+      "gift to the enemy. they can keep them"
      ],
      "optional": false
     },
@@ -545056,7 +545056,7 @@
      "text": "honestly, the other realms don't deserve this kind of punishment",
      "variants": [
       "honestly, the other realms don't deserve this kind of punishment",
-      "poor enemy realm, they didnt do anything to deserve him"
+      "poor enemy realm, they didnt do anything to deserve them"
      ],
      "optional": false
     }
@@ -545170,10 +545170,10 @@
     },
     {
      "role": "F",
-     "text": "dont encourage him",
+     "text": "dont encourage them",
      "variants": [
-      "dont encourage him",
-      "stop it, he's going to do it"
+      "dont encourage them",
+      "stop it, they're going to do it"
      ],
      "optional": false
     },
@@ -545236,7 +545236,7 @@
      "text": "wait wait, record it",
      "variants": [
       "wait wait, record it",
-      "someone follow him, i want the death message"
+      "someone follow them, i want the death message"
      ],
      "optional": false
     },
@@ -545318,28 +545318,28 @@
     },
     {
      "role": "B",
-     "text": "did he log or go to the lair",
+     "text": "did they log or go to the lair",
      "variants": [
-      "did he log or go to the lair",
-      "either he logged or he's walking to the lair, both are great"
+      "did they log or go to the lair",
+      "either they logged or they're walking to the lair, both are great"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "i kind of wanted to see him try",
+     "text": "i kind of wanted to see them try",
      "variants": [
-      "i kind of wanted to see him try",
-      "i was going to follow him for the screenshot"
+      "i kind of wanted to see them try",
+      "i was going to follow them for the screenshot"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "next raid we name a pull after him",
+     "text": "next raid we name a pull after them",
      "variants": [
-      "next raid we name a pull after him",
-      "next raid, the first death is in his honor"
+      "next raid we name a pull after them",
+      "next raid, the first death is in their honor"
      ],
      "optional": false
     }
@@ -545604,9 +545604,9 @@
     },
     {
      "role": "B",
-     "text": "bet he hit one more guard on his way out",
+     "text": "bet they hit one more guard on the way out",
      "variants": [
-      "bet he hit one more guard on his way out",
+      "bet they hit one more guard on the way out",
       "six deaths, final answer"
      ],
      "optional": false
@@ -545843,10 +545843,10 @@
     },
     {
      "role": "F",
-     "text": "he told us to stfu in faction. growth",
+     "text": "they told us to stfu in faction. growth",
      "variants": [
-      "he told us to stfu in faction. growth",
-      "look at him, finding his voice"
+      "they told us to stfu in faction. growth",
+      "look at them, finding their voice"
      ],
      "optional": false
     },
@@ -545892,9 +545892,9 @@
     },
     {
      "role": "C",
-     "text": "his corpse is still out there, waiting",
+     "text": "their corpse is still out there, waiting",
      "variants": [
-      "his corpse is still out there, waiting",
+      "their corpse is still out there, waiting",
       "the body is still warm out there"
      ],
      "optional": false
@@ -546319,10 +546319,10 @@
     },
     {
      "role": "C",
-     "text": "oh, he went to see the edge of the world",
+     "text": "oh, they went to see the edge of the world",
      "variants": [
-      "oh, he went to see the edge of the world",
-      "he swam out to the edge. they always do once"
+      "oh, they went to see the edge of the world",
+      "they swam out to the edge. they always do once"
      ],
      "optional": false
     },
@@ -546436,10 +546436,10 @@
     },
     {
      "role": "D",
-     "text": "oh my. he doesn't know about the map",
+     "text": "oh my. they don't know about the map",
      "variants": [
-      "oh my. he doesn't know about the map",
-      "he's been playing without the map"
+      "oh my. they don't know about the map",
+      "they've been playing without the map"
      ],
      "optional": false
     },
@@ -546503,28 +546503,28 @@
     },
     {
      "role": "B",
-     "text": "he quit from the middle of the ocean. legend",
+     "text": "they quit from the middle of the ocean. legend",
      "variants": [
-      "he quit from the middle of the ocean. legend",
-      "he left from the middle of the sea. what a way to go"
+      "they quit from the middle of the ocean. legend",
+      "they left from the middle of the sea. what a way to go"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "his ghost will swim forever",
+     "text": "their ghost will swim forever",
      "variants": [
-      "his ghost will swim forever",
+      "their ghost will swim forever",
       "somewhere out there, a ghost is still swimming"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "next time someone tell him where the map is before he dies of thirst",
+     "text": "next time someone tell them where the map is before they die of thirst",
      "variants": [
-      "next time someone tell him where the map is before he dies of thirst",
-      "someone tell him about the map when he's back"
+      "next time someone tell them where the map is before they die of thirst",
+      "someone tell them about the map when they're back"
      ],
      "optional": false
     }
@@ -546672,10 +546672,10 @@
     },
     {
      "role": "H",
-     "text": "he wanted to mez the rock",
+     "text": "they wanted to mez the rock",
      "variants": [
-      "he wanted to mez the rock",
-      "he was going to mez the rock"
+      "they wanted to mez the rock",
+      "they were going to mez the rock"
      ],
      "optional": false
     },
@@ -546784,10 +546784,10 @@
     },
     {
      "role": "B",
-     "text": "next relic raid, we put a mez on the pillar in his honor",
+     "text": "next relic raid, we put a mez on the pillar in their honor",
      "variants": [
-      "next relic raid, we put a mez on the pillar in his honor",
-      "we leave one rock unmezzed for him"
+      "next relic raid, we put a mez on the pillar in their honor",
+      "we leave one rock unmezzed for them"
      ],
      "optional": false
     },
@@ -546802,10 +546802,10 @@
     },
     {
      "role": "D",
-     "text": "he'll be back to cc the trees",
+     "text": "they'll be back to cc the trees",
      "variants": [
-      "he'll be back to cc the trees",
-      "he'll be back. the trees will be waiting"
+      "they'll be back to cc the trees",
+      "they'll be back. the trees will be waiting"
      ],
      "optional": false
     }

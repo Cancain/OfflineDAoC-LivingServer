@@ -142,12 +142,21 @@ public static class AutonomousBotSchedule
 
     public static bool RageQuitting(long botId, DateTime nowUtc)
     {
+        AutonomousBotRageQuits.EnsureLoaded();
         if (!RageQuitUntil.TryGetValue(botId, out DateTime until))
             return false;
         if (nowUtc < until)
             return true;
         RageQuitUntil.TryRemove(botId, out _);
         return false;
+    }
+
+    /// <summary>A saved rage quit (AutonomousBotRageQuits): away until then, and sheepish when it logs back in.</summary>
+    public static void RestoreRageQuit(long botId, DateTime untilUtc, DateTime nowUtc)
+    {
+        if (untilUtc > nowUtc)
+            RageQuitUntil[botId] = untilUtc;
+        ReturningFromRageQuit[botId] = 0;
     }
 
     /// <summary>
@@ -170,6 +179,7 @@ public static class AutonomousBotSchedule
                     return ++tries < 12 ? 5_000 : 0;
                 RageQuitUntil[bot.DatabaseID] = until;
                 ReturningFromRageQuit[bot.DatabaseID] = 0;
+                AutonomousBotRageQuits.Save(bot.DatabaseID, until);
                 LeavingNow[bot.DatabaseID] = 0;
                 Log.Info($"LIVING_SERVER_LOGOUT bot=\"{bot.Name}\" id={bot.DatabaseID} reason=ragequit until={until:O}");
                 bot.Delete();
@@ -330,8 +340,10 @@ public static class AutonomousBotSchedule
     public static void OnLoggedIn(GameBot bot)
     {
         // Back from a rage quit: a sheepish word in /faction, whatever the schedule mode.
+        AutonomousBotRageQuits.EnsureLoaded();
         if (bot != null && ReturningFromRageQuit.TryRemove(bot.DatabaseID, out _))
         {
+            AutonomousBotRageQuits.Forget(bot.DatabaseID);
             AutonomousLivingServer.Later(bot, 20_000 + Random.Shared.Next(40_000), () => AutonomousLivingServer.CanTalk(bot), () =>
             {
                 if (AutonomousBotVoices.TryEventLine(bot, "session", out string sheepish, "ragequit_back"))

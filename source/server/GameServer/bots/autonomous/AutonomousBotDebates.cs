@@ -278,7 +278,7 @@ public static class AutonomousBotDebates
 
     private static bool Eligible(GameBot bot, eRealm realm) => bot?.IsAutonomousWorldBot == true && !bot.IsTemporaryGroupHelper &&
         bot.Realm == realm && bot.IsAlive && bot.ObjectState == GameObject.eObjectState.Active && !bot.InCombat && !bot.IsCasting &&
-        bot.DatabaseID > 0;
+        bot.DatabaseID > 0 && !AutonomousBeggars.Is(bot);   // beggars talk only on their corner
 
     private static Candidate CandidateOf(GameBot bot) =>
         new(bot.DatabaseID, AutonomousBotPersonality.For(bot).Type, bot.CharacterClass?.Name ?? bot.ClassName ?? string.Empty, bot.Level,

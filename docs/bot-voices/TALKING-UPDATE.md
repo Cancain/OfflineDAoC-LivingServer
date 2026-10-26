@@ -230,8 +230,10 @@ Now and then a bot asks something truly dumb in /faction ("how do i level up my 
 points?", "how do i pause the game, dinner is ready"), six or seven bots pile on, the dunce gets angrier until it rage
 quits in capitals, and then it really logs off for 2-6 hours (scenes with `@exit A`, `AutonomousBotSchedule.RageQuit`,
 whatever the schedule mode). When it logs back in it says something sheepish in /faction ("ok im back. we dont talk about
-earlier"). Eight scenes (`dunce.lines`); scenes now take up to eight speakers (roles A-H). A dunce that can't log out
-(grouped, fighting) is tried for about a minute, then stays.
+earlier"). Ten scenes (`dunce.lines`); scenes now take up to eight speakers (roles A-H). A dunce that can't log out
+(grouped, fighting) is tried for about a minute, then stays. The time away and the sheepish return are saved
+(`offline_bot_ragequits`, an optional progress table), so a server restart does not bring the dunce back early. Beggars
+are never cast in a debate or a pile-on, and the roasts call the dunce "they".
 
 ### 11. Beggars
 

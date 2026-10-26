@@ -113,6 +113,17 @@ namespace DOL.GS.Tests
             for (int i = 0; i < 200; i++)
                 Assert.That(AutonomousBotSchedule.RageQuitAway(r).TotalHours, Is.InRange(2.0, 6.0));
             Assert.That(AutonomousBotSchedule.RageQuitting(123456, DateTime.UtcNow), Is.False);
+            // A saved rage quit (offline_bot_ragequits) keeps the dunce away after a restart, until its time is up.
+            DateTime now = DateTime.UtcNow;
+            AutonomousBotSchedule.RestoreRageQuit(987_654_321, now.AddHours(2), now);
+            Assert.That(AutonomousBotSchedule.RageQuitting(987_654_321, now), Is.True);
+            Assert.That(AutonomousBotSchedule.RageQuitting(987_654_321, now.AddHours(3)), Is.False);
+            // The roasts never call the dunce "he" (the dunce may be any bot).
+            foreach (var scene in dunces)
+            foreach (var beat in scene.Beats.Where(beat => beat.Role != scene.Exit))
+            foreach (string variant in beat.Variants)
+                Assert.That(System.Text.RegularExpressions.Regex.IsMatch(variant, @"\b(he|he's|hes|him|his|himself)\b") &&
+                            !System.Text.RegularExpressions.Regex.IsMatch(variant, @"\b(friend|king|guard)\b"), Is.False, $"{scene.Id}: {variant}");
         }
 
         private static readonly string[] Debate =
