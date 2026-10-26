@@ -521118,10 +521118,25 @@
       "Leveler",
       "NoLifer"
      ],
-     "class": []
+     "class": [],
+     "levels": [
+      30,
+      50
+     ]
     },
     "D": {
      "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "E": {
+     "type": [
+      "Socialite",
+      "Daredevil"
+     ],
      "class": []
     }
    },
@@ -521131,86 +521146,274 @@
      "text": "{q} anyone else think avalon was hidden in the marsh all along?",
      "variants": [
       "{q} anyone else think avalon was hidden in the marsh all along?",
-      "{q} i get more sure every week: avalon was in the marsh the whole time",
-      "here's my theory. avalon never moved. it was in the marsh and we missed it"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "the old guides said the marsh ran right to the edges of avalon city. edges. of a city nobody could see",
-     "variants": [
-      "the old guides said the marsh ran right to the edges of avalon city. edges. of a city nobody could see",
-      "the first maps had the marsh running up to avalon city's walls. so where were the walls"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "or the mapmakers were drunk and the isle was always across the water",
-     "variants": [
-      "or the mapmakers were drunk and the isle was always across the water",
-      "guides get things wrong. the city is on an island, we sailed there, done"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "then explain the sunken roman pillars. nobody builds columns in a bog for fun",
-     "variants": [
-      "then explain the sunken roman pillars. nobody builds columns in a bog for fun",
-      "and the pillars sinking in the mud? that's a city's front steps, not a swamp"
+      "{q} i get more sure every week: avalon was in the marsh the whole time"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "and lady nimue walks that marsh every night. the lady of the lake doesn't patrol frogs",
+     "text": "wait, avalon like the avalonians? i thought that was just a race on the character screen",
      "variants": [
-      "and lady nimue walks that marsh every night. the lady of the lake doesn't patrol frogs",
-      "why would the lady of the lake walk a swamp after dark unless there's a door in it"
+      "wait, avalon like the avalonians? i thought that was just a race on the character screen",
+      "avalon as in avalonians? i figured that was just a race name"
+     ],
+     "optional": true
+    },
+    {
+     "role": "B",
+     "text": "thats the thing. day one the race text said they come from the city of avalon, albion's seat of magic. so where was it?",
+     "variants": [
+      "thats the thing. day one the race text said they come from the city of avalon, albion's seat of magic. so where was it?",
+      "the race text says avalonians come from the city of avalon, where the great mage guilds were. ever been? nobody had"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "she walks camelot hills too. is avalon under the hills now",
+     "text": "across the water, where we found it. avalon isle, the isle of glass, the ruins. case closed",
      "variants": [
-      "she walks camelot hills too. is avalon under the hills now",
-      "she walks four zones a day. by that logic avalon is everywhere"
+      "across the water, where we found it. avalon isle, the isle of glass, the ruins. case closed",
+      "on the isle, where it is now. we sailed there, we killed things there. done"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "maybe it is. maybe the mist picks where it lets you through",
+     "text": "the isle we found was rubble. the drakoran had already burned it. so who was the race text talking about?",
      "variants": [
-      "maybe it is. maybe the mist picks where it lets you through",
-      "maybe the mist moved the door when the drakoran came. i'd have hidden it too"
+      "the isle we found was rubble. the drakoran had already burned it. so who was the race text talking about?",
+      "by the time we landed it was ash and drakoran. so where did the living avalonians come from?"
      ],
-     "optional": true
+     "optional": false
     },
     {
-     "role": "A",
-     "text": "no proof either way. i still check the fog every time i ride past",
+     "role": "C",
+     "text": "survivors. thats why they came to camelot. thats literally the race story",
      "variants": [
-      "no proof either way. i still check the fog every time i ride past",
-      "nobody can prove it. i'm swimming the marsh again this weekend anyway"
+      "survivors. thats why they came to camelot. thats literally the race story",
+      "refugees. they fled to camelot, which is why they have nowhere to go home to"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "then why did the old guides say avalon marsh runs right to the edges of avalon city. edges. you dont have edges across a sea",
+     "variants": [
+      "then why did the old guides say avalon marsh runs right to the edges of avalon city. edges. you dont have edges across a sea",
+      "the first guides said the marsh ran to the edges of avalon city. a city on another island has no edges in our marsh"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "the old guides also said the merchants were honest",
+     "variants": [
+      "the old guides also said the merchants were honest",
+      "the old guides also said my class was fun to solo"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "walk the marsh sometime. roman pillars sinking into the bog, in rows. rows lead somewhere",
+     "variants": [
+      "walk the marsh sometime. roman pillars sinking into the bog, in rows. rows lead somewhere",
+      "go stand in the marsh. pillars, half sunk, in lines. somebody built a road into that mud"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "romans built everywhere. there's a whole roman tomb under cornwall and nobody calls cardova avalon",
+     "variants": [
+      "romans built everywhere. there's a whole roman tomb under cornwall and nobody calls cardova avalon",
+      "the romans left stones in every zone. cardova has an emperor in it and it isnt avalon either"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "whats in the marsh besides pillars? i only go there for the slimes",
+     "variants": [
+      "whats in the marsh besides pillars? i only go there for the slimes",
+      "is there anything in the marsh worth seeing? i just kill slimes there"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "lady nimue. the lady of the lake. she walks the marsh after dark, every night, and nobody can tell you why",
+     "variants": [
+      "lady nimue. the lady of the lake. she walks the marsh after dark, every night, and nobody can tell you why",
+      "the lady of the lake walks that marsh at night. not a guard, not a merchant. her"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "she walks camelot hills and campacorentin too. she just likes long walks",
+     "variants": [
+      "she walks camelot hills and campacorentin too. she just likes long walks",
+      "she has a whole route, four zones. by your logic avalon is everywhere"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "think about the old tale. the lady took excalibur back, and arthur was carried to avalon to heal. she keeps the way in",
+     "variants": [
+      "think about the old tale. the lady took excalibur back, and arthur was carried to avalon to heal. she keeps the way in",
+      "in the old story the lady of the lake took the sword back and the barge took arthur to avalon. she is the gatekeeper"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "so arthur is asleep under the marsh? would explain why camelot went downhill",
+     "variants": [
+      "so arthur is asleep under the marsh? would explain why camelot went downhill",
+      "arthur's napping in a bog? explains a lot about the realm lately"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "the old tale says he sleeps in avalon until albion needs him most. look around. albion needs him",
+     "variants": [
+      "the old tale says he sleeps in avalon until albion needs him most. look around. albion needs him",
+      "the isle of apples, where the king sleeps until the realm is at its worst. we're getting close"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "if he's sleeping in that marsh he picked a smelly bed",
+     "variants": [
+      "if he's sleeping in that marsh he picked a smelly bed",
+      "he'd wake up just to complain about the leeches"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "wait so what's the isle of glass then, if avalon is somewhere else?",
+     "variants": [
+      "wait so what's the isle of glass then, if avalon is somewhere else?",
+      "then why is the landing called the isle of glass?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "isle of glass is an old name for glastonbury, and glastonbury was always said to be avalon. look at the names over there",
+     "variants": [
+      "isle of glass is an old name for glastonbury, and glastonbury was always said to be avalon. look at the names over there",
+      "glastonbury was the isle of glass, and the monks swore it was avalon. the isle is wearing avalon's old names"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "so you agree. avalon is the isle. across the water. not under your frogs",
+     "variants": [
+      "so you agree. avalon is the isle. across the water. not under your frogs",
+      "caer witrin, wearyall, all on the isle. you just proved my point"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "i agree the isle wears the names. i think the real city sat between the two, and the mist moved it",
+     "variants": [
+      "i agree the isle wears the names. i think the real city sat between the two, and the mist moved it",
+      "the names went with the people who fled. the city itself? the mist has it"
      ],
      "optional": false
     },
     {
      "role": "~",
-     "pause": 20
+     "pause": 15
     },
     {
      "role": "C",
-     "text": "bring a lantern and leave me out of it",
+     "text": "mist doesnt move cities",
      "variants": [
-      "bring a lantern and leave me out of it",
-      "have fun with the leeches"
+      "mist doesnt move cities",
+      "fog does not pick up a city and carry it off"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "mist pulled a whole pass out of a bog in hibernia once, ask any hib. their rangers swore it wasnt there the week before",
+     "variants": [
+      "mist pulled a whole pass out of a bog in hibernia once, ask any hib. their rangers swore it wasnt there the week before",
+      "the hibs had a pass come out of the mist one morning. nobody believed that either"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "great, now we're taking geography lessons from hibs",
+     "variants": [
+      "great, now we're taking geography lessons from hibs",
+      "lovely, hib fairy stories as evidence"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "ok explorer, what's your actual proof",
+     "variants": [
+      "ok explorer, what's your actual proof",
+      "so whats the proof, if there is any"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "none i can hand you. but the fog west of adribard's retreat doesnt move with the wind. real fog moves",
+     "variants": [
+      "none i can hand you. but the fog west of adribard's retreat doesnt move with the wind. real fog moves",
+      "the fog off adribard's retreat sits still in a gale. ive watched it for an hour. fog that doesnt drift is a door"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "i'll believe it when the fog lets you in and you send me a tell from inside",
+     "variants": [
+      "i'll believe it when the fog lets you in and you send me a tell from inside",
+      "send me a tell from the other side and i'll buy you a horse"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "bring a lantern. and a healer. and dont call me when the leeches win",
+     "variants": [
+      "bring a lantern. and a healer. and dont call me when the leeches win",
+      "count me out, i'll hold your corpse spot"
      ],
      "optional": true
+    },
+    {
+     "role": "A",
+     "text": "i ride past the marsh after this camp anyway. i'll look at the fog",
+     "variants": [
+      "i ride past the marsh after this camp anyway. i'll look at the fog",
+      "im near the marsh later, i'll check the fog for you"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "look at the pillars too. count which way they lean",
+     "variants": [
+      "look at the pillars too. count which way they lean",
+      "and look which way the pillars lean. they all point the same way"
+     ],
+     "optional": false
     }
    ],
    "needs": []
