@@ -271,7 +271,8 @@ public class SocialExpansionSettingsTests
         Call("SaveSettings");
         var rows = Rows();
         Assert.That(rows["bot_guilds_enabled"], Is.EqualTo("True"));
-        Assert.That(rows["bot_voices_enabled"], Is.EqualTo("True"));
+        // Voices were switched off and on again: still the default (on since Beta 1.1), so nothing is written for them.
+        Assert.That(rows.ContainsKey("bot_voices_enabled"), Is.False);
         Assert.That(rows["xp_rate_by_level"], Is.EqualTo(SocialExpansionSettings.SuggestedPlayerXp));
         Assert.That(type.GetProperty("HasUnsavedChanges")!.GetValue(panel), Is.False);
 
@@ -279,6 +280,7 @@ public class SocialExpansionSettingsTests
         Call("SaveSettings");
         rows = Rows();
         Assert.That(rows["bot_guilds_enabled"], Is.EqualTo("False"));
+        Assert.That(rows["bot_voices_enabled"], Is.EqualTo("False"), "ALL OFF switches the new default off too");
         Assert.That(rows["xp_rate_by_level"], Is.EqualTo(""));
     }
 
