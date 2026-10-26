@@ -175,9 +175,30 @@ approach (a trained model on many more labelled lines), not more rules.
 To measure a new blind set: `TALK_AUDIT_IN=<lines.json> TALK_AUDIT_OUT=<misses.txt> dotnet vstest Tests.dll
 --Tests:MeasureReadRate` (each line `{text, channel, context?, expect, to?}`; `to` is the bot named in the line).
 
+### 8. Joining a debate, and how often lines repeat
+
+- **A player can join a running debate.** In /faction within 75 s of a debate line, "yeah exactly" draws thanks from the
+  last speaker ("see, Wynn gets it") and sometimes a groan from the other side; "nah, buffbots are fine" draws pushback
+  and sometimes a bot on the player's side; an opinion on the topic a nod from a debater. At most two answers per
+  debate, and the debate then goes on. Debate lines are now in the realm's thread, so "why?" or "lol" after one goes to
+  the bot that said it (`AutonomousBotDebates.TryAnswerPlayer`, `StanceOf`).
+- **The month simulation** (`UT_ChatMonth`, an audit tool: `TALK_MONTH_OUT=<file>`, optional `TALK_MONTH_RATE`) runs 30
+  evenings of 4 hours per realm through the real picker and its 3-day no-repeat window, at the evening pace 900 bots
+  give (/faction openers about every 74 s, replies, /guild, about 25 player lines). It is an approximate model: speakers'
+  places and flags are random, news and place lines are not modelled, debates are left out.
+  - A player reads about 340-360 bot lines an evening. From week 2 about **77-84% are the same words they read on an
+    earlier evening** (week 1: about 40%). At half the chat rate it is 62-81%, at a quarter 41-73%.
+  - The reply pools ran dry first ("chat" replies: 19 lines for about 1,000 openers a month, 423 left unanswered).
+    `replies_pools.lines` adds about 210 replies (chat, joke, boast, complaint, lfg, real life, newbie answers); after it no
+    reply goes unanswered and joke, boast and complaint replies no longer repeat within 3 days. The overall rate barely
+    moves: the openers (512 ambient lines per realm against about 140 a night, 130 lfg lines, 210 guild lines) are the
+    limit. Lowering the pace alone doesn't fix it; it needs several times more distinct openers (lines built from parts,
+    or many more written lines).
+
 ## Content
 
-The corpus went from 2,326 to 3,573 lines (`talking_audit.lines` holds the audit's reply sets). These files are new: `news.lines`, `news_replies.lines`, `tells.lines`,
+The corpus went from 2,326 to about 3,820 lines (`talking_audit.lines` holds the audit's reply sets, `replies_pools.lines`
+the month simulation's). These files are new: `news.lines`, `news_replies.lines`, `tells.lines`,
 `memory_more.lines`, `combat_calls.lines`, `lfg_real.lines`, `followups.lines`, `closings_more.lines`, `camp_more.lines`,
 `guild_more.lines` and `experience.lines`. The existing files were annotated with place, news, xp and role flags,
 and a few were reworded or removed.

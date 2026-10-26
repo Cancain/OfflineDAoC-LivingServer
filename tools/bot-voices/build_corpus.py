@@ -41,7 +41,7 @@ INVITES = {'none', 'chat', 'joke', 'boast', 'complaint', 'news', 'lfg', 'trade',
 # answer when a player asks "why?", "really?", "how?", "what?" or "where?" right after the bot's own line.
 # "player_<shape>" (the talking update audit): replies to a kind of player statement the reply path reads (good news,
 # an offer of help or items, a request to wait).
-INVITE_RE = re.compile(r'(none|chat|joke|boast|complaint|news(_[a-z0-9]+)*|lfg|trade|ask(_[a-z0-9]+)*|followup_[a-z]+|player_[a-z_]+)')
+INVITE_RE = re.compile(r'(none|chat|joke|boast|complaint|news(_[a-z0-9]+)*|lfg|trade|ask(_[a-z0-9]+)*|followup_[a-z]+|player_[a-z_]+|debate_[a-z]+)')
 TYPES = {'Leveler', 'Crafter', 'Socialite', 'Explorer', 'Daredevil', 'NoLifer'}
 REALMS = {'alb', 'mid', 'hib'}
 CLASSES = {

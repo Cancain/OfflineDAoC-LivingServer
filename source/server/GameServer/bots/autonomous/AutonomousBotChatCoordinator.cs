@@ -231,7 +231,7 @@ public static class AutonomousBotChatCoordinator
     }
 
     /// <summary>Remembers what a bot said in a channel, so the player's next line can follow it up (AutonomousChatThreads).</summary>
-    private static void Note(string channel, GameBot bot, string text, string invites, string to = null) =>
+    internal static void Note(string channel, GameBot bot, string text, string invites, string to = null) =>
         AutonomousChatThreads.Log.Record(channel, bot?.DatabaseID ?? 0, bot?.Name, text, invites, GameLoop.GameLoopTime, to);
 
     /// <summary>Where a conversation thread is: realm chat, /say near the player, or the player's /group.</summary>
@@ -453,6 +453,9 @@ public static class AutonomousBotChatCoordinator
         if (AutonomousBotGuildSocial.TryAnswerGuildRequest(player, message, true))
             return;
         if (TryThreadReply(player, message, AutonomousChatThreads.Faction(player.Realm), ThreadScope.Faction))
+            return;
+        // A player who joins a running debate ("nah, necros are fine") is answered in it, by the side they took or the other.
+        if (AutonomousBotDebates.TryAnswerPlayer(player, message))
             return;
         lock (Sync)
         {
@@ -1539,7 +1542,7 @@ public static class AutonomousBotChatCoordinator
         bot.IsAlive && bot.ObjectState == GameObject.eObjectState.Active && !bot.InCombat && !bot.IsCasting &&
         !bot.IsOnStableMasterRoute && !bot.IsOnHorse;
 
-    private static bool HasFactionAudience(eRealm realm) => ClientService.Instance.GetPlayersOfRealm(realm).Count > 0;
+    internal static bool HasFactionAudience(eRealm realm) => ClientService.Instance.GetPlayersOfRealm(realm).Count > 0;
 
     private static bool HasLocalAudience(GameBot bot) => bot?.CurrentRegion != null &&
         ClientService.Instance.GetPlayersOfRegion(bot.CurrentRegion)

@@ -193,6 +193,13 @@ public static class AutonomousBotDebates
         public long NextAt;
         /// <summary>When the current beat started waiting for a busy speaker; 0 when not waiting.</summary>
         public long WaitingSince;
+        /// <summary>The last line said: by whom (role and bot), when, and every line so far (for what a player's line is about).</summary>
+        public string LastRole;
+        public long LastSpeakerId;
+        public long LastAt;
+        public readonly List<(string Role, string Text)> Said = new();
+        /// <summary>Players answered in this scene, so one player gets at most two in-debate answers.</summary>
+        public int PlayerAnswers;
     }
 
     private static readonly object Sync = new();
@@ -390,11 +397,142 @@ public static class AutonomousBotDebates
             string filled = VC.ForTimeOfDay(filledVariants[Random.Shared.Next(filledVariants.Length)], DateTime.Now.Hour);
             string line = VC.Style(filled, AutonomousBotVoices.Corpus.VoiceFor(speaker.DatabaseID), Random.Shared);
             AutonomousBotChatCoordinator.BroadcastFaction(speaker.Name, realm, line);
+            // In the realm's thread too, so "why?" or "lol" after a debate line goes to the bot that said it.
+            AutonomousBotChatCoordinator.Note(AutonomousChatThreads.Faction(realm), speaker, line, "chat");
+            lock (Sync)
+            {
+                running.LastRole = beat.Role;
+                running.LastSpeakerId = speaker.DatabaseID;
+                running.LastAt = now;
+                running.Said.Add((beat.Role, line));
+            }
             running.NextAt = now + BeatDelayMs(NextText(running));
             return;
         }
         End(realm, "finished");
     }
+
+    #region A player joins in
+
+    /// <summary>How long after a debate line a player's line is still read as part of the debate.</summary>
+    public const int JoinWindowMs = 75_000;
+
+    private static readonly System.Text.RegularExpressions.Regex Agrees = new(
+        @"^(yeah|yea|ya|yep|yup|agreed|agree|true|so true|exactly|same|same here|thats right|that s right|correct|for real|totally|preach|truth)\b");
+
+    private static readonly System.Text.RegularExpressions.Regex Disagrees = new(
+        @"^(nah|no|nope|no way|disagree|i disagree|hard disagree|wrong|not really|not true|thats not true|that s not true|lol no|meh|eh no|naw|dunno about that|not sure about that|thats wrong)\b");
+
+    private static readonly HashSet<string> Filler = new(StringComparer.Ordinal)
+    {
+        "the", "and", "that", "this", "with", "they", "them", "have", "just", "what", "your", "youre", "about", "really", "there", "their",
+        "dont", "cant", "its", "for", "you", "but", "not", "was", "are", "all", "out", "get", "got", "one", "too", "can", "lol", "yeah",
+        "like", "know", "think", "even", "much", "more", "some", "been", "when", "then", "than", "into", "from", "only", "still",
+        "anyone", "else", "people", "feels", "actually", "make", "makes", "want", "would", "could", "should", "everyone", "thing", "things",
+    };
+
+    /// <summary>
+    /// What a player's line does in a running debate: "agree" with the last speaker ("yeah exactly", "+1"), "disagree" ("nah,
+    /// necros are fine"), "opinion" (three or more words that share one with the debate so far: "spiritmasters are fine in
+    /// groups imo"), or null (not about the debate). A question is left to the usual answers. Pure.
+    /// </summary>
+    public static string StanceOf(string message, IEnumerable<string> debateLines)
+    {
+        string t = AutonomousChatQuestions.Normalize(message);
+        if (message.TrimEnd().EndsWith('?') || AutonomousChatQuestions.IsQuestion(message))
+            return null;
+        // A request or a hello is not a side taken: "anyone want to group for vendo", "hi all".
+        if (AutonomousChatIntentModel.Predict(message) is eAutonomousChatIntent.Grouping or eAutonomousChatIntent.Trading or
+            eAutonomousChatIntent.Rez or eAutonomousChatIntent.Alarm or eAutonomousChatIntent.Greeting or eAutonomousChatIntent.Farewell or
+            eAutonomousChatIntent.Thanks or eAutonomousChatIntent.Away or eAutonomousChatIntent.Back or eAutonomousChatIntent.Abuse)
+            return null;
+        if (Disagrees.IsMatch(t) && !System.Text.RegularExpressions.Regex.IsMatch(t, @"^no (idea|clue|problem|worries)\b"))
+            return "disagree";
+        string raw = message.Trim();
+        if (Agrees.IsMatch(t) || t is "this" or "right" or "this right here" || raw.StartsWith("+1", StringComparison.Ordinal) || raw.StartsWith('^'))
+            return "agree";
+        string[] words = t.Split(' ');
+        if (words.Length < 3)
+            return null;
+        // "buffbots" and "buffbot" are one word here.
+        static string Stem(string word) => word.Length > 4 && word.EndsWith('s') ? word[..^1] : word;
+        var debate = new HashSet<string>(debateLines.SelectMany(line => AutonomousChatQuestions.Normalize(line).Split(' '))
+            .Where(word => word.Length >= 4 && !Filler.Contains(word)).Select(Stem), StringComparer.Ordinal);
+        return words.Any(word => word.Length >= 4 && !Filler.Contains(word) && debate.Contains(Stem(word))) ||
+               System.Text.RegularExpressions.Regex.IsMatch(t, @"\b(imo|imho|i think|i reckon|personally|honestly|in my experience)\b")
+            ? "opinion"
+            : null;
+    }
+
+    /// <summary>
+    /// A player's /faction line during a running debate, answered in it (the talking update): agreeing with the last speaker
+    /// draws its thanks ("see, Wynn gets it"), disagreeing its pushback ("fair, but hear me out") and now and then a bot on
+    /// the player's side; an opinion on the topic a nod from one of the debaters. The debate then goes on. At most two such
+    /// answers per scene. False when no debate is running, the line isn't about it, or nobody can answer.
+    /// </summary>
+    public static bool TryAnswerPlayer(GamePlayer player, string message)
+    {
+        if (!Enabled || !AutonomousBotVoices.Enabled || player == null || string.IsNullOrWhiteSpace(message))
+            return false;
+        eRealm realm = player.Realm;
+        long now = GameLoop.GameLoopTime;
+        string stance;
+        GameBot last, other;
+        lock (Sync)
+        {
+            if (!Scenes.TryGetValue(realm, out Running running) || running.LastAt == 0 || now - running.LastAt > JoinWindowMs ||
+                running.PlayerAnswers >= 2)
+                return false;
+            stance = StanceOf(message, running.Said.Select(said => said.Text));
+            if (stance == null)
+                return false;
+            last = AutonomousBotRegistry.TryGet(running.LastSpeakerId, out GameBot lastBot) && Eligible(lastBot, realm) ? lastBot : null;
+            // The other side: a cast member who spoke under another role.
+            string lastRole = running.LastRole;
+            long otherId = running.Said.Where(said => said.Role != lastRole).Select(said => running.Cast.GetValueOrDefault(said.Role)).LastOrDefault();
+            other = otherId > 0 && AutonomousBotRegistry.TryGet(otherId, out GameBot otherBot) && Eligible(otherBot, realm) ? otherBot : null;
+            if (last == null && other == null)
+                return false;
+            running.PlayerAnswers++;
+            // The debate waits for the answers below.
+            running.NextAt = Math.Max(running.NextAt, now + 14_000);
+        }
+        var slots = new Dictionary<string, string>(StringComparer.Ordinal) { ["player"] = player.Name };
+        var replies = new List<(GameBot Bot, string Answers)>();
+        switch (stance)
+        {
+            case "agree":
+                replies.Add((last ?? other, last != null ? "debate_agreed" : "debate_opinion"));
+                if (last != null && other != null && Random.Shared.NextDouble() < 0.4)
+                    replies.Add((other, "debate_outnumbered"));
+                break;
+            case "disagree":
+                replies.Add((last ?? other, last != null ? "debate_disagreed" : "debate_backed"));
+                if (last != null && other != null && Random.Shared.NextDouble() < 0.5)
+                    replies.Add((other, "debate_backed"));
+                break;
+            default:
+                replies.Add((other ?? last, "debate_opinion"));
+                break;
+        }
+        int due = 0;
+        foreach ((GameBot bot, string answers) in replies)
+        {
+            if (!AutonomousBotVoices.TryLine(bot, "reply", out VC.Picked picked, answers: answers, slots: slots, relax: true))
+                continue;
+            due = AutonomousBotChatCoordinator.ReplyDelayMs(picked.Text, due, Random.Shared);
+            string text = picked.Text;
+            GameBot speaker = bot;
+            AutonomousLivingServer.Later(speaker, due, () => Eligible(speaker, realm) && AutonomousBotChatCoordinator.HasFactionAudience(realm), () =>
+            {
+                AutonomousBotChatCoordinator.BroadcastFaction(speaker.Name, realm, text);
+                AutonomousBotChatCoordinator.Note(AutonomousChatThreads.Faction(realm), speaker, text, "chat", player.Name);
+            });
+        }
+        return due > 0;
+    }
+
+    #endregion
 
     private static string NextText(Running running)
     {

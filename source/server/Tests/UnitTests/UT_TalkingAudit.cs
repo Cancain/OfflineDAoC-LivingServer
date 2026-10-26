@@ -88,6 +88,37 @@ namespace DOL.GS.Tests
             Assert.That(AutonomousChatQuestions.AnswerSelf("busy", "u busy", bare with { Busy = true }, r), Does.Contain("busy").Or.Contains("middle"));
         }
 
+        private static readonly string[] Debate =
+            ["is anyone else running a buffbot on a second account now?", "why not, buffs make solo play actually fun", "feels like cheating to me"];
+
+        [TestCase("yeah exactly", "agree")]
+        [TestCase("+1", "agree")]
+        [TestCase("nah, buffbots are fine", "disagree")]
+        [TestCase("no idea", null)]
+        [TestCase("solo play without buffs is rough imo", "opinion")]
+        [TestCase("buffbots ruin the game", "opinion")]
+        [TestCase("anyone want to group for vendo", null)]
+        [TestCase("why do people even care?", null)]
+        [TestCase("ok", null)]
+        public void APlayersLineInADebateIsRead(string text, string stance) =>
+            Assert.That(AutonomousBotDebates.StanceOf(text, Debate), Is.EqualTo(stance));
+
+        [Test]
+        public void TheDebateAnswerSetsAreInTheCorpus()
+        {
+            var assembly = typeof(AutonomousBotVoiceCorpus).Assembly;
+            string Read(string suffix)
+            {
+                string name = assembly.GetManifestResourceNames().Single(n => n.EndsWith(suffix, StringComparison.Ordinal));
+                using var stream = assembly.GetManifestResourceStream(name);
+                using var reader = new System.IO.StreamReader(stream);
+                return reader.ReadToEnd();
+            }
+            var corpus = AutonomousBotVoiceCorpus.Parse(Read("chat.corpus.json"), Read("chat.voices.json"));
+            foreach (string set in new[] { "debate_agreed", "debate_disagreed", "debate_backed", "debate_outnumbered", "debate_opinion" })
+                Assert.That(corpus.Lines.Count(line => line.Answers.Contains(set)), Is.GreaterThanOrEqualTo(4), set);
+        }
+
         // The independent review of the audit (2026-10-26): each of these was misread.
         [Test]
         public void TheReviewsMisreadsAreFixed()
