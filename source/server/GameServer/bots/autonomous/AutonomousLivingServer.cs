@@ -338,12 +338,15 @@ public static partial class AutonomousLivingServer
     }
 
     /// <summary>A private /send from a bot to a player (shown as "Name sends, ...").</summary>
-    internal static void Tell(GameBot bot, GamePlayer player, string text)
+    internal static void Tell(GameBot bot, GamePlayer player, string text, string invites = null)
     {
         if (string.IsNullOrWhiteSpace(text) || !IsSpeaker(bot) || player?.Client == null)
             return;
         ChatUtil.SendSendMessage(player.Client, "Social.ReceiveMessage.Private.Sends", bot.Name, text);
         BotChatTranscript.Bot("tell", bot.Name, bot.Realm, text, player.Name);
+        // The talking update: the player's next tell to this bot continues this exchange.
+        AutonomousChatThreads.Log.Record(AutonomousChatThreads.Tell(player.Name, bot.Name), bot.DatabaseID, bot.Name, text, invites,
+            GameLoop.GameLoopTime);
     }
 
     #endregion
