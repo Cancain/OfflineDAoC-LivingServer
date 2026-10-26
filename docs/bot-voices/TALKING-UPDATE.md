@@ -233,6 +233,34 @@ whatever the schedule mode). When it logs back in it says something sheepish in 
 earlier"). Eight scenes (`dunce.lines`); scenes now take up to eight speakers (roles A-H). A dunce that can't log out
 (grouped, fighting) is tried for about a minute, then stays.
 
+### 11. Beggars
+
+About 2% of the Crafter personalities are beggars (`bot_living_beggars`, on by default; `AutonomousBeggars`). The choice
+is a stable roll on the bot's id: 687 of 35,802 Crafters in a sample of 300,000 ids (1.9%), about 2 bots in every
+1,000. A beggar:
+
+- **Lives in its own capital.** It logs in there, picks a corner beside one of the city's merchants, and every few
+  minutes either stays on it or wanders to another merchant, trainer or the broker to beg there. It never groups (an
+  invite gets "X won't leave their corner"), is never picked for groups, raids, sieges or realm forces, and takes no
+  part in /faction chat: it talks only in /say on its corner.
+- **Begs.** It walks up to a player of its realm within 900 units (each player at most every four minutes), plays the
+  beg emote and asks for coin or loot by name and class. It calls out to the street now and then and mutters over its
+  purse ("3g 12s. never enough"). It begs passing bots too: about one in three gives 1 copper to 2 silver (about 1% of
+  its purse) from its own saved coin; the others say no and get called a cheapskate.
+- **Takes real gifts.** Drag coin or an item onto it. Coin moves from your purse into the bot's saved purse; a tradable
+  item from your backpack moves into its saved inventory (a full pack takes coin only). It thanks you and names the gift.
+- **Hoards.** It never buys, upgrades or spends. Every few minutes it takes begged loot to the Realm Exchange (an item
+  worth listing, by the same rules other bots use) or to a merchant (vendor trash) and keeps the coin.
+- **Turns on you if you ask it for gold or items** in /say near it, by tell, or with /beg at it. It follows you around
+  the city (no combat) insulting you and claiming its corner every 6-13 seconds, with rude, taunt and throw-dirt emotes,
+  until you leave the capital, then crows ("and STAY out") and goes back. Coin given while it chases you buys a truce,
+  and it won't beg you for ten minutes. A 30-minute limit stops a chase if you stay in the city.
+
+What reads as asking (`AsksForCharity`): an asking phrase ("spare", "gimme", "can i have", "lend me", "got any ... for
+me", "i need") with something of value ("gold", "coin", "5g", "loot", "armor", "anything"). Offers are not ("u want
+some gold?", "here, take this", "i'll give you some gold"), nor are "give me a sec" or "can i get an invite". About 3,100
+lines (`beggars.lines`, kind `beggar`, 19 topics), spiced the way the dunces are: 2003 chat, no real swear words.
+
 ## Content
 
 The corpus went from 2,326 to about 3,820 lines (`talking_audit.lines` holds the audit's reply sets, `replies_pools.lines`
@@ -294,3 +322,7 @@ Everything above was tested without a running world. These need the PC:
     ("heal me" to a thane) and one it can.
 13. Answer a bot's call for a group with "x", and say "ty" right after a bot's "gz": the first gets a join answer, the
     second nothing.
+14. Beggars: find one in each capital (`BEGGAR_CORNER` in the log names its merchant). Check that it walks up and
+    begs, that dragging coin and an item onto it moves them (your purse and pack, its purse after a restart), that
+    "spare some gold?" in /say makes it follow and insult you, that it stops when you zone out of the city, and that
+    it walks and paths sensibly between merchants (no walking into walls). Watch `BEGGAR_SOLD` and `BEGGAR_LISTED`.

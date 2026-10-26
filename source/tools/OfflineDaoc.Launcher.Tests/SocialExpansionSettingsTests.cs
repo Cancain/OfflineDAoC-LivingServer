@@ -58,7 +58,7 @@ public class SocialExpansionSettingsTests
         GuildAlliances = false, PlayerXpByLevel = SocialExpansionSettings.SuggestedPlayerXp,
         BotXpByLevel = SocialExpansionSettings.SuggestedBotXp,
         LivingMemory = true, LivingGrats = true, LivingFirsts = true, LivingDeath = true, LivingAlarms = true,
-        LivingNemesis = true, ScheduleMode = "clock", LivingBreaks = true, LivingBodyLanguage = true,
+        LivingNemesis = true, ScheduleMode = "clock", LivingBreaks = true, LivingBodyLanguage = true, LivingBeggars = true,
     };
 
     [Test] public void NoRowsMeansTheServerDefaults()
@@ -66,9 +66,9 @@ public class SocialExpansionSettingsTests
         var problems = new List<string>();
         Assert.That(SocialExpansionSettings.Load(_database, problems), Is.EqualTo(SocialExpansionSettings.Defaults));
         Assert.That(problems, Is.Empty);
-        // Since Beta 1.1 (the talking update) the chat-only parts are on: voices, memory, grats. The rest stays off.
+        // Since Beta 1.1 (the talking update) the chat-only parts are on: voices, memory, grats, and the beggars. The rest stays off.
         Assert.That(SocialExpansionSettings.Defaults.Voices && SocialExpansionSettings.Defaults.LivingMemory &&
-                    SocialExpansionSettings.Defaults.LivingGrats, Is.True);
+                    SocialExpansionSettings.Defaults.LivingGrats && SocialExpansionSettings.Defaults.LivingBeggars, Is.True);
         Assert.That(SocialExpansionSettings.Defaults.BotGuilds || SocialExpansionSettings.Defaults.Personalities ||
                     SocialExpansionSettings.Defaults.LivingDeath || SocialExpansionSettings.Defaults.LivingBreaks, Is.False);
         Assert.That(SocialExpansionSettings.Defaults.PlayerXpByLevel + SocialExpansionSettings.Defaults.BotXpByLevel, Is.Empty);
@@ -89,6 +89,7 @@ public class SocialExpansionSettingsTests
         Assert.That(rows["bot_schedule_mode"], Is.EqualTo("clock"));
         Assert.That(rows["bot_living_breaks"], Is.EqualTo("True"));
         Assert.That(rows["bot_living_body_language"], Is.EqualTo("True"));
+        Assert.That(rows["bot_living_beggars"], Is.EqualTo("True"));
         var problems = new List<string>();
         Assert.That(SocialExpansionSettings.Load(_database, problems), Is.EqualTo(AllOn));
         Assert.That(problems, Is.Empty);
@@ -140,6 +141,8 @@ public class SocialExpansionSettingsTests
         Assert.That((SocialExpansionSettings.Defaults with { ScheduleMode = "session" }).IsAllOff, Is.False);
         Assert.That((SocialExpansionSettings.Defaults with { LivingBodyLanguage = true }).IsAllOff, Is.False);
         Assert.That(off.LivingBodyLanguage, Is.False);
+        Assert.That(off.LivingBeggars, Is.False);
+        Assert.That((SocialExpansionSettings.Defaults.AllOff() with { LivingBeggars = true }).IsAllOff, Is.False);
     }
 
     [Test] public void NothingIsWrittenWhileTheServerRunsOrWithInvalidRanges()

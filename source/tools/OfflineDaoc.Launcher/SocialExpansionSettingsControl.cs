@@ -40,6 +40,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
     private readonly ComboBox _schedule = Choice("Bot schedule", "Off  (all online)", "Session", "Real clock");
     private readonly CheckBox _breaks = Switch("Breaks and linkdeads");
     private readonly CheckBox _body = Switch("Body language");
+    private readonly CheckBox _beggars = Switch("Beggars");
     private readonly XpRow _playerXp = new("YOUR CHARACTERS", SocialExpansionSettings.SuggestedPlayerXp, "3× · 5× · 12×");
     private readonly XpRow _botXp = new("AUTONOMOUS BOTS", SocialExpansionSettings.SuggestedBotXp, "1.5× · 2.5× · 6×");
     private readonly Label _status = new()
@@ -96,7 +97,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         Dependent(_debates, Add(voices, _debates, null, "Spec arguments, relic alerts and long threads in /faction, every 30–45 minutes while you play. Needs bot voices."),
             v => v.Voices);
 
-        var living = Card("SERVER LIFE", DaocTheme.Gold, 9);
+        var living = Card("SERVER LIFE", DaocTheme.Gold, 10);
         Add(living, _memory, null, "Bots of your realm remember grouping with you, your rezzes and rude words: they greet and thank you by name.");
         Add(living, _grats, null, "Dings get grats from the group and bots nearby; a new level 50 gets cheers in /faction.");
         Add(living, _firsts, null, "The first to level 50, to 50 in each class and to each realm rank is announced and goes in the Herald.");
@@ -107,6 +108,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
             "Off: all bots online. Session: bots play 1–4 hour sessions. Real clock: busy evenings, quiet nights."));
         Add(living, _breaks, null, "Idle bots go brb for 5–25 minutes; a bot in your group rarely goes linkdead for a minute.");
         Add(living, _body, null, "Idle bots look around, emote, shift their feet in town, wave when you walk up and cheer a ding. No jumping or sitting.");
+        Add(living, _beggars, null, "A few Crafter bots beg in their capital and hoard coin. Ask one for gold and it follows you, insulting you, until you leave.");
 
         var xp = Card("XP BY LEVEL RANGE", DaocTheme.Gold, 5);
         xp = xp with { Height = TitleRow + 2 * (XpRow.Height + XpRow.ErrorHeight) + Row + CardPadding };
@@ -160,7 +162,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         scroller.BringToFront();   // docked last, so it fills what the footer leaves
 
         foreach (var box in new[] { _guilds, _guildSocial, _guildRecruit, _guildClaims, _guildEconomy, _guildAlliances, _personalities, _voices, _debates,
-                     _memory, _grats, _firsts, _death, _alarms, _nemesis, _breaks, _body })
+                     _memory, _grats, _firsts, _death, _alarms, _nemesis, _breaks, _body, _beggars })
             box.CheckedChanged += (_, _) => Edited();
         _schedule.SelectedIndexChanged += (_, _) => Edited();
         _share.ValueChanged += (_, _) => Edited();
@@ -222,6 +224,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         ScheduleMode = SocialExpansionSettings.ScheduleModes[Math.Max(0, _schedule.SelectedIndex)],
         LivingBreaks = _breaks.Checked,
         LivingBodyLanguage = _body.Checked,
+        LivingBeggars = _beggars.Checked,
         PlayerXpByLevel = _playerXp.Value,
         BotXpByLevel = _botXp.Value,
     };
@@ -249,6 +252,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         _schedule.SelectedIndex = Math.Max(0, Array.IndexOf(SocialExpansionSettings.ScheduleModes, settings.ScheduleMode));
         _breaks.Checked = settings.LivingBreaks;
         _body.Checked = settings.LivingBodyLanguage;
+        _beggars.Checked = settings.LivingBeggars;
         _playerXp.Value = settings.PlayerXpByLevel;
         _botXp.Value = settings.BotXpByLevel;
         _loading = false;
@@ -363,8 +367,8 @@ internal sealed class SocialExpansionSettingsControl : UserControl
         if (s.Personalities) on.Add("personalities");
         if (s.Voices) on.Add(s.Debates ? "voices and debates" : "voices");
         int living = new[] { s.LivingMemory, s.LivingGrats, s.LivingFirsts, s.LivingDeath, s.LivingAlarms, s.LivingNemesis,
-            s.ScheduleMode != "off", s.LivingBreaks, s.LivingBodyLanguage }.Count(x => x);
-        if (living > 0) on.Add($"Server life ({living} of 9 parts)");
+            s.ScheduleMode != "off", s.LivingBreaks, s.LivingBodyLanguage, s.LivingBeggars }.Count(x => x);
+        if (living > 0) on.Add($"Server life ({living} of 10 parts)");
         if (s.PlayerXpByLevel != "" || s.BotXpByLevel != "") on.Add("XP by level");
         return on.Count == 0
             ? "Settings are loaded from the saved server settings. Everything is off: the game plays like the normal release."

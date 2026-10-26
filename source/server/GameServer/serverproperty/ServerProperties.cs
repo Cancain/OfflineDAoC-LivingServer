@@ -2470,6 +2470,10 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("bots", "bot_living_body_language", "Server life: autonomous gamebots standing around in town, waiting for their group or resting look around, emote now and then (ponder, shrug, laugh, stretch their legs with a step or two in town), turn and wave at you when you walk up, and cheer when someone dings nearby. Only where a real player can see it; never in a fight. Bots cannot jump or sit (the game sends no such state for them).", false)]
 		public static bool BOT_LIVING_BODY_LANGUAGE;
 
+		/// <summary>About 2% of Crafter bots are beggars who live in their capital (AutonomousBeggars).</summary>
+		[ServerProperty("bots", "bot_living_beggars", "Server life: about 2% of the Crafter bots are beggars. They live in their capital, beg you and passing bots for coin and loot (drag coin or an item onto one to give it), sell what they are given and hoard every copper. Ask a beggar for gold or items and it follows you around the city insulting you and defending its corner until you leave. Beggars never group or fight.", true)]
+		public static bool BOT_LIVING_BEGGARS;
+
 
 
 		#endregion

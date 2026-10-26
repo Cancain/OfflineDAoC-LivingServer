@@ -200,7 +200,7 @@ namespace DOL.GS
         {
             lock (Sync) return Raids.TryGetValue(id, out var raid) && raid.Forced;
         }
-        public static bool IsEligible(GameBot bot) => bot != null && RealmRaidRecruitmentPolicy.Eligible(
+        public static bool IsEligible(GameBot bot) => bot != null && !AutonomousBeggars.Is(bot) && RealmRaidRecruitmentPolicy.Eligible(
             bot.Level, bot.IsAutonomousWorldBot, bot.IsTemporaryGroupHelper, bot.IsPlayerLedGroup);
 
         /// <summary>

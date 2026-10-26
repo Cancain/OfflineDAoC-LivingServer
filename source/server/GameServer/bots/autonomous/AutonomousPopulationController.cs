@@ -237,6 +237,9 @@ public static class AutonomousPopulationController
                 PlaceAtCapitalFallback(bot, record);
                 bot.SynchronizePositionForLoginValidation();
             }
+            // A beggar (bot_living_beggars) always logs in in its own capital.
+            if (AutonomousBeggars.PlaceAtLogin(bot, record))
+                bot.SynchronizePositionForLoginValidation();
             if (string.IsNullOrWhiteSpace(record.LastSavedUtc) && record.Experience == 0)
             {
                 bot.Health = bot.MaxHealth;

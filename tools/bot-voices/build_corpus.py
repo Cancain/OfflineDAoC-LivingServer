@@ -33,7 +33,9 @@ KINDS = {'ambient', 'reply', 'lfg', 'trade', 'rvr', 'greet', 'thanks', 'grudge',
          # 0.36-se.4: group talk (/group with you, /say near you), a starter's closing line, guild idle chat
          'group', 'closing', 'guild',
          # The talking update: news of the world (AutonomousChatNews), and private tells a bot starts
-         'news', 'tell'}
+         'news', 'tell',
+         # Beggars (AutonomousBeggars): a few Crafters who live on their capital's corners
+         'beggar'}
 # Lines that start a conversation; each says what kind of answer it invites (@invites, or inferred below).
 OPENER_KINDS = {'ambient', 'lfg', 'trade', 'rvr', 'camp', 'group', 'guild', 'news', 'tell'}
 # Kinds whose lines speak about the speaker's own here and now, so a place they name must be true (or @about).
@@ -115,7 +117,9 @@ SLOTS = {'me', 'class', 'level', 'realm', 'zone', 'monster', 'npc', 'item', 'cou
          # 0.36-se.4: the plural of {monster} ("2 hill cats"), and where a travelling bot is going
          'monsters', 'destination',
          # The talking update: what a piece of news is about
-         'relic', 'raid', 'boss', 'winner', 'loser', 'bubbles', 'need'}
+         'relic', 'raid', 'boss', 'winner', 'loser', 'bubbles', 'need',
+         # Beggars: a gift or sale ({coin}) and the beggar's whole purse ({hoard})
+         'coin', 'hoard'}
 MEMORY_SLOTS = {'player', 'player_class', 'place'}
 MAX_RAW = 140
 
@@ -165,7 +169,8 @@ def check_text(text, tags, where, problems):
             problems.append(f'{where}: unknown slot {{{slot}}}')
         elif slot in MEMORY_SLOTS and 'knows_player' not in tags['needs'] and 'player_nearby' not in tags['needs'] and tags['kind'] not in (
                 'greet', 'thanks', 'grudge', 'gossip', 'alarm', 'nemesis', 'revenge') and not (
-                slot == 'player' and tags['kind'] in ('reply', 'closing')):   # in a reply, {player} is whoever is answered
+                slot == 'player' and tags['kind'] in ('reply', 'closing')) and not (
+                tags['kind'] == 'beggar'):   # in a reply, {player} is whoever is answered; a beggar's, whoever it begs or chases
             problems.append(f'{where}: memory slot {{{slot}}} needs @needs knows_player or a memory kind')
     if text.count('{') != text.count('}'):
         problems.append(f'{where}: unbalanced braces')

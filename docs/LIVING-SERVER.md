@@ -31,6 +31,7 @@ stopped; they are used at the next start. The server keys (category `bots`) are:
 | Bot schedule | `bot_schedule_mode` | `off` (also `session`, `clock`) |
 | Breaks and linkdeads | `bot_living_breaks` | False |
 | Body language | `bot_living_body_language` | False |
+| Beggars | `bot_living_beggars` | True |
 
 **ALL OFF** in the tab switches every part off, along with the other Living Server features.
 
@@ -196,6 +197,13 @@ What it can't do: bots can't jump, sit or strafe. The game's updates for an NPC 
 is) carry its position, heading and speed but no jump or sit state, and the new client puts NPCs
 on the ground. All emotes used are ones the new client animates (ids 1–46); the original client
 hasn't been tried.
+
+### Beggars (`bot_living_beggars`)
+About 2% of the Crafter bots (about 2 in every 1,000 bots) live as beggars in their own capital. They beg you and
+passing bots for coin and loot, sell what they are given and hoard every copper. Drag coin or an item onto one to give
+it; the gift really moves to the bot. Ask a beggar for gold or items (in /say, by tell or with /beg) and it follows
+you around the city insulting you and defending its corner until you leave the city. Beggars never group, fight for
+the realm or talk in /faction. Details: [bot-voices/TALKING-UPDATE.md](bot-voices/TALKING-UPDATE.md) section 11.
 
 ## New client (0.36c)
 

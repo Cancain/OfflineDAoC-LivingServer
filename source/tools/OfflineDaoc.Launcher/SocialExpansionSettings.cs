@@ -36,6 +36,8 @@ public sealed record SocialExpansionSettings
     public string ScheduleMode { get; init; } = "off";
     public bool LivingBreaks { get; init; }
     public bool LivingBodyLanguage { get; init; }
+    /// <summary>About 2% of Crafter bots are beggars in their capital (AutonomousBeggars). On by default.</summary>
+    public bool LivingBeggars { get; init; } = true;
     public string PlayerXpByLevel { get; init; } = "";
     public string BotXpByLevel { get; init; } = "";
 
@@ -65,6 +67,7 @@ public sealed record SocialExpansionSettings
         ("bot_schedule_mode", "bots", "Server life: when autonomous gamebots are online. off = the whole roster (today's behavior); session = each bot plays sessions of 1-4 hours with 20 minutes to 2 hours away, timed from server start; clock = your PC's time of day (busiest 7-11pm and weekends, quiet overnight)."),
         ("bot_living_breaks", "bots", "Server life: an idle bot now and then says brb and logs off for 5-25 minutes, and a bot grouped with you rarely goes linkdead for 30-90 seconds (the group hears about it) and comes back with an apology. Never during a fight, siege or relic march."),
         ("bot_living_body_language", "bots", "Server life: autonomous gamebots standing around in town, waiting for their group or resting look around, emote now and then (ponder, shrug, laugh, stretch their legs with a step or two in town), turn and wave at you when you walk up, and cheer when someone dings nearby. Only where a real player can see it; never in a fight. Bots cannot jump or sit (the game sends no such state for them)."),
+        ("bot_living_beggars", "bots", "Server life: about 2% of the Crafter bots are beggars. They live in their capital, beg you and passing bots for coin and loot (drag coin or an item onto one to give it), sell what they are given and hoard every copper. Ask a beggar for gold or items and it follows you around the city insulting you and defending its corner until you leave. Beggars never group or fight."),
         ("xp_rate_by_level", "rates", "Optional XP rate by level range for real player characters (set in the launcher's Living Server tab)."),
         ("bot_xp_rate_by_level", "rates", "Optional XP rate by level range for autonomous gamebots (set in the launcher's Living Server tab)."),
     ];
@@ -92,6 +95,7 @@ public sealed record SocialExpansionSettings
         ["bot_schedule_mode"] = ScheduleMode,
         ["bot_living_breaks"] = Bool(LivingBreaks),
         ["bot_living_body_language"] = Bool(LivingBodyLanguage),
+        ["bot_living_beggars"] = Bool(LivingBeggars),
         ["xp_rate_by_level"] = PlayerXpByLevel.Trim(),
         ["bot_xp_rate_by_level"] = BotXpByLevel.Trim(),
     };
@@ -184,6 +188,7 @@ public sealed record SocialExpansionSettings
             ScheduleMode = schedule,
             LivingBreaks = ReadBool("bot_living_breaks", d.LivingBreaks),
             LivingBodyLanguage = ReadBool("bot_living_body_language", d.LivingBodyLanguage),
+            LivingBeggars = ReadBool("bot_living_beggars", d.LivingBeggars),
             // Kept as written: an invalid range setting shows its own error in the tab (the server ignores it).
             PlayerXpByLevel = stored.TryGetValue("xp_rate_by_level", out string? player) ? player?.Trim() ?? "" : "",
             BotXpByLevel = stored.TryGetValue("bot_xp_rate_by_level", out string? bots) ? bots?.Trim() ?? "" : "",
@@ -195,7 +200,7 @@ public sealed record SocialExpansionSettings
 
     /// <summary>True when any Living Server part is on.</summary>
     public bool AnyLiving => LivingMemory || LivingGrats || LivingFirsts || LivingDeath || LivingAlarms || LivingNemesis ||
-                             ScheduleMode != "off" || LivingBreaks || LivingBodyLanguage;
+                             ScheduleMode != "off" || LivingBreaks || LivingBodyLanguage || LivingBeggars;
 
     /// <summary>
     /// "All off": the three features, every Living Server part and both XP ranges off. The share, lowest level and each part keep their
@@ -205,7 +210,7 @@ public sealed record SocialExpansionSettings
     {
         BotGuilds = false, Personalities = false, Voices = false, PlayerXpByLevel = "", BotXpByLevel = "",
         LivingMemory = false, LivingGrats = false, LivingFirsts = false, LivingDeath = false, LivingAlarms = false,
-        LivingNemesis = false, ScheduleMode = "off", LivingBreaks = false, LivingBodyLanguage = false,
+        LivingNemesis = false, ScheduleMode = "off", LivingBreaks = false, LivingBodyLanguage = false, LivingBeggars = false,
     };
 
     /// <summary>True when every feature and both XP ranges are off.</summary>

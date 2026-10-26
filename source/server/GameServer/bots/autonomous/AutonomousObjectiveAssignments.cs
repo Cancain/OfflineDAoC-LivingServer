@@ -229,7 +229,7 @@ public static class AutonomousObjectiveAssignments
             DateTime utcNow = DateTime.UtcNow;
             GameBot[] roster = AutonomousBotRegistry.Snapshot()
                 .Where(bot => bot.IsAutonomousWorldBot && !bot.IsTemporaryGroupHelper && !bot.IsPlayerLedGroup &&
-                              bot.PersistentRecord != null)
+                              bot.PersistentRecord != null && !AutonomousBeggars.Is(bot))
                 .ToArray();
             // The existing one-minute pass is also a backstop for a service bot
             // whose own movement/maintenance branch is delayed. No new timer.

@@ -23,7 +23,9 @@ namespace DOL.GS.Tests
         private static readonly string[] MemorySlots = ["player", "place", "player_class"];
 
         // Slots only the Living Server event that says the line fills (grats, firsts, alarms, nemesis).
-        private static readonly string[] EventSlots = ["target", "what", "size", "classes", "killer", "killer_class"];
+        private static readonly string[] EventSlots = ["target", "what", "size", "classes", "killer", "killer_class",
+            // Beggars (AutonomousBeggars): a gift or sale, the beggar's purse, and the merchant by its corner
+            "coin", "hoard", "npc"];
 
         private static readonly string[] OutOfEra =
             ["world of warcraft", "discord", "twitch", "youtube", "lmao", "covid", "smh", "tbh", "ngl", "yeet"];

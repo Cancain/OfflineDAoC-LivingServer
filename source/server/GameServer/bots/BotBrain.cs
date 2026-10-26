@@ -1225,6 +1225,9 @@ namespace DOL.AI.Brain
                     BotBody.StopMoving();
                 return;
             }
+            // Beggars (bot_living_beggars): a few Crafters live on a corner of their capital and do nothing else.
+            if (AutonomousBeggars.Think(this))
+                return;
             bool nativeSpeedTravelStarted;
             if (CompanionFollowPolicy.ObserveAndCancelBuffs(BotBody, out nativeSpeedTravelStarted))
             {

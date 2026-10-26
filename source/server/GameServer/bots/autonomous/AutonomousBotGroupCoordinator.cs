@@ -1601,7 +1601,7 @@ public static partial class AutonomousBotGroupCoordinator
                 ? releaseReason : "Shared group task expired");
 
         GameBot[] activeRoster = AutonomousBotRegistry.Snapshot()
-            .Where(bot => !bot.IsTemporaryGroupHelper && AutonomousObjectiveAssignments.Is(bot, objectiveKind))
+            .Where(bot => !bot.IsTemporaryGroupHelper && AutonomousObjectiveAssignments.Is(bot, objectiveKind) && !AutonomousBeggars.Is(bot))
             .ToArray();
         int groupedCount = activeRoster.Count(bot => bot.Group != null);
         // Allocation has already capped the GroupPve cohort at its population

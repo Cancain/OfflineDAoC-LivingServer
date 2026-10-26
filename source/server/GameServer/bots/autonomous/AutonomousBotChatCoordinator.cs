@@ -471,6 +471,9 @@ public static class AutonomousBotChatCoordinator
         if (player == null || string.IsNullOrWhiteSpace(message) || player.CurrentRegion == null)
             return;
         BotChatTranscript.Player("say", player, message);
+        // Asking for gold or items near a beggar in a capital: the beggar takes it personally (AutonomousBeggars).
+        if (AutonomousBeggars.OnPlayerSay(player, message))
+            return;
         if (AutonomousChatIntentModel.Predict(message) == eAutonomousChatIntent.IgnoreOutOfWorld)
             return;
         if (AutonomousBotGuildSocial.TryAnswerGuildRequest(player, message, false))
@@ -517,6 +520,8 @@ public static class AutonomousBotChatCoordinator
         if (player == null || bot == null || string.IsNullOrWhiteSpace(message))
             return;
         BotChatTranscript.Player("tell", player, message, bot.Name);
+        if (AutonomousBeggars.OnPlayerTell(player, bot, message))
+            return;
         lock (Sync)
         {
             string key = player.Name + "|" + bot.Name;
@@ -1540,7 +1545,7 @@ public static class AutonomousBotChatCoordinator
 
     private static bool Eligible(GameBot bot) => bot?.IsAutonomousWorldBot == true && !bot.IsTemporaryGroupHelper &&
         bot.IsAlive && bot.ObjectState == GameObject.eObjectState.Active && !bot.InCombat && !bot.IsCasting &&
-        !bot.IsOnStableMasterRoute && !bot.IsOnHorse;
+        !bot.IsOnStableMasterRoute && !bot.IsOnHorse && !AutonomousBeggars.Is(bot);   // beggars talk only on their corner
 
     internal static bool HasFactionAudience(eRealm realm) => ClientService.Instance.GetPlayersOfRealm(realm).Count > 0;
 
