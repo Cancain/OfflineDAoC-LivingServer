@@ -61,13 +61,16 @@ public class SocialExpansionSettingsTests
         LivingNemesis = true, ScheduleMode = "clock", LivingBreaks = true, LivingBodyLanguage = true,
     };
 
-    [Test] public void NoRowsMeansTheServerDefaultsEverythingOff()
+    [Test] public void NoRowsMeansTheServerDefaults()
     {
         var problems = new List<string>();
         Assert.That(SocialExpansionSettings.Load(_database, problems), Is.EqualTo(SocialExpansionSettings.Defaults));
         Assert.That(problems, Is.Empty);
+        // Since Beta 1.1 (the talking update) the chat-only parts are on: voices, memory, grats. The rest stays off.
+        Assert.That(SocialExpansionSettings.Defaults.Voices && SocialExpansionSettings.Defaults.LivingMemory &&
+                    SocialExpansionSettings.Defaults.LivingGrats, Is.True);
         Assert.That(SocialExpansionSettings.Defaults.BotGuilds || SocialExpansionSettings.Defaults.Personalities ||
-                    SocialExpansionSettings.Defaults.Voices, Is.False);
+                    SocialExpansionSettings.Defaults.LivingDeath || SocialExpansionSettings.Defaults.LivingBreaks, Is.False);
         Assert.That(SocialExpansionSettings.Defaults.PlayerXpByLevel + SocialExpansionSettings.Defaults.BotXpByLevel, Is.Empty);
     }
 

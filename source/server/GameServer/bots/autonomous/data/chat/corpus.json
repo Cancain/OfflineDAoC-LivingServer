@@ -33837,7 +33837,8 @@
     50
    ],
    "needs": [
-    "knows_player"
+    "knows_player",
+    "recruiting"
    ],
    "intent": "",
    "mood": "",
@@ -33857,7 +33858,8 @@
     50
    ],
    "needs": [
-    "knows_player"
+    "knows_player",
+    "recruiting"
    ],
    "intent": "",
    "mood": "",
@@ -33877,7 +33879,8 @@
     50
    ],
    "needs": [
-    "knows_player"
+    "knows_player",
+    "recruiting"
    ],
    "intent": "",
    "mood": "",
@@ -64877,9 +64880,9 @@
    "intent": "",
    "mood": "",
    "weight": 1.0,
-   "invites": "ask",
-   "text": "hey, you coming to the guild group later?",
-   "id": "4624a41de9c7"
+   "invites": "ask_anyone",
+   "text": "hey, anyone in the guild grouping tonight?",
+   "id": "bd4a718e5ef5"
   },
   {
    "kind": "tell",
@@ -65020,26 +65023,6 @@
    "invites": "chat",
    "text": "heya guildie",
    "id": "10941d241027"
-  },
-  {
-   "kind": "tell",
-   "topic": "guildmate",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "knows_player"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "invites": "chat",
-   "text": "thanks for the help last week {player}",
-   "id": "9339c98a1b32"
   },
   {
    "kind": "tell",

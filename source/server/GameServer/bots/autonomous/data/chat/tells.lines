@@ -146,7 +146,7 @@ heads up, we lost df
 @who *
 @needs knows_player
 @invites ask
-hey, you coming to the guild group later?
+hey, anyone in the guild grouping tonight?
 {player}, how close are you to your next level?
 {player}, are we doing anything this weekend?
 yo, got a question about your spec, got a sec?
@@ -155,7 +155,6 @@ hey, you ok? havent seen you on much
 {player}! guild is quiet tonight, where is everyone?
 @invites chat
 heya guildie
-thanks for the help last week {player}
 {player}, we should get the guild out to rvr soon
 was just telling the others about you lol, all good things
 @who Crafter

@@ -2402,7 +2402,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Autonomous gamebots speak lines from the bot-voices corpus in their own writing style.
 		/// </summary>
-		[ServerProperty("bots", "bot_voices_enabled", "Autonomous gamebots say pre-written, period lines (docs/bot-voices/DESIGN.md) chosen by personality, level, realm, class and situation, each in its own writing style, without repeating a line in a realm within 6 hours. False keeps today's lines.", false)]
+		[ServerProperty("bots", "bot_voices_enabled", "Autonomous gamebots say pre-written, period lines (docs/bot-voices/DESIGN.md) chosen by personality, level, realm, class and situation, each in its own writing style, without repeating a line in a realm within 6 hours. On by default since Beta 1.1 (the talking update). False keeps the old lines.", true)]
 		public static bool BOT_VOICES_ENABLED;
 
 		/// <summary>
@@ -2411,14 +2411,26 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("bots", "bot_voices_debates", "When bot voices are on: bots of a realm play the corpus's debates and long threads in /faction while you are online, one at a time, 30-45 minutes apart, never repeating a scene until all have played.", true)]
 		public static bool BOT_VOICES_DEBATES;
 
+		/// <summary>
+		/// Bots now and then start a private tell with the player (the talking update).
+		/// </summary>
+		[ServerProperty("bots", "bot_voices_tells", "When bot voices and bot memory are on: now and then (at most every 25-45 minutes) a bot sends you a tell: a friend saying hello or passing on news, a guildmate, or a solo bot of your level nearby asking to duo.", true)]
+		public static bool BOT_VOICES_TELLS;
+
+		/// <summary>
+		/// How busy realm chat is (the talking update): a multiplier on how often bots start /faction and /say lines.
+		/// </summary>
+		[ServerProperty("bots", "bot_voices_chat_rate", "When bot voices are on: how much bots talk unprompted, from 0 (only answers) to 3 (very busy). 1 is a normal evening; it already rises and falls with how many bots are on and the hour.", 1.0)]
+		public static double BOT_VOICES_CHAT_RATE;
+
 		// ---- Server life (docs/LIVING-SERVER.md). Every part is off by default. ----
 
 		/// <summary>Bots remember the player: greetings by name, thanks for a rez or a group, gossip, grudges.</summary>
-		[ServerProperty("bots", "bot_living_memory", "Server life: autonomous gamebots of your realm remember grouping with you, your rezzes and rude words; they greet you by name, thank you for an old rez, answer you by name, mention you in /faction now and then, and stay cool after insults. Chat only. False keeps today's bots.", false)]
+		[ServerProperty("bots", "bot_living_memory", "Server life: autonomous gamebots of your realm remember grouping with you, your rezzes and rude words; they greet you by name, thank you for an old rez, answer you by name, mention you in /faction now and then, and stay cool after insults. Chat only. On by default since Beta 1.1. False keeps today's bots.", true)]
 		public static bool BOT_LIVING_MEMORY;
 
 		/// <summary>Grats from nearby, grouped and guilded bots when a character dings; /faction grats for a 50.</summary>
-		[ServerProperty("bots", "bot_living_grats", "Server life: when you or a bot gains a level, groupmates say grats in /group and bots nearby in /say, and a realm's bots cheer a new level 50 in /faction.", false)]
+		[ServerProperty("bots", "bot_living_grats", "Server life: when you or a bot gains a level, groupmates say grats in /group and bots nearby in /say, and a realm's bots cheer a new level 50 in /faction. On by default since Beta 1.1.", true)]
 		public static bool BOT_LIVING_GRATS;
 
 		/// <summary>Realm-wide announcements of server firsts, recorded for the Herald.</summary>

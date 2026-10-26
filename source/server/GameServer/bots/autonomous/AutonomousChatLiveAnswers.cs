@@ -51,15 +51,25 @@ public static class AutonomousChatLiveAnswers
         return null;
     }
 
-    /// <summary>"where are the mids?": the frontier zone with the most enemy gamebots in it now, or that it is quiet.</summary>
+    /// <summary>
+    /// "where are the mids?": what the realm has seen. The talking update: first the realm's latest sightings on its news board
+    /// (frontier bots report what they see), with how long ago; else enemies that a bot or player of the realm can see now;
+    /// else that it is quiet. Before, the answer came from where every enemy gamebot really was, seen or not.
+    /// </summary>
     public static string EnemySighting(GameBot bot, Random random)
     {
         if (bot == null)
             return null;
+        ChatNewsItem latest = AutonomousChatNews.Board.EnemySightings(bot.Realm, DateTime.UtcNow).FirstOrDefault();
+        if (latest != null)
+            return SightingText(latest, DateTime.UtcNow, random);
+        GameLiving[] watchers = AutonomousBotRegistry.Snapshot().Where(other => other.Realm == bot.Realm && other.IsAlive)
+            .Concat<GameLiving>(ClientService.Instance.GetPlayersOfRealm(bot.Realm)).ToArray();
         var seen = AutonomousBotRegistry.Snapshot()
             .Where(other => other.Realm != bot.Realm && other.Realm is eRealm.Albion or eRealm.Midgard or eRealm.Hibernia && other.IsAlive &&
                             other.CurrentZone != null && (other.CurrentZone.IsRvR || other.CurrentRegion?.IsRvR == true) &&
-                            !string.IsNullOrWhiteSpace(other.CurrentZone.Description))
+                            !string.IsNullOrWhiteSpace(other.CurrentZone.Description) &&
+                            watchers.Any(watcher => watcher.CurrentRegionID == other.CurrentRegionID && watcher.IsWithinRadius(other, SightRadius)))
             .GroupBy(other => (other.Realm, Zone: other.CurrentZone.Description, ZoneRealm: FrontierHome(other.CurrentZone.Description)))
             // Enemies on our side of the frontier first, then on neutral ground, then in their own homeland (live check
             // 2026-10-21: "where are the mids?" drew "big group of mids in Uppland", Midgard's own frontier).
@@ -76,6 +86,19 @@ public static class AutonomousChatLiveAnswers
         return seen.Count() >= 8
             ? random.Next(2) == 0 ? $"big group of {enemy} in {seen.Key.Zone}" : $"{enemy} zerg in {seen.Key.Zone} last i heard"
             : random.Next(2) == 0 ? $"saw some {enemy} around {seen.Key.Zone}" : $"a few {enemy} in {seen.Key.Zone}";
+    }
+
+    /// <summary>How far a bot or player of the realm sees an enemy for "where are the mids?".</summary>
+    public const int SightRadius = 3_500;
+
+    /// <summary>A sighting off the news board in chat words: "6 mids in Emain Macha, couple min ago". Pure.</summary>
+    public static string SightingText(ChatNewsItem item, DateTime now, Random random)
+    {
+        string enemy = item.Enemy switch { eRealm.Albion => "albs", eRealm.Midgard => "mids", _ => "hibs" };
+        double minutes = Math.Max(0, (now - item.When).TotalMinutes);
+        string when = minutes < 2 ? "just now" : minutes < 6 ? "couple min ago" : $"{(int)minutes} min ago";
+        string size = item.Size >= 8 ? "big group of" : item.Size >= 3 ? $"{item.Size}" : "a couple";
+        return random.Next(2) == 0 ? $"{size} {enemy} in {item.Zone}, {when}" : $"saw {size} {enemy} at {item.Zone} {when}";
     }
 
     /// <summary>

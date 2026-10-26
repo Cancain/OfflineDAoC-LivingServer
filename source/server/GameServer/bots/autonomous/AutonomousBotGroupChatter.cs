@@ -75,6 +75,22 @@ public static class AutonomousBotGroupChatter
         return true;
     }
 
+    /// <summary>
+    /// The talking update: a gamebot that joins the player's group says hello in /group a moment later ("hi all, ty for the
+    /// inv"), most of the time. Lines of kind lfg, topic join.
+    /// </summary>
+    public static void OnJoinedPlayerGroup(GameBot bot)
+    {
+        if (!AutonomousBotVoices.Enabled || bot?.IsAutonomousWorldBot != true || bot.IsTemporaryGroupHelper || Random.Shared.NextDouble() >= 0.75)
+            return;
+        Group group = bot.Group;
+        AutonomousLivingServer.Later(bot, 2_500 + Random.Shared.Next(3_500), () => bot.Group == group && bot.IsAlive && !bot.InCombat, () =>
+        {
+            if (AutonomousBotVoices.TryLine(bot, "lfg", out VC.Picked picked, topic: "join", relax: true))
+                Send(bot, picked.Text);
+        });
+    }
+
     /// <summary>A groupmate may pick the line up, as in /faction (a question nearly always, a remark sometimes).</summary>
     private static void Answer(GameBot speaker, Group group, VC.Picked opener)
     {
@@ -128,7 +144,7 @@ public static class AutonomousBotGroupChatter
         {
             GameBot answerer = pool[0];
             AutonomousLivingServer.Later(answerer, AutonomousBotChatCoordinator.ReplyDelayMs(knowledge, 0, Random.Shared),
-                () => answerer.Group == group && answerer.IsAlive, () => Send(answerer, knowledge));
+                () => answerer.Group == group && answerer.IsAlive, () => Send(answerer, AutonomousBotVoices.StyleFor(answerer, knowledge)));
             return;
         }
         eAutonomousChatIntent intent = AutonomousChatIntentModel.Predict(message);
@@ -149,7 +165,7 @@ public static class AutonomousBotGroupChatter
         }
     }
 
-    private static void Send(GameBot bot, string text)
+    internal static void Send(GameBot bot, string text)
     {
         if (bot.Group != null && AutonomousLivingServer.GroupHasPlayer(bot.Group))
         {

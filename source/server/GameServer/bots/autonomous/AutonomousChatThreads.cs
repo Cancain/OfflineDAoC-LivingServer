@@ -131,6 +131,21 @@ public static class AutonomousChatThreads
         return Regex.Matches(message, @"[A-Za-z]{2,}").Count >= 1;
     }
 
+    private static readonly Regex Yes = new(@"^(sure|yes|yeah|yea|ya|yep|yup|ok|okay|k|kk|ok sure|sure thing|why not|sounds good|lets go|let's go|lets do it|let's do it|definitely|absolutely|of course|ofc|inv|invite|inv me|np|sure why not|go for it|im in|i'm in|deal|sweet|cool)\b");
+    private static readonly Regex No = new(@"^(no|nah|nope|no thanks|no thx|no ty|not now|not right now|maybe later|later|im good|i'm good|im ok|i'm ok|pass|cant|can't|sorry|busy|already grouped|im grouped|i'm grouped)\b");
+
+    /// <summary>"sure", "yeah inv me", "ok": a yes to an offer. "nah", "maybe later": a no. Null when neither.</summary>
+    public static bool? SaysYes(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return null;
+        string text = Regex.Replace(message.ToLowerInvariant(), @"[^a-z' ]", " ");
+        text = Regex.Replace(text, @"\s+", " ").Trim();
+        if (No.IsMatch(text))
+            return false;
+        return Yes.IsMatch(text) ? true : null;
+    }
+
     /// <summary>The closing sets that fit the question asked, most specific first ("ask_where" then "ask").</summary>
     public static string[] ClosingAnswers(string invites)
     {

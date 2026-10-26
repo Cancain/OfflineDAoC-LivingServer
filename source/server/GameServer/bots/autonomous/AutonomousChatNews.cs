@@ -65,7 +65,9 @@ public sealed class ChatNewsBoard
     public static readonly TimeSpan DfWindow = TimeSpan.FromHours(1);
     public static readonly TimeSpan EnemyWindow = TimeSpan.FromMinutes(15);
 
+    public const int SightingCapacity = 120;
     private readonly List<ChatNewsItem> _items = new();
+    private readonly List<ChatNewsItem> _sightings = new();
     private long _nextId = 1;
 
     public ChatNewsItem Post(ChatNewsItem item)
@@ -73,6 +75,15 @@ public sealed class ChatNewsBoard
         lock (_items)
         {
             item = item with { Id = _nextId++ };
+            // Sightings come often (one per realm and zone a minute); they are kept apart so they never push keep, relic and
+            // raid news off the board.
+            if (item.Topic == "enemy_seen")
+            {
+                _sightings.Add(item);
+                if (_sightings.Count > SightingCapacity)
+                    _sightings.RemoveRange(0, _sightings.Count - SightingCapacity);
+                return item;
+            }
             _items.Add(item);
             if (_items.Count > Capacity)
                 _items.RemoveRange(0, _items.Count - Capacity);
@@ -126,7 +137,7 @@ public sealed class ChatNewsBoard
     public ChatNewsItem[] EnemySightings(eRealm realm, DateTime now)
     {
         lock (_items)
-            return _items.Where(item => item.Realm == realm && item.Topic == "enemy_seen" && now - item.When <= EnemyWindow)
+            return _sightings.Where(item => item.Realm == realm && now - item.When <= EnemyWindow)
                 .OrderByDescending(item => item.When).ToArray();
     }
 }

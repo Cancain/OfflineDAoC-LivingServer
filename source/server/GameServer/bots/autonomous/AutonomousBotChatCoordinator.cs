@@ -76,7 +76,9 @@ public static class AutonomousBotChatCoordinator
                 if (LastFactionAmbient.TryGetValue(starter.Realm, out long last) && now - last < gap)
                     return false;
                 LastFactionAmbient[starter.Realm] = now;
-                FactionGap[starter.Realm] = voices ? 120_000 + Random.Shared.Next(120_001) : 180_000;
+                FactionGap[starter.Realm] = voices
+                    ? FactionGapMs(RealmBotsOnline(starter.Realm), DateTime.Now.Hour, ServerProperties.Properties.BOT_VOICES_CHAT_RATE, Random.Shared)
+                    : 180_000;
             }
             else
             {
@@ -84,7 +86,9 @@ public static class AutonomousBotChatCoordinator
                 if (LastLocalAmbient.TryGetValue(starter.CurrentRegionID, out long last) && now - last < gap)
                     return false;
                 LastLocalAmbient[starter.CurrentRegionID] = now;
-                LocalGap[starter.CurrentRegionID] = voices ? 60_000 + Random.Shared.Next(60_001) : 90_000;
+                LocalGap[starter.CurrentRegionID] = voices
+                    ? LocalGapMs(DateTime.Now.Hour, ServerProperties.Properties.BOT_VOICES_CHAT_RATE, Random.Shared)
+                    : 90_000;
             }
         }
 
@@ -93,6 +97,14 @@ public static class AutonomousBotChatCoordinator
         // formal lines ("How fares everyone across the realm?").
         if (string.IsNullOrWhiteSpace(opening))
             return false;
+        // The talking update: most "lfg" and "trade" lines go to the realm's /lfg and /trade channels, as players used them.
+        string channel = faction && voices ? picked?.Line?.Kind : null;
+        if (channel is "lfg" or "trade" && Random.Shared.NextDouble() < 0.7)
+        {
+            SendRealmChannel(starter, channel, opening);
+            Note(channel + ":" + starter.Realm, starter, opening, picked?.Line?.Invites);
+            return true;
+        }
         if (faction)
             BroadcastFaction(starter.Name, starter.Realm, opening);
         else if (!starter.Say(opening))
@@ -155,6 +167,68 @@ public static class AutonomousBotChatCoordinator
         SendCorrection(speaker, true, picked.Correction);
         ScheduleBotReplies(speaker, picked.Text, true, false, picked.Line);
         return true;
+    }
+
+    /// <summary>
+    /// The talking update: the gap between bot-started /faction lines. 2-4 minutes on a normal evening; shorter with more bots
+    /// of the realm online and in the evening, longer late at night, scaled by bot_voices_chat_rate (0 = none). Pure.
+    /// </summary>
+    public static long FactionGapMs(int realmBotsOnline, int localHour, double rate, Random random)
+    {
+        if (rate <= 0.01)
+            return long.MaxValue / 4;
+        double population = Math.Clamp(Math.Sqrt(Math.Max(0, realmBotsOnline) / 120.0), 0.5, 1.8);
+        double gap = (120_000 + random.Next(120_001)) / (population * HourFactor(localHour) * Math.Clamp(rate, 0.01, 3.0));
+        return (long)Math.Clamp(gap, 40_000, 20 * 60_000);
+    }
+
+    /// <summary>The gap between bot-started /say lines in a region (1-2 minutes, by hour and chat rate). Pure.</summary>
+    public static long LocalGapMs(int localHour, double rate, Random random)
+    {
+        if (rate <= 0.01)
+            return long.MaxValue / 4;
+        double gap = (60_000 + random.Next(60_001)) / (HourFactor(localHour) * Math.Clamp(rate, 0.01, 3.0));
+        return (long)Math.Clamp(gap, 30_000, 10 * 60_000);
+    }
+
+    /// <summary>How busy chat is by the hour: evenings busiest, small hours quiet.</summary>
+    public static double HourFactor(int hour) => hour switch
+    {
+        >= 18 and <= 23 => 1.35,
+        >= 2 and <= 7 => 0.55,
+        >= 8 and <= 11 => 0.85,
+        _ => 1.0,
+    };
+
+    private static readonly Dictionary<eRealm, (int Count, long At)> RealmCounts = new();
+
+    private static int RealmBotsOnline(eRealm realm)
+    {
+        long now = GameLoop.GameLoopTime;
+        lock (RealmCounts)
+        {
+            if (RealmCounts.TryGetValue(realm, out var cached) && now - cached.At < 30_000)
+                return cached.Count;
+        }
+        int count = AutonomousBotRegistry.CountByRealm().GetValueOrDefault(realm);
+        lock (RealmCounts)
+            RealmCounts[realm] = (count, now);
+        return count;
+    }
+
+    /// <summary>A bot's line in its realm's /lfg or /trade channel, formatted as the server's /lfg and /trade commands do.</summary>
+    private static void SendRealmChannel(GameBot bot, string channel, string text)
+    {
+        string safe = (text ?? string.Empty).Trim();
+        if (safe.Length == 0)
+            return;
+        if (safe.Length > 240)
+            safe = safe[..240];
+        bool lfg = channel == "lfg";
+        string formatted = lfg ? $"[LFG] {bot.Name} ({bot.Level}, {bot.CharacterClass?.Name ?? bot.ClassName}): {safe}" : $"[Trade] {bot.Name}: {safe}";
+        foreach (GamePlayer player in ClientService.Instance.GetPlayersOfRealm(bot.Realm))
+            player.Out.SendMessage(formatted, lfg ? eChatType.CT_LFG : eChatType.CT_Trade, eChatLoc.CL_ChatWindow);
+        BotChatTranscript.Bot(channel, bot.Name, bot.Realm, safe);
     }
 
     /// <summary>Remembers what a bot said in a channel, so the player's next line can follow it up (AutonomousChatThreads).</summary>
@@ -388,6 +462,16 @@ public static class AutonomousBotChatCoordinator
             if (word != null && last != null && FollowUpReply(bot, player, word, last) is { } followUp)
                 return followUp;
             ChatThreadLog.Said question = AutonomousChatThreads.Log.OpenQuestion(channel, now, AutonomousChatThreads.TellMemoryMs);
+            // A duo or help offer the bot made: "sure" is answered with how to group (the player invites), "nah" with an ok.
+            if (question != null && question.Invites == AutonomousLivingServer.AskGroupInvite && AutonomousChatThreads.SaysYes(message) is bool yes)
+            {
+                AutonomousChatThreads.Log.Close(question);
+                if (yes)
+                    return AutonomousBotVoices.StyleFor(bot, JoinReply(bot, player, Random.Shared));
+                if (AutonomousBotVoices.TryLine(bot, "closing", out VC.Picked declined, answers: "lfg", relax: true))
+                    return declined.Text;
+                return AutonomousBotVoices.StyleFor(bot, "np, maybe later");
+            }
             if (question != null && AutonomousChatThreads.ReadsAsAnswer(message, intent))
             {
                 AutonomousChatThreads.Log.Close(question);

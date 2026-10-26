@@ -108,6 +108,7 @@ public static class BotGroupInvite
 
         bot.PathTo(player, bot.MaxSpeed);
         ChatUtil.SendSystemMessage(player, $"{bot.Name} joins your group and starts moving to you.");
+        AutonomousBotGroupChatter.OnJoinedPlayerGroup(bot);
         return true;
     }
 }

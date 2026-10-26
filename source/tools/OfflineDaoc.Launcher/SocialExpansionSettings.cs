@@ -24,10 +24,10 @@ public sealed record SocialExpansionSettings
     public bool GuildEconomy { get; init; } = true;
     public bool GuildAlliances { get; init; } = true;
     public bool Personalities { get; init; }
-    public bool Voices { get; init; }
+    public bool Voices { get; init; } = true;
     public bool Debates { get; init; } = true;
-    public bool LivingMemory { get; init; }
-    public bool LivingGrats { get; init; }
+    public bool LivingMemory { get; init; } = true;
+    public bool LivingGrats { get; init; } = true;
     public bool LivingFirsts { get; init; }
     public bool LivingDeath { get; init; }
     public bool LivingAlarms { get; init; }
@@ -39,7 +39,7 @@ public sealed record SocialExpansionSettings
     public string PlayerXpByLevel { get; init; } = "";
     public string BotXpByLevel { get; init; } = "";
 
-    /// <summary>The server's defaults: every Living Server feature off.</summary>
+    /// <summary>The server's defaults: since Beta 1.1 (the talking update) bot voices, bot memory and grats on, the rest off.</summary>
     public static SocialExpansionSettings Defaults { get; } = new();
 
     // Key, category and description of each setting, as the server and the Python helpers write them.

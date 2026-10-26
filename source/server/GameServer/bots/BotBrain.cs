@@ -1248,6 +1248,9 @@ namespace DOL.AI.Brain
             AutonomousSummonActivity.RecoverOwner(BotBody);
             BotAnimistPolicy.RestoreEncounterTarget(BotBody);
             ObserveLeaderActivity();
+            // The talking update: in the real player's group a gamebot calls the fight in /group (pull, adds, oom, wipe).
+            if (BotBody?.IsAutonomousWorldBot == true && BotBody.IsPlayerLedGroup)
+                AutonomousBotCombatCalls.Observe(BotBody);
             BotBody?.WakeRecoveryRestIfCombatBlocked();
             BotBody?.EnsureAutonomousRecoveryTimers();
 
