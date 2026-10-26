@@ -132,12 +132,68 @@ public static class AutonomousBotSchedule
 
     public static bool OnBreak(long botId, DateTime nowUtc) => BreakUntil.TryGetValue(botId, out DateTime until) && nowUtc < until;
 
+    // A bot that rage quit after a pile-on (a debate scene with "@exit") stays away a few hours whatever the schedule mode,
+    // then comes back a little sheepish.
+    private static readonly ConcurrentDictionary<long, DateTime> RageQuitUntil = new();
+    private static readonly ConcurrentDictionary<long, byte> ReturningFromRageQuit = new();
+
+    /// <summary>Hours a rage quitter stays away: 2-6. Pure.</summary>
+    public static TimeSpan RageQuitAway(Random random) => TimeSpan.FromMinutes(120 + random.Next(241));
+
+    public static bool RageQuitting(long botId, DateTime nowUtc)
+    {
+        if (!RageQuitUntil.TryGetValue(botId, out DateTime until))
+            return false;
+        if (nowUtc < until)
+            return true;
+        RageQuitUntil.TryRemove(botId, out _);
+        return false;
+    }
+
+    /// <summary>
+    /// The dunce of a pile-on logs off a few seconds after its last line and stays away 2-6 hours. A bot that can't log
+    /// out (grouped, fighting, carrying a relic) is tried again for about a minute, then left alone.
+    /// </summary>
+    public static void RageQuit(GameBot bot, Random random)
+    {
+        if (bot?.IsAutonomousWorldBot != true || bot.IsTemporaryGroupHelper)
+            return;
+        DateTime until = DateTime.UtcNow + RageQuitAway(random);
+        int tries = 0;
+        _ = new ECSGameTimer(bot, timer =>
+        {
+            try
+            {
+                if (bot.ObjectState != GameObject.eObjectState.Active)
+                    return 0;
+                if (!CanLogOut(bot))
+                    return ++tries < 12 ? 5_000 : 0;
+                RageQuitUntil[bot.DatabaseID] = until;
+                ReturningFromRageQuit[bot.DatabaseID] = 0;
+                LeavingNow[bot.DatabaseID] = 0;
+                Log.Info($"LIVING_SERVER_LOGOUT bot=\"{bot.Name}\" id={bot.DatabaseID} reason=ragequit until={until:O}");
+                bot.Delete();
+            }
+            catch (Exception exception)
+            {
+                Log.Warn($"Living Server: {bot.Name} could not rage quit", exception);
+            }
+            finally
+            {
+                LeavingNow.TryRemove(bot.DatabaseID, out _);
+            }
+            return 0;
+        }, 3_000 + random.Next(3_000));
+    }
+
     #endregion
 
     /// <summary>Whether the population controller should have this bot online now (thread-safe).</summary>
     public static bool WantsOnline(OfflineWorldBotRecord record, DateTime nowUtc)
     {
         if (record == null)
+            return false;
+        if (RageQuitting(record.BotId, nowUtc))
             return false;
         Mode mode = CurrentMode;
         if (mode == Mode.Off && !BreaksOn)
@@ -273,6 +329,16 @@ public static class AutonomousBotSchedule
     /// <summary>A bot logged in (called by the population controller): a returning or scheduled bot says hello.</summary>
     public static void OnLoggedIn(GameBot bot)
     {
+        // Back from a rage quit: a sheepish word in /faction, whatever the schedule mode.
+        if (bot != null && ReturningFromRageQuit.TryRemove(bot.DatabaseID, out _))
+        {
+            AutonomousLivingServer.Later(bot, 20_000 + Random.Shared.Next(40_000), () => AutonomousLivingServer.CanTalk(bot), () =>
+            {
+                if (AutonomousBotVoices.TryEventLine(bot, "session", out string sheepish, "ragequit_back"))
+                    AutonomousBotChatCoordinator.BroadcastFaction(bot.Name, bot.Realm, sheepish);
+            });
+            return;
+        }
         if (!Active || bot == null)
             return;
         bool back = ReturningFromBreak.TryRemove(bot.DatabaseID, out _);

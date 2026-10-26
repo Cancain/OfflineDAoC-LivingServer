@@ -333,6 +333,12 @@ def parse_file(path, problems):
                 # levels=35-49: a role whose lines only fit some levels ("i am not 50 yet"; live test 2026-10-18).
                 if 'levels' in req:
                     scene['roles'][role]['levels'] = parse_levels(req['levels'], where)
+            elif key == 'exit':
+                # "@exit A": when the scene plays to its end, the bot cast as A logs off for a few hours (the rage quit).
+                if scene is None or not re.fullmatch(r'[A-H]', value):
+                    problems.append(f'{where}: @exit takes one role (A-H) inside a scene')
+                    continue
+                scene['exit'] = value
             elif key == 'end':
                 scene = None
             else:
@@ -380,9 +386,9 @@ def parse_file(path, problems):
                     problems.append(f'{where}: a pause must be 5-600 seconds')
                 scene['beats'].append(dict(role='~', pause=seconds))
                 continue
-            m = re.fullmatch(r'(\?)?([A-F]):\s*(.+)', text)
+            m = re.fullmatch(r'(\?)?([A-H]):\s*(.+)', text)
             if not m:
-                problems.append(f'{where}: scene beats look like "A: text" (roles A-F, "?" for optional)')
+                problems.append(f'{where}: scene beats look like "A: text" (roles A-H, "?" for optional)')
                 continue
             optional, role, beat = m.groups()
             variants = [v.strip() for v in beat.split(' | ')]
@@ -390,7 +396,7 @@ def parse_file(path, problems):
                 problems.append(f'{where}: empty alternative')
             for v in variants:
                 check_text(v, dict(kind='debate', needs=scene['needs'], realm=scene['realm']), where, problems)
-                if re.match(r'\??[A-F]:\s', v):
+                if re.match(r'\??[A-H]:\s', v):
                     problems.append(f'{where}: an alternative starts with a role marker: {v}')
             scene['beats'].append(dict(role=role, text=variants[0], variants=variants, optional=bool(optional),
                                        where=where))
@@ -427,6 +433,8 @@ def parse_file(path, problems):
             problems.append(f'{s["where"]}: scene {s["id"]} needs at least 3 beats')
         if len(roles_used) < 2:
             problems.append(f'{s["where"]}: scene {s["id"]} needs at least 2 speakers')
+        if s.get('exit') and s['exit'] not in roles_used:
+            problems.append(f'{s["where"]}: scene {s["id"]} exits role {s["exit"]}, which never speaks')
         for r in s['roles']:
             if r not in roles_used:
                 problems.append(f'{s["where"]}: scene {s["id"]} declares role {r} that never speaks')
@@ -572,7 +580,7 @@ def main():
                scenes=[{k: v for k, v in s.items() if k != 'where'} for s in scenes])
     # Scene beats must never start with a role marker ("?D: ..."): the server sends them as they are.
     markers = [v for sc in out['scenes'] for b in sc['beats'] for v in b.get('variants', [b.get('text', '')])
-               if v and re.match(r'^\??[A-F]:\s', v)]
+               if v and re.match(r'^\??[A-H]:\s', v)]
     if markers:
         raise SystemExit(f'{len(markers)} scene line(s) start with a role marker, e.g. {markers[0]!r}')
     if args.verify:

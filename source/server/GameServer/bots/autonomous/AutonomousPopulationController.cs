@@ -138,6 +138,8 @@ public static class AutonomousPopulationController
             List<OfflineWorldBotRecord> available = roster
                 .Where(record => !record.IsOnline && !AutonomousBotRegistry.Contains(record.BotId) && !PendingSpawns.ContainsKey(record.BotId))
                 .Where(record => !scheduled || AutonomousBotSchedule.WantsOnline(record, nowUtc))
+                // A rage quitter stays away even with schedules off.
+                .Where(record => !AutonomousBotSchedule.RageQuitting(record.BotId, nowUtc))
                 .ToList();
 
             // Ten thousand actors require about eleven scheduled logins per

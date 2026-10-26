@@ -88,6 +88,33 @@ namespace DOL.GS.Tests
             Assert.That(AutonomousChatQuestions.AnswerSelf("busy", "u busy", bare with { Busy = true }, r), Does.Contain("busy").Or.Contains("middle"));
         }
 
+        [Test]
+        public void TheDunceRageQuitsAndComesBack()
+        {
+            var assembly = typeof(AutonomousBotVoiceCorpus).Assembly;
+            string Read(string suffix)
+            {
+                string name = assembly.GetManifestResourceNames().Single(n => n.EndsWith(suffix, StringComparison.Ordinal));
+                using var stream = assembly.GetManifestResourceStream(name);
+                using var reader = new System.IO.StreamReader(stream);
+                return reader.ReadToEnd();
+            }
+            var corpus = AutonomousBotVoiceCorpus.Parse(Read("chat.corpus.json"), Read("chat.voices.json"));
+            var dunces = corpus.Scenes.Where(scene => scene.Exit.Length > 0).ToArray();
+            Assert.That(dunces.Length, Is.GreaterThanOrEqualTo(6));
+            foreach (var scene in dunces)
+            {
+                // The dunce speaks, and at least five others pile on.
+                Assert.That(scene.Beats.Any(beat => beat.Role == scene.Exit), scene.Id);
+                Assert.That(scene.SpeakingRoles.Length, Is.GreaterThanOrEqualTo(6), scene.Id);
+            }
+            Assert.That(corpus.Lines.Count(line => line.Kind == "session" && line.Topic == "ragequit_back"), Is.GreaterThanOrEqualTo(6));
+            var r = new Random(4);
+            for (int i = 0; i < 200; i++)
+                Assert.That(AutonomousBotSchedule.RageQuitAway(r).TotalHours, Is.InRange(2.0, 6.0));
+            Assert.That(AutonomousBotSchedule.RageQuitting(123456, DateTime.UtcNow), Is.False);
+        }
+
         private static readonly string[] Debate =
             ["is anyone else running a buffbot on a second account now?", "why not, buffs make solo play actually fun", "feels like cheating to me"];
 

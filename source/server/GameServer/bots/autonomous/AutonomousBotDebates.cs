@@ -409,6 +409,10 @@ public static class AutonomousBotDebates
             running.NextAt = now + BeatDelayMs(NextText(running));
             return;
         }
+        // The dunce who rage quits ("@exit A") logs off once the pile-on is over.
+        if (!string.IsNullOrEmpty(running.Scene.Exit) && running.Cast.TryGetValue(running.Scene.Exit, out long quitter) &&
+            AutonomousBotRegistry.TryGet(quitter, out GameBot dunce))
+            AutonomousBotSchedule.RageQuit(dunce, Random.Shared);
         End(realm, "finished");
     }
 

@@ -47,6 +47,9 @@ public sealed class AutonomousBotVoiceCorpus
         /// <summary>Time-of-day flags the scene needs ("night", "!day"); empty for any time.</summary>
         public string[] Needs { get; init; } = [];
 
+        /// <summary>A role that logs off when the scene plays to its end ("@exit A": the dunce who rage quits); empty for none.</summary>
+        public string Exit { get; init; } = string.Empty;
+
         public string[] SpeakingRoles => Beats.Where(beat => !beat.IsPause).Select(beat => beat.Role).Distinct().ToArray();
     }
 
@@ -147,6 +150,7 @@ public sealed class AutonomousBotVoiceCorpus
         return new Scene(Str(e, "id"), Str(e, "topic"), realm.Length == 0 ? "*" : realm, low, high, roles, beats)
         {
             Needs = Strs(e, "needs"),
+            Exit = Str(e, "exit"),
         };
     }
 

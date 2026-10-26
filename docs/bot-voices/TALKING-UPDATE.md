@@ -218,6 +218,20 @@ Behemoth, Govannon and the dragons are lore only, and no bot claims to have kill
   frontiers and "the third power", the three dragons compared, con colours that lie, drop superstitions, the world finding
   itself (passes out of mist, new islands), swimming to the edge, old maps; 12 debates.
 - Lore by weight per realm: 357 / 385 / 356 (alb / mid / hib); all realm talk 1,327 / 1,303 / 1,283.
+- **Second pass** (the owner found the first debates thin): every lore debate rewritten as a full conversation, 19-30
+  beats with 5 speakers, concrete lore in nearly every line, evidence against counter-evidence, the old legend the game
+  drew on (Arthurian, Norse, Irish) set against what the game shows, a newcomer who asks "wait, who is that?", and an
+  ending with a plan, a dare or a shrug; plus tale scenes, where one bot tells a legend and others interrupt (5 per realm,
+  3 shared). 16 / 15 / 17 / 16 lore scenes (alb / mid / hib / shared).
+
+### 10. The Dunce Rage Quit
+
+Now and then a bot asks something truly dumb in /faction ("how do i level up my horse?", "which merchant sells realm
+points?", "how do i pause the game, dinner is ready"), six or seven bots pile on, the dunce gets angrier until it rage
+quits in capitals, and then it really logs off for 2-6 hours (scenes with `@exit A`, `AutonomousBotSchedule.RageQuit`,
+whatever the schedule mode). When it logs back in it says something sheepish in /faction ("ok im back. we dont talk about
+earlier"). Eight scenes (`dunce.lines`); scenes now take up to eight speakers (roles A-H). A dunce that can't log out
+(grouped, fighting) is tried for about a minute, then stays.
 
 ## Content
 
