@@ -406,6 +406,7 @@ def parse_file(path, problems):
             line.pop('about')
             if len(family) > 1:
                 line['weight'] = round(weight, 4)
+                line['_family'] = True
             if tags['kind'] in OPENER_KINDS:
                 line['invites'] = tags['invites'] or infer_invites(said, tags['kind'])
                 # A plain "ask" tag takes a more specific question type when the words show one ("how is everyone?").
@@ -494,12 +495,21 @@ def main():
                 beat_seen.setdefault(key, sc['id'])
         for b in sc['beats']:
             b.pop('where', None)
-    seen = {}
-    for line in lines:
+    # One way of saying a family line that is already a line of its own ("[ha|heh], too true" and "ha, too true") is
+    # dropped quietly: the family still has its other ways. A plain line said twice is a mistake.
+    seen, kept = {}, []
+    for line in sorted(lines, key=lambda x: x.get('_family', False)):
         key = (line['kind'], norm(line['text']))
         if key in seen:
+            if line.get('_family'):
+                continue
             problems.append(f'{line["where"]}: duplicate of {seen[key]}: {line["text"]}')
         seen.setdefault(key, line['where'])
+        kept.append(line)
+    order = {id(x): i for i, x in enumerate(lines)}
+    lines = sorted(kept, key=lambda x: order[id(x)])
+    for line in lines:
+        line.pop('_family', None)
     scene_ids = collections.Counter(s['id'] for s in scenes)
     problems += [f'duplicate scene id {k}' for k, n in scene_ids.items() if n > 1]
 

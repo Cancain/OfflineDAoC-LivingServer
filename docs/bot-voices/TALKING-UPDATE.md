@@ -194,6 +194,12 @@ To measure a new blind set: `TALK_AUDIT_IN=<lines.json> TALK_AUDIT_OUT=<misses.t
     moves: the openers (512 ambient lines per realm against about 140 a night, 130 lfg lines, 210 guild lines) are the
     limit. Lowering the pace alone doesn't fix it; it needs several times more distinct openers (lines built from parts,
     or many more written lines).
+  - **Then both were done** (2026-10-26): lines built from parts (`[a|b|c]`, DESIGN.md 3.1) and about 2,400 new written
+    rows in `ambient_life_more`, `ambient_realms_more`, `ambient_classes_more`, `guild_chat_more`, `lfg_parts` and
+    `replies_parts`. The corpus grew from about 3,800 to about 15,000 lines (ambient 752 to 7,934, guild 210 to 3,063, lfg
+    130 to 299, trade 33 to 237, replies 1,616 to 2,192). Word-for-word repeats from an earlier evening fell to about 9% in
+    week 1, 37-38% in week 2 and 58-60% by week 4 (from 40%, 77% and 83%). The measure counts exact words, so two ways of
+    saying one family line count as different; a player may notice the family sooner than the numbers suggest.
 
 ## Content
 
