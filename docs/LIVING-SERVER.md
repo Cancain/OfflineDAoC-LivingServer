@@ -22,8 +22,8 @@ stopped; they are used at the next start. The server keys (category `bots`) are:
 
 | Switch | Key | Default |
 |---|---|---|
-| Bots remember you | `bot_living_memory` | False |
-| Grats | `bot_living_grats` | False |
+| Bots remember you | `bot_living_memory` | True (since Beta 1.1) |
+| Grats | `bot_living_grats` | True (since Beta 1.1) |
 | Server firsts | `bot_living_firsts` | False |
 | Rezzes and corpse runs | `bot_living_death` | False |
 | Frontier alarms | `bot_living_alarms` | False |

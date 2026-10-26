@@ -8,6 +8,51 @@ of its feature groups (bots remember you, grats, rezzes, alarms, nemeses, schedu
 language). From Beta 1.0 the whole add-on is the **Living Server** and that group is **Server life**.
 Older entries below keep the names they were written with.
 
+## Beta 1.1 (in development): the talking update
+
+A Reddit report from Beta 1.0 had a Hibernian bot in Ardee asking about an Albion dungeon. That led to a rework of how
+bots talk; the full design is in [docs/bot-voices/TALKING-UPDATE.md](docs/bot-voices/TALKING-UPDATE.md).
+
+**Bots say only what is true**
+- Each line that names a place needs the speaker there or on its way, or says it is only talking about it. A place
+  list of about 140 zones, towns and dungeons gives the realm and zones of each. The corpus build rejects lines that
+  name another realm's zone, town or dungeon.
+- Keep, relic, siege, raid and Darkness Falls lines need the news that makes them true, and use the real names.
+  When something happens, a bot tells /faction in its own words about a minute later ("heard we lost Caer
+  Benowyc"), as a witness if it was there, and others react.
+- Xp ("4 bubbles to go"), role ("i can heal"), new-player and veteran lines follow the bot's real state. "Where are
+  the mids?" is answered from what the realm has seen. With nothing true to say, a bot stays quiet instead of
+  using the old formal lines.
+- Lines that promised a bot would invite you are no longer said (a bot can't invite a player). Wizards no longer
+  talk about their pet, and solo bots don't apologize to "my healer".
+
+**Conversations**
+- "why?", "rly?", "where?" right after a bot's line is answered by that bot. An answer to a bot's question gets
+  thanks from the asker, and the others let it be. Tells carry on the same way and answer with where the bot is
+  when it replies.
+
+**Your group**
+- Gamebots in your group call the fight: the pull, adds, low health, out of power, the mez, root, stun, taunt, group
+  heal or rez they are casting, a wipe, and gj or med up after. Spaced out, never a flood. A bot that joins your
+  group says hi.
+
+**Tells and channels**
+- Now and then (at most every 25-45 minutes) a bot starts a tell: a friend saying hello or thanks for an old group,
+  passing on news or offering a low-level friend a hand; a guildmate; a solo bot of your level nearby offering to
+  duo. Your /lfg may get a duo offer. "sure" gets "send me an invite".
+- Most bot lfg lines go to /lfg and trade lines to /trade. Realm chat is busier with more bots online and in the
+  evening, quieter late at night; new setting `bot_voices_chat_rate` (0-3). New setting `bot_voices_tells`.
+- Guild lines and answers are written in each bot's style.
+
+**Defaults**
+- Bot voices, bot memory and grats are on by default (chat only). Personalities, guilds and the other Server life
+  parts stay off. Settings saved in the launcher keep their values.
+
+**Checked**
+- Automated: all 3,602 tests in `Tests.dll` (Linux), including 65 new talking-update cases and a chat simulator that
+  plays an evening in each realm, a lost keep, a group fight and three conversations through the real corpus. Not
+  played in game yet; the list of checks is in TALKING-UPDATE.md.
+
 ## Beta 1.0 — 2026-10-22
 
 The first release under the Living Server name, and the first public build since 0.36-se.1. Beta 1.0 is the build

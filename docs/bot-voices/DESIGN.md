@@ -286,7 +286,11 @@ ding in /faction gets 1-3, a "lol" usually none, a named bot always answers. A s
   - **Greetings:** at most one per bot every 2 hours. Nearby greetings to you are capped at 1 a
     minute.
 
-## 5. Settings (all off by default until the playtest)
+## 5. Settings
+
+**Beta 1.1 (the talking update):** `bot_voices_enabled` is on by default, `bot_voices_chat_rate` (the planned
+`bot_voices_faction_rate`) and `bot_voices_tells` exist; see [TALKING-UPDATE.md](TALKING-UPDATE.md). The table below is
+the original plan.
 
 **Status (2026-10-12):** `bot_voices_enabled` and `bot_voices_debates` exist (see
 [../BOT-PERSONALITIES.md](../BOT-PERSONALITIES.md)). The others come with memory (step 3) and aren't
