@@ -203,9 +203,19 @@ public sealed class AutonomousBotVoiceCorpus
     }
 
     /// <summary>Lines of a kind this speaker may say now (realm, class, level band, needed context, intent, answers).</summary>
+    private Dictionary<string, Line[]> _byKind;
+
+    /// <summary>The lines of a kind (built once: lines built from parts made the corpus several times larger).</summary>
+    private Line[] OfKind(string kind)
+    {
+        Dictionary<string, Line[]> byKind = _byKind ??= Lines.GroupBy(line => line.Kind, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.ToArray(), StringComparer.Ordinal);
+        return kind != null && byKind.TryGetValue(kind, out Line[] lines) ? lines : [];
+    }
+
     public IEnumerable<Line> Candidates(string kind, Speaker speaker, string intent = null, string topic = null, string mood = null,
         string answers = null) =>
-        Lines.Where(line => line.Kind == kind &&
+        OfKind(kind).Where(line => line.Kind == kind &&
                             (topic == null || string.Equals(line.Topic, topic, StringComparison.Ordinal)) &&
                             (mood == null || string.Equals(line.Mood, mood, StringComparison.Ordinal)) &&
                             RealmFits(line.Realm, speaker.Realm) &&

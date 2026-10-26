@@ -6,6 +6,11 @@
 
 Line files: source/server/GameServer/bots/autonomous/data/chat/*.lines. The format is described in
 docs/bot-voices/DESIGN.md (section 3). Every line is new writing for this project.
+
+Lines built from parts: "[a|b|c]" in a line is one of a, b or c ("[a|]" is a or nothing). The build writes each way
+of saying it as its own line (all of them up to FAMILY_CAP, else a fixed sample), so the no-repeat window works line by
+line as before, and the family shares one line's weight times the square root of its size: a family is picked more
+often than a single line, and it rarely says the same words twice (the month simulation, UT_ChatMonth, 2026-10-26).
 """
 import argparse
 import collections
@@ -391,19 +396,26 @@ def parse_file(path, problems):
                                        where=where))
             continue
         check_tags(tags, where, problems)
-        check_text(text, tags, where, problems)
-        line = dict(tags, text=text, where=where, **{'class': list(tags['class'])})
-        line.pop('about')
-        if tags['kind'] in OPENER_KINDS:
-            line['invites'] = tags['invites'] or infer_invites(text, tags['kind'])
-            # A plain "ask" tag takes a more specific question type when the words show one ("how is everyone?").
-            if line['invites'] == 'ask' and infer_invites(text, tags['kind']).startswith('ask_'):
-                line['invites'] = infer_invites(text, tags['kind'])
-        else:
-            line.pop('invites')
-        if not line['answers']:
-            line.pop('answers')
-        lines.append(line)
+        if '[' in text and not CHOICE_RE.search(text):
+            problems.append(f'{where}: "[" without a "|" choice: {text}')
+        family = expand(text)
+        weight = tags['weight'] * (len(family) ** 0.5) / len(family)
+        for said in family:
+            check_text(said, tags, where, problems)
+            line = dict(tags, text=said, where=where, **{'class': list(tags['class'])})
+            line.pop('about')
+            if len(family) > 1:
+                line['weight'] = round(weight, 4)
+            if tags['kind'] in OPENER_KINDS:
+                line['invites'] = tags['invites'] or infer_invites(said, tags['kind'])
+                # A plain "ask" tag takes a more specific question type when the words show one ("how is everyone?").
+                if line['invites'] == 'ask' and infer_invites(said, tags['kind']).startswith('ask_'):
+                    line['invites'] = infer_invites(said, tags['kind'])
+            else:
+                line.pop('invites')
+            if not line['answers']:
+                line.pop('answers')
+            lines.append(line)
     for s in scenes:
         roles_used = {b['role'] for b in s['beats'] if b['role'] != '~'}
         if sum(1 for b in s['beats'] if b['role'] != '~') < 3:
@@ -414,6 +426,44 @@ def parse_file(path, problems):
             if r not in roles_used:
                 problems.append(f'{s["where"]}: scene {s["id"]} declares role {r} that never speaks')
     return lines, scenes
+
+
+FAMILY_CAP = 48
+CHOICE_RE = re.compile(r'\[([^\[\]]*\|[^\[\]]*)\]')
+
+
+def expand(text):
+    """The ways to say a line with "[a|b]" parts: all of them up to FAMILY_CAP, else a fixed sample. Pure."""
+    import itertools
+    import random
+    groups = [m.group(1).split('|') for m in CHOICE_RE.finditer(text)]
+    if not groups:
+        return [text]
+    pieces = CHOICE_RE.split(text)
+    # CHOICE_RE.split gives text, group, text, group...: rebuild from a choice per group.
+    def build(choice):
+        out = []
+        for i, piece in enumerate(pieces):
+            out.append(choice[i // 2] if i % 2 else piece)
+        return re.sub(r'\s+', ' ', ''.join(out)).strip().replace(' ,', ',').replace(' ?', '?').replace(' !', '!')
+    total = 1
+    for g in groups:
+        total *= len(g)
+    if total <= FAMILY_CAP:
+        combos = itertools.product(*groups)
+    else:
+        rng = random.Random(hashlib.sha1(text.encode()).hexdigest())
+        picked = set()
+        while len(picked) < FAMILY_CAP:
+            picked.add(tuple(rng.choice(g) for g in groups))
+        combos = sorted(picked)
+    seen, out = set(), []
+    for combo in combos:
+        said = build(combo)
+        if said and norm(said) not in seen:
+            seen.add(norm(said))
+            out.append(said)
+    return out
 
 
 def norm(text):
