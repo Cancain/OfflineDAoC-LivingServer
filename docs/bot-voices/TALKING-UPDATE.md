@@ -201,6 +201,24 @@ To measure a new blind set: `TALK_AUDIT_IN=<lines.json> TALK_AUDIT_OUT=<misses.t
     week 1, 37-38% in week 2 and 58-60% by week 4 (from 40%, 77% and 83%). The measure counts exact words, so two ways of
     saying one family line count as different; a player may notice the family sooner than the numbers suggest.
 
+### 9. Lore, myths and exploration
+
+Researched from the era (patch notes up to 1.65, the last before Trials of Atlantis; zone lore; Allakhazam comments from
+2002-2003), with each item labelled documented, player rumour or invented. Bots state documented facts plainly and frame
+rumours and inventions as rumour ("heard that...", "my old guild swore..."). Only monsters that exist in this world are
+named (checked against the world database: not Yar, Apocalypse, Morgana as a monster, Flame or Beliathan); Legion,
+Behemoth, Govannon and the dragons are lore only, and no bot claims to have killed a raid boss.
+
+- `lore_albion.lines`, `lore_midgard.lines`, `lore_hibernia.lines`: each realm's legends, named monsters, dungeon stories,
+  superstitions and its own hidden-place myth, given equal weight: Avalon hidden in the marsh (the launch race text named a
+  city of Avalon, a 2001 preview said the marsh ran "to the edges of Avalon City", and there was no way in until Shrouded
+  Isles); the road to Asgard behind a waterfall and the gate nobody has found in Odin's Gate; a door under a hill in
+  Connacht and the Fianna asleep beneath it, and Hy Brasil seen from the cliffs. About 10-12 lore debates per realm.
+- `lore_shared.lines`: Darkness Falls (Legion's court, the imps and seals, Behemoth, Govannon), the tunnels under all three
+  frontiers and "the third power", the three dragons compared, con colours that lie, drop superstitions, the world finding
+  itself (passes out of mist, new islands), swimming to the edge, old maps; 12 debates.
+- Lore by weight per realm: 357 / 385 / 356 (alb / mid / hib); all realm talk 1,327 / 1,303 / 1,283.
+
 ## Content
 
 The corpus went from 2,326 to about 3,820 lines (`talking_audit.lines` holds the audit's reply sets, `replies_pools.lines`

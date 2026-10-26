@@ -1,0 +1,446 @@
+# Hibernian lore, myths and exploration talk (classic + Shrouded Isles). New writing (see docs/bot-voices).
+# Facts from the zone and patch lore are said plainly; player rumours, superstitions and invented myths (the door
+# under the hill, the sleeping Fianna, drop myths) are said as belief, memory or hearsay. No bot here claims a kill
+# of a level 70+ boss. Flame and the old Muire lord are not named (not in this world / by request).
+
+@kind ambient
+@realm hib
+@topic lore
+@about place
+
+# ---------------- Sheeroe, the Glimmer King and the Azure ----------------
+@who *
+@levels *
+a pass came out of the bog of cullen's mist one day and nobody had ever seen it before. that is how sheeroe began
+the rangers who found the sheeroe pass swore it had not been there the week before
+sheeroe is an otherworld kingdom and cuuldurach is its king. we are the guests up there, not the other way round
+the glimmers glow because the otherworld leaks through them, or so the old sages tell it
+the azure are firbolg kin who pray to the sky, and they want every glimmer in sheeroe burned out
+[funny how|odd that] the azure hate the glimmers more than they hate [us|the albs]
+never count the glimmers out loud in sheeroe. my [old guild|first guild] swore it [draws the prince|brings maldahar] down on you
+[i like to sit|sometimes i sit] on the sheeroe ridge and watch the glimmers drift. you can almost see the otherworld behind them
+the azure preach at the glimmers all day and the glimmers just keep glowing. patience of a saint
+
+@levels 35-50
+cuuldurach the glimmer king, [eighty levels of|a whole hillside of] light and teeth. [seen him once from the ridge|seen him from far off] and that was plenty
+they say cuuldurach is the only male dragon of the three. the norse argue about theirs
+[heard|word is] the glimmer king [takes heat badly now|cannot stand fire anymore]. [our eldritch are smug about it|the casters are thrilled]
+the glimmer king drops a pile of respec stones. most raids go up for the stones, not the armour
+people say the dragon drops nothing but coin. those people have never been on a raid
+old raid advice i heard: fight the glimmer king up close. stand off at range and his breath finds the whole ridge
+do not nuke a dragon early. let the tanks hold him first or he turns on the casters, every raid leader says so
+
+@who Explorer
+@levels *
+there is a fold in the bog of cullen where the mist never lifts. i keep thinking another pass will open there one day
+the mist in the bog of cullen moves against the wind. [i have watched it|watch it some time]. it is looking for something
+
+# ---------------- Breifine, Evern and the tunnels ----------------
+@who *
+@levels 35-50
+[they say|my guild leader always said] the fairies that land on evern's stones heal him. kill the fairies first
+evern is seventy something and every fairy around him counts as a healer. no thanks
+i think evern is older than the frontier keeps. the stones were there first and the keeps went up around them
+
+@levels *
+there are tunnels under breifine full of undead. somebody carved them, and nobody is saying who
+heard the marfach caverns serve some power that wants all three realms on its knees. cheerful neighbours
+leave a bit of bread on the stones in breifine before a raid. my guild never skips it
+
+@who Daredevil
+dare: walk into evern's stone ring, touch one stone and run. nobody has taken me up yet
+
+@who Explorer
+counted the stones around evern once. got twenty three, a friend got twenty two. the fairies moved one
+
+# ---------------- The Cursed Forest ----------------
+@who *
+@levels *
+the faerie court is said to walk the cursed forest. i have seen lights there that were not wisps
+if something in the cursed forest calls you by name, do not answer. [old hib rule|my first guild's only rule]
+everyone knows the cursed forest for the werewolf camps, but the deep woods hold older things
+skeaghshee means fairy thorn, i think. leave the thorn trees alone, is all i am saying
+never cut a thorn tree in hibernia. the folk under the hills remember
+
+@levels 40-50
+luriquay [walks|haunts] the cursed forest and he [is not as easy as he looks|has ended more groups than the werewolves]
+people swear the con colours lie about juggernaut. i am not testing it
+i bet even the faerie court steps around juggernaut when he comes through
+
+@who Daredevil
+dare for the brave: stand still in the cursed forest when something calls your name. i did it once
+
+@who Crafter
+old crafter belief: anything you loot in the cursed forest carries a curse until it has been sold twice
+
+# ---------------- Muire Tomb ----------------
+@who *
+@levels *
+the old lord of the muire house went mad and killed his whole household. it has not been quiet since
+every hib has done muire tomb at some point. every hib has also heard something behind them in there
+[don't|never] whistle in muire tomb. [my guild swears|an old druid told me] it wakes [the family|the muires] up
+muire tomb feels sad more than scary. a whole family laid down there because of what their lord did
+the muire hero still guards his kin down there. loyal even now, i suppose
+
+@who Leveler
+@levels 10-30
+muire tomb is decent xp that nobody wants, too gloomy for most. suits me fine
+
+# ---------------- Firbolg, Tuatha, siabra and the old names ----------------
+@who *
+@levels *
+the firbolg ruled this land first, before the tuatha came. every firbolg i know will tell you so twice
+they say tir na nog was the tuatha's refuge when the world turned on them. now it is full of merchants
+the siabra are elf kin gone wrong, and they hold more of hibernia than people like to admit
+the old songs say we warred with the folk under the hills before we made peace against the norse and the britons
+three of our towns carry otherworld names. mag mell, tir na mbeo, tir na nog. [i do not think that is chance|somebody knew something]
+the tuatha came in on a cloud of mist, the old songs say. maybe that is the bog of cullen's mist
+the firbolg say they were here when the hills were young. the tuatha just smile at that
+the siabra wayguards watch the roads like they still own the land. maybe they do
+the overseer of the silver hand in coruscating mine. silver hand, like nuada. that is no accident
+queen cliodna sits in the bog of cullen. in the old tales her birds sing people to sleep. i keep my distance
+the amadan dubh in connacht, the dark fool. one touch and you are never right again, [or so the old folk say|my gran said]
+the grey man walks the cliffs of moher in the fog. sailors say he is the fog
+badb nests in the bog of cullen, a crow of war. the old folk say she smells battles coming
+the song of fionnuala and her brothers turned to swans still gets me. every bard in hibernia knows it
+the dullahan rides when someone is about to die. [hear hooves and see no horse, run|hooves with no horse means go home]
+heard a banshee wail right before a pull once. [we wiped|someone died], of course. [i do not pull after a wail now|lesson learned]
+earthquakes caved in part of the spraggon den and the spraggons picked a new leader. even spraggons have politics
+coruscating mine was not open when hibernia was young, the veterans say. makes you wonder what else is shut
+
+# ---------------- The hidden door and the sleeping Fianna ----------------
+there is a door under a hill somewhere in hibernia that opens into the otherworld. sheeroe proves the doors are real
+[my grandmother|an old bard in ardee] said the door to the otherworld opens only when the mist comes up from the bog
+the fianna never died. they sleep under a hill in connacht, waiting for someone to wake them
+[the bards say|an old bard told me] a horn hangs inside the fianna's hill. blow it three times and they wake
+if the fianna wake i want to be there. [imagine fionn's men|imagine them] at emain macha against the norse
+samhain is when the doors open, the old folk say. [i plan to be on a hill in connacht that night|i will be in bri leith with a lantern]
+if hy brasil was hidden all those years, the otherworld door can be hidden too
+hy brasil was a children's story until the sylvan came asking for help. makes you wonder what else is real
+the melancholic fairy queen sits by lough gur. [i think she is locked out of her own door|maybe she lost the way home]
+there is a story that a rider sleeps under lough gur and comes out once every seven years
+my guild's old saying: the otherworld is never far, it is just one step sideways
+
+@who Explorer
+bri leith was a fairy hill before it was a valley. i think the door is there
+i have walked every hill in bri leith knocking on stones. still nothing. i will keep knocking
+i asked every bard in tir na nog about the sleeping fianna. each one put the hill somewhere else in connacht
+my old map shows a hill in connacht with no name on it. the new maps leave it off entirely
+there is a hill in connacht where the wind goes quiet. stood on it once and [felt someone waiting below|my horse would not stay]
+rode the whole connacht coast with a lantern looking for a door in the hills. found a lot of spiders instead
+stood in a fairy ring in lough derg for a full minute. nothing happened. maybe it was the wrong night
+i mark every cave i find on my map in ink. connacht has more holes in it than the map admits
+[my granda|an old fisherman in connla] said you could see hy brasil from the cliffs of moher once every seven years. nobody laughs now
+
+@who Socialite
+heard a guild found an old door in a connacht hillside. nobody will say where. probably nothing
+gossip says someone blew a horn in connacht and the hill [answered|rumbled]. [i do not believe a word|sounds like ale talking]
+a bard in tir na nog swears she knows where the fianna sleep. [she wants gold for it|she charges a round of drinks per hint]
+
+# ---------------- Edges of the map ----------------
+@who Explorer
+swam west off the cliffs of moher until [the shore was gone|i lost sight of land]. the sea just keeps going, and so does the fog
+world's end is a real zone. i went to see if the world [actually ends|really stops] there. [it nearly does|close enough]
+the shannon estuary goes further out than the map shows. swam it once and the water just turned grey
+the old maps leave the sea past the cliffs blank. i think the map maker just gave up
+climbed the highest rock on vigilant rock just to see the sea. [fog and more fog|nothing out there], and something big moving under it
+every new island they find is one we called a myth. [hy brasil, allta fearann|first hy brasil, now allta fearann]. [i read old maps differently now|i stopped laughing at old maps]
+allta fearann turned up out of nowhere. one more place nobody knew about. the map keeps growing
+[i swear|i am sure] there is a cave mouth on the shannon side nobody talks about. went twenty steps in and turned back
+before hy brasil, the edge of the map was the edge of the world. now i keep looking past it
+
+@who Daredevil
+someone should swim out past world's end and see what is there. [i will if two more come|i need a lot of company for that]
+dare: run straight through the glimmer camps in sheeroe without stopping. [first one to the far ridge wins|loser buys the next drink]
+
+# ---------------- Hy Brasil: Olcasgean, Galladoria, Fomor, Balor ----------------
+@who *
+@levels 30-50
+olcasgean was banished to world's end, and now his roots poison hy brasil. [the trees out there look sick|you can see the rot]
+olcasgean is a child of gaea, [older than the tuatha|older than any of us], and he has been sulking at the edge of the world ever since
+galladoria is where the roots lead. hurionthex [changes shape in there|wears a different shape every time], so trust nothing that looks friendly
+the sylvan are trees that walk and talk and ask us for help. still getting used to that
+the mantids kept allta fearann secret for generations. their untamed land, they call it
+heard curengkur stalks allta fearann and the mantids only say the name in a whisper
+balor of the evil eye holds tur suil. [never meet his eye|do not look him in the eye], [if half the stories are true|the stories say]
+i think the fomorians were here before anyone. balor's eye has seen every age of hibernia
+myrddraxis is a hydra at the bottom of fomor, and they say the heads heal each other
+heard of a raid of fifty that fought myrddraxis for an hour and came out with nothing but [repair bills|bruises]
+balor's eye opened once and a whole valley burned, the sylvan say. that is why the vale of balor looks like that
+norsob the annihilator lives in tur suil. with a name like that, i am not asking questions
+elro the ancient waits out at world's end. i believe the name
+
+@who Crafter
+myrddraxis is supposed to drop a scale that never breaks. never seen one myself
+glimmer dust from sheeroe is supposed to [make a dye that glows|shine armour like new]. my vendor did not agree
+people say the respec stones from the glimmer king are worth more than all the armour he drops
+
+# ---------------- Relics ----------------
+@who *
+@levels *
+lug's spear rests in cruachan and the dagda's cauldron in mount collory. [the albs only borrow them|the norse only ever borrow them]
+the dagda's cauldron never runs empty in the old tales. that explains our soldiers
+lug's spear [never misses|throws itself] in the stories. [good thing it is on our side|i hope it remembers that in a siege]
+they say there were meant to be more than six relics. [i think one is hidden in hibernia|my guess is one is under a hill here]
+my old guild swore nuada's sword was meant to be our third relic and just never turned up
+the stone of fal is out there somewhere, the bards say. it would cry out under a true king, if anyone ever found it
+
+# ---------------- Bards ----------------
+@class Bard
+people say bards are overpowered. we [mez|mez, heal] and run fast. that is called [being useful|talent]
+@class *
+every realm thinks our bards are overpowered. they are not wrong, and we are not giving them up
+a bard with speed, mez and a heal is three classes in one kilt. [overpowered|unfair], and i love it
+
+# ---------------- Veterans remember ----------------
+@who NoLifer
+@levels 40-50
+i remember when sheeroe first opened. half the realm ran up the pass just to look at the glimmers
+my first night in tir na nog i got lost for an hour. the city felt like it went on forever
+i still remember the first time the cursed forest werewolves trained my group. never went back without a bard
+veterans told us the realm was bigger than the map. turned out they were right
+remember when hy brasil was just a word in a song? [now i have a bind point there|now people level there]
+the first time i saw a sylvan move i swung at it. it was very polite about it
+
+# ---------------- Gossip and dares ----------------
+@who Socialite
+@levels *
+rumour in tir na nog is the azure are recruiting. bring snacks
+someone in ardee swears the melancholic fairy queen [smiled at her|waved at her]. [i do not buy it|sure she did]
+
+# ---------------- Is it worth it ----------------
+@who Leveler
+@levels 30-50
+sheeroe is good xp if you can stand the glow. the azure camps never run dry
+hy brasil is lovely, but i still level faster in the old zones. pretty does not pay
+lore is nice and all but i go to sheeroe for xp, not for the otherworld
+@about
+
+# =========================================================================================
+# Debates
+# =========================================================================================
+@kind debate
+@realm hib
+
+@topic lore_hib_door
+@levels 1-50
+@scene lore_hib_hidden_door
+@role B type=Explorer
+@role C type=NoLifer,Leveler
+@role D type=*
+A: {q} do you think there is a real door to the otherworld under one of our hills? | anyone here believe in the door under the hill?
+B: i do. sheeroe came out of the mist one day, so the doors are real | sheeroe walked out of the bog mist. that was a door opening, plain as day
+C: sheeroe was always there, nobody had walked that far before | a pass nobody had found is not a door, it is just a pass
+B: then why did the rangers swear it was not there the week before | the rangers mapped that bog. the pass was not on their maps
+C: rangers swear lots of things after a night in the bog | rangers also swear the ale in ardee is good
+?D: hy brasil was a children's tale too, until the ships went | everyone called hy brasil a myth once, remember
+B: i have knocked on half the hills in bri leith. one day one knocks back | i will find it. bri leith first, then connacht
+C: bring a lantern and a healer, that is all i ask | good luck. send me a tell if a hill answers
+
+@topic lore_hib_fianna
+@levels 1-50
+@scene lore_hib_fianna
+@role B class=Bard
+@role C type=*
+@role D type=Socialite
+A: the bards keep saying the fianna sleep under a hill in connacht | heard the fianna are only asleep, under some hill in connacht
+B: they do. there is a horn by the door, blow it three times and they rise | true as any song. three blasts on the horn and they wake
+C: if they were real someone would have found the hill by now | every bard puts that hill in a different spot
+B: it moves, that is the point of a hidden hill | of course, a hill that wants hiding does not stay put
+?D: my guildmate swears she heard a horn in connacht once | heard a guild went looking with a horn of their own
+C: and if you did wake them, whose side would they take | say you wake them. who says they fight for us and not the siabra
+B: hibernia's. they were hers before there were realms | they swore to this land, not to any king
+A: i want to see it anyway | still, imagine them at emain macha
+C: imagine waking a hundred old warriors and explaining keep counts to them | they would be very confused by the frontier
+
+@topic lore_hib_dragon
+@levels 35-50
+@scene lore_hib_male_dragon
+@role B type=NoLifer
+@role C type=*
+@role D type=*
+A: is the glimmer king really the only male dragon? | cuuldurach is supposed to be the only male of the three dragons, true?
+B: that is what i was told on my first raid | every raid leader i ever had called him he
+C: nobody has ever checked, and i am not volunteering | who decided that, did someone ask him
+B: the other realms call theirs she, so he is the odd one out | the norse cannot even agree on theirs
+C: a dragon is a dragon, the breath burns the same either way | does it matter when you are on fire
+?D: the glimmers call him king, not queen. settles it for me | he is the glimmer king, not the glimmer queen. done
+C: kings have been wrong about themselves before | maybe the title is just a title
+A: i am calling him he and running from the breath either way | he it is. now someone else pull
+
+@topic lore_hib_evern
+@levels 35-50
+@scene lore_hib_evern_stones
+@role B type=Daredevil
+@role C type=NoLifer
+@role D class=Druid
+A: {q} what is the real trick to evern? | how do you even fight evern with those fairies everywhere?
+B: kill the fairies before they land on the stones, every one | fairies first. if one lands on a stone, he heals
+C: that is the story. i think the stones heal him, fairies or not | i always heard it was the stones, not the fairies
+B: then why do the fairies fly straight to the stones? | the stones do nothing until a fairy sits on them
+C: maybe the stones call the fairies | chicken and egg, and the egg hits for nine hundred
+?D: druid view: nobody heals forever, something feeds him | as a healer i say look for what feeds the healer
+B: so next raid we stand on the stones ourselves | then we smash the stones, simple
+C: try it and tell me how it goes from the bind point | i will watch from the hill
+
+@topic lore_hib_oldest
+@levels 20-50
+@scene lore_hib_who_was_first
+@role B type=Explorer
+@role C type=Socialite
+@role D type=NoLifer
+@role E type=*
+A: which came first in hibernia, the firbolg or the tuatha? | who was here first, firbolg or tuatha?
+B: firbolg. they ruled before the tuatha ever arrived | firbolg, everyone knows the tuatha came after
+C: the fomorians were here before either of them | older than both, the fomorians. look at balor
+D: older than all of them is olcasgean, a child of gaea | olcasgean was old before anyone had a name
+B: a titan in exile does not count as ruling | being banished to the edge is not the same as owning the place
+?E: the siabra would say it was always theirs | ask a siabra and they claim all of it
+C: the land was here first. everyone else is visiting | the hills were here first and they keep their own counsel
+A: so nobody agrees, as usual | i will tell my firbolg friend he won, he will like that
+
+@topic lore_hib_azure
+@levels 25-50
+@scene lore_hib_azure_crusade
+@role B type=Daredevil,Socialite
+@role C type=Explorer
+@role D type=Leveler
+A: are the azure right to burn the glimmers out of sheeroe? | should we back the azure crusade or leave sheeroe alone?
+B: they are firbolg kin. kin over strangers | the azure are ours by blood, the glimmers are not
+C: sheeroe was the glimmers' kingdom before the pass ever opened | we walked into their kingdom, not the other way round
+B: their kingdom bites anyone who walks in | their king breathes on visitors, that is not hospitality
+C: so would you, if a crusade came over your hill | anyone defends home
+?D: i just go there for the xp, sorry | i kill both, they both give xp
+B: then pick the side with better loot | the azure at least do not glow in the dark
+C: i will stay out of it. the otherworld has a long memory | the otherworld remembers who burned its lights
+
+@topic lore_hib_sylvan
+@levels 35-50
+@scene lore_hib_trust_sylvan
+@role B type=NoLifer
+@role C type=Explorer
+@role D type=*
+A: do we trust the sylvan? | should hibernia trust the sylvan, honestly?
+B: they asked us for help against the fomorians. that is enough | anyone who fights balor is my friend
+C: trees with grudges, that is what they are | they remember every axe since the first one
+B: they let us onto hy brasil, an island we called a myth | without them we would still think hy brasil was a story
+C: the sylvanshades in galladoria were sylvan once too, think on that | hurionthex looks like whatever it wants. so could they
+?D: olcasgean's roots turned them, not their nature | the rot comes from olcasgean, not the sylvan
+B: so we deal with the roots and keep the friends | then olcasgean goes and the problem goes with him
+C: easy to say from tir na nog | sure, after you
+
+@topic lore_hib_hydra
+@levels 40-50
+@scene lore_hib_hydra_heads
+@role B type=Crafter
+@role C type=NoLifer
+@role D type=*
+A: is it true the heads on myrddraxis heal each other? | heard the hydra heads heal each other, is that real?
+C: that is what every raid that went down to fomor says | every story from the bottom of fomor says so
+B: i care about the scale. supposedly it never needs repair | forget the heads, is the scale drop real
+C: i have never met anyone who owns one | heard about it, never seen it
+B: then someone is hoarding them | the best drops always sit in somebody else's bank
+?D: kill order matters, take the heads down together or not at all | all heads at once, that is what i heard
+C: fifty people and an hour, for a scale nobody has seen | an hour of fighting for a rumour
+B: rumours are how every good drop starts | every drop was a rumour once
+A: i will believe it when one is for sale | sell me one and i will believe
+
+@topic lore_hib_bards
+@levels 20-50
+@scene lore_hib_bards_overpowered
+@role B class=Bard
+@role C type=*
+@role D class=Eldritch
+A: honest question, are bards overpowered? | {q} bards, overpowered or just loved?
+C: speed, mez, heals and a harp. yes | three jobs in one class, how is that fair
+B: and we die first in every fight because of it | try being the first name on every enemy list
+C: you get rezzed first too | that is because nobody can leave without your speed
+?D: as an eldritch i would trade my nukes for that song | i would give up pbae for that speed song
+B: then reroll, the kilt is waiting | you can have the harp when you pry it from my hands
+A: overpowered it is then | i will take that as a yes
+
+@topic lore_hib_muire
+@levels 10-35
+@scene lore_hib_muire_haunted
+@role B type=Explorer
+@role C type=Leveler
+@role D type=*
+A: is muire tomb actually haunted or is it just dark? | anyone else think muire tomb is haunted?
+B: the old lord of the house went mad and killed his own family. it is haunted | a lord murdered his whole household there. of course it is haunted
+C: it is a dungeon full of undead, haunted is the point | every tomb is haunted, that is why we go there for xp
+B: i heard footsteps behind me with nothing there | something whistled back at me in the lower halls
+C: that was your groupmate's pet | probably a rat
+?D: never whistle in there. ever | rule one of muire tomb, no whistling
+B: laugh all you want, i do not solo it anymore | i only go in with a group now
+A: noted. group up, no whistling | no whistling, got it
+
+@topic lore_hib_moher
+@levels 1-50
+@scene lore_hib_seen_from_moher
+@role B type=NoLifer
+@role C type=Explorer
+@role D type=*
+A: could you really see hy brasil from the cliffs of moher before the ships went? | my granda said hy brasil showed from moher every seven years. nonsense?
+B: plenty of old fishermen swore by it | i knew a fisherman in connla who swore he saw it twice
+C: you can see fog from moher. fog looks like whatever you want | fog off the cliffs looks like an island if you squint
+B: and then the island turned out to be real | then explain why hy brasil was right where they said
+C: lucky guess by a lot of thirsty fishermen | even a blind archer hits sometimes
+?D: maybe the grey man showed it to them | the grey man on the cliffs plays tricks like that
+A: so what are the fishermen seeing out there now? | i want to know what they see from moher now
+
+@topic lore_hib_juggernaut
+@levels 40-50
+@scene lore_hib_juggernaut_con
+@role B type=Daredevil
+@role C type=NoLifer
+@role D type=*
+A: is juggernaut really as strong as people say? | heard juggernaut hits way harder than his con
+B: i say he is soft, someone just has to try | he is a big tree with legs. we could take him
+C: i watched three groups try, and i watched three groups run | i have seen what he does to full groups
+B: those groups had no bard | they pulled badly, that is all
+C: the faerie court walks the same forest and even they give him room | even the deep forest folk leave him alone
+?D: the con colours lie, everyone knows that | never trust a con colour in the cursed forest
+B: fine. i still say he goes down one day | dare stands. get him to half and i buy the round
+
+# ---- more Hibernian lore built from parts (realm balance, 2026-10-26) -------------------------
+@kind ambient
+@realm hib
+@topic lore
+@about place
+@who *
+[my gran|an old bard|a druid in tir na nog] [swore|used to say] there is a [door|green door|stone door] [under|inside] a hill [somewhere in connacht|in connacht], [and it only opens|that only opens] [when the mist is low|when nobody is looking]
+[heard|they say] the [fianna|old warriors of the fianna] [sleep|are sleeping] under [a hill|the hills] [in connacht|of connacht], [waiting|just waiting] for [someone|the right horn] to [wake them|call them]
+[i think|maybe] [hy brasil|the isle of hy brasil] [was|has always been] [out there|offshore] [the whole time|all along], [we just|and we] [couldnt see it|needed the sylvan to show us]
+[on a clear day|some days], [from the cliffs of moher|off the cliffs of moher] [you can|you could] [see|almost see] [an island|a shape|land] [that isnt on any map|nobody can name]. [i swear it|ask anyone who has looked]
+[tir na nog|the city of tir na nog] [was|is] [the|a] [refuge|hiding place] of the [tuatha|old gods], [or so|at least that is what] the [bards|elders] [say|tell it]
+[the firbolg|firbolgs] [were here|ruled here] [first|before the tuatha], [and|so] [they|the firbolg] [remember|still remember] [things|stories] [the rest of us|the elves] [never|dont] [knew|hear]
+[the siabra|siabra] [hold|still hold] more of [this realm|hibernia] than [the maps|our maps] [admit|show]
+[lough derg|the waters of lough derg] [are|look] [calm|still], [but|and] [my|an old] [fisherman friend|ranger friend] [says|swears] [something|a shape] [moves|swims] [under|beneath] [them|the surface] [sometimes|now and then]
+[the|that] [melancholic fairy queen|fairy queen] [at|of] [lough gur|lough gur] [weeps|sings] [for|over] [something|someone] [she lost|long gone]. [nobody|no one] [knows|remembers] [what|who]
+[bri leith|the valley of bri leith] [is|was] an [old|ancient] [sidhe|fairy] [mound|hall], so [mind your manners|watch your step] there
+[the|our] [cauldron|cauldron of dagda] [sits|rests] [at|on] [mount collory|collory], and [the albs dream|every alb dreams] [of stealing it|about stealing it]
+[lugs|lug's] [spear|spear of lightning] [hums|crackles] [before|ahead of] [a storm|every raid], [say|said] [the guards|the old keepers] [at|of] [cruachan|cruachan gorge]
+[spraggon den|the spraggon den] [fell in|collapsed] [once|in a quake], [and|so] the [spraggons|little ones] [picked|chose] [a new|another] [leader|chief]. [politics|spraggon politics] [never|dont] [change|stop]
+[the|those] [miners|things] [in|down in] [the coruscating mine|coruscating] [dug|went] [too deep|deeper than they should], [heard|i think] something down there found them first
+[the eye of balor|balor's eye] [at|in] tur suil [sees|watches] [everything|the whole isle], [or so|at least so] [the sylvan|sylvans] [say|claim]
+[myrddraxis|the hydra under fomor] [grows|regrows] [heads|its heads] [faster|quicker] than [a raid|any raid] [can|could] [cut them|chop them off], or so [the story goes|my guild tells it]
+[olcasgean|the titan olcasgean] [was|got] [banished|sent] [to|out to] [the world's end|world's end] [ages|long] ago, and [his roots|his anger] still [reach|creep] [into|across] [hy brasil|the isle]
+[galladoria|deep in galladoria], [hurionthex|that shapeshifter] [wears|takes] [whatever|any] [face|shape] [it|he] [likes|wants]. [trust|believe] [nothing|no one] [down there|you meet there]
+[the mantids|mantids] [kept|hid] [allta fearann|their untamed land] [secret|hidden] [for|through] [ages|generations], makes you wonder what else [they are hiding|is still out there]
+@who Explorer
+[every|each] [glen|lough|hill] [in hibernia|here] [has|hides] [a|its own] [story|secret|door], [i have|ive] [found|seen] [maybe|about] [half|a few] [of them|so far]
+[swam|i swam] [out|west] [past|beyond] [the|our] [coast|shore] [once|one night], [the water|the mist] just kept [going|getting thicker]. [turned back|came back] before it got too [dark|cold]
+[the old maps showed|my old map had] an [island|isle] [off the coast|west of moher] that [nobody|no one] has reached. [maybe that was hy brasil|hy brasil, maybe] [all along|before the sylvan]
+[i keep|i still keep] [a list|a little list] [of|for] [caves|doors|mounds] [in|around] [connacht|bri leith|the cursed forest] [nobody|that no one] [talks about|mentions]
+@who NoLifer
+@levels 40-50
+[back when|in the early days] [sheeroe|the sheeroe pass] [wasnt|was not] [there|open], [we|everyone] [thought|swore] [the|those] [hills|mists] [hid|held] [a|the] [dragon|whole kingdom]. [turns out|and] [we were right|they did]
+[i remember|remember] [when|back when] [hy brasil|the sylvan isle] [was|seemed] [just|only] [a story|a fireside tale], and now [i|we] [hunt|camp] there [all the time|whenever we can]
+@who Socialite
+[gossip|word] [in|around] [tir na nog|the city] [is|says] [someone|a ranger] [found|saw] [a|another] [door|stair] [in|under] [a hill|connacht] [last|this] [week|month]. [nobody|no one] [can|could] [find|show] [it|the place] [again|since]
+@who Daredevil
+[dare|i dare you]: [walk|go] [into|through] [the|that] [green door|stone ring] [in connacht|in the hills] [if|when] [you|anyone] [find|finds] [it|one]. [ill|i will] [follow|be right behind] [you|you, probably]
+@who Crafter
+[a|any] [hib|hibernian] [tailor|crafter] will swear that [cloth|thread] from [bri leith|the fairy hills] never tears
+@who Leveler
+is [galladoria|tur suil|fomor] [worth|really worth] [it|the trip] at our levels? the [stories|tales] alone keep [me|most of us] out
