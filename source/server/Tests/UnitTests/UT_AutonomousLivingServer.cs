@@ -17,7 +17,7 @@ namespace DOL.GS.Tests
         #region Settings
 
         [Test]
-        public void EveryPartIsOffByDefault()
+        public void TheChatPartsAreOnAndTheRestOffByDefault()
         {
             var fields = typeof(Properties).GetFields();
             // The talking update (Beta 1.1) turns on the chat-only parts: bot voices, bot memory and grats (below).

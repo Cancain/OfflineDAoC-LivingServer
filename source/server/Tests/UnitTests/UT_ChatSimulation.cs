@@ -195,9 +195,11 @@ namespace DOL.GS.Tests
                 Speaker(sim, eRealm.Hibernia, "Bard", 30, 7004, ["in_group", "in_player_group", "is_support", "is_healer", "in_combat"]),
             };
             var always = new FixedRandom(0.0);
-            void Call(VC.Speaker who, string topic, string what)
+            void Call(VC.Speaker who, string topic, string what, int enemies = 1)
             {
-                if (Pick(sim, "combat", who, Slots(who, "Cursed Forest"), out VC.Picked picked, topic: topic))
+                // The same line filter the server uses for pull and add calls.
+                if (Pick(sim, "combat", who, Slots(who, "Cursed Forest"), out VC.Picked picked, topic: topic,
+                        filter: topic is "pull" or "add" ? line => AutonomousBotCombatCalls.PullLineFits(line.Text, enemies) : null))
                     sim.Line("group", $"{who.Name} ({who.ClassName}, {what})", picked.Text);
                 else
                     sim.Note($"{who.Name} has no {topic} line ({what})");
@@ -205,8 +207,8 @@ namespace DOL.GS.Tests
             string pull = AutonomousBotCombatCalls.GroupEvent(group, new(true, 1, 5, 5, false), 1_000, always);
             Call(bots[0], pull, "fight starts, 1 enemy");
             string add = AutonomousBotCombatCalls.GroupEvent(group, new(true, 2, 5, 5, false), 6_000, always);
-            Call(bots[2], add, "a second enemy joins");
-            Call(bots[3], AutonomousBotCombatCalls.CastTopic(eSpellType.Mesmerize, eSpellTarget.ENEMY, 0, 2), "casting mesmerize");
+            Call(bots[2], add, "a second enemy joins", 2);
+            Call(bots[3], AutonomousBotCombatCalls.CastTopic(eSpellType.Mesmerize, eSpellTarget.ENEMY, 0, 2), "its mesmerize landed");
             var tank = new AutonomousBotCombatCalls.BotState();
             Call(bots[0], AutonomousBotCombatCalls.SelfEvent(tank, true, 24, 0, false, 12_000, always), "health 24%");
             Call(bots[1], AutonomousBotCombatCalls.CastTopic(eSpellType.Heal, eSpellTarget.GROUP, 0, 2), "casting a group heal");

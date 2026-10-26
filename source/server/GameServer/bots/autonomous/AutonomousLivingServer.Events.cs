@@ -333,13 +333,16 @@ public static partial class AutonomousLivingServer
     {
         if (!AutonomousBotVoices.Enabled || bot?.CurrentZone == null || nearby == null || nearby.Count == 0 || !bot.IsAlive)
             return;
+        string zone = bot.CurrentZone.Description;
+        long now = GameLoop.GameLoopTime;
+        lock (NextSightingByZone)
+            if (NextSightingByZone.TryGetValue((bot.Realm, zone), out long next) && now < next)
+                return;
         var enemies = nearby.Where(target => (target is GamePlayer || target is GameBot) && target.IsAlive && target.Realm != bot.Realm &&
                                              target.Realm is eRealm.Albion or eRealm.Midgard or eRealm.Hibernia)
             .GroupBy(target => target.Realm).OrderByDescending(group => group.Count()).FirstOrDefault();
         if (enemies == null)
             return;
-        string zone = bot.CurrentZone.Description;
-        long now = GameLoop.GameLoopTime;
         lock (NextSightingByZone)
         {
             if (NextSightingByZone.TryGetValue((bot.Realm, zone), out long next) && now < next)

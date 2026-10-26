@@ -12504,27 +12504,6 @@
   },
   {
    "kind": "combat",
-   "topic": "pull",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_player_group"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "inc, next one right behind it",
-   "id": "cb909ed79da5"
-  },
-  {
-   "kind": "combat",
    "topic": "add",
    "who": [],
    "realm": "*",
@@ -21906,46 +21885,6 @@
   },
   {
    "kind": "combat",
-   "topic": "pull",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_player_group",
-    "!in_capital"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "target the caster first",
-   "id": "dfc99bac239d"
-  },
-  {
-   "kind": "combat",
-   "topic": "pull",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "in_player_group",
-    "!in_capital"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "text": "switching to the healer",
-   "id": "b4868044678d"
-  },
-  {
-   "kind": "combat",
    "topic": "add",
    "who": [],
    "realm": "*",
@@ -22335,7 +22274,17 @@
    "topic": "pull",
    "who": [],
    "realm": "*",
-   "class": [],
+   "class": [
+    "Cabalist",
+    "Theurgist",
+    "Necromancer",
+    "Spiritmaster",
+    "Bonedancer",
+    "Hunter",
+    "Druid",
+    "Enchanter",
+    "Animist"
+   ],
    "levels": [
     1,
     50

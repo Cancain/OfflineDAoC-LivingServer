@@ -63,13 +63,17 @@ public static class AutonomousChatLiveAnswers
         ChatNewsItem latest = AutonomousChatNews.Board.EnemySightings(bot.Realm, DateTime.UtcNow).FirstOrDefault();
         if (latest != null)
             return SightingText(latest, DateTime.UtcNow, random);
-        GameLiving[] watchers = AutonomousBotRegistry.Snapshot().Where(other => other.Realm == bot.Realm && other.IsAlive)
-            .Concat<GameLiving>(ClientService.Instance.GetPlayersOfRealm(bot.Realm)).ToArray();
+        // Only watchers in the frontier can see enemies there (review 2026-10-26: all bots against all enemies was millions of
+        // distance checks with a 9,000-bot roster).
+        ILookup<ushort, GameLiving> watchers = AutonomousBotRegistry.Snapshot()
+            .Where(other => other.Realm == bot.Realm && other.IsAlive && (other.CurrentZone?.IsRvR == true || other.CurrentRegion?.IsRvR == true))
+            .Concat<GameLiving>(ClientService.Instance.GetPlayersOfRealm(bot.Realm))
+            .ToLookup(watcher => watcher.CurrentRegionID);
         var seen = AutonomousBotRegistry.Snapshot()
             .Where(other => other.Realm != bot.Realm && other.Realm is eRealm.Albion or eRealm.Midgard or eRealm.Hibernia && other.IsAlive &&
                             other.CurrentZone != null && (other.CurrentZone.IsRvR || other.CurrentRegion?.IsRvR == true) &&
                             !string.IsNullOrWhiteSpace(other.CurrentZone.Description) &&
-                            watchers.Any(watcher => watcher.CurrentRegionID == other.CurrentRegionID && watcher.IsWithinRadius(other, SightRadius)))
+                            watchers[other.CurrentRegionID].Any(watcher => watcher.IsWithinRadius(other, SightRadius)))
             .GroupBy(other => (other.Realm, Zone: other.CurrentZone.Description, ZoneRealm: FrontierHome(other.CurrentZone.Description)))
             // Enemies on our side of the frontier first, then on neutral ground, then in their own homeland (live check
             // 2026-10-21: "where are the mids?" drew "big group of mids in Uppland", Midgard's own frontier).

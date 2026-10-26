@@ -21,9 +21,13 @@ All are server settings, category `bots`. The first three are in the launcher's 
 | `bot_voices_tells` | True (new) | Bots now and then start a tell with you (below). |
 | `bot_voices_chat_rate` | 1.0 (new) | How much bots talk unprompted: 0 (they only answer) to 3. |
 
-Only these chat parts are on by default. Personalities, guilds and the other Server life parts stay off. A world
-whose database already has a row for a setting keeps that value; the new defaults apply where there is no row (a new
-install, or a launcher that never saved the Living Server tab).
+Only these chat parts are on by default. Personalities, guilds and the other Server life parts stay off.
+
+**Worlds that ran an earlier build.** The server keeps a setting's stored row, so on its own the new default would
+never reach a world that has already run. On the first start of 1.1 the server switches on, once, each of the three
+settings whose row it wrote itself with the old default (`LivingServerSettingsUpgrade`; the server log says which).
+Rows saved in the launcher are left as they are. The row `living_server_settings_version` records that the switch ran.
+To keep a part off, switch it off again in the Living Server tab; it is not switched on a second time.
 
 ## What changed
 
@@ -82,11 +86,12 @@ state:
 
 | Call | When |
 |---|---|
-| pull ("inc", "pulling") | a fight starts, 35%; said by a bot in the fight, a tank first |
+| pull ("inc", "here it comes") | a fight starts, 35%; said by a bot in the fight, a tank first. The player usually pulls, so no "pulling now", and "inc 1" only with one enemy |
 | add ("add, add") | more enemies on the group than before, at most every 15 s, 75% |
 | low_hp ("heal me") | the bot's health drops under 30% in a fight, once until it is back over 50% |
-| oom ("oom") | a caster's or healer's power drops under 15%, once until it is back over 40% |
-| mez, root, stun, taunt, heal_big, rez | the bot is casting that spell now (a mez only with two or more enemies; a root is a 99% snare) |
+| oom ("oom") | in a fight, a caster's or healer's power drops under 15%, once until it is back over 40% |
+| mez, root, stun | the bot cast it and it landed (the target is mezzed, stunned or snared); a mez only with two or more enemies |
+| taunt, heal_big, rez | the bot is casting that spell now |
 | wipe ("run!") | half the group has died in this fight (groups of 3+), once |
 | kill / rest ("gj", "med up") | a fight ends without a wipe, rest more likely when the group is worn |
 
@@ -104,7 +109,8 @@ every 25-45 minutes, and a given bot tells you at most once every 6 hours:
 - **a solo bot of your level** (±2) in your zone, within 6,000 units, while you are ungrouped: a duo offer.
 
 A friend standing next to you greets you in /say instead. A player's **/lfg** may also get a duo offer by tell from a
-solo bot within 3 levels, the same zone first. Answer "sure" and the bot tells you how to group ("sure, send me an
+solo bot within 2 levels, the same zone first (this needs voices and `bot_voices_tells`, not memory). A bot busy with a
+siege, a relic, a raid or a horse route says so instead of "send me an invite". Answer "sure" and the bot tells you how to group ("sure, send me an
 invite": you invite, because a bot can't). "Nah" gets "np, maybe later".
 
 ### 6. A busier, more natural realm chat
@@ -130,13 +136,17 @@ take a player, so a player who answered one would have nowhere to go.
 
 ## Tests
 
-- `UT_TalkingUpdate`: 65 cases, covering places, `near:` needs, news topics and flag windows, siege flags and
+- `UT_TalkingUpdate`: 79 cases, covering places, `near:` needs, news topics and flag windows, siege flags and
   outcomes, sightings, bubbles, follow-up words, answers, yes/no, the thread log, combat-call rules and gaps, tell
-  timing and fit, chat gaps, and corpus coverage for every topic the code asks for.
+  timing and fit, chat gaps, pull and add line fit, the one-time settings upgrade, and corpus coverage for every topic the code asks for.
 - `UT_ChatSimulation`: an evening in each realm (30 openers with replies), a keep lost, a group fight and three
   conversations, played through the real corpus picker. It fails on a speaker naming another realm's zone, town or
   dungeon, an unfilled slot, or a keep named without news. Set `TALK_TRANSCRIPT=<path>` to keep the transcript.
-- All 3,602 tests in `Tests.dll` pass (2026-10-26, Linux, no game world).
+- All 3,616 tests in `Tests.dll` pass (2026-10-26, Linux, no game world). CI on Windows ran the server tests and the
+  launcher tests on the branch.
+- An independent review of the code (2026-10-26) found eight defects, all fixed: the defaults not reaching existing
+  worlds, help offers answered as duo offers, "pulling" said after the player pulled, "mezzed" before a resist, relic
+  notices lost for two realms, keep news told twice, a player's /lfg taken as an answer, and "oom" outside fights.
 
 ## Not checked in game yet
 
@@ -144,8 +154,8 @@ Everything above was tested without a running world. These need the PC:
 
 1. /lfg and /trade lines show in the **original client**. The server sends chat types 0x23 and 0x24, which its own
    /lfg and /trade commands use. Also check how the new client shows them (mapped to the faction tab).
-2. Combat calls in a real group fight: pull, add, low health, oom, a Bard's or Enchanter's mez, a group heal, a rez
-   after a death. Check that they are timely, not spammy, and say nothing outside a fight.
+2. Combat calls in a real group fight: pull, add, low health, oom, a Bard's or Enchanter's mez (said only once it
+   lands), a group heal, a rez after a death. Check that they are timely, not spammy, and say nothing outside a fight.
 3. A keep taken in the frontier: a bot tells /faction in its own words about a minute later, and the herald text
    isn't said twice.
 4. Ask "why?" right after a bot's /faction line, and answer a bot's question ("try spindelhalla"). Check that the
@@ -156,3 +166,4 @@ Everything above was tested without a running world. These need the PC:
    opener every 40 s).
 8. "Where are the mids?" while enemies are in the frontier and while they aren't.
 9. The server log shows no `Bot voices:` warnings from the new code (combat call, world flags).
+10. Start 1.1 on the owner's world: the log names the settings it switched on, and the Living Server tab shows them.

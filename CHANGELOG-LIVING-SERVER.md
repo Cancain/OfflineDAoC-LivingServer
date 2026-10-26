@@ -46,12 +46,14 @@ bots talk; the full design is in [docs/bot-voices/TALKING-UPDATE.md](docs/bot-vo
 
 **Defaults**
 - Bot voices, bot memory and grats are on by default (chat only). Personalities, guilds and the other Server life
-  parts stay off. Settings saved in the launcher keep their values.
+  parts stay off. On a world that ran an earlier build, 1.1 switches them on once where the server had written the
+  old default; settings saved in the launcher keep their values.
 
 **Checked**
-- Automated: all 3,602 tests in `Tests.dll` (Linux), including 65 new talking-update cases and a chat simulator that
-  plays an evening in each realm, a lost keep, a group fight and three conversations through the real corpus. Not
-  played in game yet; the list of checks is in TALKING-UPDATE.md.
+- Automated: all 3,616 tests in `Tests.dll` (Linux), including 79 new talking-update cases and a chat simulator that
+  plays an evening in each realm, a lost keep, a group fight and three conversations through the real corpus. An
+  independent code review found eight defects; all are fixed. Not played in game yet; the list of checks is in
+  TALKING-UPDATE.md.
 
 ## Beta 1.0 — 2026-10-22
 

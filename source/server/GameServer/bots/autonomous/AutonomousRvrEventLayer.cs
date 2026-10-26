@@ -1586,7 +1586,9 @@ public static partial class AutonomousRvrEventLayer
                     RealmEventNotices.Queue(targetId, realm, winner == eRealm.None
                         ? $"{name} has been secured at a shrine. The struggle on the road has ended."
                         : realm == winner ? $"{name} is safe in our shrine! Honour to its bearers and defenders."
-                        : $"{GlobalConstants.RealmToName(winner)} has secured {name} at a shrine. Our struggle on the road is over.", "-");
+                        : $"{GlobalConstants.RealmToName(winner)} has secured {name} at a shrine. Our struggle on the road is over.",
+                        // The world news tells the shrine's realm in a bot's words; the other realms keep the notice.
+                        realm == winner ? "-" : null);
             }
             bool removed = CarrierEvents.Remove(targetId, out var carrier);
             if (removed) RealmEventRecords.Finish(targetId, "Captured / returned", "Relic mounted or recovered; escort/interception ended.");
@@ -1618,7 +1620,8 @@ public static partial class AutonomousRvrEventLayer
             CarrierTargets[carrierId] = carrierAnchor ?? active.Target with
                 { Id = carrierId, IsRelicCarrier = true, OwningRealm = active.AttackerRealm };
             foreach (eRealm realm in new[] { active.AttackerRealm, active.DefenderRealm, OtherRealm(active) })
-                RealmEventNotices.Queue(keepId, realm, $"The relic has left {Place(active.Target.Name)}! The battle continues on the road; its fate is not yet decided.", "-");
+                RealmEventNotices.Queue(keepId, realm, $"The relic has left {Place(active.Target.Name)}! The battle continues on the road; its fate is not yet decided.",
+                    realm == active.DefenderRealm ? "-" : null);
             RealmEventRecords.Finish(keepId, "Relic taken", "Relic removed; the battle continued as an escort/interception event.");
             RealmEventRecords.Begin(carrierId, carrierAnchor?.Name ?? active.Target.Name, "Relic", GlobalConstants.RealmToName(active.AttackerRealm), "Continued from " + active.Target.Name);
             RealmEventRecords.Progress(carrierId, "Battle", "Relic escort / interception", active.Attackers.Values.Sum() + active.Defenders.Values.Sum() + active.ThirdRealm.Values.Sum(), 0);

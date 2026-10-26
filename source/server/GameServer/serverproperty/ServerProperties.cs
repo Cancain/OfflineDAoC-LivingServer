@@ -28,6 +28,9 @@ namespace DOL.GS.ServerProperties
 			{
 				Load(prop.Value.Item1, prop.Value.Item2, prop.Value.Item3);
 			}
+
+			// Living Server: new defaults reach worlds that ran an earlier build (once).
+			LivingServerSettingsUpgrade.Apply(propDict);
 			
 			// Refresh static dict values for display
 			AllCurrentProperties = propDict.ToDictionary(k => k.Key, v => v.Value.Item2.GetValue(null));
@@ -2422,6 +2425,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("bots", "bot_voices_chat_rate", "When bot voices are on: how much bots talk unprompted, from 0 (only answers) to 3 (very busy). 1 is a normal evening; it already rises and falls with how many bots are on and the hour.", 1.0)]
 		public static double BOT_VOICES_CHAT_RATE;
+
+		public const string LIVING_SERVER_SETTINGS_VERSION_KEY = "living_server_settings_version";
+
+		/// <summary>The Living Server build whose default changes were last applied to this world (LivingServerSettingsUpgrade).</summary>
+		[ServerProperty("bots", LIVING_SERVER_SETTINGS_VERSION_KEY, "Living Server: the build whose new defaults were last applied to this world's saved settings (set by the server; leave it alone).", "")]
+		public static string LIVING_SERVER_SETTINGS_VERSION;
 
 		// ---- Server life (docs/LIVING-SERVER.md). Every part is off by default. ----
 

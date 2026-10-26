@@ -11,7 +11,8 @@ namespace DOL.GS;
 /// private message: a friend saying hello or thanks for an old group, a friend passing on realm news, a guildmate's small
 /// talk, a friend offering a low-level player a hand, or a solo bot of about the same level in the same zone asking to duo.
 /// Each tell is the start of a thread (AutonomousChatThreads): the player's answer gets a fitting reply, and "sure" to a duo
-/// offer gets "ok, invite me" (the player invites; a bot cannot invite a player). Needs bot voices and bot memory.
+/// offer gets "ok, invite me" (the player invites; a bot cannot invite a player). Needs bot voices and bot memory (an answer
+/// to the player's /lfg needs voices only).
 /// </summary>
 public static partial class AutonomousLivingServer
 {
@@ -64,7 +65,8 @@ public static partial class AutonomousLivingServer
                 continue;
             lock (LastTellPair)
                 LastTellPair[(bot.DatabaseID, player.Name)] = now;
-            string invites = topic is "group_offer" or "help_offer" && picked.Line?.Invites == "ask" ? AskGroupInvite : picked.Line?.Invites;
+            // Only a duo offer is answered with how to group; "need directions?" is a real question (review 2026-10-26).
+            string invites = topic == "group_offer" && picked.Line?.Invites == "ask" ? AskGroupInvite : picked.Line?.Invites;
             Later(bot, 0, () => CanTalk(bot) && player.ObjectState == GameObject.eObjectState.Active, () => Tell(bot, player, picked.Text, invites));
             return;
         }
@@ -74,6 +76,7 @@ public static partial class AutonomousLivingServer
         @"\b(here|same area|same mobs|soloing|same zone|out here)\b|\{zone\}", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
     /// <summary>A duo-offer line that says "here" fits only a bot in the player's zone.</summary>
+    // (Needs voices and bot_voices_tells, not memory: the bot answers a player's /lfg, it doesn't recall them.)
     public static bool OfferFits(string lineText, bool sameZone) => sameZone || !HereWords.IsMatch(lineText ?? string.Empty);
 
     /// <summary>
@@ -87,7 +90,7 @@ public static partial class AutonomousLivingServer
         long now = GameLoop.GameLoopTime;
         GameBot[] bots = AutonomousBotRegistry.Snapshot()
             .Where(bot => bot.Realm == player.Realm && CanTalk(bot) && bot.Group == null && !bot.IsOnStableMasterRoute &&
-                          BotGroupInvite.DutyOf(bot) == BotGroupInvite.Duty.None && Math.Abs(bot.Level - player.Level) <= 3)
+                          BotGroupInvite.DutyOf(bot) == BotGroupInvite.Duty.None && Math.Abs(bot.Level - player.Level) <= 2)
             .Where(bot =>
             {
                 lock (LastTellPair)

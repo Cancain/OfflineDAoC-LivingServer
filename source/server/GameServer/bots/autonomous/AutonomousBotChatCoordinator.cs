@@ -137,10 +137,10 @@ public static class AutonomousBotChatCoordinator
     }
 
     /// <summary>World news no realm notice told (AutonomousChatNews): said by a bot that was near it if there is one.</summary>
-    public static void TellNews(ChatNewsItem item)
+    public static bool TellNews(ChatNewsItem item)
     {
         if (item == null || !AutonomousBotVoices.Enabled || !HasFactionAudience(item.Realm))
-            return;
+            return false;
         GameBot[] bots = AutonomousBotRegistry.Snapshot().Where(bot => bot.Realm == item.Realm && Eligible(bot)).ToArray();
         GameBot witness = item.RegionId == 0 ? null : bots
             .Where(bot => bot.CurrentRegionID == item.RegionId &&
@@ -151,8 +151,7 @@ public static class AutonomousBotChatCoordinator
             .OrderByDescending(bot => item.Topic.StartsWith("keep") || item.Topic.StartsWith("relic") || item.Topic.StartsWith("df")
                 ? bot.Level >= 35 ? 1 : 0 : 0)
             .ThenBy(_ => Random.Shared.Next()).FirstOrDefault();
-        if (speaker != null)
-            SayNews(speaker, witness != null, item.Topic, item.Slots());
+        return speaker != null && SayNews(speaker, witness != null, item.Topic, item.Slots());
     }
 
     private static bool SayNews(GameBot speaker, bool witness, string topic, IReadOnlyDictionary<string, string> slots)
@@ -463,7 +462,8 @@ public static class AutonomousBotChatCoordinator
                 return followUp;
             ChatThreadLog.Said question = AutonomousChatThreads.Log.OpenQuestion(channel, now, AutonomousChatThreads.TellMemoryMs);
             // A duo or help offer the bot made: "sure" is answered with how to group (the player invites), "nah" with an ok.
-            if (question != null && question.Invites == AutonomousLivingServer.AskGroupInvite && AutonomousChatThreads.SaysYes(message) is bool yes)
+            if (question != null && question.Invites == AutonomousLivingServer.AskGroupInvite && !message.Contains('?') &&
+                AutonomousChatThreads.SaysYes(message) is bool yes)
             {
                 AutonomousChatThreads.Log.Close(question);
                 if (yes)
@@ -543,6 +543,17 @@ public static class AutonomousBotChatCoordinator
     {
         if (bot.PlayerGroupLeader != null && bot.PlayerGroupLeader != player)
             return random.Next(2) == 0 ? "sorry, already grouped up with someone" : "cant right now, im in a group";
+        // The talking update: a bot the invite would refuse (siege, relic, raid...) doesn't say "send me an invite".
+        if (BotGroupInvite.DutyOf(bot) is not BotGroupInvite.Duty.None and var duty)
+            return duty switch
+            {
+                BotGroupInvite.Duty.Siege => "cant right now, holding a keep",
+                BotGroupInvite.Duty.Relic => "cant, got a relic to move",
+                BotGroupInvite.Duty.RealmRaid => "cant, signed up for the raid",
+                BotGroupInvite.Duty.RvrEvent => "cant right now, out with the realm",
+                BotGroupInvite.Duty.StableRoute => "on a horse right now, catch me after",
+                _ => "cant right now, sorry",
+            };
         if (!BotGroupInvite.CloseEnoughToInviteByName(player, bot))
         {
             string where = Clean(bot.CurrentZone?.Description, "the other side of the realm");

@@ -46,6 +46,22 @@ namespace DOL.GS
                 return Told.TryGetValue((id, realm), out long when) && now - when < ToldMemoryMs;
         }
 
+        /// <summary>
+        /// A bot just told this realm about the event in its own words (AutonomousChatNews): a notice about it still waiting
+        /// for its turn (one that a bot could have said, so with a news topic) is not sent as well.
+        /// </summary>
+        public static void ToldByNews(string id, eRealm realm, long now)
+        {
+            if (string.IsNullOrEmpty(id))
+                return;
+            lock (Sync)
+            {
+                if (Pending.TryGetValue((id, realm), out var pending) && !string.IsNullOrEmpty(pending.Topic))
+                    Pending.Remove((id, realm));
+                Told[(id, realm)] = now;
+            }
+        }
+
         // Realm-wide one-line announcements at the top of the screen (no sound, not in the chat box),
         // for the moment a siege begins. Sent from Pulse, never while an event lock is held.
         private static readonly Dictionary<(string, eRealm), (string Text, AnnouncementKind Kind)> PendingScreen = new();

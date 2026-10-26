@@ -93,7 +93,7 @@ public static class AutonomousChatThreads
 
     private static readonly (Regex Pattern, string Word)[] FollowUps =
     [
-        (new Regex(@"^(why|y|why\s?not|how come|whys that|why is that|why tho|why though|how so)$"), "why"),
+        (new Regex(@"^(why|why\s?not|how come|whys that|why is that|why tho|why though|how so)$"), "why"),
         (new Regex(@"^(really|rly|srsly|seriously|for real|no way|are you sure|u sure|you sure|honestly|truly)$"), "really"),
         (new Regex(@"^(how|how do you mean|how do u mean|how do you do that|how did you|how'd you|hows that work|how does that work)$"), "how"),
         (new Regex(@"^(what|wut|wat|huh|what do you mean|what do u mean|wdym|meaning|what about it|what is that|whats that)$"), "what"),
@@ -126,7 +126,11 @@ public static class AutonomousChatThreads
             return false;
         if (intent is eAutonomousChatIntent.Greeting or eAutonomousChatIntent.Farewell or eAutonomousChatIntent.Laugh or
             eAutonomousChatIntent.Away or eAutonomousChatIntent.Back or eAutonomousChatIntent.Abuse or eAutonomousChatIntent.IgnoreOutOfWorld or
-            eAutonomousChatIntent.Ding or eAutonomousChatIntent.Alarm or eAutonomousChatIntent.Rez)
+            eAutonomousChatIntent.Ding or eAutonomousChatIntent.Alarm or eAutonomousChatIntent.Rez or
+            // A player's own lfg, trade or rvr call is not an answer (review 2026-10-26: "lfg healer for tom" drew "ty").
+            eAutonomousChatIntent.Grouping or eAutonomousChatIntent.Trading)
+            return false;
+        if (Regex.IsMatch(message, @"\b(lfg|lfm|lf\dm|wts|wtb|inc)\b", RegexOptions.IgnoreCase))
             return false;
         return Regex.Matches(message, @"[A-Za-z]{2,}").Count >= 1;
     }
@@ -141,6 +145,8 @@ public static class AutonomousChatThreads
             return null;
         string text = Regex.Replace(message.ToLowerInvariant(), @"[^a-z' ]", " ");
         text = Regex.Replace(text, @"\s+", " ").Trim();
+        if (Regex.IsMatch(text, @"^(no problem|no prob|no worries)\b"))
+            return true;
         if (No.IsMatch(text))
             return false;
         return Yes.IsMatch(text) ? true : null;

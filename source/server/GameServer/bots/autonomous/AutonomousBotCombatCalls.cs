@@ -61,6 +61,10 @@ public static class AutonomousBotCombatCalls
         public long LastCall = long.MinValue / 2;
         public readonly Dictionary<string, long> LastCast = new(StringComparer.Ordinal);
         public object LastHandler;
+        /// <summary>A mez, root or stun being cast: called once the target really is held (a resist is not "mezzed").</summary>
+        public string PendingCast;
+        public GameLiving PendingTarget;
+        public long PendingUntil;
     }
 
     /// <summary>
@@ -128,7 +132,8 @@ public static class AutonomousBotCombatCalls
                 return "low_hp";
             }
         }
-        if (usesPower && manaPercent < OomPercent && !state.WasOom)
+        // In a fight only: a healer rezzed with no power is not "oom, slow down" (review 2026-10-26).
+        if (inCombat && usesPower && manaPercent < OomPercent && !state.WasOom)
         {
             state.WasOom = true;
             if (now - state.LastOom >= OomGapMs && random.NextDouble() < 0.7)
@@ -152,6 +157,34 @@ public static class AutonomousBotCombatCalls
         eSpellType.Taunt => "taunt",
         _ => null
     };
+
+    /// <summary>The calls that wait until the spell has landed on its target.</summary>
+    public static bool NeedsLanding(string topic) => topic is "mez" or "root" or "stun";
+
+    private static readonly System.Text.RegularExpressions.Regex PullWords = new(@"\b(pull|bringing)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    private static readonly System.Text.RegularExpressions.Regex CountWords = new(
+        @"\b(\d+|one|two|three|four|five|a couple|a few|big one|single)\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    /// <summary>
+    /// A pull call fits the fight: the call comes once the fight has started (the player usually pulls), so no "pulling now",
+    /// and a line that counts the enemies ("inc 1", "two of them") only when it is that many. Pure.
+    /// </summary>
+    public static bool PullLineFits(string text, int enemies)
+    {
+        if (string.IsNullOrEmpty(text) || PullWords.IsMatch(text))
+            return false;
+        // "another one" is an add, not a count.
+        var count = CountWords.Match(System.Text.RegularExpressions.Regex.Replace(text, @"\banother one\b", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase));
+        if (!count.Success)
+            return true;
+        string word = count.Value.ToLowerInvariant();
+        int said = word switch
+        {
+            "one" or "single" or "big one" => 1, "two" => 2, "three" => 3, "four" => 4, "five" => 5,
+            "a couple" => 2, "a few" => 3, _ => int.TryParse(word, out int n) ? n : -1,
+        };
+        return word == "a few" ? enemies >= 3 : said == enemies;
+    }
 
     /// <summary>How likely a bot calls the spell it casts (a rez nearly always, a stun now and then).</summary>
     public static double CastChance(string topic) => topic switch
@@ -208,12 +241,20 @@ public static class AutonomousBotCombatCalls
                         members.Count(m => m.IsAlive), members.Any(m => m.IsAlive && (m.HealthPercent < 50 || m.MaxMana > 0 && m.ManaPercent < 40)));
                     string topic = GroupEvent(state, view, now, Random.Shared);
                     if (topic != null)
-                        CallForGroup(group, members, state, topic, now);
+                        CallForGroup(members, state, topic, now, enemies);
                 }
             }
             if (!bot.IsAlive)
                 return;
             string own = SelfEvent(self, bot.InCombat, bot.HealthPercent, bot.ManaPercent, UsesPower(bot), now, Random.Shared);
+            if (own == null && self.PendingCast != null && (!bot.IsCasting || !ReferenceEquals(bot.CurrentSpellHandler, self.LastHandler)))
+            {
+                GameLiving target = self.PendingTarget;
+                if (target != null && target.IsAlive && Landed(self.PendingCast, target))
+                    own = self.PendingCast;
+                if (own != null || now > self.PendingUntil)
+                    (self.PendingCast, self.PendingTarget) = (null, null);
+            }
             if (own == null && bot.IsCasting && bot.CurrentSpellHandler is ISpellHandler handler && !ReferenceEquals(handler, self.LastHandler))
             {
                 self.LastHandler = handler;
@@ -223,13 +264,16 @@ public static class AutonomousBotCombatCalls
                     Random.Shared.NextDouble() < CastChance(cast))
                 {
                     self.LastCast[cast] = now;
-                    own = cast;
+                    if (NeedsLanding(cast))
+                        (self.PendingCast, self.PendingTarget, self.PendingUntil) = (cast, handler.Target, now + 6_000);
+                    else
+                        own = cast;
                 }
             }
             if (own != null)
                 lock (state)
                     if (Gate(state, self, own, now))
-                        Say(bot, own);
+                        Say(bot, own, enemies);
         }
         catch (Exception exception)
         {
@@ -237,8 +281,10 @@ public static class AutonomousBotCombatCalls
         }
     }
 
-    private static void CallForGroup(Group group, GameLiving[] members, GroupState state, string topic, long now)
+    private static void CallForGroup(GameLiving[] members, GroupState state, string topic, long now, int enemies)
     {
+        if (topic != "wipe" && now - state.LastCall < GroupGapMs)
+            return;
         GameBot[] bots = members.OfType<GameBot>()
             .Where(b => b.IsAlive && b.IsAutonomousWorldBot && !b.IsTemporaryGroupHelper && b.DatabaseID > 0)
             .OrderBy(_ => Random.Shared.Next()).ToArray();
@@ -251,9 +297,10 @@ public static class AutonomousBotCombatCalls
         foreach (GameBot speaker in order)
         {
             BotState self = Bots.GetValue(speaker, _ => new BotState());
+            // A bot that just spoke leaves the call to the next one (review 2026-10-26: a wipe call was lost that way).
             if (!Gate(state, self, topic, now))
-                return;
-            if (Say(speaker, topic))
+                continue;
+            if (Say(speaker, topic, enemies))
                 return;
             // Nothing to say for this bot (its role has no line): let the next one try.
             state.LastCall = long.MinValue / 2;
@@ -261,9 +308,18 @@ public static class AutonomousBotCombatCalls
         }
     }
 
-    private static bool Say(GameBot bot, string topic)
+    private static bool Landed(string topic, GameLiving target) => topic switch
     {
-        if (!AutonomousBotVoices.TryLine(bot, "combat", out VC.Picked picked, topic: topic, relax: true))
+        "mez" => target.IsMezzed,
+        "stun" => target.IsStunned,
+        "root" => target.effectListComponent?.ContainsEffectForEffectType(eEffect.MovementSpeedDebuff) == true,
+        _ => false,
+    };
+
+    private static bool Say(GameBot bot, string topic, int enemies)
+    {
+        if (!AutonomousBotVoices.TryLine(bot, "combat", out VC.Picked picked, topic: topic, relax: true,
+                filter: topic is "pull" or "add" ? line => PullLineFits(line.Text, enemies) : null))
             return false;
         AutonomousBotGroupChatter.Send(bot, picked.Text);
         return true;

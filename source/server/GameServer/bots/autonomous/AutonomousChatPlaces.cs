@@ -81,10 +81,16 @@ public static class AutonomousChatPlaces
             bool exact = string.Equals(place.Key, text, StringComparison.OrdinalIgnoreCase) ||
                          place.Aliases.Any(a => string.Equals(a, text, StringComparison.OrdinalIgnoreCase)) ||
                          place.Type != "town" && place.Zones.Any(z => string.Equals(z, destination.Trim(), StringComparison.OrdinalIgnoreCase));
-            if (exact || place.Aliases.Any(a => a.Length >= 5 && Regex.IsMatch(text, $@"(?<![a-z']){Regex.Escape(a)}(?![a-z])")))
+            if (exact || place.Aliases.Any(a => a.Length >= 5 && WordPattern(a).IsMatch(text)))
                 yield return place.Key;
         }
     }
+
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, Regex> Patterns = new(StringComparer.Ordinal);
+
+    /// <summary>A whole-word pattern for an alias, built once (they are matched each time a speaker is built).</summary>
+    private static Regex WordPattern(string alias) =>
+        Patterns.GetOrAdd(alias, a => new Regex($@"(?<![a-z']){Regex.Escape(a)}(?![a-z])", RegexOptions.Compiled));
 
     /// <summary>The "at:" and "going:" flags for a speaker.</summary>
     public static IEnumerable<string> Flags(string zone, string region, string destination, IEnumerable<Place> places = null)

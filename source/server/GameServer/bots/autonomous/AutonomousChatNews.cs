@@ -302,6 +302,9 @@ public static class AutonomousChatNews
     private static void Post(ChatNewsItem item, bool voice)
     {
         item = Board.Post(item);
+        // Sightings come often and change no speaker flags: no cache reset, no log line.
+        if (item.Topic == "enemy_seen")
+            return;
         Invalidate(item.Realm);
         if (Log.IsInfoEnabled)
             Log.Info($"CHAT_NEWS topic={item.Topic} realm={item.Realm} keep=\"{item.Keep}\" relic=\"{item.Relic}\" raid=\"{item.Raid}\" " +
@@ -366,7 +369,8 @@ public static class AutonomousChatNews
                 }
             }
             foreach (ChatNewsItem item in due)
-                AutonomousBotChatCoordinator.TellNews(item);
+                if (AutonomousBotChatCoordinator.TellNews(item))
+                    RealmEventNotices.ToldByNews(item.EventKey, item.Realm, now);
         }
         catch (Exception exception)
         {

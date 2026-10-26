@@ -40,6 +40,12 @@ namespace DOL.GS.Tests
             public override int Next(int minValue, int maxValue) => minValue;
         }
 
+        /// <summary>Draws the top of every range.</summary>
+        private sealed class LongestRandom : Random
+        {
+            public override int Next(int maxValue) => maxValue - 1;
+        }
+
         private static readonly Random Always = new FixedRandom(0.0);
         private static readonly Random Never = new FixedRandom(0.999);
 
@@ -267,7 +273,6 @@ namespace DOL.GS.Tests
         #region Conversations
 
         [TestCase("why?", "why")]
-        [TestCase("y", "why")]
         [TestCase("how come", "why")]
         [TestCase("rly?", "really")]
         [TestCase("for real?", "really")]
@@ -284,6 +289,7 @@ namespace DOL.GS.Tests
         [TestCase("where is the cleric trainer in camelot")]
         [TestCase("hi")]
         [TestCase("")]
+        [TestCase("y")]
         public void ALongerQuestionIsNotAFollowUp(string message) => Assert.That(AutonomousChatThreads.FollowUpWord(message), Is.Null);
 
         [Test]
@@ -295,6 +301,9 @@ namespace DOL.GS.Tests
             Assert.That(AutonomousChatThreads.ReadsAsAnswer("hi all", eAutonomousChatIntent.Greeting), Is.False);
             Assert.That(AutonomousChatThreads.ReadsAsAnswer("lol", eAutonomousChatIntent.Laugh), Is.False);
             Assert.That(AutonomousChatThreads.ReadsAsAnswer("why", eAutonomousChatIntent.Unknown), Is.False);
+            Assert.That(AutonomousChatThreads.ReadsAsAnswer("lfg healer for tom", eAutonomousChatIntent.Unknown), Is.False,
+                "a player's own lfg is not an answer");
+            Assert.That(AutonomousChatThreads.ReadsAsAnswer("wts nice sword", eAutonomousChatIntent.Trading), Is.False);
         }
 
         [Test]
@@ -314,6 +323,7 @@ namespace DOL.GS.Tests
         [TestCase("no thanks", false)]
         [TestCase("sorry, already grouped", false)]
         [TestCase("what level are you", null)]
+        [TestCase("no problem, inv me", true)]
         public void AYesOrNoToAnOffer(string message, bool? yes) => Assert.That(AutonomousChatThreads.SaysYes(message), Is.EqualTo(yes));
 
         [Test]
@@ -397,6 +407,51 @@ namespace DOL.GS.Tests
             Assert.That(AutonomousBotCombatCalls.GroupEvent(state, View(false, 0, worn: true), 50_000, Always), Is.EqualTo("rest"));
             AutonomousBotCombatCalls.GroupEvent(state, View(true, 1), 60_000, Never);
             Assert.That(AutonomousBotCombatCalls.GroupEvent(state, View(false, 0), 80_000, Never), Is.Null, "most fights end quietly");
+        }
+
+        [Test]
+        public void OomIsCalledInAFightOnly()
+        {
+            var state = new AutonomousBotCombatCalls.BotState();
+            Assert.That(AutonomousBotCombatCalls.SelfEvent(state, false, 90, 5, true, 1_000, Always), Is.Null, "rezzed with no power, no fight");
+            Assert.That(AutonomousBotCombatCalls.SelfEvent(state, true, 90, 5, true, 2_000, Always), Is.EqualTo("oom"));
+        }
+
+        [TestCase("incoming", 1, true)]
+        [TestCase("pulling, get set", 1, false)]
+        [TestCase("ready? pulling now", 1, false)]
+        [TestCase("bringing it in", 1, false)]
+        [TestCase("inc 1", 1, true)]
+        [TestCase("inc 1", 2, false)]
+        [TestCase("inc, two of them", 2, true)]
+        [TestCase("inc, two of them", 3, false)]
+        [TestCase("another one, add!", 2, true)]
+        [TestCase("one coming, on me", 1, true)]
+        public void APullOrAddLineFitsTheFight(string text, int enemies, bool fits) =>
+            Assert.That(AutonomousBotCombatCalls.PullLineFits(text, enemies), Is.EqualTo(fits));
+
+        [Test]
+        public void MezRootAndStunAreCalledOnceTheyLand()
+        {
+            Assert.That(AutonomousBotCombatCalls.NeedsLanding("mez"), Is.True);
+            Assert.That(AutonomousBotCombatCalls.NeedsLanding("root"), Is.True);
+            Assert.That(AutonomousBotCombatCalls.NeedsLanding("stun"), Is.True);
+            Assert.That(AutonomousBotCombatCalls.NeedsLanding("heal_big"), Is.False, "a group heal is called as it is cast");
+            Assert.That(AutonomousBotCombatCalls.NeedsLanding("rez"), Is.False);
+        }
+
+        [Test]
+        public void TheNewDefaultsReachAWorldOnce()
+        {
+            var oldWorld = new Dictionary<string, (string Value, string DefaultValue)>
+            {
+                ["bot_voices_enabled"] = ("False", "False"),   // the server wrote the old default
+                ["bot_living_memory"] = ("False", ""),          // the launcher wrote it: the player's choice
+                ["bot_living_grats"] = ("True", "False"),
+            };
+            Assert.That(DOL.GS.ServerProperties.LivingServerSettingsUpgrade.Plan("", oldWorld), Is.EqualTo(new[] { "bot_voices_enabled" }));
+            Assert.That(DOL.GS.ServerProperties.LivingServerSettingsUpgrade.Plan("1.1", oldWorld), Is.Empty, "once only");
+            Assert.That(DOL.GS.ServerProperties.LivingServerSettingsUpgrade.Plan("", new Dictionary<string, (string, string)>()), Is.Empty);
         }
 
         [Test]
@@ -531,6 +586,11 @@ namespace DOL.GS.Tests
             Assert.That(AutonomousBotChatCoordinator.FactionGapMs(120, 14, 0, fixedDraw), Is.GreaterThan(TimeSpan.FromDays(365).TotalMilliseconds),
                 "rate 0: bots only answer");
             Assert.That(AutonomousBotChatCoordinator.LocalGapMs(14, 1.0, fixedDraw), Is.EqualTo(60_000));
+            // The longest draw too (the fixed draw above is the shortest).
+            var longest = new LongestRandom();
+            Assert.That(AutonomousBotChatCoordinator.FactionGapMs(120, 14, 1.0, longest), Is.EqualTo(240_000));
+            Assert.That(AutonomousBotChatCoordinator.FactionGapMs(120, 4, 1.0, longest), Is.LessThanOrEqualTo(20 * 60_000));
+            Assert.That(AutonomousBotChatCoordinator.FactionGapMs(10, 4, 0.1, longest), Is.EqualTo(20 * 60_000), "never silent for hours");
             Assert.That(AutonomousBotChatCoordinator.LocalGapMs(14, 0, fixedDraw), Is.GreaterThan(TimeSpan.FromDays(365).TotalMilliseconds));
         }
 
