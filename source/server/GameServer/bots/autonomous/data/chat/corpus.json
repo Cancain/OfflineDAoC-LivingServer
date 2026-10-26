@@ -16475,8 +16475,8 @@
    "mood": "",
    "weight": 1.0,
    "invites": "chat",
-   "text": "just figured out i can sit to get my power back faster",
-   "id": "9a7fc61b9b48"
+   "text": "just figured out sitting gets my health back faster",
+   "id": "dc5cfdae37ce"
   },
   {
    "kind": "ambient",
@@ -36142,8 +36142,8 @@
    "mood": "",
    "weight": 1.0,
    "invites": "chat",
-   "text": "saw some amazing houses in the housing area today, someday",
-   "id": "9a4d4091772e"
+   "text": "saw some amazing houses in the housing zone today, want one someday",
+   "id": "bb7b2b482e6e"
   },
   {
    "kind": "ambient",
@@ -46703,24 +46703,6 @@
    "mood": "",
    "weight": 1.0,
    "invites": "joke",
-   "text": "my pet has better gear than me",
-   "id": "ee161e02b7ae"
-  },
-  {
-   "kind": "ambient",
-   "topic": "humor",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "invites": "joke",
    "text": "spent more time running back from my bind than fighting tonight",
    "id": "e11503eb2955"
   },
@@ -46829,24 +46811,6 @@
    "mood": "",
    "weight": 1.0,
    "invites": "joke",
-   "text": "somebody tell my healer i am sorry",
-   "id": "3b6b90af918b"
-  },
-  {
-   "kind": "ambient",
-   "topic": "humor",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "invites": "joke",
    "text": "i was going to log off an hour ago",
    "id": "61749ce8f0ba"
   },
@@ -46907,6 +46871,54 @@
    "invites": "joke",
    "text": "the road to {zone} is longer every time i walk it",
    "id": "14ba00ea762a"
+  },
+  {
+   "kind": "ambient",
+   "topic": "humor",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "in_group"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "invites": "joke",
+   "text": "somebody tell my healer i am sorry",
+   "id": "3b6b90af918b"
+  },
+  {
+   "kind": "ambient",
+   "topic": "humor",
+   "who": [],
+   "realm": "*",
+   "class": [
+    "Cabalist",
+    "Theurgist",
+    "Necromancer",
+    "Spiritmaster",
+    "Bonedancer",
+    "Hunter",
+    "Druid",
+    "Enchanter",
+    "Animist"
+   ],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "invites": "joke",
+   "text": "my pet has better gear than me",
+   "id": "ee161e02b7ae"
   },
   {
    "kind": "reply",
