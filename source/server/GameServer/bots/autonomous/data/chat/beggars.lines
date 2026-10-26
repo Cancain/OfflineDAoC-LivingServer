@@ -25,7 +25,7 @@ just drag a coin onto me, {player}. [any coin|one copper|anything]. its easy. lo
 i used to adventure like you, {player}. [then the bog took my boots|then a troll took my purse|then i took up crafting]. spare a copper?
 {player}! dont walk away! [i saw you loot that|i know you have coin|i can hear your pack jingling]
 a {player_class}! [your kind always gives|your kind is generous|bless your kind]. spare [a coin|some silver]?
-[spare any|any spare] [gems|bones|hides|cloth|loot][, {player}|]? [i turn junk into food|i can sell it|i make use of it]
+[spare any|any spare] [gems|bones|hides|cloth|loot][, {player}|]? [i turn junk into food|i can sell that|i make use of anything]
 {player} [you dropped|you forgot|you owe] [a coin|a copper|your charity]. right here. in my hand
 [for the love of the realm|by all the gods|have mercy], {player}, [a copper|a coin|anything]
 honest work [is hard to find|dried up|left me] in {capital}, {player}. [spare a coin|help a soul out]?
@@ -218,7 +218,7 @@ i hope [your next pull goes wrong|your loot is all trash drops|your horse throws
 [go|run|go on], {player}. [run home|run to the gates|run to your guild]. [i will be right here|i will follow|im faster than i look]
 [hey|oi|HEY] {player}! [you forgot something|you dropped something]. [your dignity|your shame|your manners]. [its back there|by my corner]
 {player} [begs|begged] [like a|worse than a] [first day farmer|wet kobold|lost goblin]. [amateur|pathetic|embarrassing]
-[i have|got] [more coin|more class|more friends] [than you|in one boot than you have in your bank], {player}
+[i have|got] [more coin in one boot than you have in the bank|more class in one boot than your whole guild|more friends than you], {player}
 [stop|quit] [looking at|staring at] [my purse|my pouch], {player}. [its not yours|it will never be yours|mine]
 [heal|buff|mez] [this|THIS], {player}. [oh wait|oh right], [you cant|you need coin for that|you begged for it]
 {player} the {player_class}. [scourge of beggars|thief of the poor|the corner pirate]. [boo|booo|BOOO]
@@ -264,7 +264,7 @@ i hope [your next pull goes wrong|your loot is all trash drops|your horse throws
 [my|MY] corner. [my|MY] [cobbles|stones|patch of dirt]. [my|MY] [coin|marks|customers]. [get lost|go]
 [i|I] [paid|bled|begged] for this corner, {player}. [three winters|ten years|every day]. [not giving it up|not sharing it]
 [this|that] [street|stretch|corner] is [spoken for|MINE|claimed]. [ask {npc}|{npc} knows|even {npc} knows]. [MINE|mine]
-[you|u] [want|want to] [a|to] corner? [go|then go] [beg in the frontier|stand in the bog|ask the trainers]. [not mine|not here]
+[you want a corner|u want a corner|want a corner]? [go|then go] [beg in the frontier|stand in the bog|ask the trainers]. [not mine|not here]
 {player} [tried to|wanted to] [steal|take|beg on] my corner. [everyone remember that|witness this|remember the face]
 [i see|i saw] [you|u] [eyeing|looking at] my corner, {player}. [dont|DONT]. [even|dont even] [think about it|try it]
 [the|THE] corner [is|stays] [mine|MINE]. [the coin is mine|the hoard is mine]. [{capital} is|this whole city is] [mine|kind of mine]
@@ -280,7 +280,7 @@ i know every [stone|cobble|crack] [of|on] this corner. [you|u] [dont|never will]
 [and STAY out|and stay gone|and dont come back][, {player}|]! [my corner|my city|my streets] [is safe|is clean again|is mine again]
 [ha|HA]. [ran off|gone|fled]. [nobody|no one] [takes|touches|begs on] [my corner|my street]
 [good riddance|good|finally]. [back to|now back to] [work|my corner|begging]. [alms!|spare a copper?|coin for the poor!]
-[thats right|yeah|aha], [run|walk|keep walking]. [beggars|this beggar] [always win|never forget|wins again]
+[thats right|yeah|aha], [run|walk|keep walking]. [beggars always win|beggars never forget|this beggar wins again]
 [corner|my corner] [defended|saved|held]. [the hoard is safe|the purse is safe]. [heh|hehe|ha]
 [the|that] {player_class} [is gone|left|ran]. [the corner|my corner] [remains|stands|is mine]
 

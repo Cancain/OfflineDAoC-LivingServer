@@ -245270,8 +245270,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare bones? i can sell it",
-   "id": "4fc1ab8c8b9f"
+   "text": "any spare bones? i can sell that",
+   "id": "d6c611993d41"
   },
   {
    "kind": "beggar",
@@ -245287,8 +245287,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare bones? i make use of it",
-   "id": "dc762513ee3c"
+   "text": "any spare bones? i make use of anything",
+   "id": "897d43e6741b"
   },
   {
    "kind": "beggar",
@@ -245304,8 +245304,42 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare bones, {player}? i make use of it",
-   "id": "c2011ff9e1fd"
+   "text": "any spare bones? i turn junk into food",
+   "id": "852c74fe1c55"
+  },
+  {
+   "kind": "beggar",
+   "topic": "beg",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "any spare bones, {player}? i can sell that",
+   "id": "9757de3c412c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "beg",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "any spare bones, {player}? i make use of anything",
+   "id": "434566e707f9"
   },
   {
    "kind": "beggar",
@@ -245338,8 +245372,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare cloth? i can sell it",
-   "id": "c0a38678570d"
+   "text": "any spare cloth? i can sell that",
+   "id": "8f2397820f99"
   },
   {
    "kind": "beggar",
@@ -245355,42 +245389,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare cloth? i make use of it",
-   "id": "7db0b43f8d8d"
-  },
-  {
-   "kind": "beggar",
-   "topic": "beg",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "any spare cloth? i turn junk into food",
-   "id": "cd3ac52be8ae"
-  },
-  {
-   "kind": "beggar",
-   "topic": "beg",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "any spare cloth, {player}? i can sell it",
-   "id": "692cce36fbb8"
+   "text": "any spare cloth, {player}? i can sell that",
+   "id": "7b119f5a537f"
   },
   {
    "kind": "beggar",
@@ -245423,8 +245423,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare gems? i can sell it",
-   "id": "3cfa4a2dfc02"
+   "text": "any spare gems? i can sell that",
+   "id": "8e9d1c3bc4d0"
   },
   {
    "kind": "beggar",
@@ -245440,8 +245440,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare gems? i make use of it",
-   "id": "3d17a39fade6"
+   "text": "any spare gems? i make use of anything",
+   "id": "78fdb2105bec"
   },
   {
    "kind": "beggar",
@@ -245474,8 +245474,25 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare gems, {player}? i make use of it",
-   "id": "1b6fe174c421"
+   "text": "any spare gems, {player}? i can sell that",
+   "id": "9f6d1e58f281"
+  },
+  {
+   "kind": "beggar",
+   "topic": "beg",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "any spare gems, {player}? i make use of anything",
+   "id": "ff2c98aebe63"
   },
   {
    "kind": "beggar",
@@ -245508,25 +245525,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare hides? i can sell it",
-   "id": "f87957168247"
-  },
-  {
-   "kind": "beggar",
-   "topic": "beg",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "any spare hides? i make use of it",
-   "id": "a9f43b7c6c46"
+   "text": "any spare hides? i make use of anything",
+   "id": "4a56d5936502"
   },
   {
    "kind": "beggar",
@@ -245559,8 +245559,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare hides, {player}? i can sell it",
-   "id": "8565f2c16c9f"
+   "text": "any spare hides, {player}? i can sell that",
+   "id": "d66e43070735"
   },
   {
    "kind": "beggar",
@@ -245576,8 +245576,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare hides, {player}? i make use of it",
-   "id": "f1915fb43f5c"
+   "text": "any spare hides, {player}? i make use of anything",
+   "id": "9cd6e7a8e217"
   },
   {
    "kind": "beggar",
@@ -245593,25 +245593,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare hides, {player}? i turn junk into food",
-   "id": "5d8955d70466"
-  },
-  {
-   "kind": "beggar",
-   "topic": "beg",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "any spare loot? i make use of it",
-   "id": "12ecfa780fd4"
+   "text": "any spare loot? i make use of anything",
+   "id": "0a3e3ece4c46"
   },
   {
    "kind": "beggar",
@@ -245644,8 +245627,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare loot, {player}? i can sell it",
-   "id": "7f3b501d3da5"
+   "text": "any spare loot, {player}? i can sell that",
+   "id": "1e8a73649870"
   },
   {
    "kind": "beggar",
@@ -245661,8 +245644,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare loot, {player}? i make use of it",
-   "id": "bdadb851b80c"
+   "text": "any spare loot, {player}? i make use of anything",
+   "id": "580ea53049b8"
   },
   {
    "kind": "beggar",
@@ -245678,8 +245661,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "any spare loot, {player}? i turn junk into food",
-   "id": "c019481d17b9"
+   "text": "spare any bones? i can sell that",
+   "id": "90b5b306f015"
   },
   {
    "kind": "beggar",
@@ -245695,25 +245678,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "spare any bones? i can sell it",
-   "id": "4a8b37900acb"
-  },
-  {
-   "kind": "beggar",
-   "topic": "beg",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "spare any bones? i make use of it",
-   "id": "9b2f0f12e415"
+   "text": "spare any bones? i make use of anything",
+   "id": "c520f8171f42"
   },
   {
    "kind": "beggar",
@@ -245746,8 +245712,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "spare any bones, {player}? i make use of it",
-   "id": "2a6f3c17c1c1"
+   "text": "spare any bones, {player}? i can sell that",
+   "id": "e1a32d003a2b"
   },
   {
    "kind": "beggar",
@@ -245763,8 +245729,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "spare any bones, {player}? i turn junk into food",
-   "id": "865ee76891d6"
+   "text": "spare any bones, {player}? i make use of anything",
+   "id": "bdcb141b553b"
   },
   {
    "kind": "beggar",
@@ -245780,8 +245746,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "spare any cloth? i can sell it",
-   "id": "c25d6674661d"
+   "text": "spare any cloth? i can sell that",
+   "id": "24fb181668f6"
   },
   {
    "kind": "beggar",
@@ -245814,25 +245780,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "spare any cloth, {player}? i can sell it",
-   "id": "a548fb549e15"
-  },
-  {
-   "kind": "beggar",
-   "topic": "beg",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "spare any cloth, {player}? i make use of it",
-   "id": "287a9ea59947"
+   "text": "spare any cloth, {player}? i make use of anything",
+   "id": "e1a359b0ad5b"
   },
   {
    "kind": "beggar",
@@ -245865,25 +245814,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "spare any gems? i can sell it",
-   "id": "faab30b2ea4e"
-  },
-  {
-   "kind": "beggar",
-   "topic": "beg",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "spare any gems? i make use of it",
-   "id": "41d2da4e095b"
+   "text": "spare any gems? i make use of anything",
+   "id": "f338a8b5aec7"
   },
   {
    "kind": "beggar",
@@ -245916,8 +245848,25 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "spare any gems, {player}? i can sell it",
-   "id": "f5f857d17061"
+   "text": "spare any gems, {player}? i can sell that",
+   "id": "6f7c9e1e8c21"
+  },
+  {
+   "kind": "beggar",
+   "topic": "beg",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "spare any gems, {player}? i make use of anything",
+   "id": "7543daad2623"
   },
   {
    "kind": "beggar",
@@ -245950,8 +245899,25 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "spare any hides? i can sell it",
-   "id": "5b27f8ef230d"
+   "text": "spare any hides? i can sell that",
+   "id": "6fd54c41df38"
+  },
+  {
+   "kind": "beggar",
+   "topic": "beg",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "spare any hides? i make use of anything",
+   "id": "3d11edcd27ea"
   },
   {
    "kind": "beggar",
@@ -245984,8 +245950,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "spare any loot? i can sell it",
-   "id": "6490ea3b9e81"
+   "text": "spare any hides, {player}? i can sell that",
+   "id": "8bfc5f23b463"
   },
   {
    "kind": "beggar",
@@ -246001,8 +245967,59 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "spare any loot? i make use of it",
-   "id": "cc3f75f4d60f"
+   "text": "spare any hides, {player}? i make use of anything",
+   "id": "2b0cd02554f9"
+  },
+  {
+   "kind": "beggar",
+   "topic": "beg",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "spare any hides, {player}? i turn junk into food",
+   "id": "2d8e3570c89f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "beg",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "spare any loot? i can sell that",
+   "id": "0055505c17ea"
+  },
+  {
+   "kind": "beggar",
+   "topic": "beg",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "spare any loot? i make use of anything",
+   "id": "ba0b95e28a7f"
   },
   {
    "kind": "beggar",
@@ -246035,25 +246052,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1443,
-   "text": "spare any loot, {player}? i can sell it",
-   "id": "2e549b7e2666"
-  },
-  {
-   "kind": "beggar",
-   "topic": "beg",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "spare any loot, {player}? i make use of it",
-   "id": "a806a49db0ba"
+   "text": "spare any loot, {player}? i can sell that",
+   "id": "a67a218d5eb1"
   },
   {
    "kind": "beggar",
@@ -269717,9 +269717,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
-   "text": "i have more coin than you, {player}",
-   "id": "35b52ba7fea2"
+   "weight": 0.4082,
+   "text": "i have more coin in one boot than you have in the bank, {player}",
+   "id": "3f65fff008eb"
   },
   {
    "kind": "beggar",
@@ -269734,9 +269734,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
-   "text": "i have more coin in one boot than you have in your bank, {player}",
-   "id": "c0cc9f9f51e8"
+   "weight": 0.4082,
+   "text": "i have more class in one boot than your whole guild, {player}",
+   "id": "a0f4818d91d3"
   },
   {
    "kind": "beggar",
@@ -269751,41 +269751,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
-   "text": "i have more class than you, {player}",
-   "id": "772d5d0a8fbf"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2887,
-   "text": "i have more class in one boot than you have in your bank, {player}",
-   "id": "ec9914b4cb1a"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2887,
+   "weight": 0.4082,
    "text": "i have more friends than you, {player}",
    "id": "53c98bac3ae2"
   },
@@ -269802,9 +269768,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
-   "text": "i have more friends in one boot than you have in your bank, {player}",
-   "id": "c919c5fc0d2e"
+   "weight": 0.4082,
+   "text": "got more coin in one boot than you have in the bank, {player}",
+   "id": "ea1ea0e77860"
   },
   {
    "kind": "beggar",
@@ -269819,9 +269785,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
-   "text": "got more coin than you, {player}",
-   "id": "9da21b42b556"
+   "weight": 0.4082,
+   "text": "got more class in one boot than your whole guild, {player}",
+   "id": "23acdc1909bc"
   },
   {
    "kind": "beggar",
@@ -269836,77 +269802,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
-   "text": "got more coin in one boot than you have in your bank, {player}",
-   "id": "7e30ba0be5aa"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2887,
-   "text": "got more class than you, {player}",
-   "id": "28468e2da0e1"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2887,
-   "text": "got more class in one boot than you have in your bank, {player}",
-   "id": "241158b38590"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2887,
+   "weight": 0.4082,
    "text": "got more friends than you, {player}",
    "id": "1c4a778f7413"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2887,
-   "text": "got more friends in one boot than you have in your bank, {player}",
-   "id": "d3c0c3b0a724"
   },
   {
    "kind": "beggar",
@@ -284215,483 +284113,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "u want a corner? go ask the trainers. not here",
-   "id": "58365c319213"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want a corner? go ask the trainers. not mine",
-   "id": "996b5d7230d7"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want a corner? go stand in the bog. not mine",
-   "id": "c589b9d904d1"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want a corner? then go ask the trainers. not here",
-   "id": "a09b1141bace"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want a corner? then go ask the trainers. not mine",
-   "id": "213d8ed847b0"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want a corner? then go beg in the frontier. not here",
-   "id": "edc4d3b04cbe"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want a corner? then go beg in the frontier. not mine",
-   "id": "9a11a3f80bed"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want a corner? then go stand in the bog. not here",
-   "id": "ec3b987d71e9"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want a corner? then go stand in the bog. not mine",
-   "id": "4f550841959b"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to corner? go ask the trainers. not here",
-   "id": "008ac334d80d"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to corner? go ask the trainers. not mine",
-   "id": "412689f9feed"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to corner? go beg in the frontier. not mine",
-   "id": "dc989fd8010e"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to corner? go stand in the bog. not here",
-   "id": "917c6d5ecafc"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to corner? then go ask the trainers. not here",
-   "id": "24093534a675"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to corner? then go beg in the frontier. not here",
-   "id": "d98dd76696d6"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to a corner? go beg in the frontier. not here",
-   "id": "37872e81fdfc"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to a corner? go stand in the bog. not mine",
-   "id": "5cf8c7c2c8ce"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to a corner? then go ask the trainers. not here",
-   "id": "fc987fa8f820"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to a corner? then go ask the trainers. not mine",
-   "id": "538c4647433e"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to a corner? then go beg in the frontier. not mine",
-   "id": "eaebb1c6712f"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to a corner? then go stand in the bog. not here",
-   "id": "affda96064fc"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to a corner? then go stand in the bog. not mine",
-   "id": "864e0d3786f9"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to to corner? go ask the trainers. not here",
-   "id": "d690dbbe9479"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to to corner? go beg in the frontier. not here",
-   "id": "225a6cc2e6c1"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to to corner? then go ask the trainers. not mine",
-   "id": "817d076c188b"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "u want to to corner? then go stand in the bog. not here",
-   "id": "cb0fe52ba1f2"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "you want a corner? go ask the trainers. not here",
-   "id": "0edc66423e4f"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "you want a corner? go ask the trainers. not mine",
-   "id": "6f6900655d42"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "text": "you want a corner? go beg in the frontier. not mine",
    "id": "47bc58938fe1"
   },
@@ -284708,9 +284130,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want a corner? then go ask the trainers. not here",
-   "id": "68287c6ac91e"
+   "weight": 0.1667,
+   "text": "you want a corner? go beg in the frontier. not here",
+   "id": "6add5fdddf52"
   },
   {
    "kind": "beggar",
@@ -284725,7 +284147,75 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
+   "text": "you want a corner? go stand in the bog. not mine",
+   "id": "8b954e525d55"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "you want a corner? go stand in the bog. not here",
+   "id": "b2eb5c880919"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "you want a corner? go ask the trainers. not mine",
+   "id": "6f6900655d42"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "you want a corner? go ask the trainers. not here",
+   "id": "0edc66423e4f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
    "text": "you want a corner? then go beg in the frontier. not mine",
    "id": "97aa5b1c56cc"
   },
@@ -284742,9 +284232,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want a corner? then go stand in the bog. not here",
-   "id": "824b532308d6"
+   "weight": 0.1667,
+   "text": "you want a corner? then go beg in the frontier. not here",
+   "id": "bf1577e7032c"
   },
   {
    "kind": "beggar",
@@ -284759,7 +284249,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "text": "you want a corner? then go stand in the bog. not mine",
    "id": "7aed86547647"
   },
@@ -284776,9 +284266,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to corner? go stand in the bog. not here",
-   "id": "24112148b4d5"
+   "weight": 0.1667,
+   "text": "you want a corner? then go stand in the bog. not here",
+   "id": "824b532308d6"
   },
   {
    "kind": "beggar",
@@ -284793,9 +284283,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to corner? go stand in the bog. not mine",
-   "id": "d679d08b0ab7"
+   "weight": 0.1667,
+   "text": "you want a corner? then go ask the trainers. not mine",
+   "id": "d06c9de74367"
   },
   {
    "kind": "beggar",
@@ -284810,9 +284300,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to corner? then go ask the trainers. not here",
-   "id": "bc4d9cb86b8a"
+   "weight": 0.1667,
+   "text": "you want a corner? then go ask the trainers. not here",
+   "id": "68287c6ac91e"
   },
   {
    "kind": "beggar",
@@ -284827,9 +284317,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to corner? then go ask the trainers. not mine",
-   "id": "cd208b2f8ba2"
+   "weight": 0.1667,
+   "text": "u want a corner? go beg in the frontier. not mine",
+   "id": "502598a537d4"
   },
   {
    "kind": "beggar",
@@ -284844,9 +284334,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to corner? then go beg in the frontier. not here",
-   "id": "e69b12d77a51"
+   "weight": 0.1667,
+   "text": "u want a corner? go beg in the frontier. not here",
+   "id": "ac7338974723"
   },
   {
    "kind": "beggar",
@@ -284861,9 +284351,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to corner? then go beg in the frontier. not mine",
-   "id": "82cab71a53f2"
+   "weight": 0.1667,
+   "text": "u want a corner? go stand in the bog. not mine",
+   "id": "c589b9d904d1"
   },
   {
    "kind": "beggar",
@@ -284878,9 +284368,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to corner? then go stand in the bog. not here",
-   "id": "e51f9a70f48e"
+   "weight": 0.1667,
+   "text": "u want a corner? go stand in the bog. not here",
+   "id": "5c80338d2cdb"
   },
   {
    "kind": "beggar",
@@ -284895,9 +284385,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to corner? then go stand in the bog. not mine",
-   "id": "f1156c401919"
+   "weight": 0.1667,
+   "text": "u want a corner? go ask the trainers. not mine",
+   "id": "996b5d7230d7"
   },
   {
    "kind": "beggar",
@@ -284912,9 +284402,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to a corner? go stand in the bog. not mine",
-   "id": "bbb81837f1f6"
+   "weight": 0.1667,
+   "text": "u want a corner? go ask the trainers. not here",
+   "id": "58365c319213"
   },
   {
    "kind": "beggar",
@@ -284929,9 +284419,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to a corner? then go stand in the bog. not here",
-   "id": "bd6dbdcc9170"
+   "weight": 0.1667,
+   "text": "u want a corner? then go beg in the frontier. not mine",
+   "id": "9a11a3f80bed"
   },
   {
    "kind": "beggar",
@@ -284946,9 +284436,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to to corner? go beg in the frontier. not here",
-   "id": "f009b5c29861"
+   "weight": 0.1667,
+   "text": "u want a corner? then go beg in the frontier. not here",
+   "id": "edc4d3b04cbe"
   },
   {
    "kind": "beggar",
@@ -284963,9 +284453,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to to corner? go stand in the bog. not mine",
-   "id": "e75603e56c57"
+   "weight": 0.1667,
+   "text": "u want a corner? then go stand in the bog. not mine",
+   "id": "4f550841959b"
   },
   {
    "kind": "beggar",
@@ -284980,9 +284470,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to to corner? then go ask the trainers. not here",
-   "id": "b01f5bc66667"
+   "weight": 0.1667,
+   "text": "u want a corner? then go stand in the bog. not here",
+   "id": "ec3b987d71e9"
   },
   {
    "kind": "beggar",
@@ -284997,9 +284487,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to to corner? then go beg in the frontier. not here",
-   "id": "7562b7108072"
+   "weight": 0.1667,
+   "text": "u want a corner? then go ask the trainers. not mine",
+   "id": "213d8ed847b0"
   },
   {
    "kind": "beggar",
@@ -285014,9 +284504,213 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "you want to to corner? then go stand in the bog. not mine",
-   "id": "48726d5e76fb"
+   "weight": 0.1667,
+   "text": "u want a corner? then go ask the trainers. not here",
+   "id": "a09b1141bace"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "want a corner? go beg in the frontier. not mine",
+   "id": "85a574a60996"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "want a corner? go beg in the frontier. not here",
+   "id": "60b39c6287c8"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "want a corner? go stand in the bog. not mine",
+   "id": "ab32c94a4c39"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "want a corner? go stand in the bog. not here",
+   "id": "30c0ea663c73"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "want a corner? go ask the trainers. not mine",
+   "id": "fdc0e138c35c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "want a corner? go ask the trainers. not here",
+   "id": "888091d5edc0"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "want a corner? then go beg in the frontier. not mine",
+   "id": "434fd2e64f4c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "want a corner? then go beg in the frontier. not here",
+   "id": "66b7314652b7"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "want a corner? then go stand in the bog. not mine",
+   "id": "25bf2fef2bc0"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "want a corner? then go stand in the bog. not here",
+   "id": "3050e442d674"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "want a corner? then go ask the trainers. not mine",
+   "id": "13b37403cb2b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "want a corner? then go ask the trainers. not here",
+   "id": "c221422a5a04"
   },
   {
    "kind": "beggar",
@@ -291083,364 +290777,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "aha, keep walking. beggars always win",
-   "id": "456ae9c17288"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, keep walking. beggars wins again",
-   "id": "d8e6646487cb"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, keep walking. this beggar always win",
-   "id": "2b43917e8477"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, keep walking. this beggar never forget",
-   "id": "c33ba001a86f"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, keep walking. this beggar wins again",
-   "id": "7459b6dcfe97"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, run. beggars always win",
-   "id": "12abd242fb2f"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, run. beggars never forget",
-   "id": "e6be40493ff2"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, run. this beggar always win",
-   "id": "22829269024f"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, run. this beggar never forget",
-   "id": "daf25982ae29"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, run. this beggar wins again",
-   "id": "1f8ead85b1c0"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, walk. beggars always win",
-   "id": "cbc2088af5e5"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, walk. beggars never forget",
-   "id": "7f72fa9df94b"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, walk. beggars wins again",
-   "id": "09ffbcbda039"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, walk. this beggar always win",
-   "id": "8c5f717e3420"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, walk. this beggar never forget",
-   "id": "9f1e95b3e218"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "aha, walk. this beggar wins again",
-   "id": "00f2d04fcc6d"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "thats right, keep walking. beggars always win",
-   "id": "5169245d5ac3"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "thats right, keep walking. beggars wins again",
-   "id": "4dd349db8133"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "thats right, keep walking. this beggar always win",
-   "id": "e7df0e28dc8a"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "thats right, keep walking. this beggar never forget",
-   "id": "54d6449f83cc"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "thats right, keep walking. this beggar wins again",
-   "id": "19b9d137b87a"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1925,
    "text": "thats right, run. beggars always win",
    "id": "dfd7e2c519bd"
   },
@@ -291457,7 +290794,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1925,
    "text": "thats right, run. beggars never forget",
    "id": "a6c2003ab7b1"
   },
@@ -291474,58 +290811,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "thats right, run. beggars wins again",
-   "id": "b0f3b2ed24da"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "thats right, run. this beggar always win",
-   "id": "773bd4149e3f"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "thats right, run. this beggar never forget",
-   "id": "18d03743f49d"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1925,
    "text": "thats right, run. this beggar wins again",
    "id": "82a04653fc9a"
   },
@@ -291542,7 +290828,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1925,
    "text": "thats right, walk. beggars always win",
    "id": "53904c858021"
   },
@@ -291559,7 +290845,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1925,
    "text": "thats right, walk. beggars never forget",
    "id": "64faaea2686d"
   },
@@ -291576,9 +290862,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "thats right, walk. beggars wins again",
-   "id": "db0b172d5816"
+   "weight": 0.1925,
+   "text": "thats right, walk. this beggar wins again",
+   "id": "d5d9f0bf3661"
   },
   {
    "kind": "beggar",
@@ -291593,9 +290879,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "thats right, walk. this beggar always win",
-   "id": "eaa5889203c9"
+   "weight": 0.1925,
+   "text": "thats right, keep walking. beggars always win",
+   "id": "5169245d5ac3"
   },
   {
    "kind": "beggar",
@@ -291610,9 +290896,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "thats right, walk. this beggar never forget",
-   "id": "16408bbc59d4"
+   "weight": 0.1925,
+   "text": "thats right, keep walking. beggars never forget",
+   "id": "b0bf3e3c3325"
   },
   {
    "kind": "beggar",
@@ -291627,9 +290913,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "yeah, keep walking. beggars always win",
-   "id": "a23bd2e245ca"
+   "weight": 0.1925,
+   "text": "thats right, keep walking. this beggar wins again",
+   "id": "19b9d137b87a"
   },
   {
    "kind": "beggar",
@@ -291644,75 +290930,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "yeah, keep walking. beggars never forget",
-   "id": "76cfa35c7685"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "yeah, keep walking. this beggar always win",
-   "id": "39f4243ca982"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "yeah, keep walking. this beggar never forget",
-   "id": "da3c05a3333c"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "yeah, keep walking. this beggar wins again",
-   "id": "3fa99b595e52"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1925,
    "text": "yeah, run. beggars always win",
    "id": "d5fd9025d2c0"
   },
@@ -291729,7 +290947,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1925,
    "text": "yeah, run. beggars never forget",
    "id": "acaf9ec79501"
   },
@@ -291746,58 +290964,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "yeah, run. beggars wins again",
-   "id": "b6494b7a9b87"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "yeah, run. this beggar always win",
-   "id": "f967ebc31c13"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "yeah, run. this beggar never forget",
-   "id": "8395094e0b6d"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1925,
    "text": "yeah, run. this beggar wins again",
    "id": "8e4cf66219f2"
   },
@@ -291814,7 +290981,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1925,
    "text": "yeah, walk. beggars always win",
    "id": "e36f26c40e77"
   },
@@ -291831,7 +290998,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1925,
    "text": "yeah, walk. beggars never forget",
    "id": "acf73087a644"
   },
@@ -291848,43 +291015,213 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "text": "yeah, walk. beggars wins again",
-   "id": "fc0bf2ac1a1d"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "text": "yeah, walk. this beggar always win",
-   "id": "436856cd4794"
-  },
-  {
-   "kind": "beggar",
-   "topic": "gone",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1925,
    "text": "yeah, walk. this beggar wins again",
    "id": "4a17a25fe29e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1925,
+   "text": "yeah, keep walking. beggars always win",
+   "id": "a23bd2e245ca"
+  },
+  {
+   "kind": "beggar",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1925,
+   "text": "yeah, keep walking. beggars never forget",
+   "id": "76cfa35c7685"
+  },
+  {
+   "kind": "beggar",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1925,
+   "text": "yeah, keep walking. this beggar wins again",
+   "id": "3fa99b595e52"
+  },
+  {
+   "kind": "beggar",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1925,
+   "text": "aha, run. beggars always win",
+   "id": "12abd242fb2f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1925,
+   "text": "aha, run. beggars never forget",
+   "id": "e6be40493ff2"
+  },
+  {
+   "kind": "beggar",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1925,
+   "text": "aha, run. this beggar wins again",
+   "id": "1f8ead85b1c0"
+  },
+  {
+   "kind": "beggar",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1925,
+   "text": "aha, walk. beggars always win",
+   "id": "cbc2088af5e5"
+  },
+  {
+   "kind": "beggar",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1925,
+   "text": "aha, walk. beggars never forget",
+   "id": "7f72fa9df94b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1925,
+   "text": "aha, walk. this beggar wins again",
+   "id": "00f2d04fcc6d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1925,
+   "text": "aha, keep walking. beggars always win",
+   "id": "456ae9c17288"
+  },
+  {
+   "kind": "beggar",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1925,
+   "text": "aha, keep walking. beggars never forget",
+   "id": "96fdc0a7c6f2"
+  },
+  {
+   "kind": "beggar",
+   "topic": "gone",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1925,
+   "text": "aha, keep walking. this beggar wins again",
+   "id": "7459b6dcfe97"
   },
   {
    "kind": "beggar",
