@@ -90,12 +90,19 @@ public static class AutonomousBotDebates
     public static long AfterPlayerSpoke(long nextAt, long now) => Math.Max(nextAt, now + PlayerPauseMs);
 
     /// <summary>A player of the realm spoke in /faction: the running scene, if any, waits a moment.</summary>
-    public static void PlayerSpoke(eRealm realm)
+    public static void PlayerSpoke(eRealm realm) => PlayerSpoke(realm, null);
+
+    /// <summary>The same, remembering who spoke: a dunce who rage quits sends that player a parting tell.</summary>
+    public static void PlayerSpoke(eRealm realm, GamePlayer player)
     {
         lock (Sync)
         {
             if (Scenes.TryGetValue(realm, out Running running))
+            {
                 running.NextAt = AfterPlayerSpoke(running.NextAt, GameLoop.GameLoopTime);
+                if (player != null)
+                    running.Players.Add(player.Name);
+            }
         }
     }
 
@@ -200,6 +207,8 @@ public static class AutonomousBotDebates
         public readonly List<(string Role, string Text)> Said = new();
         /// <summary>Players answered in this scene, so one player gets at most two in-debate answers.</summary>
         public int PlayerAnswers;
+        /// <summary>Players who spoke in /faction while the scene ran.</summary>
+        public readonly HashSet<string> Players = new(StringComparer.OrdinalIgnoreCase);
     }
 
     private static readonly object Sync = new();
@@ -412,7 +421,21 @@ public static class AutonomousBotDebates
         // The dunce who rage quits ("@exit A") logs off once the pile-on is over.
         if (!string.IsNullOrEmpty(running.Scene.Exit) && running.Cast.TryGetValue(running.Scene.Exit, out long quitter) &&
             AutonomousBotRegistry.TryGet(quitter, out GameBot dunce))
+        {
+            // A player who joined in (or laughed) gets the dunce's parting tell before it logs off.
+            GamePlayer witness = null;
+            lock (Sync)
+                foreach (string name in running.Players)
+                {
+                    witness = ClientService.Instance.GetPlayerByExactName(name);
+                    if (witness != null && witness.Realm == realm)
+                        break;
+                    witness = null;
+                }
+            if (witness != null && AutonomousBotVoices.TryEventLine(dunce, "session", out string parting, "ragequit_tell", noRepeat: false))
+                AutonomousLivingServer.Tell(dunce, witness, parting, "none");
             AutonomousBotSchedule.RageQuit(dunce, Random.Shared);
+        }
         End(realm, "finished");
     }
 

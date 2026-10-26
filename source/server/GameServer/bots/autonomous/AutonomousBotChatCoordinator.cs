@@ -447,7 +447,7 @@ public static class AutonomousBotChatCoordinator
             return;
         BotChatTranscript.Player("faction", player, message);
         SendFaction(player.Name, player.Realm, message);
-        AutonomousBotDebates.PlayerSpoke(player.Realm);
+        AutonomousBotDebates.PlayerSpoke(player.Realm, player);
         lock (Sync)
             LastPlayerFactionLine[player.Realm] = GameLoop.GameLoopTime;
         if (AutonomousBotGuildSocial.TryAnswerGuildRequest(player, message, true))

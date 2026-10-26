@@ -252752,6 +252752,227 @@
    "id": "b3664bd0415f"
   },
   {
+   "kind": "session",
+   "topic": "ragequit_back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "i did not uninstall. i was going to. it was a long night",
+   "id": "92e59b9a52de"
+  },
+  {
+   "kind": "session",
+   "topic": "ragequit_back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "before anyone says anything, yes, i came back. the game has a hold on me",
+   "id": "370d1ccfefa0"
+  },
+  {
+   "kind": "session",
+   "topic": "ragequit_back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "i would like to formally apologize to the horse",
+   "id": "c2fee9731e8f"
+  },
+  {
+   "kind": "session",
+   "topic": "ragequit_back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "whoever saved the screenshot, i will pay you to delete it",
+   "id": "ccfbe990f704"
+  },
+  {
+   "kind": "session",
+   "topic": "ragequit_back",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "im back, but i still think the guards are op",
+   "id": "b8bcac6ae75e"
+  },
+  {
+   "kind": "session",
+   "topic": "ragequit_tell",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "and YOU. i saw you laughing",
+   "id": "945b5e0211d8"
+  },
+  {
+   "kind": "session",
+   "topic": "ragequit_tell",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "dont think i didnt see you in there",
+   "id": "d9240dea2f4e"
+  },
+  {
+   "kind": "session",
+   "topic": "ragequit_tell",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "you too. dont act innocent",
+   "id": "6a9f13f99a34"
+  },
+  {
+   "kind": "session",
+   "topic": "ragequit_tell",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "you were the worst one and you know it",
+   "id": "850b34315942"
+  },
+  {
+   "kind": "session",
+   "topic": "ragequit_tell",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "remember my name. you'll regret this",
+   "id": "74a9ea989cd0"
+  },
+  {
+   "kind": "session",
+   "topic": "ragequit_tell",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "i expected better from you. i dont know why",
+   "id": "7f63e732c3f5"
+  },
+  {
+   "kind": "session",
+   "topic": "ragequit_tell",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "thanks for nothing. seriously",
+   "id": "4e552b5ed4e3"
+  },
+  {
+   "kind": "session",
+   "topic": "ragequit_tell",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "youre on my list now",
+   "id": "65364de82fca"
+  },
+  {
    "kind": "ambient",
    "topic": "dungeon",
    "who": [],
@@ -484452,6 +484673,10 @@
     "G": {
      "type": [],
      "class": []
+    },
+    "H": {
+     "type": [],
+     "class": []
     }
    },
    "beats": [
@@ -484466,145 +484691,217 @@
     },
     {
      "role": "B",
-     "text": "lol",
+     "text": "hahahaha",
      "variants": [
-      "lol",
-      "rofl"
+      "hahahaha",
+      "ROFL"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "your horse",
+     "text": "your. horse.",
      "variants": [
-      "your horse",
+      "your. horse.",
       "...your horse"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "have you tried feeding it xp potions",
+     "text": "you have to feed it a dragon scale every level",
      "variants": [
-      "have you tried feeding it xp potions",
-      "try killing blues with it, horses need bubbles too"
+      "you have to feed it a dragon scale every level",
+      "have you tried killing blues ON the horse"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "you dont own the horse. the stablemaster owns the horse. you rent a seat",
+     "text": "which horse trainer did you go to, the one in the fountain?",
      "variants": [
-      "you dont own the horse. the stablemaster owns the horse. you rent a seat",
-      "the horse belongs to the stable, you just sit on it"
+      "which horse trainer did you go to, the one in the fountain?",
+      "the horse trainer lives behind the bank, ask the banker nicely"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "no but it says im on a horse and it goes the same speed every time",
+     "text": "no im serious, it says im riding and its so slow, everyone else must have a faster one",
      "variants": [
-      "no but it says im on a horse and it goes the same speed every time",
-      "it says im riding. why cant i make it go faster"
+      "no im serious, it says im riding and its so slow, everyone else must have a faster one",
+      "im not joking, my friend says his horse is faster"
      ],
      "optional": false
     },
     {
      "role": "F",
-     "text": "have you tried yelling at it",
+     "text": "your friend is lying to you, and so is your horse",
      "variants": [
-      "have you tried yelling at it",
-      "try saying giddyup in /say, works every time"
+      "your friend is lying to you, and so is your horse",
+      "your friend also told you the moon is a level 50 named"
      ],
      "optional": false
     },
     {
      "role": "G",
-     "text": "screenshot. this is going on the guild site",
+     "text": "screenshot. this is going on the guild site under \"hall of fame\"",
      "variants": [
-      "screenshot. this is going on the guild site",
-      "oh this is getting framed"
+      "screenshot. this is going on the guild site under \"hall of fame\"",
+      "logging this. this is getting framed in the guild hall"
      ],
      "optional": false
     },
     {
-     "role": "B",
-     "text": "i think he wants to spec into horse",
+     "role": "H",
+     "text": "i think he wants to spec 50 in horse",
      "variants": [
-      "i think he wants to spec into horse",
-      "someone tell him theres no horse trainer before he finds the dog trainer"
+      "i think he wants to spec 50 in horse",
+      "50 in horse, 1 in common sense"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "ok forget it, everyone here is useless",
+     "text": "why is everyone laughing, its a real question",
      "variants": [
-      "ok forget it, everyone here is useless",
-      "why is everyone so mean, it was a real question"
+      "why is everyone laughing, its a real question",
+      "ok wow. its a real question you know"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "it was a real question. thats the problem",
+     "text": "its a real question. thats what makes it so beautiful",
      "variants": [
-      "it was a real question. thats the problem",
-      "nobody said it wasnt real"
+      "its a real question. thats what makes it so beautiful",
+      "it is extremely real. that is the problem"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "can i level my sword next? asking for a friend",
+     "text": "do you also water your sword so it grows",
      "variants": [
-      "can i level my sword next? asking for a friend",
-      "while we're at it, how do i level up my cloak"
+      "do you also water your sword so it grows",
+      "next up: how do i level my pants"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "aw leave him alone. he just wants a fast pony",
+     "variants": [
+      "aw leave him alone. he just wants a fast pony",
+      "dont be mean, he just wants a pony with talents"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "you know what, i dont even care. this game is dumb",
+     "text": "stfu all of you. this realm is full of jerks",
      "variants": [
-      "you know what, i dont even care. this game is dumb",
-      "this is the worst realm i swear"
+      "stfu all of you. this realm is full of jerks",
+      "wtf is wrong with this realm, nobody can just answer"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "ok ok. horses are a ride between towns, you cant train them. they go one speed",
+     "text": "we answered. the answer is lol",
      "variants": [
-      "ok ok. horses are a ride between towns, you cant train them. they go one speed",
-      "the stable horses are a fixed route, nobody can speed them up. thats all"
-     ],
-     "optional": false
-    },
-    {
-     "role": "A",
-     "text": "TOO LATE. im done. have fun with your stupid horses",
-     "variants": [
-      "TOO LATE. im done. have fun with your stupid horses",
-      "NOPE. done. uninstalling. enjoy your slow horses"
+      "we answered. the answer is lol",
+      "we did answer. the answer is: hahaha"
      ],
      "optional": false
     },
     {
      "role": "F",
-     "text": "dont forget to unsubscribe the horse",
+     "text": "the stablemaster horses are a fixed route. same speed for everyone. you rent the seat, you dont own the animal",
      "variants": [
-      "dont forget to unsubscribe the horse",
-      "bye, the horse will miss you"
+      "the stablemaster horses are a fixed route. same speed for everyone. you rent the seat, you dont own the animal",
+      "horses go one speed for everyone. its a ride, not a pet"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "BYE",
+     "text": "then why didnt you say that first instead of being $#@! about it",
      "variants": [
-      "BYE",
-      "BYE ALL"
+      "then why didnt you say that first instead of being $#@! about it",
+      "oh NOW you tell me. after the whole realm laughs"
+     ],
+     "optional": false
+    },
+    {
+     "role": "G",
+     "text": "because watching you was more fun",
+     "variants": [
+      "because watching you was more fun",
+      "the laughing was mandatory"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "you know what. i pay for this game. i dont have to take this",
+     "variants": [
+      "you know what. i pay for this game. i dont have to take this",
+      "i pay every month for this and this is what i get"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "you pay so we can laugh. thank you for your contribution",
+     "variants": [
+      "you pay so we can laugh. thank you for your contribution",
+      "best money you ever spent, honestly"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "IM CANCELING MY ACCOUNT. ALL OF YOU CAN RIDE YOUR SLOW HORSES INTO A LAKE",
+     "variants": [
+      "IM CANCELING MY ACCOUNT. ALL OF YOU CAN RIDE YOUR SLOW HORSES INTO A LAKE",
+      "THAT'S IT. DONE. ENJOY YOUR STUPID SLOW HORSES, I HOPE THEY BUCK YOU OFF"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "bye"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "/wave"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "o7"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "AND THE HORSE THING IS A BAD DESIGN AND YOU KNOW IT",
+     "variants": [
+      "AND THE HORSE THING IS A BAD DESIGN AND YOU KNOW IT",
+      "THIS GAME IS BROKEN AND SO ARE ALL OF YOU"
      ],
      "optional": false
     },
@@ -484613,29 +484910,38 @@
      "pause": 6
     },
     {
-     "role": "G",
+     "role": "E",
      "text": "did he actually log",
      "variants": [
       "did he actually log",
-      "he actually left lol"
+      "he's gone. he actually left"
      ],
      "optional": false
     },
     {
-     "role": "B",
-     "text": "gg",
+     "role": "F",
+     "text": "rip horse guy",
      "variants": [
-      "gg",
-      "rip horse guy"
+      "rip horse guy",
+      "rest in peace, horse whisperer"
      ],
      "optional": false
     },
     {
-     "role": "C",
-     "text": "every week",
+     "role": "G",
+     "text": "ten gold says he's back before the stablemaster's horse gets to the next town",
      "variants": [
-      "every week",
-      "another one for the hall of fame"
+      "ten gold says he's back before the stablemaster's horse gets to the next town",
+      "he'll be back by morning asking how to level his cloak"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "honestly i asked that in my first week too. i just had the sense to ask a guildie",
+     "variants": [
+      "honestly i asked that in my first week too. i just had the sense to ask a guildie",
+      "i asked that once. in a tell. like a sane person"
      ],
      "optional": false
     }
@@ -484698,145 +485004,208 @@
    "beats": [
     {
      "role": "A",
-     "text": "{q} how do i turn off pvp? the enemy keeps killing me in the frontier",
+     "text": "{q} how do i turn off pvp?? the enemy keeps killing me in the frontier",
      "variants": [
-      "{q} how do i turn off pvp? the enemy keeps killing me in the frontier",
-      "{q} where is the option to turn off pvp, i keep dying out in the frontier"
+      "{q} how do i turn off pvp?? the enemy keeps killing me in the frontier",
+      "{q} where is the option to turn off pvp, three enemies just killed me again"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "ha",
+     "text": "lol",
      "variants": [
-      "ha",
-      "haha no"
+      "lol",
+      "omfg"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "the frontier IS the pvp",
+     "text": "the frontier. is the pvp.",
      "variants": [
-      "the frontier IS the pvp",
-      "turn off pvp... in the frontier"
+      "the frontier. is the pvp.",
+      "turn off pvp... in the frontier... the pvp zone"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "there is a button, but you have to be level 51 to see it",
+     "text": "there's a button for it but you have to be level 51 to see it",
      "variants": [
-      "there is a button, but you have to be level 51 to see it",
-      "its in the options menu right under \"make me invincible\""
+      "there's a button for it but you have to be level 51 to see it",
+      "it's under options, right below \"make me invincible\""
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "walk out of the frontier, that's the off switch",
+     "text": "walk out of the frontier, that's the off switch. it's called the portal home",
      "variants": [
-      "walk out of the frontier, that's the off switch",
-      "the off switch is the portal back home"
+      "walk out of the frontier, that's the off switch. it's called the portal home",
+      "the off switch is the big glowing portal you walked through"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "no im serious, the other realms keep attacking me, its not fair",
+     "text": "thats not funny, im seriously asking. they just keep coming. it's not fair",
      "variants": [
-      "no im serious, the other realms keep attacking me, its not fair",
-      "i was just walking and three of them killed me, thats not right"
+      "thats not funny, im seriously asking. they just keep coming. it's not fair",
+      "i was just walking to a keep and they killed me, thats not fair"
      ],
      "optional": false
     },
     {
      "role": "F",
-     "text": "thats the whole game. three realms. they hate us. we hate them",
+     "text": "you walked to an ENEMY KEEP",
      "variants": [
-      "thats the whole game. three realms. they hate us. we hate them",
-      "they're supposed to attack you, thats what the war is"
+      "you walked to an ENEMY KEEP",
+      "wait. you walked TO the keep. their keep"
      ],
      "optional": false
     },
     {
      "role": "G",
-     "text": "did you think the frontier was a shortcut",
+     "text": "what did you think the keeps were for, decoration",
      "variants": [
-      "did you think the frontier was a shortcut",
-      "what did you think the keeps were for, decoration"
+      "what did you think the keeps were for, decoration",
+      "did you think the guards with bows were for show"
      ],
      "optional": false
     },
     {
      "role": "H",
-     "text": "write to your king. maybe he'll ask them to stop",
+     "text": "write your king a letter, maybe he'll ask them nicely to stop",
      "variants": [
-      "write to your king. maybe he'll ask them to stop",
-      "file a complaint with the other realms, im sure they'll listen"
+      "write your king a letter, maybe he'll ask them nicely to stop",
+      "file a complaint with their realm, im sure they'll care"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "this is so stupid, nobody even helps",
+     "text": "wow thanks for nothing. this is why nobody likes this realm",
      "variants": [
-      "this is so stupid, nobody even helps",
-      "wow thanks for the help, really"
+      "wow thanks for nothing. this is why nobody likes this realm",
+      "great help. really. this is why our realm loses"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "i'll help. step one, run",
+     "text": "we lose because guys like you walk into keeps alone",
      "variants": [
-      "i'll help. step one, run",
-      "here's help: turn around, run, dont stop"
+      "we lose because guys like you walk into keeps alone",
+      "we lose because people feed the enemy realm points like you just did"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "i didnt FEED anyone, i was EXPLORING",
+     "variants": [
+      "i didnt FEED anyone, i was EXPLORING",
+      "it wasnt feeding, i was exploring"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "we did help. you asked where the pvp switch is and we pointed at the whole zone",
+     "text": "you explored right into three of them. bold strategy",
      "variants": [
-      "we did help. you asked where the pvp switch is and we pointed at the whole zone",
-      "everyone helped, the answer is just no"
-     ],
-     "optional": false
-    },
-    {
-     "role": "A",
-     "text": "whatever. i'm done with this. pvp games are trash",
-     "variants": [
-      "whatever. i'm done with this. pvp games are trash",
-      "forget it, this game is trash and so is everyone in it"
+      "you explored right into three of them. bold strategy",
+      "you explored their swords with your face"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "aw, dont go, who will we laugh at tomorrow",
+     "text": "aw, they probably thanked you",
      "variants": [
-      "aw, dont go, who will we laugh at tomorrow",
-      "nooo stay, you were the best part of tonight"
+      "aw, they probably thanked you",
+      "they're sending you a fruit basket for the realm points"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "IM DONE. UNINSTALLING. LATER LOSERS",
+     "text": "you know what, i bet none of you could kill them either",
      "variants": [
-      "IM DONE. UNINSTALLING. LATER LOSERS",
-      "FORGET THIS. LOGGING. ENJOY YOUR WAR"
+      "you know what, i bet none of you could kill them either",
+      "like any of you could do better, you just sit in town"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "see you tomorrow",
+     "text": "i killed six of them last night",
      "variants": [
-      "see you tomorrow",
-      "/wave"
+      "i killed six of them last night",
+      "i was out there two hours tonight. you were out there two minutes"
+     ],
+     "optional": false
+    },
+    {
+     "role": "F",
+     "text": "he has more realm points than your realm has realm points",
+     "variants": [
+      "he has more realm points than your realm has realm points",
+      "his realm points have realm points"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "whatever. pvp is trash. this whole game is trash. YOU are trash",
+     "variants": [
+      "whatever. pvp is trash. this whole game is trash. YOU are trash",
+      "omfg, i'm done with this. this game and everyone in it is garbage"
+     ],
+     "optional": false
+    },
+    {
+     "role": "G",
+     "text": "careful, the abuse filter will catch you before the enemy does",
+     "variants": [
+      "careful, the abuse filter will catch you before the enemy does",
+      "look at that, he learned to fight. in chat"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "IM DONE. UNINSTALLING. HAVE FUN BEING FARMED BY THE OTHER REALMS LOSERS",
+     "variants": [
+      "IM DONE. UNINSTALLING. HAVE FUN BEING FARMED BY THE OTHER REALMS LOSERS",
+      "FORGET THIS. LOGGING FOREVER. ENJOY YOUR STUPID WAR"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "say hi to the enemy on your way out, they miss you already",
+     "variants": [
+      "say hi to the enemy on your way out, they miss you already",
+      "the other realms just lost their favorite pinata"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "o7"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "bye"
      ],
      "optional": false
     },
@@ -484845,29 +485214,29 @@
      "pause": 6
     },
     {
+     "role": "D",
+     "text": "did anyone get a screenshot of the caps",
+     "variants": [
+      "did anyone get a screenshot of the caps",
+      "please tell me someone screenshotted the caps"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "back in an hour, asking how to turn off the dragons",
+     "variants": [
+      "back in an hour, asking how to turn off the dragons",
+      "next week: how do i turn off mobs"
+     ],
+     "optional": false
+    },
+    {
      "role": "F",
-     "text": "he'll be back by morning",
+     "text": "fair question for the first day. not for day forty",
      "variants": [
-      "he'll be back by morning",
-      "betting he's back in an hour"
-     ],
-     "optional": false
-    },
-    {
-     "role": "G",
-     "text": "someone tell the enemy they lost a fan",
-     "variants": [
-      "someone tell the enemy they lost a fan",
-      "the other realms just lost their favorite target"
-     ],
-     "optional": false
-    },
-    {
-     "role": "H",
-     "text": "honestly, a fair question for the first week",
-     "variants": [
-      "honestly, a fair question for the first week",
-      "in fairness, i asked that too once. quietly"
+      "fair question for the first day. not for day forty",
+      "in fairness he was new. in unfairness, not that new"
      ],
      "optional": false
     }
@@ -484923,15 +485292,19 @@
     "G": {
      "type": [],
      "class": []
+    },
+    "H": {
+     "type": [],
+     "class": []
     }
    },
    "beats": [
     {
      "role": "A",
-     "text": "{q} which merchant sells realm points? i have like 40 gold",
+     "text": "{q} which merchant sells realm points? i have like 40 gold saved",
      "variants": [
-      "{q} which merchant sells realm points? i have like 40 gold",
-      "{q} where can i buy realm points, i have gold saved up"
+      "{q} which merchant sells realm points? i have like 40 gold saved",
+      "{q} where can i buy realm points, i have gold now"
      ],
      "optional": false
     },
@@ -484946,55 +485319,64 @@
     },
     {
      "role": "C",
-     "text": "you earn realm points. by killing people of other realms. with your face",
+     "text": "you earn realm points. by killing people of other realms. with your face, usually",
      "variants": [
-      "you earn realm points. by killing people of other realms. with your face",
+      "you earn realm points. by killing people of other realms. with your face, usually",
       "you dont buy them, you take them from enemies"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "i hear the bindstone sells them if you hug it",
+     "text": "try the bindstone, give it a hug and wait",
      "variants": [
-      "i hear the bindstone sells them if you hug it",
-      "try the guard by the gate, tell him you have 40 gold and see what happens"
+      "try the bindstone, give it a hug and wait",
+      "ask the guard by the gate, tell him you have 40 gold and see what happens"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "i'll sell you mine. 40 gold, and you have to stand very still in the frontier",
+     "text": "i'll sell you mine. send me the 40 gold and stand very still in the frontier",
      "variants": [
-      "i'll sell you mine. 40 gold, and you have to stand very still in the frontier",
-      "send me the 40 gold and i'll send you realm points. trust me"
+      "i'll sell you mine. send me the 40 gold and stand very still in the frontier",
+      "40 gold and i'll send you all my realm points. trust me"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "really? ok sending",
+     "text": "really? ok how do i send it",
      "variants": [
-      "really? ok sending",
+      "really? ok how do i send it",
       "wait for real? how many do i get"
      ],
      "optional": false
     },
     {
      "role": "F",
-     "text": "DONT",
+     "text": "DO NOT",
      "variants": [
-      "DONT",
-      "do not send him anything"
+      "DO NOT",
+      "DONT YOU DARE"
      ],
      "optional": false
     },
     {
      "role": "G",
-     "text": "lol he was going to send it",
+     "text": "lol he was really going to send it",
      "variants": [
-      "lol he was going to send it",
+      "lol he was really going to send it",
       "and that's how you lose 40 gold in one evening"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "the realm point fairy only visits good boys who send gold to strangers",
+     "variants": [
+      "the realm point fairy only visits good boys who send gold to strangers",
+      "the realm point fairy takes payment in advance"
      ],
      "optional": false
     },
@@ -485009,10 +485391,10 @@
     },
     {
      "role": "C",
-     "text": "straight answer: you cant buy them. kill enemies in the frontier or battlegrounds",
+     "text": "straight answer: you cant buy them. kill enemies in the frontier or battlegrounds. no merchant sells them",
      "variants": [
-      "straight answer: you cant buy them. kill enemies in the frontier or battlegrounds",
-      "no merchant sells them. frontier kills, battlegrounds, keeps. thats it"
+      "straight answer: you cant buy them. kill enemies in the frontier or battlegrounds. no merchant sells them",
+      "no merchant. frontier kills, battlegrounds, keeps. thats it"
      ],
      "optional": false
     },
@@ -485027,37 +485409,91 @@
     },
     {
      "role": "B",
-     "text": "buy better armor? like a normal person",
+     "text": "you could buy armor. like a person",
      "variants": [
-      "buy better armor? like a normal person",
-      "you could spend it on gear, like everyone else"
+      "you could buy armor. like a person",
+      "spend it on gear, like everyone with a pulse"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "you know what forget it, i'm going to play something else",
+     "text": "i HAVE armor. its fine",
      "variants": [
-      "you know what forget it, i'm going to play something else",
-      "i'm done, this server is full of clowns"
+      "i HAVE armor. its fine",
+      "my armor is fine, i got it from a quest"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "careful, clowns sell realm points",
+     "text": "it's grey. we can see it from here",
      "variants": [
-      "careful, clowns sell realm points",
-      "the clowns are the only ones who'd sell you any"
+      "it's grey. we can see it from here",
+      "from here it looks like a tablecloth"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "BYE. ENJOY YOUR STUPID POINTS",
+     "text": "omfg. you know what, this server is full of clowns",
      "variants": [
-      "BYE. ENJOY YOUR STUPID POINTS",
-      "DONE. NEVER COMING BACK"
+      "omfg. you know what, this server is full of clowns",
+      "wtf is wrong with you people"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "careful, clowns sell realm points",
+     "variants": [
+      "careful, clowns sell realm points",
+      "i'm a clown with realm points. still want some?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "you're all losers with no life who play 20 hours a day",
+     "variants": [
+      "you're all losers with no life who play 20 hours a day",
+      "none of you have jobs, i can tell"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "i have a job. i'm here because it's fun watching you",
+     "variants": [
+      "i have a job. i'm here because it's fun watching you",
+      "i have a job and a family and i still found time for this"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "THATS IT. IM DONE. ENJOY YOUR STUPID FAKE POINTS",
+     "variants": [
+      "THATS IT. IM DONE. ENJOY YOUR STUPID FAKE POINTS",
+      "NEVER COMING BACK. KEEP YOUR POINTS. KEEP YOUR CLOWNS"
+     ],
+     "optional": false
+    },
+    {
+     "role": "F",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "bye bye"
+     ],
+     "optional": false
+    },
+    {
+     "role": "G",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "o7"
      ],
      "optional": false
     },
@@ -485066,29 +485502,29 @@
      "pause": 6
     },
     {
-     "role": "E",
+     "role": "H",
      "text": "i still would have taken the 40 gold",
      "variants": [
       "i still would have taken the 40 gold",
-      "shame, i had my realm points ready"
+      "shame, i was going to buy pots with that 40 gold"
      ],
      "optional": false
     },
     {
-     "role": "F",
+     "role": "B",
      "text": "someone save that log",
      "variants": [
       "someone save that log",
-      "i need that log for the guild site"
+      "that log is going in the guild newsletter"
      ],
      "optional": false
     },
     {
-     "role": "G",
-     "text": "first week stuff, we've all been there",
+     "role": "E",
+     "text": "he'll be back. they always come back",
      "variants": [
-      "first week stuff, we've all been there",
-      "everybody asks one of those once"
+      "he'll be back. they always come back",
+      "give it two hours"
      ],
      "optional": false
     }
@@ -485144,6 +485580,10 @@
     "G": {
      "type": [],
      "class": []
+    },
+    "H": {
+     "type": [],
+     "class": []
     }
    },
    "beats": [
@@ -485152,7 +485592,7 @@
      "text": "{q} how do i switch realms? the other side is winning and i want to be on that team",
      "variants": [
       "{q} how do i switch realms? the other side is winning and i want to be on that team",
-      "{q} is there a way to move my guy to the realm that wins"
+      "{q} is there a way to move my guy to the winning realm"
      ],
      "optional": false
     },
@@ -485167,118 +485607,181 @@
     },
     {
      "role": "C",
-     "text": "just walk up to their keep and ask nicely",
+     "text": "just walk up to their gate and ask nicely",
      "variants": [
-      "just walk up to their keep and ask nicely",
-      "go to their gate and wave a white flag, im sure they'll let you in"
+      "just walk up to their gate and ask nicely",
+      "wave a white flag at their keep, im sure they'll let you in"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "switching sides mid war. bold",
+     "text": "a traitor. in our own faction chat. at least he's honest",
      "variants": [
-      "switching sides mid war. bold",
-      "a traitor in our own faction chat. at least he's honest"
+      "a traitor. in our own faction chat. at least he's honest",
+      "a deserter announcing it in faction. respect, honestly"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "you'd have to start over in their realm, new character, new everything",
+     "text": "new realm means a new character from level 1. everything starts over",
      "variants": [
-      "you'd have to start over in their realm, new character, new everything",
-      "it doesnt work like that, new realm means a new character from level 1"
+      "new realm means a new character from level 1. everything starts over",
+      "it doesnt carry over. new realm, new guy, level 1"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "from level one?? thats dumb",
+     "text": "from level ONE?? that's so stupid",
      "variants": [
-      "from level one?? thats dumb",
-      "so all my levels are just gone? thats so stupid"
+      "from level ONE?? that's so stupid",
+      "so all my levels just vanish? what kind of design is that"
      ],
      "optional": false
     },
     {
      "role": "F",
-     "text": "you said you wanted the winning team. winning takes levels",
+     "text": "you wanted the winning team. winning starts at level one too",
      "variants": [
-      "you said you wanted the winning team. winning takes levels",
-      "you wanted to win. winning starts at level one too"
+      "you wanted the winning team. winning starts at level one too",
+      "the winning team didnt get there by switching"
      ],
      "optional": false
     },
     {
      "role": "G",
-     "text": "we're not even losing. we just lost one keep",
+     "text": "we're not even losing. we lost ONE keep",
      "variants": [
-      "we're not even losing. we just lost one keep",
-      "we lose a keep and he wants to defect"
+      "we're not even losing. we lost ONE keep",
+      "we lose one keep and he's packing his bags"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "imagine being a fair weather fan of a realm",
+     "variants": [
+      "imagine being a fair weather fan of a realm",
+      "he'd switch back the second we took a relic"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "well you guys are losing to ME in this chat at least",
+     "text": "well at least the other realm wouldnt laugh at a real question",
      "variants": [
-      "well you guys are losing to ME in this chat at least",
-      "at least the other realm probably answers questions without laughing"
+      "well at least the other realm wouldnt laugh at a real question",
+      "i bet the other realms are nicer than you lot"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "they would laugh harder. trust me, i've seen their chat",
+     "text": "the other realms would put you on a stick and roast you. ask anyone who's met them",
      "variants": [
-      "they would laugh harder. trust me, i've seen their chat",
-      "the other realms would put you on a stick"
+      "the other realms would put you on a stick and roast you. ask anyone who's met them",
+      "they'd laugh harder and then kill you"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "we laugh because we love you",
+     "text": "aw, we only tease the ones we love",
      "variants": [
-      "we laugh because we love you",
-      "aw, we only tease the ones we like"
+      "aw, we only tease the ones we love",
+      "we laugh because we care. a little"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "no you dont. this whole realm is a joke",
+     "text": "no you dont. nobody in this realm likes anybody",
      "variants": [
-      "no you dont. this whole realm is a joke",
-      "nobody here likes anybody, i can tell"
+      "no you dont. nobody in this realm likes anybody",
+      "this whole realm is a joke"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "says the guy trying to desert",
+     "text": "says the guy halfway out the door",
      "variants": [
-      "says the guy trying to desert",
+      "says the guy halfway out the door",
       "big words from the deserter"
      ],
      "optional": false
     },
     {
-     "role": "A",
-     "text": "FINE. i'm logging. maybe i'll make a char on the winning side",
+     "role": "E",
+     "text": "if you leave, who's going to feed the enemy realm points",
      "variants": [
-      "FINE. i'm logging. maybe i'll make a char on the winning side",
-      "DONE WITH YOU ALL. new realm, new life, bye"
+      "if you leave, who's going to feed the enemy realm points",
+      "who will the enemy farm without you"
      ],
      "optional": false
     },
     {
-     "role": "E",
-     "text": "tell them hi from us",
+     "role": "A",
+     "text": "you know what, i hope the other realm takes every keep and every relic. you deserve it",
      "variants": [
-      "tell them hi from us",
-      "when they ask where you came from, say it was us"
+      "you know what, i hope the other realm takes every keep and every relic. you deserve it",
+      "i hope we lose every keep. you all deserve it"
+     ],
+     "optional": false
+    },
+    {
+     "role": "F",
+     "text": "wow, rooting against your own realm in faction. treason with an audience",
+     "variants": [
+      "wow, rooting against your own realm in faction. treason with an audience",
+      "that's a new low, even for faction chat"
+     ],
+     "optional": false
+    },
+    {
+     "role": "G",
+     "text": "someone report him to the king",
+     "variants": [
+      "someone report him to the king",
+      "someone call the guards, we have a traitor"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "FINE. im making a char on the winning side and i'm coming back to kill all of you",
+     "variants": [
+      "FINE. im making a char on the winning side and i'm coming back to kill all of you",
+      "FORGET YOU ALL. NEW REALM. I'LL SEE YOU IN THE FRONTIER"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "we'll be waiting. bring your level 1",
+     "variants": [
+      "we'll be waiting. bring your level 1",
+      "come find us at level 1, we'll be gentle"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "o7"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "bye traitor"
      ],
      "optional": false
     },
@@ -485287,20 +485790,29 @@
      "pause": 6
     },
     {
-     "role": "F",
-     "text": "think he'll actually do it",
+     "role": "D",
+     "text": "he'll be back here tomorrow, same name with an extra letter",
      "variants": [
-      "think he'll actually do it",
-      "he'll be back here tomorrow, watch"
+      "he'll be back here tomorrow, same name with an extra letter",
+      "tomorrow: a new character, same name plus an x"
      ],
      "optional": false
     },
     {
-     "role": "G",
-     "text": "the other realms are welcome to him",
+     "role": "E",
+     "text": "the enemy is welcome to him. our gift",
      "variants": [
-      "the other realms are welcome to him",
+      "the enemy is welcome to him. our gift",
       "gift to the enemy. they can keep him"
+     ],
+     "optional": false
+    },
+    {
+     "role": "F",
+     "text": "honestly, the other realms don't deserve this kind of punishment",
+     "variants": [
+      "honestly, the other realms don't deserve this kind of punishment",
+      "poor enemy realm, they didnt do anything to deserve him"
      ],
      "optional": false
     }
@@ -485378,37 +485890,37 @@
     },
     {
      "role": "B",
-     "text": "the dragon is level eighty",
+     "text": "the dragon is level eighty. you are level twenty",
      "variants": [
-      "the dragon is level eighty",
-      "that dragon is older than our capital"
+      "the dragon is level eighty. you are level twenty",
+      "that dragon is older than our capital and bigger than your house"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "yes. walk up, open trade, hold out the gold. i'll watch",
+     "text": "yes. walk right up to it, open trade, hold out the gold. i'll watch",
      "variants": [
-      "yes. walk up, open trade, hold out the gold. i'll watch",
+      "yes. walk right up to it, open trade, hold out the gold. i'll watch",
       "absolutely. go up close so it can see the coins"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "be sure to say please, they're very formal",
+     "text": "say please, they're very formal",
      "variants": [
-      "be sure to say please, they're very formal",
-      "dragons need a polite greeting first, everyone knows that"
+      "say please, they're very formal",
+      "bow first. dragons are big on manners"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "i mean, the old stories do say dragons sit on gold",
+     "text": "in fairness, every old tale puts the dragon on a pile of gold",
      "variants": [
-      "i mean, the old stories do say dragons sit on gold",
-      "in fairness, every tale has the dragon on a pile of gold"
+      "in fairness, every old tale puts the dragon on a pile of gold",
+      "the stories do say dragons sit on gold"
      ],
      "optional": false
     },
@@ -485417,97 +485929,142 @@
      "text": "dont encourage him",
      "variants": [
       "dont encourage him",
-      "stop, he's going to do it"
+      "stop it, he's going to do it"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "see! he gets it. so how much would it take",
+     "text": "see! someone gets it. so how much would it take",
      "variants": [
-      "see! he gets it. so how much would it take",
-      "so how much gold do they want, roughly"
+      "see! someone gets it. so how much would it take",
+      "so how much do they want, roughly"
      ],
      "optional": false
     },
     {
      "role": "G",
-     "text": "all of it. and you. mostly you",
+     "text": "all of it. then you. mostly you",
      "variants": [
-      "all of it. and you. mostly you",
-      "everything you own, and then you as dessert"
+      "all of it. then you. mostly you",
+      "everything you own, and then you for dessert"
      ],
      "optional": false
     },
     {
      "role": "H",
-     "text": "you cant trade with a monster. it doesnt have a trade window",
+     "text": "there's no trade window on a dragon. it's not a merchant, it's a disaster",
      "variants": [
-      "you cant trade with a monster. it doesnt have a trade window",
-      "there's no trade window on a dragon, it's not a merchant"
+      "there's no trade window on a dragon. it's not a merchant, it's a disaster",
+      "monsters don't trade. it would eat you and the gold"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "you all think youre so funny",
+     "text": "you all think you're so funny",
      "variants": [
-      "you all think youre so funny",
+      "you all think you're so funny",
       "wow, nobody in this realm can answer anything"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "answer: no. a raid of fifty or more, not a purse",
+     "text": "answer: no. fifty people, a plan and luck. not a purse",
      "variants": [
-      "answer: no. a raid of fifty or more, not a purse",
-      "no amount of gold, it takes a whole raid and luck"
+      "answer: no. fifty people, a plan and luck. not a purse",
+      "no amount of gold. it takes a raid and even then it's a coin flip"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "ugh, forget it. i'll go ask it myself then",
+     "text": "fine, i'm going to go ask it myself",
      "variants": [
-      "ugh, forget it. i'll go ask it myself then",
-      "fine, i'm going to go try it. watch"
+      "fine, i'm going to go ask it myself",
+      "ok, i'm going there. watch me"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "take screenshots",
+     "text": "wait wait, record it",
      "variants": [
-      "take screenshots",
-      "wait, record it, record it"
+      "wait wait, record it",
+      "someone follow him, i want the death message"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "tell your next of kin we said hi",
+     "text": "leave us your stuff in your will",
      "variants": [
-      "tell your next of kin we said hi",
-      "leave us your stuff in your will"
+      "leave us your stuff in your will",
+      "who gets your sword"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "you know what, NO. not doing this. this game is stupid and so are all of you",
+     "text": "you know what, NO. you all want me to die for a laugh",
      "variants": [
-      "you know what, NO. not doing this. this game is stupid and so are all of you",
-      "FORGET IT. you guys suck, i'm out"
+      "you know what, NO. you all want me to die for a laugh",
+      "you want me dead for a joke. nice realm"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "the dragon will be so disappointed",
+     "text": "the dragon would have laughed too",
      "variants": [
-      "the dragon will be so disappointed",
-      "and the dragon never got its gold"
+      "the dragon would have laughed too",
+      "the dragon wouldnt even have noticed"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "this realm is the worst. i hope the dragon eats every one of you on your next raid",
+     "variants": [
+      "this realm is the worst. i hope the dragon eats every one of you on your next raid",
+      "i hope the dragon wipes your raid ten times in a row"
+     ],
+     "optional": false
+    },
+    {
+     "role": "F",
+     "text": "the dragon wipes us for free. no gold needed",
+     "variants": [
+      "the dragon wipes us for free. no gold needed",
+      "the dragon already does that without your help"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "IM DONE WITH THIS $#@! GAME AND THIS $#@! REALM. BYE",
+     "variants": [
+      "IM DONE WITH THIS $#@! GAME AND THIS $#@! REALM. BYE",
+      "ENJOY YOUR DRAGON. I'M OUT. FOREVER"
+     ],
+     "optional": false
+    },
+    {
+     "role": "G",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "bye"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "o7"
      ],
      "optional": false
     },
@@ -485516,29 +486073,29 @@
      "pause": 6
     },
     {
-     "role": "F",
-     "text": "did he log or go to the dragon",
+     "role": "B",
+     "text": "did he log or go to the lair",
      "variants": [
-      "did he log or go to the dragon",
+      "did he log or go to the lair",
       "either he logged or he's walking to the lair, both are great"
      ],
      "optional": false
     },
     {
-     "role": "G",
+     "role": "C",
      "text": "i kind of wanted to see him try",
      "variants": [
       "i kind of wanted to see him try",
-      "i was going to follow him for the death message"
+      "i was going to follow him for the screenshot"
      ],
      "optional": false
     },
     {
-     "role": "H",
-     "text": "someone bring him back tomorrow, he was a good one",
+     "role": "D",
+     "text": "next raid we name a pull after him",
      "variants": [
-      "someone bring him back tomorrow, he was a good one",
-      "we'll miss him. ok we wont"
+      "next raid we name a pull after him",
+      "next raid, the first death is in his honor"
      ],
      "optional": false
     }
@@ -485592,15 +486149,19 @@
     "G": {
      "type": [],
      "class": []
+    },
+    "H": {
+     "type": [],
+     "class": []
     }
    },
    "beats": [
     {
      "role": "A",
-     "text": "{q} why do our guards kill me when i attack them? theyre on my side",
+     "text": "{q} why do our own guards kill me when i attack them? theyre on my side",
      "variants": [
-      "{q} why do our guards kill me when i attack them? theyre on my side",
-      "{q} the guards keep killing me when i hit them, isnt that a bug"
+      "{q} why do our own guards kill me when i attack them? theyre on my side",
+      "{q} the guards keep killing me when i hit them, that has to be a bug"
      ],
      "optional": false
     },
@@ -485615,127 +486176,181 @@
     },
     {
      "role": "C",
-     "text": "you're attacking the guards",
+     "text": "why. are you. hitting. the guards.",
      "variants": [
-      "you're attacking the guards",
-      "why are you hitting the guards"
+      "why. are you. hitting. the guards.",
+      "you're attacking the guards"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "i wanted to see if i could beat one",
+     "text": "i wanted to see if i could beat one with my new sword",
      "variants": [
-      "i wanted to see if i could beat one",
-      "i was just testing my new sword on them"
+      "i wanted to see if i could beat one with my new sword",
+      "i was testing my new sword on them"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "and how did that go",
+     "text": "and how is that going",
      "variants": [
-      "and how did that go",
-      "did you win, at least once"
+      "and how is that going",
+      "did you win, even once"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "no they killed me like five times",
+     "text": "they killed me like five times",
      "variants": [
-      "no they killed me like five times",
-      "they keep killing me, so i keep going back"
+      "they killed me like five times",
+      "five deaths so far, i keep going back"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "five times??",
+     "text": "FIVE",
      "variants": [
-      "five times??",
-      "you went back FIVE times"
+      "FIVE",
+      "you went back FIVE TIMES"
      ],
      "optional": false
     },
     {
      "role": "F",
-     "text": "thats not a bug, thats the guards working perfectly",
+     "text": "that's not a bug, that's the guards doing their job perfectly",
      "variants": [
-      "thats not a bug, thats the guards working perfectly",
-      "the guards are doing their job, very well apparently"
+      "that's not a bug, that's the guards doing their job perfectly",
+      "the guards are working as intended. extremely as intended"
      ],
      "optional": false
     },
     {
      "role": "G",
-     "text": "the guards are having a great night",
+     "text": "the guards are having the best night of their lives",
      "variants": [
-      "the guards are having a great night",
-      "best night the guards have had all month"
+      "the guards are having the best night of their lives",
+      "this is the most fun the guards have had all year"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "did you at least lose a level",
+     "variants": [
+      "did you at least lose a level",
+      "how many bubbles did the guards take"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "like two levels. and my stuff is all broken now",
+     "variants": [
+      "like two levels. and my stuff is all broken now",
+      "i lost two levels and my gear is red"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "maybe try hitting the training dummy. it doesnt hit back",
+     "text": "aw. try the training dummy. it doesn't hit back",
      "variants": [
-      "maybe try hitting the training dummy. it doesnt hit back",
-      "there's a dummy for that, it doesnt fight back"
+      "aw. try the training dummy. it doesn't hit back",
+      "there's a dummy for that, it never fights back"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "i hate all of you. you could just say they are strong",
+     "text": "stop laughing, it's not funny, i lost two levels",
      "variants": [
-      "i hate all of you. you could just say they are strong",
-      "instead of laughing you could just tell me how to beat them"
+      "stop laughing, it's not funny, i lost two levels",
+      "i lost two levels and you all think it's funny"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "you dont beat them. they're level way above you and theres always more",
+     "text": "it is funny. it's the funniest thing this week",
      "variants": [
-      "you dont beat them. they're level way above you and theres always more",
-      "nobody beats the guards, theres always another one"
-     ],
-     "optional": false
-    },
-    {
-     "role": "A",
-     "text": "this game is broken. who makes guards that strong",
-     "variants": [
-      "this game is broken. who makes guards that strong",
-      "whatever, guards are op and this game is busted"
+      "it is funny. it's the funniest thing this week",
+      "it is extremely funny"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "guards: overpowered, needs a nerf",
+     "text": "guards op, please nerf",
      "variants": [
-      "guards: overpowered, needs a nerf",
-      "the forums will love this one, guards op"
+      "guards op, please nerf",
+      "the guards are clearly overpowered, someone post on the forums"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "im DONE. this is the dumbest game ever made",
+     "text": "they ARE overpowered. who makes guards that strong",
      "variants": [
-      "im DONE. this is the dumbest game ever made",
-      "THATS IT. uninstalling. you can all hit the guards yourselves"
+      "they ARE overpowered. who makes guards that strong",
+      "they are op! nobody can beat them, its broken"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "say bye to the guards on your way out",
+     "text": "they're supposed to be. they guard the town from things like you",
      "variants": [
-      "say bye to the guards on your way out",
-      "the guards say bye"
+      "they're supposed to be. they guard the town from things like you",
+      "that's their job. guarding the town. from you, tonight"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "wow. i'm done talking to any of you",
+     "variants": [
+      "wow. i'm done talking to any of you",
+      "this realm is the worst, i swear"
+     ],
+     "optional": false
+    },
+    {
+     "role": "F",
+     "text": "but the guards will miss you",
+     "variants": [
+      "but the guards will miss you",
+      "the guards were just getting to know you"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "I HOPE THE GUARDS KILL ALL OF YOU. THIS GAME IS RIGGED. BYE",
+     "variants": [
+      "I HOPE THE GUARDS KILL ALL OF YOU. THIS GAME IS RIGGED. BYE",
+      "THIS GAME IS BROKEN AND YOU ARE ALL MEAN. UNINSTALLING"
+     ],
+     "optional": false
+    },
+    {
+     "role": "G",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "o7"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "bye"
      ],
      "optional": false
     },
@@ -485744,25 +486359,25 @@
      "pause": 6
     },
     {
-     "role": "F",
-     "text": "he died to the guards one more time before logging, i bet",
-     "variants": [
-      "he died to the guards one more time before logging, i bet",
-      "six times, final answer"
-     ],
-     "optional": false
-    },
-    {
-     "role": "G",
-     "text": "anyone else do that when they were new?",
-     "variants": [
-      "anyone else do that when they were new?",
-      "ok confess, who else hit a guard their first week"
-     ],
-     "optional": false
-    },
-    {
      "role": "B",
+     "text": "bet he hit one more guard on his way out",
+     "variants": [
+      "bet he hit one more guard on his way out",
+      "six deaths, final answer"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "ok confess, who else hit a guard in their first week",
+     "variants": [
+      "ok confess, who else hit a guard in their first week",
+      "anyone else do that when they were new"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
      "text": "once. never again",
      "variants": [
       "once. never again",
@@ -485822,6 +486437,10 @@
     "G": {
      "type": [],
      "class": []
+    },
+    "H": {
+     "type": [],
+     "class": []
     }
    },
    "beats": [
@@ -485836,109 +486455,118 @@
     },
     {
      "role": "B",
-     "text": "pause",
+     "text": "pause.",
      "variants": [
-      "pause",
+      "pause.",
       "the pause button"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "its next to the save button",
+     "text": "it's next to the save button and the load button",
      "variants": [
-      "its next to the save button",
-      "right next to the save button and the reload button"
+      "it's next to the save button and the load button",
+      "right between save game and quick load"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "hit escape three times and say the name of your class",
+     "text": "hit escape three times and shout your class name",
      "variants": [
-      "hit escape three times and say the name of your class",
-      "type /pause, then hold your breath"
+      "hit escape three times and shout your class name",
+      "type /pause and hold your breath"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "there is no pause, its a shared world, the mobs dont wait for dinner",
+     "text": "there's no pause. it's a shared world, the mobs don't wait for dinner",
      "variants": [
-      "there is no pause, its a shared world, the mobs dont wait for dinner",
-      "the world doesnt stop for anyone, finish the fight or run"
+      "there's no pause. it's a shared world, the mobs don't wait for dinner",
+      "nothing stops for anyone. finish the fight or run"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "but its a game, all games have pause",
+     "text": "but its a GAME, every game has pause",
      "variants": [
-      "but its a game, all games have pause",
-      "every game has a pause, this one has to"
+      "but its a GAME, every game has pause",
+      "every game has a pause button, this one has to"
      ],
      "optional": false
     },
     {
      "role": "F",
-     "text": "everyone else is also in the game. we can't all pause",
+     "text": "if you pause, do we all freeze? because i'd pay to see that",
      "variants": [
-      "everyone else is also in the game. we can't all pause",
-      "if you pause, do we all freeze? i'd love to see that"
+      "if you pause, do we all freeze? because i'd pay to see that",
+      "do the other two thousand people pause too"
      ],
      "optional": false
     },
     {
      "role": "G",
-     "text": "bring the dinner to the computer, its the only way",
+     "text": "bring the dinner to the computer. we all do",
      "variants": [
-      "bring the dinner to the computer, its the only way",
-      "eat with one hand, everyone does"
+      "bring the dinner to the computer. we all do",
+      "eat with one hand, it's the way"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "ok i'll just go and come back, the fight can wait",
+     "text": "ok whatever, i'm just going to go eat and come back",
      "variants": [
-      "ok i'll just go and come back, the fight can wait",
-      "fine i'm just leaving, it'll be fine"
+      "ok whatever, i'm just going to go eat and come back",
+      "fine i'll just walk away, the fight can wait"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "it will not be fine",
+     "text": "the fight will not wait",
      "variants": [
-      "it will not be fine",
-      "the mob says thank you"
+      "the fight will not wait",
+      "the mob says thank you for your sacrifice"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "tell your mom the realm says hi",
+     "variants": [
+      "tell your mom the realm says hi",
+      "tell your mom to hold dinner, we are mid-joke"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "...i died. thanks for nothing",
+     "text": "...i died. thanks a lot",
      "variants": [
-      "...i died. thanks for nothing",
+      "...i died. thanks a lot",
       "great, i'm dead. this is your fault"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "our fault, yes, clearly",
+     "text": "our fault, absolutely",
      "variants": [
-      "our fault, yes, clearly",
-      "we told you, the mob doesnt eat dinner"
+      "our fault, absolutely",
+      "yes, clearly we killed you from here"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "this is the worst game ever. no pause, no save, just death",
+     "text": "no pause, no save, no help. this is the worst game ever made",
      "variants": [
-      "this is the worst game ever. no pause, no save, just death",
-      "no pause, no help, just jerks. i'm done"
+      "no pause, no save, no help. this is the worst game ever made",
+      "no pause, no help, just jerks. what a game"
      ],
      "optional": false
     },
@@ -485947,25 +486575,61 @@
      "text": "and now a corpse run on an empty stomach",
      "variants": [
       "and now a corpse run on an empty stomach",
-      "enjoy dinner, your body will wait for you"
-     ],
-     "optional": false
-    },
-    {
-     "role": "A",
-     "text": "BYE. ENJOY YOUR NO PAUSE GAME",
-     "variants": [
-      "BYE. ENJOY YOUR NO PAUSE GAME",
-      "IM OUT. DINNER IS MORE FUN THAN THIS"
+      "enjoy dinner, your body will be lying there when you get back"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "enjoy dinner",
+     "text": "you'll lose more xp than you'd lose skipping dessert",
      "variants": [
-      "enjoy dinner",
+      "you'll lose more xp than you'd lose skipping dessert",
+      "that death cost you more than the meal"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "shut up. all of you. stfu",
+     "variants": [
+      "shut up. all of you. stfu",
+      "stfu, every single one of you"
+     ],
+     "optional": false
+    },
+    {
+     "role": "F",
+     "text": "he told us to stfu in faction. growth",
+     "variants": [
+      "he told us to stfu in faction. growth",
+      "look at him, finding his voice"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "IM GOING TO EAT AND IM NEVER COMING BACK. ENJOY YOUR NO PAUSE GAME",
+     "variants": [
+      "IM GOING TO EAT AND IM NEVER COMING BACK. ENJOY YOUR NO PAUSE GAME",
+      "BYE. DINNER IS MORE FUN THAN ANY OF YOU"
+     ],
+     "optional": false
+    },
+    {
+     "role": "G",
+     "text": "o/ enjoy dinner",
+     "variants": [
+      "o/ enjoy dinner",
       "/wave, eat well"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "o7"
      ],
      "optional": false
     },
@@ -485974,20 +486638,29 @@
      "pause": 6
     },
     {
-     "role": "F",
-     "text": "he'll be back after dessert",
+     "role": "B",
+     "text": "back in twenty minutes, guaranteed",
      "variants": [
-      "he'll be back after dessert",
-      "back in twenty, guaranteed"
+      "back in twenty minutes, guaranteed",
+      "back after dessert. watch"
      ],
      "optional": false
     },
     {
-     "role": "G",
-     "text": "and his corpse is still lying there",
+     "role": "C",
+     "text": "his corpse is still out there, waiting",
      "variants": [
-      "and his corpse is still lying there",
-      "his corpse is still out there waiting"
+      "his corpse is still out there, waiting",
+      "the body is still warm out there"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "i'm going to go stand on it",
+     "variants": [
+      "i'm going to go stand on it",
+      "going to go dance on the spot"
      ],
      "optional": false
     }
@@ -486071,15 +486744,19 @@
     "G": {
      "type": [],
      "class": []
+    },
+    "H": {
+     "type": [],
+     "class": []
     }
    },
    "beats": [
     {
      "role": "A",
-     "text": "{q} how do i get my pet? everyone else has one and i dont see a button",
+     "text": "{q} how do i get my pet? everyone has one and i cant find the button",
      "variants": [
-      "{q} how do i get my pet? everyone else has one and i dont see a button",
-      "{q} where do i get my pet? i've looked everywhere for the pet button"
+      "{q} how do i get my pet? everyone has one and i cant find the button",
+      "{q} where do i get my pet? i looked through every menu"
      ],
      "optional": false
     },
@@ -486112,100 +486789,172 @@
     },
     {
      "role": "D",
-     "text": "your pet is your sword. name it something nice",
+     "text": "oh no no no",
      "variants": [
-      "your pet is your sword. name it something nice",
-      "your pet is the guy you're grouped with. be nice to him"
+      "oh no no no",
+      "oh honey"
      ],
      "optional": false
     },
     {
      "role": "E",
-     "text": "only some casters get pets. you have to pick one of those classes",
+     "text": "only some casters get pets. if your trainer never gave you one, you don't get one",
      "variants": [
-      "only some casters get pets. you have to pick one of those classes",
-      "pets come with the class. if your trainer never gave you one, you dont get one"
+      "only some casters get pets. if your trainer never gave you one, you don't get one",
+      "pets come with the class. yours doesnt have one"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "so i made the wrong class?? nobody told me that",
+     "text": "so i made the WRONG CLASS?? {level} levels and NOBODY told me",
      "variants": [
-      "so i made the wrong class?? nobody told me that",
-      "thats so unfair, why does nobody explain anything"
+      "so i made the WRONG CLASS?? {level} levels and NOBODY told me",
+      "{level} levels in and nobody thought to mention this??"
      ],
      "optional": false
     },
     {
      "role": "F",
-     "text": "the class description kind of did",
+     "text": "the class description on the creation screen kind of did",
      "variants": [
-      "the class description kind of did",
-      "it was on the screen when you picked"
+      "the class description on the creation screen kind of did",
+      "it said so when you picked it. in words"
      ],
      "optional": false
     },
     {
      "role": "G",
-     "text": "you can always tame a rat and carry it around",
+     "text": "your pet is your sword. name it something nice",
      "variants": [
-      "you can always tame a rat and carry it around",
-      "catch a frog, call it a pet, nobody will know"
+      "your pet is your sword. name it something nice",
+      "your pet is the healer. be nice to her"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "tame a rat and carry it around, nobody will know",
+     "variants": [
+      "tame a rat and carry it around, nobody will know",
+      "catch a frog, call it fluffy"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "thats not funny",
+     "text": "that is NOT funny",
      "variants": [
-      "thats not funny",
-      "nobody here is funny"
+      "that is NOT funny",
+      "none of you are funny"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "that one was a little funny",
+     "text": "it was a little funny",
      "variants": [
-      "that one was a little funny",
-      "it was a little funny"
+      "it was a little funny",
+      "the frog one was funny"
      ],
      "optional": false
     },
     {
      "role": "A",
-     "text": "i'm going to delete and make a pet class and never talk to any of you again",
+     "text": "you know what, i'm deleting this char and making a pet class",
      "variants": [
-      "i'm going to delete and make a pet class and never talk to any of you again",
-      "fine. deleting. new char. you'll never see me again"
+      "you know what, i'm deleting this char and making a pet class",
+      "fine. deleting. twenty levels, gone"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "what will the new one be called",
+     "text": "noooo, you'll miss your sword",
      "variants": [
-      "what will the new one be called",
-      "tell us the new name so we can say hi"
-     ],
-     "optional": false
-    },
-    {
-     "role": "A",
-     "text": "NOT TELLING. BYE",
-     "variants": [
-      "NOT TELLING. BYE",
-      "NONE OF YOUR BUSINESS. LOGGING"
+      "noooo, you'll miss your sword",
+      "dont delete, your sword will be so sad"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "i bet it's the same name with an extra letter",
+     "text": "think of the frog",
      "variants": [
-      "i bet it's the same name with an extra letter",
-      "it'll be the same name with two of the last letter"
+      "think of the frog",
+      "what about fluffy"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "stop it. stop. this realm is full of the meanest people i've ever met",
+     "variants": [
+      "stop it. stop. this realm is full of the meanest people i've ever met",
+      "omfg why are all of you like this"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "ok real advice: if you want a pet, ask a trainer which classes get one and try it on an alt first",
+     "variants": [
+      "ok real advice: if you want a pet, ask a trainer which classes get one and try it on an alt first",
+      "real answer: roll a pet class as an alt before you delete anything"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "TOO LATE. I DELETED. ARE YOU HAPPY",
+     "variants": [
+      "TOO LATE. I DELETED. ARE YOU HAPPY",
+      "ALREADY DELETED. HAPPY NOW?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "F",
+     "text": "wait you deleted a whole character because of chat",
+     "variants": [
+      "wait you deleted a whole character because of chat",
+      "you deleted all those levels because of faction chat"
+     ],
+     "optional": false
+    },
+    {
+     "role": "G",
+     "text": "that is the most committed thing i've ever seen",
+     "variants": [
+      "that is the most committed thing i've ever seen",
+      "respect. that's real commitment"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "IM DONE. NEW CHAR, NEW NAME, AND NONE OF YOU WILL EVER KNOW WHO I AM",
+     "variants": [
+      "IM DONE. NEW CHAR, NEW NAME, AND NONE OF YOU WILL EVER KNOW WHO I AM",
+      "BYE. NONE OF YOU WILL EVER KNOW MY NEW NAME"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "it'll be the same name with an extra letter",
+     "variants": [
+      "it'll be the same name with an extra letter",
+      "same name, extra x on the end"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "o7"
      ],
      "optional": false
     },
@@ -486214,29 +486963,605 @@
      "pause": 6
     },
     {
-     "role": "E",
-     "text": "rip",
+     "role": "C",
+     "text": "rip, little petless one",
      "variants": [
-      "rip",
-      "rest in peace, old char"
+      "rip, little petless one",
+      "rest in peace, petless one"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "we should be nicer to new people",
+     "variants": [
+      "we should be nicer to new people",
+      "ok in fairness, nobody told me either"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "no",
+     "variants": [
+      "no",
+      "nope"
+     ],
+     "optional": false
+    }
+   ],
+   "needs": [],
+   "exit": "A"
+  },
+  {
+   "id": "dunce_how_do_i_quit",
+   "topic": "dunce",
+   "realm": "*",
+   "levels": [
+    5,
+    50
+   ],
+   "roles": {
+    "A": {
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      30
+     ]
+    },
+    "B": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    },
+    "C": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    },
+    "E": {
+     "type": [],
+     "class": []
+    },
+    "F": {
+     "type": [],
+     "class": []
+    },
+    "G": {
+     "type": [],
+     "class": []
+    },
+    "H": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "{q} why cant i get out of the water? i've been swimming for twenty minutes",
+     "variants": [
+      "{q} why cant i get out of the water? i've been swimming for twenty minutes",
+      "{q} how do you get out of the water? i'm stuck swimming in circles"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "swim to the shore",
+     "variants": [
+      "swim to the shore",
+      "have you tried the land"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "what shore, there is no shore, it's just water and fog",
+     "variants": [
+      "what shore, there is no shore, it's just water and fog",
+      "i swam out to see what's past the edge and now i cant see anything"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "oh, he went to see the edge of the world",
+     "variants": [
+      "oh, he went to see the edge of the world",
+      "he swam out to the edge. they always do once"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "did you find the wall of the gods",
+     "variants": [
+      "did you find the wall of the gods",
+      "did you see the wall yet? everyone sees the wall"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "turn around and swim the other way",
+     "variants": [
+      "turn around and swim the other way",
+      "do a 180. literally swim back"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "i did that like ten times. which way is back",
+     "variants": [
+      "i did that like ten times. which way is back",
+      "i turned around and it all looks the same"
      ],
      "optional": false
     },
     {
      "role": "F",
-     "text": "we should be nicer to the new ones",
+     "text": "the way you came",
      "variants": [
-      "we should be nicer to the new ones",
-      "ok in fairness nobody told me either"
+      "the way you came",
+      "back is behind you"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "that's not helpful!!!",
+     "variants": [
+      "that's not helpful!!!",
+      "omfg that doesnt help"
      ],
      "optional": false
     },
     {
      "role": "G",
-     "text": "no",
+     "text": "did you try /stuck",
      "variants": [
-      "no",
-      "nope"
+      "did you try /stuck",
+      "type /stuck and pray"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "it says i'm not stuck. i AM stuck",
+     "variants": [
+      "it says i'm not stuck. i AM stuck",
+      "it says i'm not stuck! i'm literally stuck in an ocean"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "you're not stuck, you're swimming. it's different",
+     "variants": [
+      "you're not stuck, you're swimming. it's different",
+      "you're free, just very far from land"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "wave at the fish for me",
+     "variants": [
+      "wave at the fish for me",
+      "say hi to the sharks"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "you're all useless, i've been here half an hour",
+     "variants": [
+      "you're all useless, i've been here half an hour",
+      "half an hour of water. this is the worst"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "real advice: open your map, find land, swim at it. the ocean is big but the map isn't",
+     "variants": [
+      "real advice: open your map, find land, swim at it. the ocean is big but the map isn't",
+      "look at the map. land is the colour that isn't blue"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "i dont have a map open, i dont know how",
+     "variants": [
+      "i dont have a map open, i dont know how",
+      "where is the map?? nobody ever told me about a map"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "oh my. he doesn't know about the map",
+     "variants": [
+      "oh my. he doesn't know about the map",
+      "he's been playing without the map"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "how did you get this far without a map",
+     "variants": [
+      "how did you get this far without a map",
+      "how did you find ANYTHING"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "THATS IT. I QUIT. HOW DO I EVEN LOG OUT OF THIS STUPID GAME",
+     "variants": [
+      "THATS IT. I QUIT. HOW DO I EVEN LOG OUT OF THIS STUPID GAME",
+      "FORGET IT. I'M QUITTING. WAIT HOW DO I QUIT"
+     ],
+     "optional": false
+    },
+    {
+     "role": "F",
+     "text": "/quit",
+     "variants": [
+      "/quit",
+      "type /quit"
+     ],
+     "optional": false
+    },
+    {
+     "role": "G",
+     "text": "or keep swimming, you'll hit the wall eventually",
+     "variants": [
+      "or keep swimming, you'll hit the wall eventually",
+      "or swim until the fog decides"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "dont do it, you're so close to finding the edge",
+     "variants": [
+      "dont do it, you're so close to finding the edge",
+      "the edge is right there, i can feel it"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "/quit. BYE. I HOPE YOU ALL DROWN",
+     "variants": [
+      "/quit. BYE. I HOPE YOU ALL DROWN",
+      "OK /QUIT. BYE. I HOPE YOU ALL GET LOST AT SEA"
+     ],
+     "optional": false
+    },
+    {
+     "role": "~",
+     "pause": 6
+    },
+    {
+     "role": "B",
+     "text": "he quit from the middle of the ocean. legend",
+     "variants": [
+      "he quit from the middle of the ocean. legend",
+      "he left from the middle of the sea. what a way to go"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "his ghost will swim forever",
+     "variants": [
+      "his ghost will swim forever",
+      "somewhere out there, a ghost is still swimming"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "next time someone tell him where the map is before he dies of thirst",
+     "variants": [
+      "next time someone tell him where the map is before he dies of thirst",
+      "someone tell him about the map when he's back"
+     ],
+     "optional": false
+    }
+   ],
+   "needs": [],
+   "exit": "A"
+  },
+  {
+   "id": "dunce_relic_mez",
+   "topic": "dunce",
+   "realm": "*",
+   "levels": [
+    10,
+    50
+   ],
+   "roles": {
+    "A": {
+     "type": [],
+     "class": [],
+     "levels": [
+      15,
+      35
+     ]
+    },
+    "B": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": [],
+     "levels": [
+      35,
+      50
+     ]
+    },
+    "C": {
+     "type": [
+      "Daredevil"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    },
+    "E": {
+     "type": [],
+     "class": []
+    },
+    "F": {
+     "type": [],
+     "class": []
+    },
+    "G": {
+     "type": [],
+     "class": []
+    },
+    "H": {
+     "type": [],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "{q} can i mez the enemy relic so they cant carry it away?",
+     "variants": [
+      "{q} can i mez the enemy relic so they cant carry it away?",
+      "{q} if i mez the relic, can the enemy still carry it?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "mez the relic",
+     "variants": [
+      "mez the relic",
+      "...mez the relic"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "you can try. it's a rock. on a pillar",
+     "variants": [
+      "you can try. it's a rock. on a pillar",
+      "mez a rock, sure. let us know how it goes"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "you also have to root the keep so it can't run away",
+     "variants": [
+      "you also have to root the keep so it can't run away",
+      "root the keep, mez the relic, stun the walls. full combo"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "and while you're at it, heal the doors",
+     "variants": [
+      "and while you're at it, heal the doors",
+      "debuff the moon while you're there"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "im serious, it moves around when they carry it, so it's like a mob",
+     "variants": [
+      "im serious, it moves around when they carry it, so it's like a mob",
+      "it moves when they carry it so it must be a target, right"
+     ],
+     "optional": false
+    },
+    {
+     "role": "F",
+     "text": "it moves because a PERSON is carrying it. mez the person",
+     "variants": [
+      "it moves because a PERSON is carrying it. mez the person",
+      "mez the guy holding it. the guy. not the rock"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "oh. well that's what i meant",
+     "variants": [
+      "oh. well that's what i meant",
+      "ok. thats what i meant obviously"
+     ],
+     "optional": false
+    },
+    {
+     "role": "G",
+     "text": "no it wasn't",
+     "variants": [
+      "no it wasn't",
+      "sure it was"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "he wanted to mez the rock",
+     "variants": [
+      "he wanted to mez the rock",
+      "he was going to mez the rock"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "i want to see someone try to resist-check a relic",
+     "variants": [
+      "i want to see someone try to resist-check a relic",
+      "imagine the relic resisting your mez"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "you know what, at least i go to relic raids. where are you guys",
+     "variants": [
+      "you know what, at least i go to relic raids. where are you guys",
+      "at least i'm out there. half of you sit in town"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "you went to one. we were there. you mezzed a wall",
+     "variants": [
+      "you went to one. we were there. you mezzed a wall",
+      "we saw you there. you mezzed a tree"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "i did NOT mez a tree",
+     "variants": [
+      "i did NOT mez a tree",
+      "that was a LAG thing"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "\"it was lag\"",
+     "variants": [
+      "\"it was lag\"",
+      "the famous lag defense"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "omfg i'm so done with this realm. i'm out. good luck keeping your relics without me",
+     "variants": [
+      "omfg i'm so done with this realm. i'm out. good luck keeping your relics without me",
+      "FINE. enjoy losing the relics. you'll miss me at the next raid"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "we'll manage. somehow",
+     "variants": [
+      "we'll manage. somehow",
+      "we'll get by, somehow"
+     ],
+     "optional": false
+    },
+    {
+     "role": "F",
+     "text": "who will mez the walls for us",
+     "variants": [
+      "who will mez the walls for us",
+      "who will cc the trees now"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "STOP. I HATE THIS REALM. I HATE THIS SERVER. BYE",
+     "variants": [
+      "STOP. I HATE THIS REALM. I HATE THIS SERVER. BYE",
+      "THIS IS THE WORST REALM IN THE GAME. BYE FOREVER"
+     ],
+     "optional": false
+    },
+    {
+     "role": "G",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "o7"
+     ],
+     "optional": false
+    },
+    {
+     "role": "H",
+     "text": "o/",
+     "variants": [
+      "o/",
+      "/wave"
+     ],
+     "optional": false
+    },
+    {
+     "role": "~",
+     "pause": 6
+    },
+    {
+     "role": "B",
+     "text": "next relic raid, we put a mez on the pillar in his honor",
+     "variants": [
+      "next relic raid, we put a mez on the pillar in his honor",
+      "we leave one rock unmezzed for him"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "the relic will never be the same",
+     "variants": [
+      "the relic will never be the same",
+      "the relic is relieved, honestly"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "he'll be back to cc the trees",
+     "variants": [
+      "he'll be back to cc the trees",
+      "he'll be back. the trees will be waiting"
      ],
      "optional": false
     }
