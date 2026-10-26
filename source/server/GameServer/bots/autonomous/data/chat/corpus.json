@@ -266595,6 +266595,6330 @@
   },
   {
    "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! i heard you asked for coin. thats MY trade?",
+   "id": "09df53ad7956"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! i heard you been begging. begging is MY job?",
+   "id": "3b224379983c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! i heard you been begging. on MY streets?",
+   "id": "26acf1432c7c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! i heard you been begging. thats MY trade?",
+   "id": "5b5ffeedc7e6"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! i heard you want handouts. begging is MY job?",
+   "id": "6f1d2b3937d4"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! i heard you want handouts. on MY streets?",
+   "id": "98e046eacf32"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! i heard you want handouts. thats MY trade?",
+   "id": "289eed39d79d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! the street says you asked for coin. begging is MY job?",
+   "id": "93687e245333"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! the street says you been begging. begging is MY job?",
+   "id": "110fdfe9475a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! the street says you want handouts. begging is MY job?",
+   "id": "93a8da95c5e1"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! the street says you want handouts. on MY streets?",
+   "id": "17ec05a9eb9f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! the street says you want handouts. thats MY trade?",
+   "id": "41800c2756dc"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! word is you been begging. begging is MY job?",
+   "id": "d4a434ff2b4a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! word is you been begging. on MY streets?",
+   "id": "bb06822f03ad"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "OI {player}! word is you want handouts. begging is MY job?",
+   "id": "57dd531e9293"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! i heard you asked for coin. begging is MY job?",
+   "id": "a14d4fb3bd85"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! i heard you asked for coin. on MY streets?",
+   "id": "209aba09c1ef"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! i heard you asked for coin. thats MY trade?",
+   "id": "5060433b1c27"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! i heard you want handouts. begging is MY job?",
+   "id": "711662a2e363"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! i heard you want handouts. thats MY trade?",
+   "id": "7d4ebd22cb98"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! the street says you asked for coin. on MY streets?",
+   "id": "046940c3cc48"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! the street says you been begging. begging is MY job?",
+   "id": "e6b9ef615dc9"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! the street says you want handouts. begging is MY job?",
+   "id": "a9c0b2a13808"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! the street says you want handouts. on MY streets?",
+   "id": "90afd7eac15d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! the street says you want handouts. thats MY trade?",
+   "id": "c02e4696a969"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! word is you asked for coin. begging is MY job?",
+   "id": "d838b3f0b25b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! word is you asked for coin. on MY streets?",
+   "id": "1aeedaf750be"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! word is you been begging. on MY streets?",
+   "id": "7f5d432a753c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! word is you been begging. thats MY trade?",
+   "id": "ea58aa40d89b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! word is you want handouts. begging is MY job?",
+   "id": "ef9479b6774a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "hey {player}! word is you want handouts. on MY streets?",
+   "id": "d37e4eaaadd9"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "oi {player}! i heard you asked for coin. begging is MY job?",
+   "id": "b99bbfb25f47"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "oi {player}! i heard you asked for coin. on MY streets?",
+   "id": "d15d511568a9"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "oi {player}! the street says you asked for coin. thats MY trade?",
+   "id": "d4d97648660b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "oi {player}! word is you asked for coin. begging is MY job?",
+   "id": "93bc9b563826"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "oi {player}! word is you asked for coin. on MY streets?",
+   "id": "42e9756567e4"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "oi {player}! word is you asked for coin. thats MY trade?",
+   "id": "3ed7df036d65"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1622,
+   "text": "oi {player}! word is you been begging. thats MY trade?",
+   "id": "278a52a0d43a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. its {player}. the {player_class} who begs all over {capital}",
+   "id": "96c398a41b18"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. its {player}. the {player_class} who begs in my city",
+   "id": "3ae2696ef365"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. its {player}. the {player_class} begging for gold all over {capital}",
+   "id": "bc7decee1215"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. its {player}. the {player_class} begging for gold in my city",
+   "id": "790927ed8186"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. its {player}. the {player_class} asking for handouts all over {capital}",
+   "id": "5de2df47f328"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. its {player}. the {player_class} asking for handouts in my city",
+   "id": "6a42d898ac84"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. its {player}. that {player_class} who begs all over {capital}",
+   "id": "e63420df2b8e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. its {player}. that {player_class} who begs in my city",
+   "id": "674cc22a16ba"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. its {player}. that {player_class} begging for gold all over {capital}",
+   "id": "09461cebf5ad"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. its {player}. that {player_class} begging for gold in my city",
+   "id": "a931edae1867"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. its {player}. that {player_class} asking for handouts all over {capital}",
+   "id": "2776363565a7"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. its {player}. that {player_class} asking for handouts in my city",
+   "id": "6d1a6afe576b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. here comes {player}. the {player_class} who begs all over {capital}",
+   "id": "d61a43ba768c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. here comes {player}. the {player_class} who begs in my city",
+   "id": "cc9b5d3e6fd3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. here comes {player}. the {player_class} begging for gold all over {capital}",
+   "id": "da66a9886a76"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. here comes {player}. the {player_class} begging for gold in my city",
+   "id": "e7529ce1a56b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. here comes {player}. the {player_class} asking for handouts all over {capital}",
+   "id": "96b12fa29172"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. here comes {player}. the {player_class} asking for handouts in my city",
+   "id": "6a1d3c11a21f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. here comes {player}. that {player_class} who begs all over {capital}",
+   "id": "18eed421735e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. here comes {player}. that {player_class} who begs in my city",
+   "id": "d84664d49e79"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. here comes {player}. that {player_class} begging for gold all over {capital}",
+   "id": "42e1b37ea36a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. here comes {player}. that {player_class} begging for gold in my city",
+   "id": "adb82d8ac227"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. here comes {player}. that {player_class} asking for handouts all over {capital}",
+   "id": "e3ad2b1a8b2b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well. here comes {player}. that {player_class} asking for handouts in my city",
+   "id": "73d4c2d0bfa0"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. its {player}. the {player_class} who begs all over {capital}",
+   "id": "ee9889cbc31e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. its {player}. the {player_class} who begs in my city",
+   "id": "048393e01a9d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. its {player}. the {player_class} begging for gold all over {capital}",
+   "id": "7202f2b3e5ac"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. its {player}. the {player_class} begging for gold in my city",
+   "id": "2a12523b758c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. its {player}. the {player_class} asking for handouts all over {capital}",
+   "id": "0cbbc09fb073"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. its {player}. the {player_class} asking for handouts in my city",
+   "id": "3ab201ab71a0"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. its {player}. that {player_class} who begs all over {capital}",
+   "id": "e1657321b1ba"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. its {player}. that {player_class} who begs in my city",
+   "id": "e15ef685f3b1"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. its {player}. that {player_class} begging for gold all over {capital}",
+   "id": "20ae6f08490b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. its {player}. that {player_class} begging for gold in my city",
+   "id": "694d06b0939f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. its {player}. that {player_class} asking for handouts all over {capital}",
+   "id": "84273407c5d6"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. its {player}. that {player_class} asking for handouts in my city",
+   "id": "0418e5e1c70a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. here comes {player}. the {player_class} who begs all over {capital}",
+   "id": "a65ae68d60a2"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. here comes {player}. the {player_class} who begs in my city",
+   "id": "908979b1e1d3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. here comes {player}. the {player_class} begging for gold all over {capital}",
+   "id": "fc0371df043c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. here comes {player}. the {player_class} begging for gold in my city",
+   "id": "a6f8b0b7d015"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. here comes {player}. the {player_class} asking for handouts all over {capital}",
+   "id": "aa70443b2218"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. here comes {player}. the {player_class} asking for handouts in my city",
+   "id": "11840338b104"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. here comes {player}. that {player_class} who begs all over {capital}",
+   "id": "744031efecc8"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. here comes {player}. that {player_class} who begs in my city",
+   "id": "381b56be0617"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. here comes {player}. that {player_class} begging for gold all over {capital}",
+   "id": "f3291cdcd5ae"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. here comes {player}. that {player_class} begging for gold in my city",
+   "id": "9aca4586a7a8"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. here comes {player}. that {player_class} asking for handouts all over {capital}",
+   "id": "a71bcf024ff3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "well well well. here comes {player}. that {player_class} asking for handouts in my city",
+   "id": "c864d5fe545d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word travels fast on the street, {player}. you asked for coin. now you have ME",
+   "id": "ce58d316933d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word travels fast on the street, {player}. you asked for coin. big mistake",
+   "id": "7df49291acb5"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word travels fast on the street, {player}. you begged. now you have ME",
+   "id": "69559f95ea37"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word travels fast on the street, {player}. you begged. big mistake",
+   "id": "94b7969efa74"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word travels fast in {capital}, {player}. you asked for coin. now you have ME",
+   "id": "7b7555199860"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word travels fast in {capital}, {player}. you asked for coin. big mistake",
+   "id": "310f193f678c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word travels fast in {capital}, {player}. you begged. now you have ME",
+   "id": "0f1f4471f954"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word travels fast in {capital}, {player}. you begged. big mistake",
+   "id": "396f3b281dcc"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word gets around on the street, {player}. you asked for coin. now you have ME",
+   "id": "88469cf17a1c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word gets around on the street, {player}. you asked for coin. big mistake",
+   "id": "be487be76479"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word gets around on the street, {player}. you begged. now you have ME",
+   "id": "68771777bcdb"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word gets around on the street, {player}. you begged. big mistake",
+   "id": "3fc5b155fe4c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word gets around in {capital}, {player}. you asked for coin. now you have ME",
+   "id": "665bca63a719"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word gets around in {capital}, {player}. you asked for coin. big mistake",
+   "id": "f5f1b7929ebe"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word gets around in {capital}, {player}. you begged. now you have ME",
+   "id": "324c08eb9547"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "word gets around in {capital}, {player}. you begged. big mistake",
+   "id": "6ff6dec61f69"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news travels fast on the street, {player}. you asked for coin. now you have ME",
+   "id": "c6aa7c179ed3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news travels fast on the street, {player}. you asked for coin. big mistake",
+   "id": "6ac42f41f84b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news travels fast on the street, {player}. you begged. now you have ME",
+   "id": "e1798e552ff7"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news travels fast on the street, {player}. you begged. big mistake",
+   "id": "3a10f3857fc7"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news travels fast in {capital}, {player}. you asked for coin. now you have ME",
+   "id": "ea58f82aecb5"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news travels fast in {capital}, {player}. you asked for coin. big mistake",
+   "id": "ac2820b5fb4f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news travels fast in {capital}, {player}. you begged. now you have ME",
+   "id": "486685911141"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news travels fast in {capital}, {player}. you begged. big mistake",
+   "id": "9e8e085233a7"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news gets around on the street, {player}. you asked for coin. now you have ME",
+   "id": "0571877d9d19"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news gets around on the street, {player}. you asked for coin. big mistake",
+   "id": "47be25cb7d50"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news gets around on the street, {player}. you begged. now you have ME",
+   "id": "974aa788ec16"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news gets around on the street, {player}. you begged. big mistake",
+   "id": "910fcf6620d3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news gets around in {capital}, {player}. you asked for coin. now you have ME",
+   "id": "c28fba0c4c28"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news gets around in {capital}, {player}. you asked for coin. big mistake",
+   "id": "aadef9587b7d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news gets around in {capital}, {player}. you begged. now you have ME",
+   "id": "ff6b14c6765b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "news gets around in {capital}, {player}. you begged. big mistake",
+   "id": "1afd5f00228a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip travels fast on the street, {player}. you asked for coin. now you have ME",
+   "id": "1b04a9551448"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip travels fast on the street, {player}. you asked for coin. big mistake",
+   "id": "ae34056c094e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip travels fast on the street, {player}. you begged. now you have ME",
+   "id": "b737dad85dde"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip travels fast on the street, {player}. you begged. big mistake",
+   "id": "1e4a1d824ef6"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip travels fast in {capital}, {player}. you asked for coin. now you have ME",
+   "id": "2d71e23d4e41"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip travels fast in {capital}, {player}. you asked for coin. big mistake",
+   "id": "e47603337e61"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip travels fast in {capital}, {player}. you begged. now you have ME",
+   "id": "4db660ecd64d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip travels fast in {capital}, {player}. you begged. big mistake",
+   "id": "6140ecd8b217"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip gets around on the street, {player}. you asked for coin. now you have ME",
+   "id": "d06f6464fd1c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip gets around on the street, {player}. you asked for coin. big mistake",
+   "id": "2d03e4a4b916"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip gets around on the street, {player}. you begged. now you have ME",
+   "id": "e780f210d14d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip gets around on the street, {player}. you begged. big mistake",
+   "id": "b2c2c611b3f9"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip gets around in {capital}, {player}. you asked for coin. now you have ME",
+   "id": "c3d19a4311fd"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip gets around in {capital}, {player}. you asked for coin. big mistake",
+   "id": "902ca1a790e0"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip gets around in {capital}, {player}. you begged. now you have ME",
+   "id": "9e21384e207c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "gossip gets around in {capital}, {player}. you begged. big mistake",
+   "id": "04adf3f966e6"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU asked a stranger for coin? IN my city?",
+   "id": "cae1a1f74de6"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU asked a stranger for gold? IN MY city?",
+   "id": "21ad320c2935"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU asked a stranger for loot? IN MY city?",
+   "id": "2ddb77638e37"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU asked someone for gold? IN MY city?",
+   "id": "a7a6bb8905db"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU asked someone for loot? IN MY city?",
+   "id": "6b3df0dfe2bf"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU asked the whole realm for coin? IN MY city?",
+   "id": "71e433999f54"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU asked the whole realm for gold? IN MY city?",
+   "id": "fb72abe33b73"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU asked the whole realm for loot? in my city?",
+   "id": "d74ecb6c1b97"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU begged a stranger for coin? IN MY city?",
+   "id": "b701830ac08d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU begged a stranger for loot? IN my city?",
+   "id": "2bdd944f2101"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU begged someone for gold? IN my city?",
+   "id": "53115e9e091d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU begged someone for loot? in MY city?",
+   "id": "0036de1538ca"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU begged the whole realm for coin? in my city?",
+   "id": "4f695733b8ff"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU begged the whole realm for gold? in my city?",
+   "id": "b128960203b7"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! YOU begged the whole realm for loot? IN my city?",
+   "id": "51fd1b30aa60"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! you asked someone for coin? IN MY city?",
+   "id": "24b6341c1bfa"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! you begged a stranger for gold? IN MY city?",
+   "id": "d3bec330c0b1"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{player}! you begged someone for coin? in MY city?",
+   "id": "31423b85e783"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "i know what you did, {player}. begging. shameful",
+   "id": "2f6c532c6f85"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "i know what you did, {player}. begging. amateur hour",
+   "id": "700b50d08ebe"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "i know what you did, {player}. begging. disgusting",
+   "id": "c42ecf1ae4b9"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "i know what you did, {player}. asking for gold. shameful",
+   "id": "2bd941d2c7f8"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "i know what you did, {player}. asking for gold. amateur hour",
+   "id": "f284a04c4fc3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "i know what you did, {player}. asking for gold. disgusting",
+   "id": "2a26ab467300"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "everyone knows what you did, {player}. begging. shameful",
+   "id": "718083940ea5"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "everyone knows what you did, {player}. begging. amateur hour",
+   "id": "3c51b84bad36"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "everyone knows what you did, {player}. begging. disgusting",
+   "id": "5ccb742763f5"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "everyone knows what you did, {player}. asking for gold. shameful",
+   "id": "682ac9df297a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "everyone knows what you did, {player}. asking for gold. amateur hour",
+   "id": "e4f2f4fa4f3d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "everyone knows what you did, {player}. asking for gold. disgusting",
+   "id": "924791ede540"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "we all heard, {player}. begging. shameful",
+   "id": "c26ef95e28a3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "we all heard, {player}. begging. amateur hour",
+   "id": "91a2ca336049"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "we all heard, {player}. begging. disgusting",
+   "id": "abccf50f1be5"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "we all heard, {player}. asking for gold. shameful",
+   "id": "4fc0c74b3dd8"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "we all heard, {player}. asking for gold. amateur hour",
+   "id": "8d2f891e291c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "we all heard, {player}. asking for gold. disgusting",
+   "id": "1ecc993bd239"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there you are. {player}. the freeloader. get over here",
+   "id": "41fc7a6d5c70"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there you are. {player}. the freeloader. dont you run",
+   "id": "1e2095702fbd"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there you are. {player}. the freeloader. stay right there",
+   "id": "22551f47c63b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there you are. {player}. the coin vulture. get over here",
+   "id": "9918d460482e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there you are. {player}. the coin vulture. dont you run",
+   "id": "1f6a3d4c5e00"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there you are. {player}. the coin vulture. stay right there",
+   "id": "ce11263e602d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there you are. {player}. the competition. get over here",
+   "id": "46b39a83019e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there you are. {player}. the competition. dont you run",
+   "id": "abe27ca0b84e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there you are. {player}. the competition. stay right there",
+   "id": "9859d4ad752b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there they are. {player}. the freeloader. get over here",
+   "id": "69a4c0ef1865"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there they are. {player}. the freeloader. dont you run",
+   "id": "513f2afb9c9f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there they are. {player}. the freeloader. stay right there",
+   "id": "032143ff8232"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there they are. {player}. the coin vulture. get over here",
+   "id": "7c50649730f0"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there they are. {player}. the coin vulture. dont you run",
+   "id": "8d176ce2049d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there they are. {player}. the coin vulture. stay right there",
+   "id": "0eb32245ad33"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there they are. {player}. the competition. get over here",
+   "id": "d9e844b00687"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there they are. {player}. the competition. dont you run",
+   "id": "a035d1baebdf"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "there they are. {player}. the competition. stay right there",
+   "id": "c29699ab58a4"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "every beggar in {capital} knows your name now, {player}. and i found you first",
+   "id": "a94959d3f721"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "every beggar in {capital} knows your name now, {player}. lucky me",
+   "id": "9a873fe6d71e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "every beggar in {capital} knows your name now, {player}. surprise",
+   "id": "764aa3436f3e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "every beggar in {capital} heard about you, {player}. and i found you first",
+   "id": "38a86d9d6007"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "every beggar in {capital} heard about you, {player}. lucky me",
+   "id": "4ed2ba2d4b21"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "every beggar in {capital} heard about you, {player}. surprise",
+   "id": "0683c3ce0a0d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "every beggar in {capital} is looking for you, {player}. and i found you first",
+   "id": "6c11a657d7b0"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "every beggar in {capital} is looking for you, {player}. lucky me",
+   "id": "64f9a9adf700"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "every beggar in {capital} is looking for you, {player}. surprise",
+   "id": "33e424572420"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? begging is a guild craft. you are not in the guild",
+   "id": "b17cfbcad3aa"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? begging is a guild craft. you have no license",
+   "id": "70cae54597ec"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? begging is for professionals. scab",
+   "id": "d64633c2e40e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? begging is for professionals. you have no license",
+   "id": "bff753de071c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? begging is union work. scab",
+   "id": "595efbb5b41e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? begging is union work. you have no license",
+   "id": "8f5b646fc2ae"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? handouts are a guild craft. scab",
+   "id": "f84cf86bb086"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? handouts are a guild craft. you are not in the guild",
+   "id": "694818033d5b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? handouts are for professionals. scab",
+   "id": "e2e478a4824f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? handouts are for professionals. you are not in the guild",
+   "id": "b7a1f3b46c14"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? handouts are for professionals. you have no license",
+   "id": "c26cb9989809"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? handouts are union work. scab",
+   "id": "28dadec2b481"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? handouts are union work. you are not in the guild",
+   "id": "fef8fabfeeda"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u want handouts, {player}? handouts are union work. you have no license",
+   "id": "c0c65d214f6e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? begging is a guild craft. scab",
+   "id": "471f212bf474"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? begging is a guild craft. you are not in the guild",
+   "id": "efd1a9fd4237"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? begging is for professionals. scab",
+   "id": "81d6421fb7e4"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? begging is for professionals. you are not in the guild",
+   "id": "55becb85c7ef"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? begging is for professionals. you have no license",
+   "id": "b4a557dbece3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? begging is union work. you have no license",
+   "id": "46eac2ef1d2d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? handouts are a guild craft. scab",
+   "id": "49a3748bff52"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? handouts are a guild craft. you are not in the guild",
+   "id": "a229c65991d4"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? handouts are a guild craft. you have no license",
+   "id": "91e7f6172b87"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? handouts are for professionals. scab",
+   "id": "d08849644e7e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? handouts are for professionals. you are not in the guild",
+   "id": "a77f381dfb40"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? handouts are union work. scab",
+   "id": "694f0f556153"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "u wanted handouts, {player}? handouts are union work. you are not in the guild",
+   "id": "5a1194794455"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you want handouts, {player}? begging is a guild craft. scab",
+   "id": "b9ea3eb78c95"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you want handouts, {player}? begging is a guild craft. you are not in the guild",
+   "id": "a9f84cfdcdd4"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you want handouts, {player}? begging is for professionals. scab",
+   "id": "523d5434f520"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you want handouts, {player}? begging is for professionals. you have no license",
+   "id": "ea1be46da95a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you want handouts, {player}? begging is union work. scab",
+   "id": "5ef5c67d2d4c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you want handouts, {player}? begging is union work. you are not in the guild",
+   "id": "10b665814c17"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you want handouts, {player}? handouts are a guild craft. you are not in the guild",
+   "id": "aa63094b3b9a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you want handouts, {player}? handouts are a guild craft. you have no license",
+   "id": "e797ace90405"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you want handouts, {player}? handouts are for professionals. you are not in the guild",
+   "id": "7d2ab613ef30"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you want handouts, {player}? handouts are for professionals. you have no license",
+   "id": "7b54ca18921b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you want handouts, {player}? handouts are union work. scab",
+   "id": "70035a5705b0"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you want handouts, {player}? handouts are union work. you are not in the guild",
+   "id": "866ee76da0ff"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you wanted handouts, {player}? begging is a guild craft. scab",
+   "id": "d7f6c4c87868"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you wanted handouts, {player}? begging is a guild craft. you have no license",
+   "id": "677979d2df88"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you wanted handouts, {player}? begging is for professionals. you are not in the guild",
+   "id": "ce95df973a00"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you wanted handouts, {player}? begging is for professionals. you have no license",
+   "id": "95bf5faf28ce"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you wanted handouts, {player}? begging is union work. you are not in the guild",
+   "id": "ca38407620e3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you wanted handouts, {player}? begging is union work. you have no license",
+   "id": "d3fdedcde5e7"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you wanted handouts, {player}? handouts are a guild craft. you are not in the guild",
+   "id": "8a61df4d8da4"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you wanted handouts, {player}? handouts are for professionals. you are not in the guild",
+   "id": "b99e31fc26a1"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "you wanted handouts, {player}? handouts are union work. you are not in the guild",
+   "id": "b98170ad17af"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for coin and not asking us first? nope",
+   "id": "59c7f472991a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for coin and not asking us first? oh no",
+   "id": "93ddb8462e6d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for coin and not cutting us in? no no",
+   "id": "dd8e4a7c3b19"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for coin without asking us first? no no",
+   "id": "0c14f626ffbe"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for coin without asking us first? oh no",
+   "id": "72c9aca1e6b8"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for coin without cutting us in? no no",
+   "id": "4ce96fd9fb7a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for coin without cutting us in? nope",
+   "id": "6b969fa3dd74"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for coin without paying your dues? nope",
+   "id": "3ba989e2c25e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for coin without paying your dues? oh no",
+   "id": "82bc4ef38301"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for gold and not asking us first? no no",
+   "id": "9dd9b592b874"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for gold and not asking us first? nope",
+   "id": "f1ff41e08970"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for gold and not cutting us in? no no",
+   "id": "c5fcce346a90"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for gold and not paying your dues? no no",
+   "id": "415bf6ce5b20"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for gold and not paying your dues? oh no",
+   "id": "14b01e72a83b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for gold without asking us first? no no",
+   "id": "6a4e7992f669"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for gold without cutting us in? nope",
+   "id": "90ca3ddd990b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for gold without paying your dues? no no",
+   "id": "ed4c358c5a89"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for gold without paying your dues? nope",
+   "id": "4c3efd6f4508"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for loot and not asking us first? no no",
+   "id": "8d1e26c0b577"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for loot and not asking us first? nope",
+   "id": "3aeff6f08f1c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for loot and not cutting us in? no no",
+   "id": "053820057711"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for loot and not cutting us in? nope",
+   "id": "1afe28b2da1c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for loot and not paying your dues? no no",
+   "id": "4b479a2c1133"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for loot without cutting us in? oh no",
+   "id": "ea21d5ffbf8a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for loot without paying your dues? no no",
+   "id": "f071c6af0c4e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, asking for loot without paying your dues? nope",
+   "id": "f59cc01cd94a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for coin and not asking us first? nope",
+   "id": "ab209e066885"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for coin and not cutting us in? nope",
+   "id": "4b1928bcb135"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for coin and not paying your dues? nope",
+   "id": "f442ed0db0b6"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for coin and not paying your dues? oh no",
+   "id": "5b6a797927fd"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for coin without asking us first? no no",
+   "id": "3c46378f161f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for coin without cutting us in? no no",
+   "id": "b006e318439e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for coin without cutting us in? nope",
+   "id": "a3d01adc1556"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for coin without cutting us in? oh no",
+   "id": "1f87ee9ba0d8"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for coin without paying your dues? nope",
+   "id": "750c59b65f42"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for coin without paying your dues? oh no",
+   "id": "d88787dc3130"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for gold and not asking us first? no no",
+   "id": "93026708e346"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for gold and not asking us first? oh no",
+   "id": "7c605081a635"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for gold and not paying your dues? no no",
+   "id": "6f6823629e2c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for gold and not paying your dues? nope",
+   "id": "58d1714a811e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for gold without asking us first? nope",
+   "id": "ef7cdf48f565"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for gold without asking us first? oh no",
+   "id": "9e7239732058"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for gold without cutting us in? nope",
+   "id": "1e45d57646a4"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for gold without cutting us in? oh no",
+   "id": "e81d52d71ba4"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for gold without paying your dues? no no",
+   "id": "777901a145ec"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for loot and not asking us first? oh no",
+   "id": "1ce9fdb0252f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for loot and not cutting us in? nope",
+   "id": "5b9f88df1949"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "{player}, begging for loot without paying your dues? oh no",
+   "id": "2e18b6ee5ce2"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars have ears, {player}. you asked for coin. now you get me",
+   "id": "bfd59609de7a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars have ears, {player}. you begged. now we dance",
+   "id": "c2a58580676a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars have ears, {player}. you begged. so now i follow",
+   "id": "bd7f16e056f1"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars have ears, {player}. you begged. so now we dance",
+   "id": "a280cd0d5f19"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars hear everything, {player}. you asked for coin. now i follow",
+   "id": "5a82e3f4d4db"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars hear everything, {player}. you asked for coin. so now we dance",
+   "id": "00315d27d5fc"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars hear everything, {player}. you begged. now i follow",
+   "id": "c8bbbe2800e5"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars hear everything, {player}. you begged. now you get me",
+   "id": "122d4e9c6363"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars hear everything, {player}. you begged. so now i follow",
+   "id": "f9ebd58c67f5"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars hear everything, {player}. you begged. so now we dance",
+   "id": "e544c8c38cef"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars hear everything, {player}. you begged. so now you get me",
+   "id": "fa5a8c45d8a9"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars talk, {player}. you asked for coin. now we dance",
+   "id": "0aa2b613de8c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars talk, {player}. you asked for coin. now you get me",
+   "id": "c239c40fb632"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars talk, {player}. you asked for coin. so now we dance",
+   "id": "bfb17a320233"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars talk, {player}. you asked for coin. so now you get me",
+   "id": "a53643873d52"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the beggars talk, {player}. you begged. so now we dance",
+   "id": "b39b1f9052a3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners have ears, {player}. you asked for coin. now we dance",
+   "id": "56d9ae89ebf8"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners have ears, {player}. you asked for coin. now you get me",
+   "id": "57f35670e930"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners have ears, {player}. you asked for coin. so now we dance",
+   "id": "07ef9d4904bd"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners have ears, {player}. you asked for coin. so now you get me",
+   "id": "62188a6ca97f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners have ears, {player}. you begged. so now we dance",
+   "id": "33cc5b586ef1"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners have ears, {player}. you begged. so now you get me",
+   "id": "8d5908435a2a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners hear everything, {player}. you asked for coin. now i follow",
+   "id": "e320e1edca81"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners hear everything, {player}. you asked for coin. now you get me",
+   "id": "7608fdf99fbc"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners hear everything, {player}. you asked for coin. so now i follow",
+   "id": "0ce553d610e1"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners hear everything, {player}. you asked for coin. so now we dance",
+   "id": "acbf0a215ef9"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners hear everything, {player}. you asked for coin. so now you get me",
+   "id": "b1383c71fd73"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners hear everything, {player}. you begged. so now i follow",
+   "id": "e5cf5989f685"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners hear everything, {player}. you begged. so now we dance",
+   "id": "7599bfaa7627"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners hear everything, {player}. you begged. so now you get me",
+   "id": "043941b6a05a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners talk, {player}. you asked for coin. now we dance",
+   "id": "e411ddc752e2"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners talk, {player}. you asked for coin. now you get me",
+   "id": "be7de878cc5d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners talk, {player}. you asked for coin. so now we dance",
+   "id": "5fb195e50110"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners talk, {player}. you begged. now we dance",
+   "id": "b9509b62f96c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the corners talk, {player}. you begged. so now i follow",
+   "id": "e9b3a2f5d9e5"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street have ears, {player}. you asked for coin. now i follow",
+   "id": "653fc1f41012"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street have ears, {player}. you asked for coin. so now we dance",
+   "id": "e05f7da9b308"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street have ears, {player}. you begged. now i follow",
+   "id": "028d6d6a88ca"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street have ears, {player}. you begged. so now i follow",
+   "id": "116c0c97c416"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street hear everything, {player}. you asked for coin. now i follow",
+   "id": "2bc558caef00"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street hear everything, {player}. you asked for coin. now we dance",
+   "id": "03f3b9439045"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street hear everything, {player}. you asked for coin. so now we dance",
+   "id": "28453931c101"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street hear everything, {player}. you begged. now i follow",
+   "id": "1987009dea2f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street hear everything, {player}. you begged. now we dance",
+   "id": "73ef072f710b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street talk, {player}. you asked for coin. now we dance",
+   "id": "53e439a6084f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street talk, {player}. you begged. now i follow",
+   "id": "0ee13100cddd"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street talk, {player}. you begged. now we dance",
+   "id": "db9f159a1187"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "text": "the street talk, {player}. you begged. so now i follow",
+   "id": "7a3d6e184e09"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "look who it is. {player}, the {player_class} who begs. boo",
+   "id": "9b4797b6f500"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "look who it is. {player}, the {player_class} who begs. shame",
+   "id": "14330650f982"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "look who it is. {player}, professional moocher. boo",
+   "id": "1196d163a8de"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "look who it is. {player}, professional moocher. shame",
+   "id": "1923397f3e18"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "look who it is. {player}, king of handouts. boo",
+   "id": "de0bda98b08f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "look who it is. {player}, king of handouts. shame",
+   "id": "c1d3039c08bd"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "look everyone. {player}, the {player_class} who begs. boo",
+   "id": "cb098cfdbacd"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "look everyone. {player}, the {player_class} who begs. shame",
+   "id": "2629b4d7caaa"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "look everyone. {player}, professional moocher. boo",
+   "id": "ec3c5d3baa46"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "look everyone. {player}, professional moocher. shame",
+   "id": "6b12f6bf3ec7"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "look everyone. {player}, king of handouts. boo",
+   "id": "124c68cddd43"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "look everyone. {player}, king of handouts. shame",
+   "id": "b8519d14adbd"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you beg out there, {player}? and thought i wouldnt hear",
+   "id": "78166f3d07b1"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you beg out there, {player}? and thought we wouldnt know",
+   "id": "a8e28aab50f4"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you beg out there, {player}? cute",
+   "id": "f24eac905633"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you beg over there, {player}? and thought i wouldnt hear",
+   "id": "48368b4a8e5d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you beg over there, {player}? and thought we wouldnt know",
+   "id": "5a2db827586f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you beg over there, {player}? cute",
+   "id": "fbeb2a3a8538"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you beg behind my back, {player}? and thought i wouldnt hear",
+   "id": "acb45ec08a3a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you beg behind my back, {player}? and thought we wouldnt know",
+   "id": "6fdf5281d204"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you beg behind my back, {player}? cute",
+   "id": "39796a232c9a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you begged out there, {player}? and thought i wouldnt hear",
+   "id": "19088b4a0ab2"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you begged out there, {player}? and thought we wouldnt know",
+   "id": "276d4482aa37"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you begged out there, {player}? cute",
+   "id": "7edc0227297f"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you begged over there, {player}? and thought i wouldnt hear",
+   "id": "54f772252c3d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you begged over there, {player}? and thought we wouldnt know",
+   "id": "1f10eba0f53a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you begged over there, {player}? cute",
+   "id": "ee0b3b27e5d1"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you begged behind my back, {player}? and thought i wouldnt hear",
+   "id": "62245f5536e9"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you begged behind my back, {player}? and thought we wouldnt know",
+   "id": "f1cfac76aaa3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "you begged behind my back, {player}? cute",
+   "id": "7d2fa8a2d11c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "heard",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "---------------------------------------------------",
+   "id": "3929fc4df5a7"
+  },
+  {
+   "kind": "beggar",
    "topic": "insult",
    "who": [],
    "realm": "*",

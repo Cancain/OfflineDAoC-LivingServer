@@ -303,6 +303,7 @@ public static class AutonomousBotGuildSocial
     /// <summary>Called after a player's /gu line was sent to the guild.</summary>
     public static void OnPlayerGuildChat(GamePlayer player, string message)
     {
+        AutonomousBeggars.OnPlayerAsked(player, message, "guild");
         if (!Enabled || player?.Guild == null || string.IsNullOrWhiteSpace(message))
             return;
         BotChatTranscript.Player("guild", player, message, player.Guild.Name);

@@ -151,6 +151,7 @@ public static class AutonomousBotGroupChatter
     /// </summary>
     public static void OnPlayerGroupChat(GamePlayer player, string message)
     {
+        AutonomousBeggars.OnPlayerAsked(player, message, "group");
         if (player?.Group != null && !string.IsNullOrWhiteSpace(message))
             BotChatTranscript.Player("group", player, message);
         if (!AutonomousBotVoices.Enabled || player?.Group == null || string.IsNullOrWhiteSpace(message))

@@ -199,10 +199,11 @@ on the ground. All emotes used are ones the new client animates (ids 1–46); th
 hasn't been tried.
 
 ### Beggars (`bot_living_beggars`)
-About 2% of the Crafter bots (about 2 in every 1,000 bots) live as beggars in their own capital. They beg you and
+About 4% of the Crafter bots (about 5 in every 1,000 bots) live as beggars in their own capital. They beg you and
 passing bots for coin and loot, sell what they are given and hoard every copper. Drag coin or an item onto one to give
-it; the gift really moves to the bot. Ask a beggar for gold or items (in /say, by tell or with /beg) and it follows
-you around the city insulting you and defending its corner until you leave the city. Beggars never group, fight for
+it; the gift really moves to the bot. Ask anyone for gold or items, on any channel, and for the next hour every beggar
+in your capital that hears of it or sees you follows you around the city insulting you and defending its corner
+until you leave the city. Beggars never group, fight for
 the realm or talk in /faction. Details: [bot-voices/TALKING-UPDATE.md](bot-voices/TALKING-UPDATE.md) section 11.
 
 ## New client (0.36c)

@@ -1,6 +1,6 @@
-# Beggars (AutonomousBeggars): 2% of Crafter bots live in their capital, beg players and passing bots for coin and
-# loot, sell what they are given, and never spend a copper of it. A player who asks THEM for gold or items (in /say, a
-# tell, or a /beg at them) gets followed around the city and insulted until they leave it. Every coin and item is
+# Beggars (AutonomousBeggars): 4% of Crafter bots live in their capital, beg players and passing bots for coin and
+# loot, sell what they are given, and never spend a copper of it. A player who asks ANYONE for gold or items (any
+# channel, or a /beg) gets followed around the city and insulted until they leave it. Every coin and item is
 # real: given by a player (drag it onto the beggar), given by a passing bot from its own purse, or a begged item sold
 # at a merchant or listed on the Realm Exchange. {coin} is the amount, {hoard} the beggar's whole purse, {npc} the
 # merchant whose corner it is. Real swear words are not in the corpus: they swear the way 2003 chat did. New writing.
@@ -206,7 +206,23 @@ i hope [your next pull goes wrong|your loot is all trash drops|your horse throws
 [you|YOU] [want|need] [gold|coin|loot]? [i want|I want] [you OFF my corner|you GONE|your head on a pike]
 [oh its|ohhh its] [ON|on] now, {player}. [where you go i go|i go where you go|i am your shadow now]
 
-# ---- insult: following the player around the city ---------------------------------------------------
+# ---- heard: a beggar that heard the player asked SOMEONE for coin or items (anywhere, any channel, within the hour) --
+@kind beggar
+@topic heard
+@who *
+[oi|OI|hey] {player}! [i heard|word is|the street says] you [been begging|asked for coin|want handouts]. [begging is MY job|thats MY trade|on MY streets]?
+[well well|well well well]. [its|here comes] {player}. [the|that] {player_class} [who begs|begging for gold|asking for handouts] [all over {capital}|in my city]
+[word|news|gossip] [travels fast|gets around] [on the street|in {capital}], {player}. [you asked for coin|you begged]. [now you have ME|big mistake]
+{player}! [you|YOU] [asked|begged] [someone|a stranger|the whole realm] for [gold|coin|loot]? [in|IN] [my|MY] city?
+[i know what you did|everyone knows what you did|we all heard], {player}. [begging|asking for gold]. [shameful|amateur hour|disgusting]
+[there|THERE] [you are|they are]. {player}. [the freeloader|the coin vulture|the competition]. [get over here|dont you run|stay right there]
+[every|EVERY] beggar in {capital} [knows your name now|heard about you|is looking for you], {player}. [and i found you first|lucky me|surprise]
+[you|u] [want|wanted] handouts, {player}? [handouts are|begging is] [union work|a guild craft|for professionals]. [you are not in the guild|you have no license|scab]
+{player}, [asking|begging] for [gold|coin|loot] [without|and not] [paying your dues|asking us first|cutting us in]? [oh no|no no|nope]
+[the corners|the beggars|the street] [talk|have ears|hear everything], {player}. [you asked for coin|you begged]. [now|so now] [you get me|we dance|i follow]
+[look|LOOK] [who it is|everyone]. {player}, [the {player_class} who begs|professional moocher|king of handouts]. [boo|BOO|shame]
+[you|YOU] [beg|begged] [out there|over there|behind my back], {player}? [and thought i wouldnt hear|and thought we wouldnt know|cute]
+ ---------------------------------------------------
 @kind beggar
 @topic insult
 @who *

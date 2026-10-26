@@ -235,9 +235,9 @@ earlier"). Eight scenes (`dunce.lines`); scenes now take up to eight speakers (r
 
 ### 11. Beggars
 
-About 2% of the Crafter personalities are beggars (`bot_living_beggars`, on by default; `AutonomousBeggars`). The choice
-is a stable roll on the bot's id: 687 of 35,802 Crafters in a sample of 300,000 ids (1.9%), about 2 bots in every
-1,000. A beggar:
+About 4% of the Crafter personalities are beggars (`bot_living_beggars`, on by default; `AutonomousBeggars`; 2% until
+2026-10-26). The choice is a stable roll on the bot's id: 1,397 of 35,802 Crafters in a sample of 300,000 ids
+(3.9%), about 5 bots in every 1,000. A beggar:
 
 - **Lives in its own capital.** It logs in there, picks a corner beside one of the city's merchants, and every few
   minutes either stays on it or wanders to another merchant, trainer or the broker to beg there. It never groups (an
@@ -251,10 +251,15 @@ is a stable roll on the bot's id: 687 of 35,802 Crafters in a sample of 300,000 
   item from your backpack moves into its saved inventory (a full pack takes coin only). It thanks you and names the gift.
 - **Hoards.** It never buys, upgrades or spends. Every few minutes it takes begged loot to the Realm Exchange (an item
   worth listing, by the same rules other bots use) or to a merchant (vendor trash) and keeps the coin.
-- **Turns on you if you ask it for gold or items** in /say near it, by tell, or with /beg at it. It follows you around
-  the city (no combat) insulting you and claiming its corner every 6-13 seconds, with rude, taunt and throw-dirt emotes,
-  until you leave the capital, then crows ("and STAY out") and goes back. Coin given while it chases you buys a truce,
-  and it won't beg you for ten minutes. A 30-minute limit stops a chase if you stay in the city.
+- **Turns on you if you ask ANYONE for gold or items**, on any channel: /say, /faction, /group, /guild, /lfg, /trade,
+  /yell, /broadcast, a tell to a bot or a player, or a /beg at anyone. Begging is their job. You are marked for an hour
+  from your last ask. Beggars in earshot (or the one you asked) turn on you at once; the other beggars in the city hear
+  about it within 5-45 seconds and come for you ("word travels fast on the street"); and any beggar that sees you in its
+  capital within 1,500 units while you are marked goes after you, even if you asked out in the frontier. It follows you
+  around the city (no combat) insulting you and claiming its corner every 6-13 seconds, with rude, taunt and throw-dirt
+  emotes, until you leave the capital, then crows ("and STAY out") and goes back. Coin given to the beggar chasing you
+  buys a truce with that one beggar for ten minutes (the rest still want you). A 30-minute limit stops one beggar's
+  chase if you stay in the city; that beggar then leaves you be for ten minutes.
 
 What reads as asking (`AsksForCharity`): an asking phrase ("spare", "gimme", "can i have", "lend me", "got any ... for
 me", "i need") with something of value ("gold", "coin", "5g", "loot", "armor", "anything"). Offers are not ("u want
@@ -324,5 +329,6 @@ Everything above was tested without a running world. These need the PC:
     second nothing.
 14. Beggars: find one in each capital (`BEGGAR_CORNER` in the log names its merchant). Check that it walks up and
     begs, that dragging coin and an item onto it moves them (your purse and pack, its purse after a restart), that
-    "spare some gold?" in /say makes it follow and insult you, that it stops when you zone out of the city, and that
+    "spare some gold?" in /say makes it follow and insult you, that asking in /faction from outside and then walking
+    into the city brings the beggars to you, that it stops when you zone out of the city, and that
     it walks and paths sensibly between merchants (no walking into walls). Watch `BEGGAR_SOLD` and `BEGGAR_LISTED`.

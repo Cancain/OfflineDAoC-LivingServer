@@ -85,6 +85,7 @@ public static partial class AutonomousLivingServer
     /// </summary>
     public static void OnPlayerLfg(GamePlayer player, string message)
     {
+        AutonomousBeggars.OnPlayerAsked(player, message, "lfg");
         if (!TellsOn || player?.Client == null || player.Group != null)
             return;
         long now = GameLoop.GameLoopTime;

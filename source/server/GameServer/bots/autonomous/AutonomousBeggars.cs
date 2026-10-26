@@ -14,16 +14,16 @@ using DOL.Logging;
 namespace DOL.GS;
 
 /// <summary>
-/// Beggars (bot_living_beggars, docs/bot-voices/TALKING-UPDATE.md section 11): about 2% of the Crafter personalities
+/// Beggars (bot_living_beggars, docs/bot-voices/TALKING-UPDATE.md section 11): about 4% of the Crafter personalities
 /// give up adventuring and live in their realm's capital. A beggar keeps a corner beside a merchant, wanders the city
 /// begging real players and passing bots, and hoards every copper: it never buys, never upgrades, never spends.
 /// <list type="bullet">
 /// <item>Every coin and item is real. A player gives by dragging coin or an item onto the beggar (the item moves to
 /// the beggar's own saved inventory); a passing bot that gives pays from its own purse; begged items are sold at a
 /// merchant or listed on the Realm Exchange by the existing economy code.</item>
-/// <item>A player who asks a beggar for gold or items (in /say near it, by tell, or with /beg at it) makes it hostile:
-/// it follows that player (no combat) insulting them and claiming its corner until the player leaves the capital, then
-/// goes back to its corner. Coin given while it is hostile calms it.</item>
+/// <item>A player who asks anyone for gold or items, on any channel or with /beg, is marked for an hour: the beggars of
+/// their capital that hear of it or see them follow them (no combat), insulting them and claiming their corners, until
+/// the player leaves the capital; then they go back to their corners. Coin given to a chasing beggar calms that one.</item>
 /// <item>A beggar logs in in its capital, never joins groups, raids or realm forces, and declines invitations.</item>
 /// </list>
 /// Real players and companion bots are never beggars; only autonomous gamebots are.
@@ -33,7 +33,7 @@ public static class AutonomousBeggars
     private static readonly Logger Log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
 
     /// <summary>The share of Crafter personalities who are beggars.</summary>
-    public const double ShareOfCrafters = 0.02;
+    public const double ShareOfCrafters = 0.04;
     private const long Salt = 0x6265_6767_6172;   // "beggar"
 
     public const int BegRadius = 900;            // a player this close may be walked up to and begged
@@ -129,7 +129,7 @@ public static class AutonomousBeggars
         public Vector3 Corner;
         public string CornerNpc = "the merchant";
         public Vector3? Spot;                 // where it is begging now (null: the corner)
-        public long NextMoveAt, NextLineAt, NextBotBegAt, NextHoardAt, NextErrandAt, NextProgressAt;
+        public long NextLookAt, NextMoveAt, NextLineAt, NextBotBegAt, NextHoardAt, NextErrandAt, NextProgressAt;
         public GamePlayer Approaching;
         public long ApproachUntil;
         public Errand Errand;
@@ -205,6 +205,12 @@ public static class AutonomousBeggars
             AutonomousStuckWatchdog.MarkProgress(bot, eAutonomousProgressKind.Movement);
         }
 
+        if (state.Mark == null && now >= state.NextLookAt)
+        {
+            state.NextLookAt = now + 3_000;
+            if (MarkedPlayerInSight(bot, state, now) is { } marked)
+                StartChase(bot, marked, "seen", true);
+        }
         if (state.Mark != null)
             Chase(bot, state, now);
         else if (state.Errand != Errand.None)
@@ -669,30 +675,33 @@ public static class AutonomousBeggars
     #region Asked for coin: the chase
 
     /// <summary>
-    /// A player's /say: when it asks for gold or items in a capital, every beggar in earshot turns on that player.
-    /// True when a beggar took it (the ordinary replies are skipped).
+    /// Any player line on any channel (/say, /faction, /group, /guild, /lfg, /trade, /yell, /broadcast, a tell). One that
+    /// asks anyone for gold or items marks the player for <see cref="MarkTime"/>: begging is the beggars' job. Beggars in
+    /// earshot turn on the player at once; the others in the city hear about it within a minute; and any beggar that sees a
+    /// marked player in its capital later goes after them. True when a beggar heard it in person (the ordinary /say
+    /// replies are skipped).
     /// </summary>
-    public static bool OnPlayerSay(GamePlayer player, string message)
+    public static bool OnPlayerAsked(GamePlayer player, string message, string how)
     {
-        if (!On || player?.CurrentRegion?.IsCapitalCity != true || !AsksForCharity(message))
+        if (!On || player == null || !AsksForCharity(message))
             return false;
-        bool any = false;
-        foreach (GameBot bot in OnlineBeggars().Where(bot => bot.Realm == player.Realm && bot.CurrentRegionID == player.CurrentRegionID &&
-                                                             bot.IsWithinRadius(player, WorldMgr.SAY_DISTANCE)))
-            any |= StartChase(bot, player, "say");
-        return any;
+        return MarkAsker(player, how, null);
     }
 
-    /// <summary>A player's tell to a beggar. Asking it for coin starts the chase; anything else gets a begging answer.</summary>
+    /// <summary>A player's /say (OnPlayerAsked on the local channel).</summary>
+    public static bool OnPlayerSay(GamePlayer player, string message) => OnPlayerAsked(player, message, "say");
+
+    /// <summary>A player's tell to a gamebot. Asking anyone for coin marks the player; a tell to a beggar is the beggar's.</summary>
     public static bool OnPlayerTell(GamePlayer player, GameBot bot, string message)
     {
-        if (!Is(bot) || player == null)
+        if (!On || player == null)
             return false;
-        if (AsksForCharity(message) && player.CurrentRegionID == bot.CurrentRegionID && player.Realm == bot.Realm)
-        {
-            StartChase(bot, player, "tell");
+        if (AsksForCharity(message))
+            MarkAsker(player, "tell", Is(bot) ? bot : null);
+        if (!Is(bot))
+            return false;
+        if (AsksForCharity(message))
             return true;
-        }
         State state = States.GetOrAdd(bot.DatabaseID, _ => new State());
         AutonomousLivingServer.Later(bot, 2_500 + Random.Shared.Next(3_000), () => AutonomousLivingServer.IsSpeaker(bot), () =>
         {
@@ -702,17 +711,53 @@ public static class AutonomousBeggars
         return true;
     }
 
-    /// <summary>A player's /beg with a beggar targeted.</summary>
+    /// <summary>A player's /beg, at anyone or at no one: that is asking for coin.</summary>
     public static void OnPlayerBegs(GamePlayer player, GameObject target)
     {
-        if (target is GameBot bot && Is(bot) && player != null && player.Realm == bot.Realm && player.CurrentRegionID == bot.CurrentRegionID)
-            StartChase(bot, player, "beg emote");
+        if (On && player != null)
+            MarkAsker(player, "beg emote", target is GameBot bot && Is(bot) ? bot : null);
     }
 
-    private static bool StartChase(GameBot bot, GamePlayer player, string how)
+    /// <summary>How long a player who asked anyone for coin or items stays fair game for every beggar of the realm.</summary>
+    public static readonly TimeSpan MarkTime = TimeSpan.FromHours(1);
+    public const int SpotRadius = 1_500;          // a beggar notices a marked player this close
+    private static readonly ConcurrentDictionary<string, long> Marked = new(StringComparer.Ordinal);
+
+    private static string MarkKey(GamePlayer player) => $"{(int)player.Realm}|{player.Name}";
+
+    /// <summary>True while a player who asked for coin or items is fair game (the mark lasts an hour from the last ask).</summary>
+    public static bool IsMarked(GamePlayer player, long now) =>
+        player != null && Marked.TryGetValue(MarkKey(player), out long until) && now < until;
+
+    private static bool MarkAsker(GamePlayer player, string how, GameBot asked)
+    {
+        long now = GameLoop.GameLoopTime;
+        Marked[MarkKey(player)] = now + (long)MarkTime.TotalMilliseconds;
+        Log.Info($"BEGGAR_MARKED player=\"{player.Name}\" how={how}");
+        if (player.CurrentRegion?.IsCapitalCity != true)
+            return false;
+        bool heard = false;
+        foreach (GameBot bot in OnlineBeggars().Where(bot => bot.Realm == player.Realm && bot.CurrentRegionID == player.CurrentRegionID).ToArray())
+        {
+            // Asked to its face: the beggar asked by tell or /beg, or any beggar in earshot of a /say or a /beg.
+            bool inPerson = bot == asked || how is "say" or "beg emote" && bot.IsWithinRadius(player, WorldMgr.SAY_DISTANCE);
+            if (inPerson)
+            {
+                heard |= StartChase(bot, player, how, false);
+                continue;
+            }
+            // Word travels fast on the street.
+            AutonomousLivingServer.Later(bot, 5_000 + Random.Shared.Next(40_000),
+                () => ChasedBy(bot) == null && player.ObjectState == GameObject.eObjectState.Active && player.CurrentRegionID == bot.CurrentRegionID,
+                () => StartChase(bot, player, "word of " + how, true));
+        }
+        return heard;
+    }
+
+    private static bool StartChase(GameBot bot, GamePlayer player, string how, bool heard)
     {
         if (!bot.IsAlive || bot.InCombat || bot.Group != null || player.CurrentRegion?.IsCapitalCity != true ||
-            AutonomousStuckWatchdog.CapitalFor(bot.Realm).RegionId != bot.CurrentRegionID)
+            player.CurrentRegionID != bot.CurrentRegionID || AutonomousStuckWatchdog.CapitalFor(bot.Realm).RegionId != bot.CurrentRegionID)
             return false;
         State state = States.GetOrAdd(bot.DatabaseID, _ => new State());
         Online[bot.DatabaseID] = bot;
@@ -729,14 +774,25 @@ public static class AutonomousBeggars
         state.Errand = Errand.None;
         bot.StopMoving();
         bot.TurnTo(player);
-        SetActivity(bot, state, $"Chasing {player.Name} off the corner", $"{player.Name} asked a beggar for coin ({how})");
+        SetActivity(bot, state, $"Chasing {player.Name} off the corner", $"{player.Name} asked for coin or items ({how})");
         Log.Info($"BEGGAR_HOSTILE beggar=\"{bot.Name}\" player=\"{player.Name}\" how={how}");
         AutonomousLivingServer.Later(bot, 900 + Random.Shared.Next(1_200), () => state.Mark == player, () =>
         {
             bot.Emote(Random.Shared.Next(2) == 0 ? eEmote.Angry : eEmote.Roar);
-            Say(bot, "outraged", SlotsFor(bot, state, player));
+            Say(bot, heard ? "heard" : "outraged", SlotsFor(bot, state, player));
         });
         return true;
+    }
+
+    /// <summary>A marked player this beggar can see in its city (not one that paid it off or that it gave up on lately).</summary>
+    private static GamePlayer MarkedPlayerInSight(GameBot bot, State state, long now)
+    {
+        long rest = (long)CalmedRest.TotalMilliseconds;
+        return bot.GetPlayersInRadius(SpotRadius).OfType<GamePlayer>()
+            .Where(player => player.ObjectState == GameObject.eObjectState.Active && player.Realm == bot.Realm && IsMarked(player, now) &&
+                             (!state.Calmed.TryGetValue(player.Name, out long calmed) || now - calmed >= rest))
+            .OrderBy(player => player.GetDistanceTo(bot))
+            .FirstOrDefault();
     }
 
     private static void Chase(GameBot bot, State state, long now)
@@ -745,6 +801,9 @@ public static class AutonomousBeggars
         bool gone = player == null || player.ObjectState != GameObject.eObjectState.Active || player.CurrentRegionID != bot.CurrentRegionID;
         if (gone || now - state.MarkSince > (long)HostileLimit.TotalMilliseconds)
         {
+            // Given up after the limit: this beggar leaves them be for a while even if they are still fair game.
+            if (!gone)
+                state.Calmed[player.Name] = now;
             EndChase(bot, state, gone ? player : null);
             return;
         }

@@ -108,7 +108,7 @@ internal sealed class SocialExpansionSettingsControl : UserControl
             "Off: all bots online. Session: bots play 1–4 hour sessions. Real clock: busy evenings, quiet nights."));
         Add(living, _breaks, null, "Idle bots go brb for 5–25 minutes; a bot in your group rarely goes linkdead for a minute.");
         Add(living, _body, null, "Idle bots look around, emote, shift their feet in town, wave when you walk up and cheer a ding. No jumping or sitting.");
-        Add(living, _beggars, null, "A few Crafter bots beg in their capital and hoard coin. Ask one for gold and it follows you, insulting you, until you leave.");
+        Add(living, _beggars, null, "A few Crafter bots beg in their capital and hoard coin. Ask anyone for gold and they follow you, insulting you, until you leave.");
 
         var xp = Card("XP BY LEVEL RANGE", DaocTheme.Gold, 5);
         xp = xp with { Height = TitleRow + 2 * (XpRow.Height + XpRow.ErrorHeight) + Row + CardPadding };

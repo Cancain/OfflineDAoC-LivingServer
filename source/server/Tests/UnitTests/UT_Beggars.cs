@@ -11,7 +11,7 @@ namespace DOL.GS.Tests
     public class UT_Beggars
     {
         [Test]
-        public void AboutTwoPercentOfCraftersAreBeggarsAndNobodyElse()
+        public void AboutFourPercentOfCraftersAreBeggarsAndNobodyElse()
         {
             int crafters = 0, beggars = 0;
             for (long id = 1; id <= 300_000; id++)
@@ -27,7 +27,7 @@ namespace DOL.GS.Tests
             }
             double share = (double)beggars / crafters;
             TestContext.Out.WriteLine($"{beggars} beggars of {crafters} crafters ({share:P2}); {beggars / 300.0:F2} per 1,000 bots");
-            Assert.That(share, Is.InRange(0.017, 0.023));
+            Assert.That(share, Is.InRange(0.036, 0.044));
             Assert.That(AutonomousBeggars.IsBeggarId(0), Is.False);
             Assert.That(AutonomousBeggars.IsBeggarId(-5), Is.False);
         }
@@ -105,6 +105,7 @@ namespace DOL.GS.Tests
             ["listed"] = ["npc", "hoard", "coin", "item"],
             ["tell"] = ["player", "player_class", "npc", "hoard"],
             ["outraged"] = ["player", "player_class", "npc", "hoard"],
+            ["heard"] = ["player", "player_class", "npc", "hoard"],
             ["insult"] = ["player", "player_class", "npc", "hoard"],
             ["corner"] = ["player", "player_class", "npc", "hoard"],
             ["gone"] = ["player", "player_class", "npc", "hoard"],
@@ -130,7 +131,7 @@ namespace DOL.GS.Tests
             Assert.That(byTopic.Keys, Is.SubsetOf(Supplied.Keys), "a topic the code never asks for");
             var floors = new Dictionary<string, int>
             {
-                ["beg"] = 100, ["insult"] = 200, ["corner"] = 100, ["outraged"] = 40, ["gone"] = 20, ["calm"] = 10,
+                ["beg"] = 100, ["insult"] = 200, ["heard"] = 60, ["corner"] = 100, ["outraged"] = 40, ["gone"] = 20, ["calm"] = 10,
                 ["thanks_coin"] = 30, ["thanks_item"] = 20, ["hoard"] = 30, ["beg_idle"] = 40, ["donor_give"] = 20,
                 ["donor_refuse"] = 15, ["tell"] = 20, ["sold"] = 10, ["listed"] = 3, ["full"] = 5, ["thanks_bot"] = 10,
                 ["beg_bot"] = 10, ["spurned"] = 10,

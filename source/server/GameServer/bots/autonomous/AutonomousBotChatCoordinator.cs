@@ -447,6 +447,8 @@ public static class AutonomousBotChatCoordinator
             return;
         BotChatTranscript.Player("faction", player, message);
         SendFaction(player.Name, player.Realm, message);
+        // Asking anyone for gold or items marks the player for the beggars (AutonomousBeggars).
+        AutonomousBeggars.OnPlayerAsked(player, message, "faction");
         AutonomousBotDebates.PlayerSpoke(player.Realm, player);
         lock (Sync)
             LastPlayerFactionLine[player.Realm] = GameLoop.GameLoopTime;

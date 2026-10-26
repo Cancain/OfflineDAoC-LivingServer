@@ -92,6 +92,7 @@ namespace DOL.GS.Commands
                     {
                         // Send the message
                         client.Player.SendPrivateMessage(targetPlayer, message);
+                        AutonomousBeggars.OnPlayerAsked(client.Player, message, "tell");
                     }
 
                     return;
