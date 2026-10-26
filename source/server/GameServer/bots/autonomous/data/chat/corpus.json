@@ -521423,7 +521423,7 @@
    "topic": "lore_avalon",
    "realm": "alb",
    "levels": [
-    20,
+    1,
     50
    ],
    "roles": {
@@ -521431,7 +521431,11 @@
      "type": [
       "NoLifer"
      ],
-     "class": []
+     "class": [],
+     "levels": [
+      30,
+      50
+     ]
     },
     "C": {
      "type": [
@@ -521440,8 +521444,17 @@
      "class": []
     },
     "D": {
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "E": {
      "type": [
-      "Socialite"
+      "Socialite",
+      "Daredevil"
      ],
      "class": []
     }
@@ -521449,88 +521462,241 @@
    "beats": [
     {
      "role": "A",
-     "text": "if avalon was in albion all along, why did we need a boat to get there",
+     "text": "{q} if avalon sat inside albion all along, why did we have to cross the sea to reach it",
      "variants": [
-      "if avalon was in albion all along, why did we need a boat to get there",
-      "{q} question for the avalon believers: if it was always here, why the ship"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "i played an avalonian from the first week. a homeland on the character screen and no road home",
-     "variants": [
-      "i played an avalonian from the first week. a homeland on the character screen and no road home",
-      "avalonian since launch. born in a city nobody could visit"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "it wasn't hidden on the map, it was hidden behind the mist. the ship just goes round the mist",
-     "variants": [
-      "it wasn't hidden on the map, it was hidden behind the mist. the ship just goes round the mist",
-      "the boat proves nothing. you sail around a spell, not through it"
-     ],
-     "optional": false
-    },
-    {
-     "role": "A",
-     "text": "so the isle of glass sat off the coast all that time and nobody noticed",
-     "variants": [
-      "so the isle of glass sat off the coast all that time and nobody noticed",
-      "a whole island sat offshore for years and not one fisherman saw it"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "isle of glass is glastonbury's old name, and glastonbury was always avalon. the clue was on the dock",
-     "variants": [
-      "isle of glass is glastonbury's old name, and glastonbury was always avalon. the clue was on the dock",
-      "the landing is called the isle of glass. that's glastonbury, that's avalon. it was in the name"
+      "{q} if avalon sat inside albion all along, why did we have to cross the sea to reach it",
+      "honest question for the marsh crowd: if avalon was always ours, why did it take a crossing to get there"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "my minstrel friend says the lady lifted the mist the night the drakoran broke the city. too late to save it",
+     "text": "wait, there's an actual avalon you can go to? i thought the avalonians were just a race on the creation screen",
      "variants": [
-      "my minstrel friend says the lady lifted the mist the night the drakoran broke the city. too late to save it",
-      "i heard nimue let the mist fall when the city burned, so someone could come help"
+      "wait, there's an actual avalon you can go to? i thought the avalonians were just a race on the creation screen",
+      "hold on, avalon is a real place? i thought it was flavour text for the avalonian race"
+     ],
+     "optional": true
+    },
+    {
+     "role": "B",
+     "text": "oh it's real. the isles opened it. you land at caer gothwaite on the isle of glass and walk straight into drakoran country",
+     "variants": [
+      "oh it's real. the isles opened it. you land at caer gothwaite on the isle of glass and walk straight into drakoran country",
+      "real enough to kill you. the shrouded isles came out, you land at caer gothwaite and the drakoran are waiting"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "either way the city we came from is rubble. we found home and it was already ruined",
+     "text": "and i say that as an avalonian since the first week. a homeland on my creation screen and no road home for a year",
      "variants": [
-      "either way the city we came from is rubble. we found home and it was already ruined",
-      "the avalonians finally got home and found drakoran in the kitchen"
+      "and i say that as an avalonian since the first week. a homeland on my creation screen and no road home for a year",
+      "i rolled an avalonian at launch. a city of mages in my story and not one road on the map that led there"
      ],
      "optional": false
     },
     {
-     "role": "A",
-     "text": "hidden or not, the drakoran found it first, and that bothers me more",
+     "role": "C",
+     "text": "because the old avalon was never a place you walk to. in the old tale arthur went there on a barge, three queens with him. by water",
      "variants": [
-      "hidden or not, the drakoran found it first, and that bothers me more",
-      "the drakoran knew the way before we did. who showed them"
+      "because the old avalon was never a place you walk to. in the old tale arthur went there on a barge, three queens with him. by water",
+      "the old story never had a road either. arthur was carried there on a barge with three queens. water was always the way in"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "three queens on one barge. meanwhile i cant get one cleric to follow me to the next camp",
+     "variants": [
+      "three queens on one barge. meanwhile i cant get one cleric to follow me to the next camp",
+      "three queens to row one king. my group cant even find one healer"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "and the real glastonbury, the isle of glass, was a hill standing up out of drowned marsh. the marsh and the island are one story",
+     "variants": [
+      "and the real glastonbury, the isle of glass, was a hill standing up out of drowned marsh. the marsh and the island are one story",
+      "look at old glastonbury. a hill sticking out of flooded marsh, and they called it an island. marsh and isle, same place"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "then why is our marsh on the mainland and the isle a sea crossing away? thats not a hill in a bog, thats open water",
+     "variants": [
+      "then why is our marsh on the mainland and the isle a sea crossing away? thats not a hill in a bog, thats open water",
+      "nice theory, but our marsh is on one side of the map and the isle is over open sea. no bog in between"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "because the land moved, or the mist did. hibernia had a whole pass come out of a bog. an island can drift off a marsh",
+     "variants": [
+      "because the land moved, or the mist did. hibernia had a whole pass come out of a bog. an island can drift off a marsh",
+      "if a pass can come out of the mist in hibernia, an island can slip back into it here"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "that hib mist pass gets used to prove everything from avalon to free respecs",
+     "variants": [
+      "that hib mist pass gets used to prove everything from avalon to free respecs",
+      "every albion argument ends up borrowing that hib pass story"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "so is the city still there? the one the avalonians came from?",
+     "variants": [
+      "so is the city still there? the one the avalonians came from?",
+      "so what happened to the city of mages, is any of it left?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "avalon city is a dungeon now. rubble and drakoran, named ones like dura'ek the empowered and sys'sro the ruthless giving orders",
+     "variants": [
+      "avalon city is a dungeon now. rubble and drakoran, named ones like dura'ek the empowered and sys'sro the ruthless giving orders",
+      "its a dungeon. drakoran sitting in the old libraries, dura'ek the empowered and sys'sro the ruthless in charge"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "sys'sro the ruthless. you just know his mother calls him sysy",
+     "variants": [
+      "sys'sro the ruthless. you just know his mother calls him sysy",
+      "sys'sro the ruthless sounds like a name somebody practised in a mirror"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "and under it the crystal cave with xanxicar. a city of mages built on a two-headed dragon. tell me that was an accident",
+     "variants": [
+      "and under it the crystal cave with xanxicar. a city of mages built on a two-headed dragon. tell me that was an accident",
+      "the crystal cave sits right under the ruins, xanxicar and all. nobody builds a mage city on a dragon by mistake"
      ],
      "optional": false
     },
     {
      "role": "~",
-     "pause": 25
+     "pause": 15
+    },
+    {
+     "role": "B",
+     "text": "what bothers me is the word when the isles were announced: avalon was no longer a friendly place. no longer. so it was friendly once",
+     "variants": [
+      "what bothers me is the word when the isles were announced: avalon was no longer a friendly place. no longer. so it was friendly once",
+      "the first word about the isles said avalon was no longer a friendly place. no longer. it had a friendly time we never got to see"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "exactly. it was there and friendly the whole time we were levelling in the marsh. hidden, not missing",
+     "variants": [
+      "exactly. it was there and friendly the whole time we were levelling in the marsh. hidden, not missing",
+      "right, friendly and there, behind the mist, while we killed slimes next door"
+     ],
+     "optional": false
     },
     {
      "role": "D",
-     "text": "someone holding a leash, that's who",
+     "text": "is anyone on our side still living over there?",
      "variants": [
-      "someone holding a leash, that's who",
-      "ask the inconnu, they always know more than they say"
+      "is anyone on our side still living over there?",
+      "who still lives on the isle then?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "wearyall holds out, a hamlet of avalonians. in the old tale wearyall hill is where joseph's staff took root and grew the holy thorn",
+     "variants": [
+      "wearyall holds out, a hamlet of avalonians. in the old tale wearyall hill is where joseph's staff took root and grew the holy thorn",
+      "wearyall village. the name is from the legend too: wearyall hill, where a pilgrim's staff grew into a thorn tree"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "a village named after a tired hill. i feel that every time i ride from caer witrin to camelot",
+     "variants": [
+      "a village named after a tired hill. i feel that every time i ride from caer witrin to camelot",
+      "wearyall. clearly named by someone who walked there"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "and the orchards. crafted apple gatherers, made things picking fruit for nobody. avalon means isle of apples in the old tongue",
+     "variants": [
+      "and the orchards. crafted apple gatherers, made things picking fruit for nobody. avalon means isle of apples in the old tongue",
+      "the isle of apples, avalons oldest name. and who works the orchards now? crafted gatherers, built not born"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "ok, the apples i give you. the first time i saw one picking fruit it gave me a chill",
+     "variants": [
+      "ok, the apples i give you. the first time i saw one picking fruit it gave me a chill",
+      "the apple harvesters got me, i admit it"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "so it was always there, it was hidden, and the drakoran found the door before we did",
+     "variants": [
+      "so it was always there, it was hidden, and the drakoran found the door before we did",
+      "so the city was there, friendly, hidden, and then the drakoran knocked first"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "and that's the real question. someone showed them the way. dragon-men dont read old maps",
+     "variants": [
+      "and that's the real question. someone showed them the way. dragon-men dont read old maps",
+      "the question isnt the ship, its who led the drakoran across first"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "probably whoever sold me a map of the marsh in camelot for forty silver",
+     "variants": [
+      "probably whoever sold me a map of the marsh in camelot for forty silver",
+      "someone with a boat and no morals. half the merchants in camelot qualify"
      ],
      "optional": true
+    },
+    {
+     "role": "C",
+     "text": "next trip i'm following the orchard down to the shore. if an old road ran out to the marsh, it ends in the water there",
+     "variants": [
+      "next trip i'm following the orchard down to the shore. if an old road ran out to the marsh, it ends in the water there",
+      "i'll walk the orchard edge to the coast next time. if there was ever a road home, it starts there"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "send a tell if you find it. i've only been waiting since launch",
+     "variants": [
+      "send a tell if you find it. i've only been waiting since launch",
+      "if you find a road home, tell this avalonian first"
+     ],
+     "optional": false
     }
    ],
    "needs": []
@@ -521540,15 +521706,20 @@
    "topic": "lore_avalon",
    "realm": "alb",
    "levels": [
-    35,
+    1,
     50
    ],
    "roles": {
     "B": {
      "type": [
-      "NoLifer"
+      "NoLifer",
+      "Leveler"
      ],
-     "class": []
+     "class": [],
+     "levels": [
+      35,
+      50
+     ]
     },
     "C": {
      "type": [
@@ -521557,92 +521728,250 @@
      "class": []
     },
     "D": {
-     "type": [
-      "Leveler",
-      "Daredevil"
-     ],
-     "class": []
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "E": {
+     "type": [],
+     "class": [
+      "Wizard",
+      "Theurgist",
+      "Sorcerer",
+      "Cabalist"
+     ]
     }
    },
    "beats": [
     {
      "role": "A",
-     "text": "here's a thought. xanxicar was under avalon before the drakoran ever showed up",
+     "text": "{q} here's a thought i cant shake. xanxicar was under avalon before the first mage laid a stone",
      "variants": [
-      "here's a thought. xanxicar was under avalon before the drakoran ever showed up",
-      "{q} which came first, the city of avalon or the dragon under it"
+      "{q} here's a thought i cant shake. xanxicar was under avalon before the first mage laid a stone",
+      "which came first, the city of avalon or the two-headed dragon in its cellar"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "xanxicar? is that one of the dragons you raid?",
+     "variants": [
+      "xanxicar? is that one of the dragons you raid?",
+      "wait, who is xanxicar, another dragon?"
+     ],
+     "optional": true
+    },
+    {
+     "role": "B",
+     "text": "twin-headed dragon in the crystal cave, under the ruins of avalon city. one of the big beasts of the isles, raid only",
+     "variants": [
+      "twin-headed dragon in the crystal cave, under the ruins of avalon city. one of the big beasts of the isles, raid only",
+      "two heads, one dragon, lives in the crystal cave under the ruined city. raid only, dont go look"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "the city. mages don't build over a sleeping dragon on purpose",
+     "text": "and the cave fills with lightning if you take too long. thats the part everyone remembers",
      "variants": [
-      "the city. mages don't build over a sleeping dragon on purpose",
-      "the city, obviously. nobody builds a library on top of a dragon"
+      "and the cave fills with lightning if you take too long. thats the part everyone remembers",
+      "linger and the whole lair lights up with lightning. thats how most raids there end"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "or they did it on purpose. the dragon was the lock and the mist was the door",
+     "text": "think about that. a dragon whose cave punishes you for staying. thats not a lair, thats a guarded door",
      "variants": [
-      "or they did it on purpose. the dragon was the lock and the mist was the door",
-      "maybe the mages wanted it there. two heads, one to watch each way"
+      "think about that. a dragon whose cave punishes you for staying. thats not a lair, thats a guarded door",
+      "a beast whose home turns on you if you overstay. thats not a temper, thats a ward on a door"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "then the lock failed. the drakoran walked right in",
+     "text": "or a short fuse. they even lengthened the lightning timer in a patch. nobody makes a sacred ward easier",
      "variants": [
-      "then the lock failed. the drakoran walked right in",
+      "or a short fuse. they even lengthened the lightning timer in a patch. nobody makes a sacred ward easier",
+      "the timer got longer in a patch because raids kept wiping. thats tuning, not a sacred seal"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "speaking as a wizard: lightning that builds on a timer is how a ward feels. it stores, then it spends. a storm doesnt keep time",
+     "variants": [
+      "speaking as a wizard: lightning that builds on a timer is how a ward feels. it stores, then it spends. a storm doesnt keep time",
+      "lightning that gathers and then breaks on a count is how a binding behaves. weather has no clock"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "a wizard says it's magic. stop the presses",
+     "variants": [
+      "a wizard says it's magic. stop the presses",
+      "of course the wizard thinks everything is a spell"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "the race text calls that city the seat of albion's strongest mage guilds. mages notice what sleeps under their floors",
+     "variants": [
+      "the race text calls that city the seat of albion's strongest mage guilds. mages notice what sleeps under their floors",
+      "the greatest mage guilds in albion lived up there. you think they missed a dragon downstairs?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "there's an old tale for it. vortigern's walls kept falling down until the boy merlin told him: two dragons sleep in a pool under the hill",
+     "variants": [
+      "there's an old tale for it. vortigern's walls kept falling down until the boy merlin told him: two dragons sleep in a pool under the hill",
+      "remember the old story. vortigern's fort kept collapsing and young merlin said dig: a red dragon and a white one under the foundations"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "two dragons under a castle? like two heads?",
+     "variants": [
+      "two dragons under a castle? like two heads?",
+      "wait, two dragons under the hill, and ours has two heads?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "two heads, one body. the old tale made it two dragons. avalon kept them together under the city",
+     "variants": [
+      "two heads, one body. the old tale made it two dragons. avalon kept them together under the city",
+      "the legend split them in two. here they share one body under the mage city"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "in that tale they were dug up and fought, and the red one won. it was a prophecy, not a door lock",
+     "variants": [
+      "in that tale they were dug up and fought, and the red one won. it was a prophecy, not a door lock",
+      "they got dug out and the red beat the white. nobody kept them as a lock, it was an omen"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "an omen about the fate of the land, buried under walls on purpose. call it what you like, someone kept it there",
+     "variants": [
+      "an omen about the fate of the land, buried under walls on purpose. call it what you like, someone kept it there",
+      "the fate of the realm buried under a fort. thats still a lock with a story carved on it"
+     ],
+     "optional": false
+    },
+    {
+     "role": "~",
+     "pause": 15
+    },
+    {
+     "role": "B",
+     "text": "then the lock failed. drakoran, dragon-men, walked into the city and burned the libraries",
+     "variants": [
+      "then the lock failed. drakoran, dragon-men, walked into the city and burned the libraries",
       "some lock. the drakoran strolled in and burned the place"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "drakoran are dragon-men. maybe the dragon let its own kind through",
+     "text": "thats my best evidence. dragon-men walking past a dragon guard. maybe the guard let its own kin through",
      "variants": [
-      "drakoran are dragon-men. maybe the dragon let its own kind through",
-      "dragon-men walking past a dragon guard. who do you think opened the gate"
+      "thats my best evidence. dragon-men walking past a dragon guard. maybe the guard let its own kin through",
+      "dragon-men, dragon guard. who do you think opened the door"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "or flip it. the guilds were the ward and xanxicar the prisoner. burn the guilds and the prisoner stirs",
+     "variants": [
+      "or flip it. the guilds were the ward and xanxicar the prisoner. burn the guilds and the prisoner stirs",
+      "maybe the mages were the lock and the dragon was the thing locked in. kill the mages, the ward weakens"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "then why is he still sitting in his cave instead of flying over camelot",
+     "variants": [
+      "then why is he still sitting in his cave instead of flying over camelot",
+      "then why hasnt he left. he could be eating cotswold by now"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "a ward half broken still holds the door. maybe the lightning is what's left of the old spell",
+     "variants": [
+      "a ward half broken still holds the door. maybe the lightning is what's left of the old spell",
+      "broken wards still bite. the lightning could be the last of it, working on its own"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "you two are arguing about a dragon that fills its own cave with lightning. leave it alone",
+     "text": "so if you kill him, does something get out?",
      "variants": [
-      "you two are arguing about a dragon that fills its own cave with lightning. leave it alone",
-      "whatever it guards, it guards it from a room full of lightning. pass"
-     ],
-     "optional": false
-    },
-    {
-     "role": "A",
-     "text": "a cave that fills with lightning if you stay too long. that's a timer on a door",
-     "variants": [
-      "a cave that fills with lightning if you stay too long. that's a timer on a door",
-      "a dragon that doesn't want guests to linger. that's the strange part"
+      "so if you kill him, does something get out?",
+      "so killing him might let something loose?"
      ],
      "optional": true
     },
     {
      "role": "B",
-     "text": "or a dragon with a temper. two tempers, actually",
+     "text": "raids have dropped him and the only thing that came out of the crystal cave was the raid, carrying loot",
      "variants": [
-      "or a dragon with a temper. two tempers, actually",
-      "or it's just in a bad mood. both heads"
+      "raids have dropped him and the only thing that came out of the crystal cave was the raid, carrying loot",
+      "every raid that downs him gets loot and a long ride home. nothing has crawled out yet"
      ],
      "optional": false
     },
     {
      "role": "C",
-     "text": "say what you like. mist, a lady in the marsh, a dragon in the cellar. that's a locked house",
+     "text": "yet. the drakoran never left those ruins. ask yourself what they're still digging for",
      "variants": [
-      "say what you like. mist, a lady in the marsh, a dragon in the cellar. that's a locked house",
-      "i think avalon was hidden on purpose and xanxicar was part of it"
+      "yet. the drakoran never left those ruins. ask yourself what they're still digging for",
+      "that we know of. the drakoran are still in the city, still searching for something"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "this is better than another argument about drop tables honestly",
+     "variants": [
+      "this is better than another argument about drop tables honestly",
+      "i like this more than the loot debates"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "fine. next time a raid goes down there i'll watch the drakoran when he falls. if they cheer, i owe you a drink",
+     "variants": [
+      "fine. next time a raid goes down there i'll watch the drakoran when he falls. if they cheer, i owe you a drink",
+      "next raid i'll keep an eye on the drakoran when he drops. if they look relieved, you win"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "and count the seconds to the lightning. a storm doesnt count. a ward does",
+     "variants": [
+      "and count the seconds to the lightning. a storm doesnt count. a ward does",
+      "time the lightning while you're at it. if it keeps a clock, i'm right"
      ],
      "optional": false
     }
@@ -521654,7 +521983,7 @@
    "topic": "lore_dragon",
    "realm": "alb",
    "levels": [
-    30,
+    1,
     50
    ],
    "roles": {
@@ -521662,7 +521991,11 @@
      "type": [
       "NoLifer"
      ],
-     "class": []
+     "class": [],
+     "levels": [
+      30,
+      50
+     ]
     },
     "C": {
      "type": [
@@ -521673,81 +522006,221 @@
     },
     "D": {
      "type": [],
-     "class": []
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "E": {
+     "type": [],
+     "class": [
+      "Minstrel"
+     ]
     }
    },
    "beats": [
     {
      "role": "A",
-     "text": "settle it for me. golestandt, he or she",
+     "text": "{q} settle a guild fight for me. golestandt, he or she",
      "variants": [
-      "settle it for me. golestandt, he or she",
-      "{q} is golestandt a he or a she, my guild is split down the middle"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "she. the heralds say she, the bards say she, end of story",
-     "variants": [
-      "she. the heralds say she, the bards say she, end of story",
-      "it's she. every herald and every song says so"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "every raid story i ever heard calls him he",
-     "variants": [
-      "every raid story i ever heard calls him he",
-      "half the raid tales i know say he. the old timers swear by it"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "raiders call everything he. they call the barrow wights he",
-     "variants": [
-      "raiders call everything he. they call the barrow wights he",
-      "anything with teeth is a he to a raid leader, that proves nothing"
+      "{q} settle a guild fight for me. golestandt, he or she",
+      "my guild has argued for an hour. is golestandt a he or a she"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "does it matter? the breath burns the same either way",
+     "text": "who's golestandt?",
      "variants": [
-      "does it matter? the breath burns the same either way",
-      "the breath feels the same whether it's a he or a she"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "it matters to the bards. you can't write a ballad about an it",
-     "variants": [
-      "it matters to the bards. you can't write a ballad about an it",
-      "matters if you're the one writing the song"
-     ],
-     "optional": false
-    },
-    {
-     "role": "D",
-     "text": "write it as the dragon and keep everyone happy",
-     "variants": [
-      "write it as the dragon and keep everyone happy",
-      "just say the dragon. diplomacy"
+      "who's golestandt?",
+      "golestandt? is that a boss?"
      ],
      "optional": true
     },
     {
-     "role": "A",
-     "text": "still split. i'm saying she to be safe, she might be listening",
+     "role": "B",
+     "text": "albion's dragon. the stone dragon at the south edge of dartmoor, past the granite giants. and she. every herald writes she",
      "variants": [
-      "still split. i'm saying she to be safe, she might be listening",
-      "fine, she, in case it can hear us from dartmoor"
+      "albion's dragon. the stone dragon at the south edge of dartmoor, past the granite giants. and she. every herald writes she",
+      "our dragon. south end of dartmoor, a dragon like living rock. and it's she, the heralds always wrote she"
      ],
      "optional": false
+    },
+    {
+     "role": "C",
+     "text": "every raid leader i ever followed said he. \"he's turning, he's breathing, spread out\"",
+     "variants": [
+      "every raid leader i ever followed said he. \"he's turning, he's breathing, spread out\"",
+      "funny, the raid leaders i rode with all said he. \"he's lifting his head, scatter\""
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "raid leaders call everything he. i heard one call the king's wight a she once and nobody blinked",
+     "variants": [
+      "raid leaders call everything he. i heard one call the king's wight a she once and nobody blinked",
+      "a raid leader would call a door he if it hit hard enough"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "the songs say she. there's an old minstrel verse about the stone mother of dartmoor. you dont sing a mother as a he",
+     "variants": [
+      "the songs say she. there's an old minstrel verse about the stone mother of dartmoor. you dont sing a mother as a he",
+      "minstrels have sung her as the stone mother for years. nobody rhymes a mother with he"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "since when do minstrels get facts right. one of you sang that i soloed a giant",
+     "variants": [
+      "since when do minstrels get facts right. one of you sang that i soloed a giant",
+      "minstrels also sing that the merchants in camelot are fair"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "why does it even matter?",
+     "variants": [
+      "why does it even matter?",
+      "does it change anything in the fight?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "it matters because a name was all we had. sir arward's thirty knights rode into dartmoor and the only word that came back was hers",
+     "variants": [
+      "it matters because a name was all we had. sir arward's thirty knights rode into dartmoor and the only word that came back was hers",
+      "the name came first. sir arward led thirty knights into the moor and all that returned was a journal with one word: golestandt"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "and that journal didnt say he or she. one singed word, fallen out of the sky over prydwen keep",
+     "variants": [
+      "and that journal didnt say he or she. one singed word, fallen out of the sky over prydwen keep",
+      "one word and no pronoun. the page dropped out of the sky at prydwen, half burnt"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "there you go. the only witness never said she. the heralds decided later",
+     "variants": [
+      "there you go. the only witness never said she. the heralds decided later",
+      "the one real witness never said. so \"she\" came from someone who wasnt there"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "the heralds wrote the dartmoor story. if anyone decides, it's them",
+     "variants": [
+      "the heralds wrote the dartmoor story. if anyone decides, it's them",
+      "the people who wrote her lore say she. thats as close to a witness as we get"
+     ],
+     "optional": false
+    },
+    {
+     "role": "~",
+     "pause": 15
+    },
+    {
+     "role": "C",
+     "text": "midgard cant decide about theirs either. half of them say he for the wolf-headed one and half say she",
+     "variants": [
+      "midgard cant decide about theirs either. half of them say he for the wolf-headed one and half say she",
+      "the mids argue the same thing about their wolf dragon. its a dragon thing, not an albion thing"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "and a hib once told me their glimmer king is the only male dragon of the three. king, so that one's easy",
+     "variants": [
+      "and a hib once told me their glimmer king is the only male dragon of the three. king, so that one's easy",
+      "some hib swore their glimmer king is the only he among the dragons. a king. fair enough"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "what does she actually do to you? the breath?",
+     "variants": [
+      "what does she actually do to you? the breath?",
+      "so how does the fight go, is it the fire breath?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "two breaths. a patch put a heat debuff on her breath so the next one hurts more, i think. a later patch softened one of them",
+     "variants": [
+      "two breaths. a patch put a heat debuff on her breath so the next one hurts more, i think. a later patch softened one of them",
+      "she breathes twice and the first strips your heat resist, as i understand it. one breath got toned down later, still hurts"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "and he drops fifty luminescent stones for respecs. half the raid is there for the stones, not the pronoun",
+     "variants": [
+      "and he drops fifty luminescent stones for respecs. half the raid is there for the stones, not the pronoun",
+      "and the stones. fifty respec stones a kill. nobody asks he or she when the stones drop"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "in the old tale uther took the name pendragon when a star shaped like a dragon crossed the sky. albion has always argued about dragons",
+     "variants": [
+      "in the old tale uther took the name pendragon when a star shaped like a dragon crossed the sky. albion has always argued about dragons",
+      "uther was called pendragon after the dragon star he saw. our kings have been arguing about dragons since the beginning"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "pendragon, chief dragon. and uther was a he, by the way",
+     "variants": [
+      "pendragon, chief dragon. and uther was a he, by the way",
+      "and uther was very much a he. just saying"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "uther is a shade in the barrows. she is alive in dartmoor. different argument",
+     "variants": [
+      "uther is a shade in the barrows. she is alive in dartmoor. different argument",
+      "uther haunts the barrows. she lives on the moor. not the same file"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "still split then. i'm calling her she, in case she can hear us from the moor",
+     "variants": [
+      "still split then. i'm calling her she, in case she can hear us from the moor",
+      "ok. she, to be safe. dartmoor is closer than it looks"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "the next verse says \"the dragon\". everyone pays, everyone's happy",
+     "variants": [
+      "the next verse says \"the dragon\". everyone pays, everyone's happy",
+      "i'll write the ballad as \"the dragon\" and keep both camps buying me ale"
+     ],
+     "optional": true
     }
    ],
    "needs": []
@@ -521757,7 +522230,7 @@
    "topic": "lore_cardova",
    "realm": "alb",
    "levels": [
-    15,
+    1,
     50
    ],
    "roles": {
@@ -521771,85 +522244,248 @@
      "type": [
       "NoLifer"
      ],
-     "class": []
+     "class": [],
+     "levels": [
+      30,
+      50
+     ]
     },
     "D": {
      "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "E": {
+     "type": [
+      "Socialite",
+      "Daredevil"
+     ],
      "class": []
     }
    },
    "beats": [
     {
      "role": "A",
-     "text": "{q} who is the emperor nobody can name in cardova",
+     "text": "{q} how does a crypt hold an emperor nobody can name. cardova bugs me",
      "variants": [
-      "{q} who is the emperor nobody can name in cardova",
-      "random thought, how does a crypt hold an emperor nobody can name"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "the scribes wrote it plain. a roman emperor, buried in cornwall, name lost",
-     "variants": [
-      "the scribes wrote it plain. a roman emperor, buried in cornwall, name lost",
-      "cornwall buried an emperor and then forgot him. that's the whole record"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "but emperor seleucus is right there with a name on him",
-     "variants": [
-      "but emperor seleucus is right there with a name on him",
-      "seleucus is down there and he has a name, so it isn't him"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "there's a forgotten emperor too, and a spirit of the emperor. three emperors, one name between them",
-     "variants": [
-      "there's a forgotten emperor too, and a spirit of the emperor. three emperors, one name between them",
-      "seleucus, the forgotten one, the spirit. that crypt is crowded with emperors"
+      "{q} how does a crypt hold an emperor nobody can name. cardova bugs me",
+      "cardova question. the lore says a roman emperor no one can name lies there. how do you lose an emperor"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "maybe seleucus is the one they remembered and the forgotten one was the real ruler",
+     "text": "cardova is the place in cornwall with the roman dead, right?",
      "variants": [
-      "maybe seleucus is the one they remembered and the forgotten one was the real ruler",
-      "i think the forgotten one is the true emperor and seleucus took his seat"
+      "cardova is the place in cornwall with the roman dead, right?",
+      "is cardova the roman crypt under cornwall? i havent been yet"
      ],
-     "optional": false
+     "optional": true
     },
     {
      "role": "C",
-     "text": "or seleucus is a usurper's name carved over a real emperor's bones",
+     "text": "cardova, yes. legionaries, centurions, praetorians, all dead and still standing their posts",
      "variants": [
-      "or seleucus is a usurper's name carved over a real emperor's bones",
-      "or the name was scraped off and the guards made one up"
+      "cardova, yes. legionaries, centurions, praetorians, all dead and still standing their posts",
+      "the crypts under cornwall. dead legionaries and centurions and the princeps praetorii, a legion that never got the order to stand down"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "either way the praetorians down there still know who they serve. we don't",
+     "text": "and the story says it plainly: an emperor of rome buried in cornwall, and his name lost. not hidden. lost",
      "variants": [
-      "either way the praetorians down there still know who they serve. we don't",
-      "the dead legion knows. ask one, i dare you"
+      "and the story says it plainly: an emperor of rome buried in cornwall, and his name lost. not hidden. lost",
+      "the lore is simple. an emperor of rome lies in cornwall and nobody can name him. that's the whole record"
      ],
-     "optional": true
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "except emperor seleucus is right there with his name over his head. a named emperor, in the crypt. solved",
+     "variants": [
+      "except emperor seleucus is right there with his name over his head. a named emperor, in the crypt. solved",
+      "but emperor seleucus is down there, name and all. there's your emperor"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "and a few halls away the forgotten emperor, and the spirit of the emperor. three emperors in one crypt, one name between them",
+     "variants": [
+      "and a few halls away the forgotten emperor, and the spirit of the emperor. three emperors in one crypt, one name between them",
+      "then explain the forgotten emperor. and the spirit of the emperor. three crowns and one name"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "three emperors in one basement and still not one of them can tell you where the exit is",
+     "variants": [
+      "three emperors in one basement and still not one of them can tell you where the exit is",
+      "three emperors, one tomb. sounds like the queue at the camelot smith"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "seleucus isnt even a roman name. greek kings used it. smells like a pretender who took the chair when the real one died",
+     "variants": [
+      "seleucus isnt even a roman name. greek kings used it. smells like a pretender who took the chair when the real one died",
+      "seleucus sounds greek, not roman. a usurper's name, or a guard's joke"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "there you go. seleucus is the name on the throne, the forgotten one is the man who earned it",
+     "variants": [
+      "there you go. seleucus is the name on the throne, the forgotten one is the man who earned it",
+      "so the one with the name is the pretender and the forgotten one is the true emperor"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "why would rome bury an emperor in cornwall though? isnt rome far away?",
+     "variants": [
+      "why would rome bury an emperor in cornwall though? isnt rome far away?",
+      "wait, why is a roman emperor buried out in cornwall at all?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "rome held this land for centuries. hadrian's wall in the north, pillars in the marsh, centurion favius still drilling out in cornwall",
+     "variants": [
+      "rome held this land for centuries. hadrian's wall in the north, pillars in the marsh, centurion favius still drilling out in cornwall",
+      "the romans were everywhere here. their wall up north, their pillars in the marsh, centurion favius still marching in cornwall"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "and rome had a custom for hated emperors. they chiselled the name off every stone and coin. the old books call it condemnation of memory",
+     "variants": [
+      "and rome had a custom for hated emperors. they chiselled the name off every stone and coin. the old books call it condemnation of memory",
+      "rome used to scrape a hated emperor's name off every monument. maybe it was done to him, on purpose"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "then he was punished, not mysterious. some failed emperor dumped at the edge of the world",
+     "variants": [
+      "then he was punished, not mysterious. some failed emperor dumped at the edge of the world",
+      "so he wasnt lost, he was erased. a bad emperor thrown in a provincial hole"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "and his legion still guards him. men dont guard a hated emperor for a thousand years",
+     "variants": [
+      "and his legion still guards him. men dont guard a hated emperor for a thousand years",
+      "hated by rome, maybe. not by his men. they're still at their posts"
+     ],
+     "optional": false
+    },
+    {
+     "role": "~",
+     "pause": 15
+    },
+    {
+     "role": "C",
+     "text": "the dead guard crypts because thats what dead things do in albion. the barrows have guards, mithra has guards",
+     "variants": [
+      "the dead guard crypts because thats what dead things do in albion. the barrows have guards, mithra has guards",
+      "skeletons standing guard is the most normal thing in albion. every barrow has them"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "the barrow wights are a rabble. cardova keeps rank. amminus pilus, taras princep praetorii, crotus, olivarius. that's a court",
+     "variants": [
+      "the barrow wights are a rabble. cardova keeps rank. amminus pilus, taras princep praetorii, crotus, olivarius. that's a court",
+      "look at the names down there. pilus, princeps, praetorii, all in order. thats a court still serving"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "is the forgotten emperor hard?",
+     "variants": [
+      "is the forgotten emperor hard?",
+      "can a group my level take the forgotten emperor?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "he's no dragon. it's the praetorians in the tight halls that wipe groups, and the pulls on the stairs",
+     "variants": [
+      "he's no dragon. it's the praetorians in the tight halls that wipe groups, and the pulls on the stairs",
+      "not hard as emperors go. the guards in the corridors are what kill you"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "bring a cleric who likes stairs. cardova is all stairs and regret",
+     "variants": [
+      "bring a cleric who likes stairs. cardova is all stairs and regret",
+      "bring a healer and a sense of direction. cardova eats both"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "the old belief is that a soul whose name is forgotten cant rest. nobody says his name, so he walks",
+     "variants": [
+      "the old belief is that a soul whose name is forgotten cant rest. nobody says his name, so he walks",
+      "they say a soul nobody can name can never sleep. so the forgotten one stays up"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "by that logic every alt i ever deleted is haunting something",
+     "variants": [
+      "by that logic every alt i ever deleted is haunting something",
+      "then my forgotten alts should be haunting somebody too"
+     ],
+     "optional": false
     },
     {
      "role": "A",
-     "text": "so nobody knows and the dead won't tell. typical cornwall",
+     "text": "so the dead know and they wont tell. typical cornwall",
      "variants": [
-      "so nobody knows and the dead won't tell. typical cornwall",
-      "no answers, just more emperors. classic cardova"
+      "so the dead know and they wont tell. typical cornwall",
+      "nobody knows, the dead wont say, cornwall shrugs. sounds right"
      ],
      "optional": false
+    },
+    {
+     "role": "B",
+     "text": "next run i'm reading the walls instead of the loot. if a name was scraped off a stone, the scrape is still there",
+     "variants": [
+      "next run i'm reading the walls instead of the loot. if a name was scraped off a stone, the scrape is still there",
+      "i'm going down with a scout to look at the stonework. a chiselled-off name leaves marks"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "if you find it, keep it quiet. the last thing we need is a fourth emperor",
+     "variants": [
+      "if you find it, keep it quiet. the last thing we need is a fourth emperor",
+      "find a name and some bard will have a fourth emperor by friday"
+     ],
+     "optional": true
     }
    ],
    "needs": []
@@ -521859,15 +522495,20 @@
    "topic": "lore_merlin",
    "realm": "alb",
    "levels": [
-    25,
+    1,
     50
    ],
    "roles": {
     "B": {
      "type": [
-      "NoLifer"
+      "NoLifer",
+      "Leveler"
      ],
-     "class": []
+     "class": [],
+     "levels": [
+      25,
+      50
+     ]
     },
     "C": {
      "type": [
@@ -521876,93 +522517,243 @@
      "class": []
     },
     "D": {
-     "type": [
-      "Socialite"
-     ],
-     "class": []
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "E": {
+     "type": [],
+     "class": [
+      "Wizard",
+      "Theurgist",
+      "Sorcerer",
+      "Cabalist"
+     ]
     }
    },
    "beats": [
     {
      "role": "A",
-     "text": "merlin is not dead. i will die on this hill",
+     "text": "{q} merlin is not dead. i will die on this hill",
      "variants": [
-      "merlin is not dead. i will die on this hill",
-      "{q} does anyone still believe merlin is in his barrow"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "then why is it called the barrow of merlin",
-     "variants": [
-      "then why is it called the barrow of merlin",
-      "his name is on the barrow. nobody names a tomb after the living"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "uther's shade walks down there, the king's wight too. nobody has seen merlin's",
-     "variants": [
-      "uther's shade walks down there, the king's wight too. nobody has seen merlin's",
-      "i've seen the shade of uther pendragon. never once a sign of merlin"
-     ],
-     "optional": false
-    },
-    {
-     "role": "A",
-     "text": "exactly. an empty barrow with a famous name. he left",
-     "variants": [
-      "exactly. an empty barrow with a famous name. he left",
-      "so it's empty. he walked out, like he always did"
+      "{q} merlin is not dead. i will die on this hill",
+      "does anyone still think merlin is lying in his barrow under stonehenge"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "an old bard told me wizard lichas was his apprentice, left behind to keep the door",
+     "text": "merlin has a grave in this game? where?",
      "variants": [
-      "an old bard told me wizard lichas was his apprentice, left behind to keep the door",
-      "i heard lichas is the student who stayed when merlin sealed it"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "or lichas is what's left of the old man and nobody wants to say it",
-     "variants": [
-      "or lichas is what's left of the old man and nobody wants to say it",
-      "maybe lichas is merlin. tell me you haven't thought it"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "merlin would never go lich, he had better taste",
-     "variants": [
-      "merlin would never go lich, he had better taste",
-      "merlin as a lich? he'd sooner be a toad"
-     ],
-     "optional": false
-    },
-    {
-     "role": "D",
-     "text": "he left his staff for us to guard. that's a man planning to come back",
-     "variants": [
-      "he left his staff for us to guard. that's a man planning to come back",
-      "the staff is still our relic. he meant to collect it"
+      "merlin has a grave in this game? where?",
+      "wait, merlin is buried somewhere we can go?"
      ],
      "optional": true
     },
     {
-     "role": "A",
-     "text": "believe what you like. i still nod to the stones when i pass",
+     "role": "B",
+     "text": "the stonehenge barrows, under salisbury plains. the heart of it is the barrow of merlin. his name on his tomb. dead",
      "variants": [
-      "believe what you like. i still nod to the stones when i pass",
-      "i'll keep checking the barrows. somebody has to"
+      "the stonehenge barrows, under salisbury plains. the heart of it is the barrow of merlin. his name on his tomb. dead",
+      "stonehenge barrows in salisbury. the middle of it is called the barrow of merlin. nobody names a tomb after a living man"
      ],
      "optional": false
+    },
+    {
+     "role": "C",
+     "text": "and who do you meet down there? the shade of uther pendragon, the king's wight, wizard lichas. never once merlin",
+     "variants": [
+      "and who do you meet down there? the shade of uther pendragon, the king's wight, wizard lichas. never once merlin",
+      "the barrows hold uther's shade, the king's wight and wizard lichas. i've walked every hall. no merlin"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "shades are what's left when the body rots. maybe there's nothing of him left to walk",
+     "variants": [
+      "shades are what's left when the body rots. maybe there's nothing of him left to walk",
+      "maybe he's dust. not every great man comes back as a shade"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "read the realm's own story. after arthur fell, merlin was seen no more. thats how you write a man who left, not one who died",
+     "variants": [
+      "read the realm's own story. after arthur fell, merlin was seen no more. thats how you write a man who left, not one who died",
+      "the realm lore says merlin is seen no more. not dead, not buried. seen no more"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "and in the old tale he didnt die either. nimue learned his own spells and sealed him away, in a tree or a cave or a prison of air",
+     "variants": [
+      "and in the old tale he didnt die either. nimue learned his own spells and sealed him away, in a tree or a cave or a prison of air",
+      "the old tale has the lady of the lake learning his magic and shutting him in. a tree, a cave, a cell of air. alive, just stuck"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "nimue? like the lady who wanders around the marsh?",
+     "variants": [
+      "nimue? like the lady who wanders around the marsh?",
+      "is that the same lady nimue who walks around at night?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "the same. she walks camelot hills, campacorentin, the marsh and snowdonia. snowdonia, where castle myrddin keeps his staff",
+     "variants": [
+      "the same. she walks camelot hills, campacorentin, the marsh and snowdonia. snowdonia, where castle myrddin keeps his staff",
+      "the very same. and her path runs through snowdonia, right past castle myrddin where merlin's staff sits as our relic"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "she hands wizards their quests on a clock. if she's guarding merlin she's very relaxed about it",
+     "variants": [
+      "she hands wizards their quests on a clock. if she's guarding merlin she's very relaxed about it",
+      "she's a quest giver on a schedule, not a jailer on patrol"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "i've done her lake quests. she talks like someone who has kept a secret for a very long time",
+     "variants": [
+      "i've done her lake quests. she talks like someone who has kept a secret for a very long time",
+      "her quests are all about the lake and the old magic. she knows more than an errand giver should"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "then who named the barrow? someone buried him there, or believed they did",
+     "variants": [
+      "then who named the barrow? someone buried him there, or believed they did",
+      "then why is the barrow his. somebody thought he was in it"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "in the old story merlin brought those stones over the sea himself to mark the graves of kings. his barrow because he built it",
+     "variants": [
+      "in the old story merlin brought those stones over the sea himself to mark the graves of kings. his barrow because he built it",
+      "the old tale says merlin carried the stones from across the water for a royal grave. he made the barrow, he didnt fill it"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "and the old chronicles bury uther inside that ring of stones. look who walks the barrows: uther's shade. that part they got right",
+     "variants": [
+      "and the old chronicles bury uther inside that ring of stones. look who walks the barrows: uther's shade. that part they got right",
+      "the chronicles put uther's grave in the stone ring, and the shade of uther pendragon is down there. the old books were half right"
+     ],
+     "optional": false
+    },
+    {
+     "role": "~",
+     "pause": 15
+    },
+    {
+     "role": "B",
+     "text": "fine, but wizard lichas. a wizard, in merlin's barrow, turned lich. i dont like where that points",
+     "variants": [
+      "fine, but wizard lichas. a wizard, in merlin's barrow, turned lich. i dont like where that points",
+      "and lichas? a wizard gone lich in the barrow of merlin. you see where i'm going"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "merlin would sooner be a toad than a lich. he had style",
+     "variants": [
+      "merlin would sooner be a toad than a lich. he had style",
+      "lichas is no merlin. lichas has a robe full of moths"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "whats a lich anyway?",
+     "variants": [
+      "whats a lich anyway?",
+      "is a lich like a skeleton mage?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "a caster who cheated death by keeping his life outside his body. exactly the kind of trick an old wizard would study",
+     "variants": [
+      "a caster who cheated death by keeping his life outside his body. exactly the kind of trick an old wizard would study",
+      "a mage who hides his own life somewhere safe and keeps walking. old wizards love that sort of reading"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "so you admit it. merlin's in there with a new face",
+     "variants": [
+      "so you admit it. merlin's in there with a new face",
+      "so lichas could be what's left of merlin"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "lichas is the apprentice who stayed behind to keep the door. my old guild's minstrel swore to it",
+     "variants": [
+      "lichas is the apprentice who stayed behind to keep the door. my old guild's minstrel swore to it",
+      "i was always told lichas was a student who stayed to guard the barrow when merlin left"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "and merlin left his staff with albion. you dont leave your staff behind unless you mean to come back for it",
+     "variants": [
+      "and merlin left his staff with albion. you dont leave your staff behind unless you mean to come back for it",
+      "either way, the staff stayed with us. a wizard doesnt leave his staff unless he plans to return"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "or he died holding it and someone picked it up",
+     "variants": [
+      "or he died holding it and someone picked it up",
+      "or he couldnt carry it any more"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "i still nod to the stones when i ride across salisbury. just in case",
+     "variants": [
+      "i still nod to the stones when i ride across salisbury. just in case",
+      "i nod at stonehenge every time i pass. if he's listening, i want to be on the list"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "next run i'm knocking on the barrow walls. hollow walls have stories",
+     "variants": [
+      "next run i'm knocking on the barrow walls. hollow walls have stories",
+      "i'll tap the walls of the barrow of merlin next time. something down there sounds hollow"
+     ],
+     "optional": true
     }
    ],
    "needs": []
@@ -521972,23 +522763,38 @@
    "topic": "lore_inconnu",
    "realm": "alb",
    "levels": [
-    20,
+    1,
     50
    ],
    "roles": {
     "B": {
      "type": [],
-     "class": []
+     "class": [
+      "Necromancer"
+     ]
     },
     "C": {
      "type": [
       "NoLifer"
      ],
-     "class": []
+     "class": [],
+     "levels": [
+      25,
+      50
+     ]
     },
     "D": {
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "E": {
      "type": [
-      "Explorer"
+      "Explorer",
+      "Daredevil"
      ],
      "class": []
     }
@@ -521996,86 +522802,203 @@
    "beats": [
     {
      "role": "A",
-     "text": "{q} do we actually trust the inconnu",
+     "text": "{q} honest question. do we actually trust the inconnu",
      "variants": [
-      "{q} do we actually trust the inconnu",
-      "honest question, should albion trust the inconnu at all"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "they fight beside us against the drakoran. good enough for me",
-     "variants": [
-      "they fight beside us against the drakoran. good enough for me",
-      "they took the field with us on avalon. what more do you want"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "they fight for arawn. we're just pointed the same way for now",
-     "variants": [
-      "they fight for arawn. we're just pointed the same way for now",
-      "arawn wants his stolen dead back. we're the tool, not the friend"
+      "{q} honest question. do we actually trust the inconnu",
+      "do we trust the inconnu, or are we just glad they point the same way"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "and the arawnites in the black mountains pray to the same lord. explain that one",
+     "text": "inconnu are the pale ones with the big eyes, right? what's their story?",
      "variants": [
-      "and the arawnites in the black mountains pray to the same lord. explain that one",
-      "there's an eye of arawn in snowdonia. if arawn is our friend why is he watching us"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "every god has fools who follow him wrong. we have them too",
-     "variants": [
-      "every god has fools who follow him wrong. we have them too",
-      "a lord with bad followers. sounds like half of camelot"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "when arawn gets his dead back he'll want payment. guess in what coin",
-     "variants": [
-      "when arawn gets his dead back he'll want payment. guess in what coin",
-      "allies with the lord of the dead? he'll send a bill, and it'll be souls"
-     ],
-     "optional": false
-    },
-    {
-     "role": "D",
-     "text": "i have never once heard an inconnu say thank you",
-     "variants": [
-      "i have never once heard an inconnu say thank you",
-      "the inconnu tell you when, never why"
+      "inconnu are the pale ones with the big eyes, right? what's their story?",
+      "sorry, the inconnu are a race? where did they come from?"
      ],
      "optional": true
     },
     {
-     "role": "A",
-     "text": "so we keep them close and keep one eye open",
+     "role": "C",
+     "text": "they came up from below when the isles opened. arawn, lord of the dead, sent them, because someone was stealing his dead",
      "variants": [
-      "so we keep them close and keep one eye open",
-      "trust them, and count your fingers after"
+      "they came up from below when the isles opened. arawn, lord of the dead, sent them, because someone was stealing his dead",
+      "they're arawn's people. arawn rules the underworld, someone has been stealing his dead, so he sent the inconnu to help us"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "and before anyone sneers, my whole class answers to arawn. the necromancers of albion have served him since the realm began",
+     "variants": [
+      "and before anyone sneers, my whole class answers to arawn. the necromancers of albion have served him since the realm began",
+      "careful. every necromancer in albion draws power from arawn. he was on our side long before the inconnu came up"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "our side. the arawnites in the black mountains pray to him too, and they ambush travellers on the road",
+     "variants": [
+      "our side. the arawnites in the black mountains pray to him too, and they ambush travellers on the road",
+      "arawn has worshippers in the black mountains. arawnite warriors, headhunters, shamanesses. trust them too?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "every lord has bad followers. we have friars who drink",
+     "variants": [
+      "every lord has bad followers. we have friars who drink",
+      "a god with ugly worshippers. sounds like half the churches in camelot"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "and there's an eye of arawn in snowdonia. if he's our friend why is he watching our frontier",
+     "variants": [
+      "and there's an eye of arawn in snowdonia. if he's our friend why is he watching our frontier",
+      "snowdonia has a thing called the eye of arawn. friends dont leave eyes in your yard"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "the war comes over snowdonia. a wise ally keeps an eye where the enemy walks in",
+     "variants": [
+      "the war comes over snowdonia. a wise ally keeps an eye where the enemy walks in",
+      "maybe he watches because thats where the enemy crosses. an ally watches the gate"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "is arawn from the old legends or did someone make him up?",
+     "variants": [
+      "is arawn from the old legends or did someone make him up?",
+      "is arawn a real legend?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "old welsh tale. arawn, king of annwn, the otherworld. a prince called pwyll swapped places with him for a year and a day",
+     "variants": [
+      "old welsh tale. arawn, king of annwn, the otherworld. a prince called pwyll swapped places with him for a year and a day",
+      "welsh legend. arawn ruled annwn, the land of the dead, and traded faces with a mortal prince, pwyll, for a year"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "and pwyll kept faith the whole year, never touched arawn's queen. arawn made him a friend for life. he repays loyalty",
+     "variants": [
+      "and pwyll kept faith the whole year, never touched arawn's queen. arawn made him a friend for life. he repays loyalty",
+      "pwyll kept every promise for a year and arawn never forgot it. a lord who rewards honesty"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "the same tales have his hounds, white with red ears, running down souls. cwn annwn. some of those dogs are loose in our world",
+     "variants": [
+      "the same tales have his hounds, white with red ears, running down souls. cwn annwn. some of those dogs are loose in our world",
+      "and his hounds, cwn annwn, white with red ears, hunting the dead. you can meet them out there. lovely friends"
      ],
      "optional": false
     },
     {
      "role": "~",
-     "pause": 20
+     "pause": 15
+    },
+    {
+     "role": "E",
+     "text": "and caer sidi is from the old poem too. arthur sailed into annwn with three shiploads of men and seven came back",
+     "variants": [
+      "and caer sidi is from the old poem too. arthur sailed into annwn with three shiploads of men and seven came back",
+      "the old poem says arthur raided the fortress of annwn. three ships went in, seven men came out"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "caer sidi sits on the border to his land, packed with imprisoned souls. if arawn is so mighty, why is his own doorstep rotting",
+     "variants": [
+      "caer sidi sits on the border to his land, packed with imprisoned souls. if arawn is so mighty, why is his own doorstep rotting",
+      "his own back door is caer sidi and it's full of trapped souls. some kingdom"
+     ],
+     "optional": false
     },
     {
      "role": "B",
-     "text": "if an inconnu reads this channel we're all in trouble",
+     "text": "because someone is robbing him. that's the whole reason he sent help. you dont send help when you're winning",
      "variants": [
-      "if an inconnu reads this channel we're all in trouble",
-      "careful, they hear more than they let on"
+      "because someone is robbing him. that's the whole reason he sent help. you dont send help when you're winning",
+      "thats why he needs us. a lord who is losing asks for allies"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "and when he wins? a lord of the dead doesnt take thank-you notes. he'll send a bill and i can guess the coin",
+     "variants": [
+      "and when he wins? a lord of the dead doesnt take thank-you notes. he'll send a bill and i can guess the coin",
+      "win his war and then what. lords of the dead get paid in souls"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "i've never once heard an inconnu say thank you. or why. they only ever tell you when",
+     "variants": [
+      "i've never once heard an inconnu say thank you. or why. they only ever tell you when",
+      "inconnu tell you when to charge and never why"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "the inconnu in my guild is the nicest person in it, for what it's worth",
+     "variants": [
+      "the inconnu in my guild is the nicest person in it, for what it's worth",
+      "one of my guildmates is inconnu and she's always the first to help"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "there you go. the newest voice in the realm with the best argument",
+     "variants": [
+      "there you go. the newest voice in the realm with the best argument",
+      "see. the newbie has more sense than the veterans"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "and a friendly face is exactly how a patient lord of the dead would buy trust",
+     "variants": [
+      "and a friendly face is exactly how a patient lord of the dead would buy trust",
+      "if i were the lord of the dead, i'd send the nice ones first"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "so we trust them and count our fingers after",
+     "variants": [
+      "so we trust them and count our fingers after",
+      "trust them, ride with them, keep one eye open"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "if an inconnu reads this channel we're all in trouble. they hear everything",
+     "variants": [
+      "if an inconnu reads this channel we're all in trouble. they hear everything",
+      "careful, the inconnu hear more than they let on"
      ],
      "optional": true
     }
@@ -522087,7 +523010,7 @@
    "topic": "lore_green_knight",
    "realm": "alb",
    "levels": [
-    20,
+    1,
     50
    ],
    "roles": {
@@ -522101,9 +523024,21 @@
      "type": [
       "NoLifer"
      ],
-     "class": []
+     "class": [],
+     "levels": [
+      30,
+      50
+     ]
     },
     "D": {
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "E": {
      "type": [
       "Explorer"
      ],
@@ -522113,75 +523048,232 @@
    "beats": [
     {
      "role": "A",
-     "text": "has anyone ever just talked to the green knight",
+     "text": "{q} what is the green knight actually doing on the sauvage road",
      "variants": [
-      "has anyone ever just talked to the green knight",
-      "{q} what is the green knight actually doing on the sauvage road"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "standing there daring someone to swing. i respect it",
-     "variants": [
-      "standing there daring someone to swing. i respect it",
-      "waiting for someone brave enough. that'll be me one day"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "the old tale says he offers a blow for a blow, and the second blow comes a year later",
-     "variants": [
-      "the old tale says he offers a blow for a blow, and the second blow comes a year later",
-      "in the story you take his head off, he picks it up and books you for next year"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "so i get the first swing for free? sounds like a deal",
-     "variants": [
-      "so i get the first swing for free? sounds like a deal",
-      "free first hit sounds great, what's the catch"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "the catch is he picks his head back up",
-     "variants": [
-      "the catch is he picks his head back up",
-      "the catch is the part where he doesn't die"
+      "{q} what is the green knight actually doing on the sauvage road",
+      "does anyone know why the green knight just stands in forest sauvage"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "he's neutral for a reason. some things in albion are older than our quarrels",
+     "text": "there's a green knight? like from the story?",
      "variants": [
-      "he's neutral for a reason. some things in albion are older than our quarrels",
-      "i rode past him once. he looked through me like i was weather"
+      "there's a green knight? like from the story?",
+      "the green knight from the old poem? he's here?"
+     ],
+     "optional": true
+    },
+    {
+     "role": "E",
+     "text": "out in forest sauvage, not far from castle sauvage. a tall knight in green plate with a green blade, standing there, bothering nobody",
+     "variants": [
+      "out in forest sauvage, not far from castle sauvage. a tall knight in green plate with a green blade, standing there, bothering nobody",
+      "in the frontier, sauvage. tall, green plate, green sword. he doesnt aggro, he just stands and watches the road"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "i heard about a raid that tried him. the story always stops halfway",
+     "text": "standing there daring someone to swing first. i respect it",
      "variants": [
-      "i heard about a raid that tried him. the story always stops halfway",
-      "three groups went at him once, so they say. nobody tells the end"
+      "standing there daring someone to swing first. i respect it",
+      "waiting for someone brave enough to start it. one day that's me"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "he cons purple to every one of us. a patch made him as tough as midgard's glacier giant. that's not a dare, it's a warning",
+     "variants": [
+      "he cons purple to every one of us. a patch made him as tough as midgard's glacier giant. that's not a dare, it's a warning",
+      "they toughened him in a patch to glacier giant strength. he's not a dare, he's a wall"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "what happens in the story he's from?",
+     "variants": [
+      "what happens in the story he's from?",
+      "whats the old story?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "a knight in green rides into arthur's hall at the yule feast and offers a game: strike me once, and in a year and a day i strike you back",
+     "variants": [
+      "a knight in green rides into arthur's hall at the yule feast and offers a game: strike me once, and in a year and a day i strike you back",
+      "a stranger all in green rides into the yule feast. one free blow, he says, and you take mine back in a year and a day"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "young gawain takes his head off. the knight picks it up by the hair and the head tells him: come find me at the green chapel",
+     "variants": [
+      "young gawain takes his head off. the knight picks it up by the hair and the head tells him: come find me at the green chapel",
+      "gawain cuts his head clean off. the knight lifts it and the head says see you next year"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "so the first swing is free. you all heard it",
+     "variants": [
+      "so the first swing is free. you all heard it",
+      "free first hit. sounds like a deal to me"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "the free swing is the trap. the whole point of the tale is that he doesnt die, and you owe him",
+     "variants": [
+      "the free swing is the trap. the whole point of the tale is that he doesnt die, and you owe him",
+      "the catch is in the tale. he doesnt die and you've just signed for his return blow"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "and gawain only lived because he came back honest. two feints and a nick on the neck",
+     "variants": [
+      "and gawain only lived because he came back honest. two feints and a nick on the neck",
+      "gawain lived because he kept his word. two feints, a nick on the neck, and a lesson"
+     ],
+     "optional": false
+    },
+    {
+     "role": "~",
+     "pause": 15
+    },
+    {
+     "role": "C",
+     "text": "i watched three groups go at him on a quiet frontier night once. death spam for a full minute, then he went back to standing",
+     "variants": [
+      "i watched three groups go at him on a quiet frontier night once. death spam for a full minute, then he went back to standing",
+      "three groups tried him while i was passing once. the death spam scrolled for ages. then the road was quiet again"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "three groups is a warm-up. bring a proper raid and he falls",
+     "variants": [
+      "three groups is a warm-up. bring a proper raid and he falls",
+      "three groups is not a raid. bring forty and see"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "and get what? no keep, no relic, no realm points. you'd be killing a neighbour for a bad story",
+     "variants": [
+      "and get what? no keep, no relic, no realm points. you'd be killing a neighbour for a bad story",
+      "for what? he guards nothing. a neighbour who never bothered anyone"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "so he's not an enemy?",
+     "variants": [
+      "so he's not an enemy?",
+      "so is he on our side or not?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "neither. look at who lives around him: fellwoods, walking trees, the gold oaken fellwood, a fallen druid seer",
+     "variants": [
+      "neither. look at who lives around him: fellwoods, walking trees, the gold oaken fellwood, a fallen druid seer",
+      "neutral. look at his neighbours. fellwoods, the gold oaken fellwood, a fallen druid seer. he belongs to the forest"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "i think he's the old green man of the woods, the face with leaves for a beard, in armour. the fellwoods are his court",
+     "variants": [
+      "i think he's the old green man of the woods, the face with leaves for a beard, in armour. the fellwoods are his court",
+      "the green man carved in old church roofs, put in plate. thats my guess. sauvage is his and the fellwoods are his household"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "the poem never made him a tree. he was a lord, bertilak, under a witch's spell, sent to test arthur's court",
+     "variants": [
+      "the poem never made him a tree. he was a lord, bertilak, under a witch's spell, sent to test arthur's court",
+      "in the old poem he's a lord under an enchantment, sent by a witch to scare the round table. not a tree king"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "spell or not, the head comes off. i've read the story",
+     "variants": [
+      "spell or not, the head comes off. i've read the story",
+      "fine, a lord under a spell. still has a head i can take"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "and the return blow comes a year and a day later. while you're shopping in cotswold",
+     "variants": [
+      "and the return blow comes a year and a day later. while you're shopping in cotswold",
+      "then a year on, he finds you. probably while you're at the bank in camelot"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "someone said a fellwood quest out there gives a grail shaped charm. is that a joke?",
+     "variants": [
+      "someone said a fellwood quest out there gives a grail shaped charm. is that a joke?",
+      "i heard there's a grail shaped charm of fellwood out there. is that real?"
      ],
      "optional": true
     },
     {
-     "role": "A",
-     "text": "so the advice is nod and keep riding",
+     "role": "E",
+     "text": "real. somebody in that forest has read the old tales and laughs at them",
      "variants": [
-      "so the advice is nod and keep riding",
-      "right. nod politely and keep walking"
+      "real. somebody in that forest has read the old tales and laughs at them",
+      "real enough. the grail shaped charm of fellwood. that forest has a sense of humour"
      ],
      "optional": false
+    },
+    {
+     "role": "A",
+     "text": "so the advice is nod politely and keep riding",
+     "variants": [
+      "so the advice is nod politely and keep riding",
+      "right. nod, keep riding, owe nobody a blow"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "i'll nod. for now. one day i'm bringing a raid and a bard to write it down",
+     "variants": [
+      "i'll nod. for now. one day i'm bringing a raid and a bard to write it down",
+      "i'll nod this time. but one day it's a raid and a minstrel taking notes"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "tell the bard to write the second verse too. the one where he picks his head up",
+     "variants": [
+      "tell the bard to write the second verse too. the one where he picks his head up",
+      "make sure the song covers what happens a year later"
+     ],
+     "optional": true
     }
    ],
    "needs": []
@@ -522191,7 +523283,7 @@
    "topic": "lore_afanc",
    "realm": "alb",
    "levels": [
-    30,
+    1,
     50
    ],
    "roles": {
@@ -522205,9 +523297,21 @@
      "type": [
       "Leveler"
      ],
-     "class": []
+     "class": [],
+     "levels": [
+      30,
+      50
+     ]
     },
     "D": {
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "E": {
      "type": [
       "Explorer"
      ],
@@ -522217,75 +523321,214 @@
    "beats": [
     {
      "role": "A",
-     "text": "{q} anyone know what the legendary afanc drops",
+     "text": "{q} what does the legendary afanc actually drop. my guild says three different things",
      "variants": [
-      "{q} anyone know what the legendary afanc drops",
-      "is the legendary afanc worth it or just a story with teeth"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "a crafter i know swears it drops a scale that never rusts",
-     "variants": [
-      "a crafter i know swears it drops a scale that never rusts",
-      "heard it drops a hide that sheds water, best leather in the realm, if it's real"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "heard it drops a wet sack and a long walk back",
-     "variants": [
-      "heard it drops a wet sack and a long walk back",
-      "i heard it drops nothing but trouble and lake weed"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "maybe someone made the scale up to sell fakes in camelot",
-     "variants": [
-      "maybe someone made the scale up to sell fakes in camelot",
-      "the hide might be a story, but somebody's selling one in camelot"
+      "{q} what does the legendary afanc actually drop. my guild says three different things",
+      "is the legendary afanc worth killing or is it a story with teeth"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "forget the loot. arthur pulled one out of that lake. is this the same one",
+     "text": "whats an afanc?",
      "variants": [
-      "forget the loot. arthur pulled one out of that lake. is this the same one",
-      "the real question is whether it's arthur's afanc or its grandchild"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "there are hatchlings in that lake. it's a family business",
-     "variants": [
-      "there are hatchlings in that lake. it's a family business",
-      "with all those hatchlings in there, grandchildren at least"
-     ],
-     "optional": false
-    },
-    {
-     "role": "D",
-     "text": "there's a stone with a hoof print up the hill. that's arthur's horse, they say",
-     "variants": [
-      "there's a stone with a hoof print up the hill. that's arthur's horse, they say",
-      "the hoof print stone says arthur was there. good enough for me"
+      "whats an afanc?",
+      "afanc? never heard of it"
      ],
      "optional": true
     },
     {
-     "role": "A",
-     "text": "no loot, a lot of history. sounds like albion",
+     "role": "E",
+     "text": "a lake monster out of the welsh tales. ours lives in llyn barfog, with its hatchlings swimming all over the shallows",
      "variants": [
-      "no loot, a lot of history. sounds like albion",
-      "fine, i'll go look at it. from the shore"
+      "a lake monster out of the welsh tales. ours lives in llyn barfog, with its hatchlings swimming all over the shallows",
+      "llyn barfog's lake beast. part beaver, part dragon, depends who tells it. the afanc hatchlings are all around the water"
      ],
      "optional": false
+    },
+    {
+     "role": "B",
+     "text": "an old smith in ludlow swears it drops a hide that sheds water like oil. best leather in the realm, if you can get it",
+     "variants": [
+      "an old smith in ludlow swears it drops a hide that sheds water like oil. best leather in the realm, if you can get it",
+      "a crafter i trust swore it drops a scale that never rusts. hammer it into a shield and it shrugs off rain forever"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "i heard it drops a wet sack and a long walk back to the stable",
+     "variants": [
+      "i heard it drops a wet sack and a long walk back to the stable",
+      "i heard nothing drops but lake weed and repair bills"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "then why is someone in camelot selling \"afanc hide\" for a fortune. you dont fake what doesnt exist",
+     "variants": [
+      "then why is someone in camelot selling \"afanc hide\" for a fortune. you dont fake what doesnt exist",
+      "someone in camelot sells afanc scale. nobody forges a thing that was never real"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "people sell fakes of things that never existed all the time. i once bought a map to avalon",
+     "variants": [
+      "people sell fakes of things that never existed all the time. i once bought a map to avalon",
+      "people fake unicorn horns too. by that logic unicorns are camping lyonesse"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "is it a raid or can a group do it?",
+     "variants": [
+      "is it a raid or can a group do it?",
+      "how strong is it? can a group take it?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "it's big. the zone story says the beasts of llyn barfog gained epic status, and the afanc is the worst of them",
+     "variants": [
+      "it's big. the zone story says the beasts of llyn barfog gained epic status, and the afanc is the worst of them",
+      "big. the zone lore says the monsters of that lake grew to epic size, and the legendary afanc tops them all"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "and it's not alone up there. the king of the barfog hills, teazanodwc, mouth, fester. the whole lake is a nest of named things",
+     "variants": [
+      "and it's not alone up there. the king of the barfog hills, teazanodwc, mouth, fester. the whole lake is a nest of named things",
+      "the hills around it have names of their own. king of the barfog hills, teazanodwc, mouth and fester. busy neighbourhood"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "in the old tale arthur's horse dragged an afanc out of that very lake on a chain. the hoof print is still in the stone, carn march arthur",
+     "variants": [
+      "in the old tale arthur's horse dragged an afanc out of that very lake on a chain. the hoof print is still in the stone, carn march arthur",
+      "the legend says arthur chained an afanc and his horse hauled it out of the lake. the hoofprint is pressed in a stone up the hill"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "so which is it, the one arthur pulled out or another one",
+     "variants": [
+      "so which is it, the one arthur pulled out or another one",
+      "if arthur pulled it out, what's this one doing back in there"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "its grandchild, maybe. look at all the hatchlings. it's a family business",
+     "variants": [
+      "its grandchild, maybe. look at all the hatchlings. it's a family business",
+      "a descendant. or the same beast, walked back in. legends never stay out of lakes"
+     ],
+     "optional": false
+    },
+    {
+     "role": "~",
+     "pause": 15
+    },
+    {
+     "role": "B",
+     "text": "barfog is old welsh for bearded, you know. llyn barfog, the bearded lake",
+     "variants": [
+      "barfog is old welsh for bearded, you know. llyn barfog, the bearded lake",
+      "the name means bearded. the bearded lake"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "a lake with a beard? why?",
+     "variants": [
+      "a lake with a beard? why?",
+      "why would a lake be bearded?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "there's a sir dillus up there. in the old tale dillus the bearded had his beard plucked out with wooden tweezers to make a hound's leash",
+     "variants": [
+      "there's a sir dillus up there. in the old tale dillus the bearded had his beard plucked out with wooden tweezers to make a hound's leash",
+      "sir dillus walks those hills. in the old story dillus the bearded lost his beard hair by hair to make a hunting leash"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "thats a horrible way to make a leash. even crafters have standards",
+     "variants": [
+      "thats a horrible way to make a leash. even crafters have standards",
+      "that is the worst crafting recipe i have ever heard"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "speak for yourself. a leash from a beard, a shield from an afanc. i'd craft with either if the quality was right",
+     "variants": [
+      "speak for yourself. a leash from a beard, a shield from an afanc. i'd craft with either if the quality was right",
+      "crafters do have standards. thats why i want that hide"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "real talk, i've never met anyone with that famous hide in their bags. coin, some loot, a story",
+     "variants": [
+      "real talk, i've never met anyone with that famous hide in their bags. coin, some loot, a story",
+      "honest answer: nobody i know ever came back with the scale or the hide. coin and a story"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "nobody you know. the ones who have it dont shout it across camelot",
+     "variants": [
+      "nobody you know. the ones who have it dont shout it across camelot",
+      "the people who have it dont advertise"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "so no proof of the drop and plenty of history. sounds like albion",
+     "variants": [
+      "so no proof of the drop and plenty of history. sounds like albion",
+      "no loot proof, lots of legend. normal albion"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "i'm riding up there anyway to see the hoof print stone. legends are worth more than leather",
+     "variants": [
+      "i'm riding up there anyway to see the hoof print stone. legends are worth more than leather",
+      "i'll go look at the stone with the hoof print. bring back nothing but a better story"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "if you see a scale on the shore, it's mine. i called it",
+     "variants": [
+      "if you see a scale on the shore, it's mine. i called it",
+      "any scale you find on the beach, mail it to me"
+     ],
+     "optional": true
     }
    ],
    "needs": []
@@ -522303,7 +523546,11 @@
      "type": [
       "NoLifer"
      ],
-     "class": []
+     "class": [],
+     "levels": [
+      30,
+      50
+     ]
     },
     "C": {
      "type": [
@@ -522312,93 +523559,225 @@
      "class": []
     },
     "D": {
-     "type": [
-      "Socialite"
-     ],
-     "class": []
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "E": {
+     "type": [],
+     "class": [
+      "Armsman",
+      "Paladin",
+      "Mercenary",
+      "Reaver"
+     ]
     }
    },
    "beats": [
     {
      "role": "A",
-     "text": "why is the scabbard our relic and not excalibur itself",
+     "text": "{q} why is the scabbard our relic and not excalibur itself",
      "variants": [
-      "why is the scabbard our relic and not excalibur itself",
-      "{q} how did albion end up with the scabbard and not the blade"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "the old tales say the scabbard was worth ten swords. whoever wore it didn't bleed",
-     "variants": [
-      "the old tales say the scabbard was worth ten swords. whoever wore it didn't bleed",
-      "merlin called the scabbard the greater gift. it kept arthur from bleeding"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "the sword went back to the lake. the lady keeps it",
-     "variants": [
-      "the sword went back to the lake. the lady keeps it",
-      "the blade went into the water when arthur fell. it's the lady's now"
+      "{q} why is the scabbard our relic and not excalibur itself",
+      "how did albion end up with a scabbard for a relic instead of the sword"
      ],
      "optional": false
     },
     {
      "role": "D",
-     "text": "lady nimue walks the marsh every night. maybe she's carrying it",
+     "text": "what are relics? i keep hearing about them in the frontier",
      "variants": [
-      "lady nimue walks the marsh every night. maybe she's carrying it",
-      "i've seen nimue out in the marsh after dark. if she has the blade she hides it well"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "and nobody takes anything from her. con her once and you understand",
-     "variants": [
-      "and nobody takes anything from her. con her once and you understand",
-      "conning her is enough. nobody's prying a sword out of those hands"
-     ],
-     "optional": false
-    },
-    {
-     "role": "A",
-     "text": "the heralds did promise more relics once. i say the blade is the one they kept back",
-     "variants": [
-      "the heralds did promise more relics once. i say the blade is the one they kept back",
-      "more relics were promised and never came. the blade's the missing one"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "the day excalibur is a relic, the mids will camp the marsh",
-     "variants": [
-      "the day excalibur is a relic, the mids will camp the marsh",
-      "if they ever add the blade i want to be holding it, not guarding it"
-     ],
-     "optional": false
-    },
-    {
-     "role": "D",
-     "text": "and the hibs will say the lady was one of theirs all along",
-     "variants": [
-      "and the hibs will say the lady was one of theirs all along",
-      "hibs would claim she's an elf in a lake"
+      "what are relics? i keep hearing about them in the frontier",
+      "relics? are those the things the keeps fight over?"
      ],
      "optional": true
     },
     {
-     "role": "A",
-     "text": "until then, guard the scabbard and bow if you see her",
+     "role": "B",
+     "text": "two per realm, one for strength and one for power. ours are excalibur's scabbard and merlin's staff. hold theirs and your realm hits harder",
      "variants": [
-      "until then, guard the scabbard and bow if you see her",
-      "for now, the scabbard. and a polite bow to the lady"
+      "two per realm, one for strength and one for power. ours are excalibur's scabbard and merlin's staff. hold theirs and your realm hits harder",
+      "a strength relic and a power relic each. ours are the scabbard and merlin's staff. steal the enemy's and the whole realm gets a bonus"
      ],
      "optional": false
+    },
+    {
+     "role": "E",
+     "text": "the scabbard is the strength one. every fighter in albion swings harder because of a sheath. think about that",
+     "variants": [
+      "the scabbard is the strength one. every fighter in albion swings harder because of a sheath. think about that",
+      "our melee relic is a sword holder. my swings hit harder because albion keeps a sheath safe"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "because the scabbard was always the real treasure. in the old tale merlin asked arthur which he valued more, blade or sheath",
+     "variants": [
+      "because the scabbard was always the real treasure. in the old tale merlin asked arthur which he valued more, blade or sheath",
+      "merlin asked arthur once which he liked better, the sword or the scabbard. arthur picked the sword. wrong answer"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "whoever wore the scabbard couldnt bleed. worth ten swords, merlin said. the sword just cut",
+     "variants": [
+      "whoever wore the scabbard couldnt bleed. worth ten swords, merlin said. the sword just cut",
+      "the old tale says the sheath kept its wearer from losing blood. merlin said it was worth ten of the blade"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "and arthur lost it. his half sister stole it and threw it in a lake, and without it he bled out at camlann",
+     "variants": [
+      "and arthur lost it. his half sister stole it and threw it in a lake, and without it he bled out at camlann",
+      "arthur lost it, didnt he. his sister stole it and drowned it. without it he bled at camlann"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "so where's the sword then?",
+     "variants": [
+      "so where's the sword then?",
+      "so what happened to excalibur?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "back in the water. bedivere threw it into the lake when arthur was dying, and a hand came up and took it under",
+     "variants": [
+      "back in the water. bedivere threw it into the lake when arthur was dying, and a hand came up and took it under",
+      "the dying king made bedivere throw it in the lake. a hand rose out of the water, caught it and sank"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "after he hid it in the reeds twice and lied about it. bedivere, worst errand runner in albion",
+     "variants": [
+      "after he hid it in the reeds twice and lied about it. bedivere, worst errand runner in albion",
+      "took him three tries. hid it in the grass twice and lied. sounds like my guild with quest items"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "so the lady has it. lady nimue walks avalon marsh after dark. go ask her for it",
+     "variants": [
+      "so the lady has it. lady nimue walks avalon marsh after dark. go ask her for it",
+      "so the lady of the lake has it. nimue walks the marsh at night. ask her nicely"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "con her once. nobody is prying anything out of those hands",
+     "variants": [
+      "con her once. nobody is prying anything out of those hands",
+      "nobody is taking a sword from her. con her and you'll see why"
+     ],
+     "optional": false
+    },
+    {
+     "role": "~",
+     "pause": 15
+    },
+    {
+     "role": "B",
+     "text": "the relic raids are the better story anyway. lose the scabbard to midgard and every tavern sings about it for a month",
+     "variants": [
+      "the relic raids are the better story anyway. lose the scabbard to midgard and every tavern sings about it for a month",
+      "the real excalibur fight is relic raids. lose the scabbard and you hear about it for weeks"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "the first time we lost it, faction chat was a funeral. nobody logged off",
+     "variants": [
+      "the first time we lost it, faction chat was a funeral. nobody logged off",
+      "i still remember the first relic we lost. the whole realm was in the frontier within the hour"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "can they really just take it?",
+     "variants": [
+      "can they really just take it?",
+      "does that happen a lot?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "break the relic keep, carry it home, survive the ride. it has happened both ways. that's what the frontier is for",
+     "variants": [
+      "break the relic keep, carry it home, survive the ride. it has happened both ways. that's what the frontier is for",
+      "it happens. break the keep, walk it to your own relic keep, live through the ride. rvr at its best"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "and when the relics first came, the word was more would follow. none ever did",
+     "variants": [
+      "and when the relics first came, the word was more would follow. none ever did",
+      "the heralds once promised more relics. they never came"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "i think the sword is the one they held back. the day the lady lets go of excalibur, the realms go to war over it",
+     "variants": [
+      "i think the sword is the one they held back. the day the lady lets go of excalibur, the realms go to war over it",
+      "the missing relic is the blade, i'm sure of it. one day the lady gives it up and all three realms come for it"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "and the hibs would swear the lady of the lake was one of their elves all along",
+     "variants": [
+      "and the hibs would swear the lady of the lake was one of their elves all along",
+      "if they add the sword the hibs will claim the lady was a lurikeen"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "the day excalibur is a relic, the mids will camp the marsh till the leeches eat them",
+     "variants": [
+      "the day excalibur is a relic, the mids will camp the marsh till the leeches eat them",
+      "if the sword ever shows up the mids will be camping avalon marsh in shifts"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "until then, guard the scabbard and bow if you pass the lady",
+     "variants": [
+      "until then, guard the scabbard and bow if you pass the lady",
+      "for now, keep the scabbard home and bow to the lady"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "i do bow, every time she passes. she nodded back once, i swear",
+     "variants": [
+      "i do bow, every time she passes. she nodded back once, i swear",
+      "i bow every time. she looked at me once. i'm counting it"
+     ],
+     "optional": true
     }
    ],
    "needs": []
@@ -522408,7 +523787,428 @@
    "topic": "lore_oldest",
    "realm": "alb",
    "levels": [
-    20,
+    1,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": [],
+     "levels": [
+      30,
+      50
+     ]
+    },
+    "C": {
+     "type": [
+      "Explorer"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "E": {
+     "type": [
+      "Socialite"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "{q} what's the oldest thing in albion, honestly",
+     "variants": [
+      "{q} what's the oldest thing in albion, honestly",
+      "oldest legend in albion. go"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "golestandt. in uther's day a roman lord and his household vanished in dartmoor, and she was already home",
+     "variants": [
+      "golestandt. in uther's day a roman lord and his household vanished in dartmoor, and she was already home",
+      "the dragon. a roman lord vanished on the moor back in uther's time. she was there first"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "the giants were here before her. in the old chronicles albion was giant country until brutus of troy landed and drove them out",
+     "variants": [
+      "the giants were here before her. in the old chronicles albion was giant country until brutus of troy landed and drove them out",
+      "older than dragons: giants. the old books say albion belonged to giants before brutus came from troy"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "brutus of troy? like the troy with the wooden horse?",
+     "variants": [
+      "brutus of troy? like the troy with the wooden horse?",
+      "who was brutus?"
+     ],
+     "optional": true
+    },
+    {
+     "role": "C",
+     "text": "a trojan prince who sailed west after the war, the old books say. he named britain after himself and gave cornwall to his friend corineus",
+     "variants": [
+      "a trojan prince who sailed west after the war, the old books say. he named britain after himself and gave cornwall to his friend corineus",
+      "grandson of aeneas, so the story goes. landed here, fought the giants, gave the island his name. his man corineus got cornwall"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "corineus wrestled the giant gogmagog and threw him off a cliff into the sea. and what still walks cornwall? cornish giants",
+     "variants": [
+      "corineus wrestled the giant gogmagog and threw him off a cliff into the sea. and what still walks cornwall? cornish giants",
+      "corineus threw the chief giant off a cornish cliff. and today cornwall is full of cornish giants"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "so the cornish giants are sore losers waiting for a rematch",
+     "variants": [
+      "so the cornish giants are sore losers waiting for a rematch",
+      "cornish giants holding a grudge for three thousand years. respect"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "and the boulders in dartmoor are granite giants, and the stonecrush ogres chew on them, and all of them keep clear of her",
+     "variants": [
+      "and the boulders in dartmoor are granite giants, and the stonecrush ogres chew on them, and all of them keep clear of her",
+      "the granite giants are dartmoor itself. the stonecrush ogres eat them. everyone stays out of her way"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "dragons outlive kings, fine, but stone outlives dragons",
+     "variants": [
+      "dragons outlive kings, fine, but stone outlives dragons",
+      "i still say rock is older than any dragon"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "what about stonehenge? isnt that super old?",
+     "variants": [
+      "what about stonehenge? isnt that super old?",
+      "stonehenge has to be old, right?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "the stones were standing long before anyone named a barrow after merlin. he just moved in",
+     "variants": [
+      "the stones were standing long before anyone named a barrow after merlin. he just moved in",
+      "stonehenge was ancient already when they buried kings under it"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "the old name for it is the giants' dance. giants carried those stones first, merlin only moved them. giants again",
+     "variants": [
+      "the old name for it is the giants' dance. giants carried those stones first, merlin only moved them. giants again",
+      "in the old tale merlin brought the giants' dance from over the sea. giants raised it first"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "is there any question where your answer isnt giants",
+     "variants": [
+      "is there any question where your answer isnt giants",
+      "you'd make the giants the answer to everything"
+     ],
+     "optional": false
+    },
+    {
+     "role": "~",
+     "pause": 15
+    },
+    {
+     "role": "E",
+     "text": "keltoi fogou then. the carvings aren't roman, aren't anything with a name, and the keltoi priests are still chanting in there",
+     "variants": [
+      "keltoi fogou then. the carvings aren't roman, aren't anything with a name, and the keltoi priests are still chanting in there",
+      "the fogou. a holy cave before rome had a name, and the keltoi are still down there chanting"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "chanting, and adding on every single pull",
+     "variants": [
+      "chanting, and adding on every single pull",
+      "chanting and bringing friends to every fight"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "then lyonesse. cailleach uragaig walks there, and the cailleach of the old tales is the hag of winter who dropped the hills from her apron",
+     "variants": [
+      "then lyonesse. cailleach uragaig walks there, and the cailleach of the old tales is the hag of winter who dropped the hills from her apron",
+      "lyonesse has cailleach uragaig. in the old stories the cailleach built the mountains out of stones she spilled from her apron"
+     ],
+     "optional": false
+    },
+    {
+     "role": "E",
+     "text": "so the oldest thing in albion is somebody's grandmother. sounds right",
+     "variants": [
+      "so the oldest thing in albion is somebody's grandmother. sounds right",
+      "the oldest thing is an old woman with an apron. every village knows that"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "someone told me about a ghost bell in the black mountains too",
+     "variants": [
+      "someone told me about a ghost bell in the black mountains too",
+      "i heard there's an abbey bell in the black mountains that rings by itself"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "the vetusta abbey bell. vetusta is latin for ancient. even the name is cheating at this game",
+     "variants": [
+      "the vetusta abbey bell. vetusta is latin for ancient. even the name is cheating at this game",
+      "vetusta abbey. the name means old in latin. whoever named it knew what they were doing"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "and llyn barfog had its afanc before arthur was born. he only got the credit for pulling one out",
+     "variants": [
+      "and llyn barfog had its afanc before arthur was born. he only got the credit for pulling one out",
+      "the lake had its monster long before arthur dragged one ashore"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "so no winner. i'm writing it down as all of them",
+     "variants": [
+      "so no winner. i'm writing it down as all of them",
+      "no answer as usual. albion is old all the way down"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "put golestandt at the top. she might be reading",
+     "variants": [
+      "put golestandt at the top. she might be reading",
+      "write her first. she's a dragon, she can read chat"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "i'm off to the cornish cliffs to look for where gogmagog went over. somebody has to",
+     "variants": [
+      "i'm off to the cornish cliffs to look for where gogmagog went over. somebody has to",
+      "i'm riding to cornwall to find the cliff corineus used. if there's a giant's heel mark at the edge, i'll tell you"
+     ],
+     "optional": true
+    }
+   ],
+   "needs": []
+  },
+  {
+   "id": "alb_tale_arwards_knights",
+   "topic": "lore_tale_arward",
+   "realm": "alb",
+   "levels": [
+    1,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "C": {
+     "type": [
+      "NoLifer",
+      "Leveler"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Socialite",
+      "Daredevil"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "{q} want to hear how albion first learned the name golestandt?",
+     "variants": [
+      "{q} want to hear how albion first learned the name golestandt?",
+      "here's the old dartmoor story. how we learned the dragon's name"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "go on, all i know is dont go south in dartmoor",
+     "variants": [
+      "go on, all i know is dont go south in dartmoor",
+      "sure, i only know her as the big con at the bottom of dartmoor"
+     ],
+     "optional": true
+    },
+    {
+     "role": "A",
+     "text": "back when uther was king, a roman lord kept a house out on the moor. one season the letters stopped. household, servants, horses, gone",
+     "variants": [
+      "back when uther was king, a roman lord kept a house out on the moor. one season the letters stopped. household, servants, horses, gone",
+      "in uther's day a roman lord lived on dartmoor with his whole household. one year they simply stopped answering"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "uther sent sir arward with thirty knights to find out why, and a scribe to write it all down",
+     "variants": [
+      "uther sent sir arward with thirty knights to find out why, and a scribe to write it all down",
+      "so the king sent sir arward and thirty knights. and a scribe, because someone always has to keep the record"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "thirty knights for one missing roman. that lord must have owed the crown a fortune",
+     "variants": [
+      "thirty knights for one missing roman. that lord must have owed the crown a fortune",
+      "uther sent thirty knights for one roman? he must have owed uther money"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "the journal tells of boulders that stood up and walked, the granite giants, and ogres that ate the rock, the stonecrush",
+     "variants": [
+      "the journal tells of boulders that stood up and walked, the granite giants, and ogres that ate the rock, the stonecrush",
+      "the scribe wrote of stones that got up and walked, and of the stonecrush ogres chewing granite giants like bread"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "wait, the stonecrush ogres in dartmoor are from that story?",
+     "variants": [
+      "wait, the stonecrush ogres in dartmoor are from that story?",
+      "the stonecrush? those are still out on the moor"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "still there, still chewing. the knights rode south past all of it. the entries get shorter. then nothing",
+     "variants": [
+      "still there, still chewing. the knights rode south past all of it. the entries get shorter. then nothing",
+      "still hungry too. arward pushed south, deeper into the moor. the pages thin out. then they stop"
+     ],
+     "optional": false
+    },
+    {
+     "role": "~",
+     "pause": 12
+    },
+    {
+     "role": "A",
+     "text": "months later a sentry at prydwen keep saw something fall out of a clear sky. a book, half burnt, still smoking",
+     "variants": [
+      "months later a sentry at prydwen keep saw something fall out of a clear sky. a book, half burnt, still smoking",
+      "months on, a guard at prydwen watched a scorched book drop out of an empty sky and land at his feet"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "from dartmoor to prydwen through the air. thats some throw",
+     "variants": [
+      "from dartmoor to prydwen through the air. thats some throw",
+      "thats a long way for a book to fly. something threw it"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "most pages were ash. one word could still be read, written large: golestandt",
+     "variants": [
+      "most pages were ash. one word could still be read, written large: golestandt",
+      "the pages were cinders. one word survived the fire. golestandt"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "and the thirty knights? and arward?",
+     "variants": [
+      "and the thirty knights? and arward?",
+      "so what happened to arward and his men?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "never found. not a horse, not a helm. the moor kept them all, and the journal kept her name",
+     "variants": [
+      "never found. not a horse, not a helm. the moor kept them all, and the journal kept her name",
+      "no knight came back. dartmoor kept the men and gave us only the name"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "i'll believe the flying book when one lands on my head at prydwen",
+     "variants": [
+      "i'll believe the flying book when one lands on my head at prydwen",
+      "if a burnt book ever hits me at prydwen keep i'll know who sent it"
+     ],
+     "optional": true
+    }
+   ],
+   "needs": []
+  },
+  {
+   "id": "alb_tale_nameless_emperor",
+   "topic": "lore_tale_cardova",
+   "realm": "alb",
+   "levels": [
+    1,
     50
    ],
    "roles": {
@@ -522419,13 +524219,176 @@
      "class": []
     },
     "C": {
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "D": {
      "type": [
       "Explorer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "{q} my old guild's minstrel had a story about the emperor under cardova. want it?",
+     "variants": [
+      "{q} my old guild's minstrel had a story about the emperor under cardova. want it?",
+      "here's the cardova story the way an old minstrel told it to me. the emperor nobody can name"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "it starts in britain. a general here was hailed emperor by his own legions and marched them over the sea, like macsen in the welsh tale",
+     "variants": [
+      "it starts in britain. a general here was hailed emperor by his own legions and marched them over the sea, like macsen in the welsh tale",
+      "a commander in britain was named emperor by his troops, like macsen wledig in the old welsh story, and took the legions to win rome"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "who's macsen?",
+     "variants": [
+      "who's macsen?",
+      "macsen?"
+     ],
+     "optional": true
+    },
+    {
+     "role": "A",
+     "text": "an emperor out of britain in the welsh tale. he dreamed of a maiden in a far land, crossed the sea to find her and stayed. ours is darker",
+     "variants": [
+      "an emperor out of britain in the welsh tale. he dreamed of a maiden in a far land, crossed the sea to find her and stayed. ours is darker",
+      "in the welsh story macsen dreams of a girl across the sea, goes to find her and never comes home. a love story. this one isnt"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "ours lost. killed far away. but his legion would not leave him in foreign dirt. they carried him home across the sea by night",
+     "variants": [
+      "ours lost. killed far away. but his legion would not leave him in foreign dirt. they carried him home across the sea by night",
+      "our emperor fell over the sea, the minstrel said, and his legion carried his body all the way back to cornwall"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "carrying a dead emperor across a whole continent. in armour. with the smell",
+     "variants": [
+      "carrying a dead emperor across a whole continent. in armour. with the smell",
+      "across an entire continent with a corpse. loyal, i'll give them that"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "they cut cardova out of the cornish rock and laid him deep. then rome, which hated him, ordered his name struck from every stone",
+     "variants": [
+      "they cut cardova out of the cornish rock and laid him deep. then rome, which hated him, ordered his name struck from every stone",
+      "they dug the crypt halls and sealed him in. and rome ordered his name chiselled off everything, the way it did with emperors it hated"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "so his own priests scraped it off the tomb first. a man with no name cant be cursed by his enemies, they said",
+     "variants": [
+      "so his own priests scraped it off the tomb first. a man with no name cant be cursed by his enemies, they said",
+      "his priests scratched the name away before rome could. no name, no curse"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "clever. and terrible. very roman",
+     "variants": [
+      "clever. and terrible. very roman",
+      "thats clever and sad at once"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "and the legion swore to stand watch until someone speaks his name in the crypt. nobody knows it. so the watch never ends",
+     "variants": [
+      "and the legion swore to stand watch until someone speaks his name in the crypt. nobody knows it. so the watch never ends",
+      "the legion's oath: guard him until his name is said aloud in those halls. nobody can say it, so they still stand"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "and emperor seleucus?",
+     "variants": [
+      "and emperor seleucus?",
+      "then who's seleucus?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "the general who took the empty chair, she said. the forgotten emperor is the real one, and seleucus sits in his seat",
+     "variants": [
+      "the general who took the empty chair, she said. the forgotten emperor is the real one, and seleucus sits in his seat",
+      "a pretender, the minstrel said. the forgotten one is our man and seleucus is wearing his crown"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "lovely tale. tell it to a centurion and see if he lets you pass",
+     "variants": [
+      "lovely tale. tell it to a centurion and see if he lets you pass",
+      "nice story. i'll believe it when a praetorian stands down"
+     ],
+     "optional": true
+    },
+    {
+     "role": "D",
+     "text": "next time i'm down there i'm shouting every roman name i know at the forgotten emperor",
+     "variants": [
+      "next time i'm down there i'm shouting every roman name i know at the forgotten emperor",
+      "i'm going to try every latin name i can think of in front of him"
+     ],
+     "optional": true
+    }
+   ],
+   "needs": []
+  },
+  {
+   "id": "alb_tale_green_knight_road",
+   "topic": "lore_tale_green_knight",
+   "realm": "alb",
+   "levels": [
+    1,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "C": {
+     "type": [
+      "NoLifer"
      ],
      "class": []
     },
     "D": {
      "type": [
+      "Daredevil",
       "Socialite"
      ],
      "class": []
@@ -522434,75 +524397,441 @@
    "beats": [
     {
      "role": "A",
-     "text": "what's the oldest thing in albion, honestly",
+     "text": "{q} want to know why the green knight stands in sauvage? an old armsman told me the story",
      "variants": [
-      "what's the oldest thing in albion, honestly",
-      "{q} oldest legend in albion, go"
+      "{q} want to know why the green knight stands in sauvage? an old armsman told me the story",
+      "here's the story i heard about the green knight and the sauvage road"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "you know the old game, a blow for a blow, the return in a year and a day. the armsman said more than gawain played it",
+     "variants": [
+      "you know the old game, a blow for a blow, the return in a year and a day. the armsman said more than gawain played it",
+      "the beheading game. the armsman said gawain wasnt the only one who took a swing. a whole bench of knights did"
      ],
      "optional": false
     },
     {
      "role": "B",
-     "text": "golestandt. she was in dartmoor before uther's roman lord got lost there",
+     "text": "more than gawain? who else?",
      "variants": [
-      "golestandt. she was in dartmoor before uther's roman lord got lost there",
-      "the dragon. a roman lord vanished in dartmoor in uther's day and she was already home"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "keltoi fogou. those stones were old when rome was a village",
-     "variants": [
-      "keltoi fogou. those stones were old when rome was a village",
-      "the fogou. the carvings aren't roman, they're older than anything with a name"
-     ],
-     "optional": false
-    },
-    {
-     "role": "D",
-     "text": "the stones at stonehenge. they were up long before anyone buried a wizard under them",
-     "variants": [
-      "the stones at stonehenge. they were up long before anyone buried a wizard under them",
-      "stonehenge. they put merlin under it because it was already ancient"
-     ],
-     "optional": false
-    },
-    {
-     "role": "B",
-     "text": "dragons outlive stones. ask the granite giants",
-     "variants": [
-      "dragons outlive stones. ask the granite giants",
-      "the granite giants are the stones, and even they keep clear of her"
-     ],
-     "optional": false
-    },
-    {
-     "role": "C",
-     "text": "then the giants are the oldest. they're the hills that walk",
-     "variants": [
-      "then the giants are the oldest. they're the hills that walk",
-      "then the giants win. they are dartmoor"
-     ],
-     "optional": false
-    },
-    {
-     "role": "D",
-     "text": "the lake is older than all of you. ask the afanc",
-     "variants": [
-      "the lake is older than all of you. ask the afanc",
-      "llyn barfog had its monster before arthur was born"
+      "more than gawain? who else?",
+      "wait, others swung at him too?"
      ],
      "optional": true
     },
     {
      "role": "A",
-     "text": "no winner. i'm writing it down as all of them, it's albion",
+     "text": "every proud knight at the table, after gawain came home with that nick on his neck. each one swung, each one booked a return",
      "variants": [
-      "no winner. i'm writing it down as all of them, it's albion",
-      "no answer, as usual. albion is old all the way down"
+      "every proud knight at the table, after gawain came home with that nick on his neck. each one swung, each one booked a return",
+      "after gawain came back alive, every hothead at the round table wanted a go. each swing, another blow owed"
      ],
      "optional": false
+    },
+    {
+     "role": "A",
+     "text": "then camlann came before the year was out. the table broken, the knights dead or scattered. nobody left to collect from",
+     "variants": [
+      "then camlann came before the year was out. the table broken, the knights dead or scattered. nobody left to collect from",
+      "and before the year was up, camlann. table broken, knights dead or gone. a ledger full of blows and no one to pay"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "so he's a debt collector. albion's oldest debt collector",
+     "variants": [
+      "so he's a debt collector. albion's oldest debt collector",
+      "so he's standing there with a bill. very albion"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "so he took the road through sauvage, the one every albion knight rides to the frontier sooner or later, and he waits",
+     "variants": [
+      "so he took the road through sauvage, the one every albion knight rides to the frontier sooner or later, and he waits",
+      "he picked the road north that every knight of albion has to ride one day. and he stands there, waiting"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "but those knights are long dead",
+     "variants": [
+      "but those knights are long dead",
+      "the round table's been dust for ages though"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "the armsman said the debt passes to whoever strikes him next. hit him and you inherit some dead knight's return blow",
+     "variants": [
+      "the armsman said the debt passes to whoever strikes him next. hit him and you inherit some dead knight's return blow",
+      "swing at him, the armsman said, and you take a dead knight's place in his book"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "that's why he never swings first. he's waiting for a volunteer",
+     "variants": [
+      "that's why he never swings first. he's waiting for a volunteer",
+      "that explains the not attacking. he wants someone to sign"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "and those groups that tried him and died? the armsman said that wasnt a fight. that was him collecting",
+     "variants": [
+      "and those groups that tried him and died? the armsman said that wasnt a fight. that was him collecting",
+      "the groups he wiped? not combat, the armsman said. a receipt"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "nice tale. i bet the fellwoods tell it differently",
+     "variants": [
+      "nice tale. i bet the fellwoods tell it differently",
+      "the fellwoods probably have their own version"
+     ],
+     "optional": true
+    },
+    {
+     "role": "D",
+     "text": "next time i'm through sauvage i'm keeping both hands on the reins",
+     "variants": [
+      "next time i'm through sauvage i'm keeping both hands on the reins",
+      "i'll nod to him next time and keep my hands off my sword"
+     ],
+     "optional": true
+    }
+   ],
+   "needs": []
+  },
+  {
+   "id": "alb_tale_lyonesse_drowning",
+   "topic": "lore_tale_lyonesse",
+   "realm": "alb",
+   "levels": [
+    1,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    },
+    "C": {
+     "type": [
+      "NoLifer",
+      "Leveler"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [
+      "Explorer"
+     ],
+     "class": []
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "{q} the camelot bards tell the drowning of lyonesse two ways. want the one-night version?",
+     "variants": [
+      "{q} the camelot bards tell the drowning of lyonesse two ways. want the one-night version?",
+      "here's the lyonesse story, the way an old bard in camelot told it to me"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "drowning? we level in lyonesse, it's dry land",
+     "variants": [
+      "drowning? we level in lyonesse, it's dry land",
+      "wait, lyonesse isnt underwater. i've walked through it"
+     ],
+     "optional": true
+    },
+    {
+     "role": "A",
+     "text": "patience. in the old tale lyonesse ran from cornwall out into the western sea. fields, a city, a hundred and forty churches",
+     "variants": [
+      "patience. in the old tale lyonesse ran from cornwall out into the western sea. fields, a city, a hundred and forty churches",
+      "in the old tale lyonesse was a rich country past cornwall, out where the sea is now. farms, towns, a hundred and forty churches"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "in one night the sea rose and took all of it. one man got out, riding a white horse ahead of the waves to the cornish hills",
+     "variants": [
+      "in one night the sea rose and took all of it. one man got out, riding a white horse ahead of the waves to the cornish hills",
+      "then one night the sea came up and swallowed the lot. one rider escaped on a white horse, the water at his heels"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "one night, or a hundred years of the sea creeping in. depends which bard has had more ale",
+     "variants": [
+      "one night, or a hundred years of the sea creeping in. depends which bard has had more ale",
+      "the other version is a century of slow flooding. less dramatic, more likely"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "one night. a hundred years doesnt get a ballad",
+     "variants": [
+      "one night. a hundred years doesnt get a ballad",
+      "one night makes the song. nobody sings about slow flooding"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "there's a white horse near west downs in salisbury. same horse?",
+     "variants": [
+      "there's a white horse near west downs in salisbury. same horse?",
+      "heh, a white horse wanders around west downs. you think it's that one"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "the bard swore it was. still running, still afraid of water. i never checked",
+     "variants": [
+      "the bard swore it was. still running, still afraid of water. i never checked",
+      "the bard said yes. still running from the sea after all these years"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "so what's the lyonesse we play in then?",
+     "variants": [
+      "so what's the lyonesse we play in then?",
+      "then what is our lyonesse?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "what the sea left, the bard said. the high ground. the drowned country lies past the coast, and the church bells still ring down there",
+     "variants": [
+      "what the sea left, the bard said. the high ground. the drowned country lies past the coast, and the church bells still ring down there",
+      "the hilltops that stayed dry, the bard said. the rest is under the waves, bells and all"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "you hear bells anywhere if you want to. albion collects haunted bells, there's one at vetusta abbey too",
+     "variants": [
+      "you hear bells anywhere if you want to. albion collects haunted bells, there's one at vetusta abbey too",
+      "bells under the sea. the vetusta abbey bell in the black mountains rings with nobody pulling it either"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "and who walks the dry part now? cailleach uragaig. a hag of the old world who watched her country go under",
+     "variants": [
+      "and who walks the dry part now? cailleach uragaig. a hag of the old world who watched her country go under",
+      "and cailleach uragaig keeps the dry part. an old witch who saw it all drown and stayed"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "next time i'm in lyonesse i'm swimming out to listen for bells",
+     "variants": [
+      "next time i'm in lyonesse i'm swimming out to listen for bells",
+      "i'm swimming out past the coast to listen. if i hear a bell, i'm turning around"
+     ],
+     "optional": true
+    },
+    {
+     "role": "C",
+     "text": "if you hear bells, swim faster. the sea doesnt give people back",
+     "variants": [
+      "if you hear bells, swim faster. the sea doesnt give people back",
+      "take a healer. the sea keeps what it takes"
+     ],
+     "optional": true
+    }
+   ],
+   "needs": []
+  },
+  {
+   "id": "alb_tale_inconnu_came",
+   "topic": "lore_tale_inconnu",
+   "realm": "alb",
+   "levels": [
+    1,
+    50
+   ],
+   "roles": {
+    "B": {
+     "type": [],
+     "class": [
+      "Necromancer"
+     ]
+    },
+    "C": {
+     "type": [
+      "NoLifer"
+     ],
+     "class": []
+    },
+    "D": {
+     "type": [],
+     "class": [],
+     "levels": [
+      5,
+      25
+     ]
+    }
+   },
+   "beats": [
+    {
+     "role": "A",
+     "text": "{q} how did the inconnu end up in albion anyway? i never got the story",
+     "variants": [
+      "{q} how did the inconnu end up in albion anyway? i never got the story",
+      "anyone know how the inconnu came to albion? they just showed up with the isles"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "my trainer told it this way. arawn rules annwn, the land of the dead, and every soul in albion goes to him in the end",
+     "variants": [
+      "my trainer told it this way. arawn rules annwn, the land of the dead, and every soul in albion goes to him in the end",
+      "the way the necromancers tell it: every albion soul ends up in annwn, arawn's realm. that's the old bargain"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "then his dead started going missing, raised before they reached him. old roman legions marching again. souls locked in caer sidi",
+     "variants": [
+      "then his dead started going missing, raised before they reached him. old roman legions marching again. souls locked in caer sidi",
+      "then somebody started stealing his dead. dead legions walking again, souls caged at caer sidi. arawn noticed"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "stealing dead people? who?",
+     "variants": [
+      "stealing dead people? who?",
+      "who was stealing them?"
+     ],
+     "optional": true
+    },
+    {
+     "role": "C",
+     "text": "the same witch who set the drakoran on avalon. nobody says her name in camelot",
+     "variants": [
+      "the same witch who set the drakoran on avalon. nobody says her name in camelot",
+      "the one who sent the drakoran into avalon. you know who. we dont say it"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "so arawn opened the deep doors and sent his pale servants up. the inconnu. eyes made for the dark, faces that never saw sun",
+     "variants": [
+      "so arawn opened the deep doors and sent his pale servants up. the inconnu. eyes made for the dark, faces that never saw sun",
+      "arawn answered by sending his own people up from below. the inconnu. pale as candles, eyes made for the dark"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "they came up on the isles where the war was, and they chose to stand with albion, because the thief is our enemy too",
+     "variants": [
+      "they came up on the isles where the war was, and they chose to stand with albion, because the thief is our enemy too",
+      "they surfaced right where the drakoran were winning, and they picked our side"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "picked our side. or were told to",
+     "variants": [
+      "picked our side. or were told to",
+      "told to, more like. arawn sends, they go"
+     ],
+     "optional": false
+    },
+    {
+     "role": "D",
+     "text": "so are the inconnu undead?",
+     "variants": [
+      "so are the inconnu undead?",
+      "are they dead too?"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "no. living, but from close to his kingdom. they can tell arawn's dead from the stolen ones the way we tell rain from snow",
+     "variants": [
+      "no. living, but from close to his kingdom. they can tell arawn's dead from the stolen ones the way we tell rain from snow",
+      "living. but they know the dead the way we know weather. which belong to arawn and which were taken"
+     ],
+     "optional": false
+    },
+    {
+     "role": "C",
+     "text": "a whole people who can count souls. handy, and a little creepy",
+     "variants": [
+      "a whole people who can count souls. handy, and a little creepy",
+      "that's the part that worries me"
+     ],
+     "optional": false
+    },
+    {
+     "role": "B",
+     "text": "in the old welsh tale arawn gave lifelong friendship to a prince who kept his word for a year. albion has kept its word. so far",
+     "variants": [
+      "in the old welsh tale arawn gave lifelong friendship to a prince who kept his word for a year. albion has kept its word. so far",
+      "there's an old story where arawn rewards a mortal for one honest year. keep faith with arawn and he keeps faith with you"
+     ],
+     "optional": false
+    },
+    {
+     "role": "A",
+     "text": "so they're here as long as the thief is",
+     "variants": [
+      "so they're here as long as the thief is",
+      "so they stay until the thief is caught"
+     ],
+     "optional": true
+    },
+    {
+     "role": "C",
+     "text": "and when she's caught, someone will have to pay arawn's bill",
+     "variants": [
+      "and when she's caught, someone will have to pay arawn's bill",
+      "and after that, we'll see what arawn wants for his help"
+     ],
+     "optional": true
     }
    ],
    "needs": []
