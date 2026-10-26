@@ -124,9 +124,58 @@ invite": you invite, because a bot can't). "Nah" gets "np, maybe later".
 - Guild template lines, knowledge answers in /gu and /group, join replies and "where are you?" answers are written in
   each bot's own style (lower case, typos, abbreviations).
 
+### 7. Bots read what you say, and answer it
+
+An audit ran realistic player lines through the reply path, each labelled with what a sensible player would answer.
+Factual questions drew remarks on the topic ("is thid open for lvl 21" drew "if you see the zerg coming, call it
+out"), follow-ups were missed, "inc" read as income and tells about groups as invitations. Changes:
+
+- **Questions get real answers.** About the bot, when it is asked by name, by tell or in your group: its level, class,
+  realm rank, speed, potions, guild, main or alt, epic, how long it has played, whether it is busy, its plans (by
+  personality), and where its gear came from (worn pieces, and how many a crafter made). About the world: a place's
+  monster levels (the 20th-80th percentile of each zone's monster levels in the world data, written to `places.json` by
+  `tools/bot-voices/place_levels.py`), battleground brackets, who holds Darkness Falls, the relics and keeps, and a few
+  commands (/stuck, /anon, /bind, /played, /relic). Any other factual question gets an honest "not sure" now and then,
+  never a remark on its topic.
+- **The bot's name is not part of the line.** "torvald u still a thane?" is read as "u still a thane?" by Torvald.
+- **More of the conversation follows on**, in /faction, /say and now /group: "which bridge", "how long did that take",
+  "the one by the inn?", "whered they go", "o ya what stats", "into what"; "no thanks" to a bot's offer; "ty" to the bot
+  that just helped (not for its own "gz" or "np"); a laugh to the joker; "x" or "me" to a bot's call for a group.
+- **New kinds of line**: good news ("finally hit 50") gets grats, an offer ("need buffs?") thanks, "wait for me" an ok,
+  "wb" a thanks, an order ("heal me") an "on it" or an honest "cant heal, im a thane", a warning a "ty for the heads up",
+  real-life talk (late nights, school, food, the computer, pets, weather, TV, work, a sore back) a reply in kind.
+- **Fewer misreadings**: "inc" as income, "group" only talked about ("my old group quit", "love this group"), sarcasm
+  ("thanks for the train"), insults aimed at a class rather than a person ("ppl say spiritmasters are useless"), "pc"
+  as a computer, school "class", goodbyes with thanks in them, a brb at the end of a line.
+- **Group requests**: "want to group?" in /say or by name gets the bot's answer with its real reasons (already grouped,
+  on a keep or relic, too far, a level gap of more than 8). An /lfm is answered only by bots of the role it needs and
+  within 6 levels.
+- **When you die in a group**, a groupmate says so, a healer first ("rez coming, dont release").
+
+**How well it reads, measured.** These are automated measures of how a line is *read* (which route it takes), not
+of the reply text, and not checked in game:
+
+| Line set | Before the audit | After |
+|---|---|---|
+| The 320 audit lines (the fixes were made against these) | 47% | 96% |
+| Fresh set 1, 160 lines written blind, first run | — | 62% |
+| Fresh set 2, written blind after the fixes for set 1, first run | — | 65% |
+| Fresh set 3, written blind after the fixes for set 2, first run | — | 62.5% |
+
+The tuned rates overstate what new chat gets: on lines nobody tuned against, about **two in three** are read the way a
+player would expect. The rest split roughly evenly between no reply, an honest "not sure" and a reply that misses (12-16%
+of fresh lines on sets 2 and 3, against 21% on set 1). The code from before the audit was not measured on fresh lines. About six of set 3's misses are a labelling difference (a
+"gz" for the bot's own ding is answered "ty", as it should be, but was labelled as the player's news). Sets 1 and 2 were
+then fixed against and are kept as a regression test; set 3 (`tools/bot-voices/eval/fresh_lines_3.json`) is kept
+untuned. Word rules have reached about their ceiling here; reading more of free chat right would need a different
+approach (a trained model on many more labelled lines), not more rules.
+
+To measure a new blind set: `TALK_AUDIT_IN=<lines.json> TALK_AUDIT_OUT=<misses.txt> dotnet vstest Tests.dll
+--Tests:MeasureReadRate` (each line `{text, channel, context?, expect, to?}`; `to` is the bot named in the line).
+
 ## Content
 
-The corpus went from 2,326 to 3,377 lines. These files are new: `news.lines`, `news_replies.lines`, `tells.lines`,
+The corpus went from 2,326 to 3,573 lines (`talking_audit.lines` holds the audit's reply sets). These files are new: `news.lines`, `news_replies.lines`, `tells.lines`,
 `memory_more.lines`, `combat_calls.lines`, `lfg_real.lines`, `followups.lines`, `closings_more.lines`, `camp_more.lines`,
 `guild_more.lines` and `experience.lines`. The existing files were annotated with place, news, xp and role flags,
 and a few were reworded or removed.
@@ -142,7 +191,10 @@ take a player, so a player who answered one would have nowhere to go.
 - `UT_ChatSimulation`: an evening in each realm (30 openers with replies), a keep lost, a group fight and three
   conversations, played through the real corpus picker. It fails on a speaker naming another realm's zone, town or
   dungeon, an unfilled slot, or a keep named without news. Set `TALK_TRANSCRIPT=<path>` to keep the transcript.
-- All 3,616 tests in `Tests.dll` pass (2026-10-26, Linux, no game world). CI on Windows ran the server tests and the
+- `UT_TalkingAudit`: the 320 audit lines (floor 93%) and the 320 holdout lines fixed after them (floor 92%), plus
+  cases for names, threads, closings, self answers, place levels and world answers. `ChatAuditRoute` mirrors the live
+  reply path for these; keep the two in step.
+- All 3,681 tests in `Tests.dll` pass (2026-10-26, Linux, no game world). CI on Windows ran the server tests and the
   launcher tests on the branch.
 - An independent review of the code (2026-10-26) found eight defects, all fixed: the defaults not reaching existing
   worlds, help offers answered as duo offers, "pulling" said after the player pulled, "mezzed" before a resist, relic
@@ -167,3 +219,9 @@ Everything above was tested without a running world. These need the PC:
 8. "Where are the mids?" while enemies are in the frontier and while they aren't.
 9. The server log shows no `Bot voices:` warnings from the new code (combat call, world flags).
 10. Start 1.1 on the owner's world: the log names the settings it switched on, and the Living Server tab shows them.
+11. Ask a bot by name and by tell: "r u 50 yet", "what lvl is vendo caverns", "is df ours", "whered u get that armor",
+    "u busy". The answers should be true of that bot and the world (its level, gear, the real owner of Darkness Falls).
+12. Die in a group with a healer bot: one groupmate says so, the healer first. Give a bot an order it can't do
+    ("heal me" to a thane) and one it can.
+13. Answer a bot's call for a group with "x", and say "ty" right after a bot's "gz": the first gets a join answer, the
+    second nothing.

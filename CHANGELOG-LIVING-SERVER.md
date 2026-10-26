@@ -31,6 +31,18 @@ bots talk; the full design is in [docs/bot-voices/TALKING-UPDATE.md](docs/bot-vo
   thanks from the asker, and the others let it be. Tells carry on the same way and answer with where the bot is
   when it replies.
 
+**Bots read what you say**
+- Questions get true answers: a bot asked by name, tell or in your group says its own level, class, rank, guild,
+  gear, plans or whether it is busy; any bot answers a place's monster levels (from the world data), battleground
+  brackets, who holds Darkness Falls, the relics and keeps. Other factual questions get "not sure", not a remark on the
+  topic. The bot's name in a line is no longer read as part of it.
+- More follows on in /faction, /say and /group: "which one", "how long did that take", "whered they go", "no thanks",
+  "ty" to the bot that helped, "x" to a bot's call for a group. Good news, offers, orders (with an honest "cant"),
+  warnings, "wb" and real-life talk get replies in kind, and a groupmate reacts when you die.
+- Fewer misreadings: "inc" as income, a group only talked about, sarcasm, an insult aimed at a class, a goodbye with
+  thanks in it. Measured on lines written blind and not tuned against, about two in three are now read as a player
+  would expect, and 12-16% draw a reply that misses (automated; see the design doc).
+
 **Your group**
 - Gamebots in your group call the fight: the pull, adds, low health, out of power, the mez, root, stun, taunt, group
   heal or rez they are casting, a wipe, and gj or med up after. Spaced out, never a flood. A bot that joins your

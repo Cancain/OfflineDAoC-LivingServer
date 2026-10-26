@@ -114,7 +114,6 @@ who is up for a group just for the company?
 @topic explorer
 @who Explorer
 @levels 1-50
-i want to see every zone in the realm before i hit 50
 @needs outdoors
 there is a spot near {zone} where the sunset is perfect
 anyone know what is at the far end of {zone}?
@@ -333,7 +332,6 @@ crafters are your friends, be nice to them
 @levels 1-50
 @invites joke
 spent more time running back from my bind than fighting tonight
-i swear the monsters respawn faster when i am oom
 @invites complaint
 why is every useful merchant on the other side of town
 @invites joke
@@ -362,3 +360,22 @@ not bad, you?
 tired but still leveling
 cant complain, the camp is quiet
 doing ok, just trying not to die
+
+# The talking update audit: only a power user goes oom
+@kind ambient
+@topic humor
+@who *
+@realm *
+@class Wizard,Theurgist,Sorcerer,Cabalist,Necromancer,Cleric,Friar,Minstrel,Healer,Shaman,Runemaster,Spiritmaster,Bonedancer,Skald,Eldritch,Enchanter,Mentalist,Animist,Druid,Bard,Warden
+@levels 1-50
+@invites joke
+i swear the monsters respawn faster when i am oom
+
+# The talking update audit: not said by a 50
+@kind ambient
+@topic explorer
+@who Explorer
+@realm *
+@levels 1-49
+@invites chat
+i want to see every zone in the realm before i hit 50

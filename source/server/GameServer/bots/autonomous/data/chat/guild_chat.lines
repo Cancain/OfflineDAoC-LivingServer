@@ -212,7 +212,6 @@ making arrows all night, my fingers hurt
 anyone on?
 hey guild
 slow night, anyone doing anything?
-heading to town to sell, then back out
 anyone heading to {capital}?
 anybody seen {keep} change hands lately?
 anyone know a good spot for a {class} at {level}?
@@ -233,7 +232,6 @@ who wants to help a guildie with a named?
 @invites ask_opinion
 is it just me or is the lag bad tonight?
 @invites joke
-just died to a grey con, dont ask
 how does everyone have so much money
 got a nice drop, of course its for another class
 @invites none
@@ -254,3 +252,23 @@ just dinged, ty for all the tips everyone
 @needs just_died
 @invites complaint
 lost a chunk of xp on that death, ugh
+
+# The talking update audit: said only right after the bot died
+@kind guild
+@topic general
+@who *
+@realm *
+@levels 1-50
+@needs just_died
+@invites joke
+just died to a grey con, dont ask
+
+# The talking update audit: only a bot with full bags heads to sell
+@kind guild
+@topic general
+@who *
+@realm *
+@levels 1-50
+@needs bag_full
+@invites chat
+heading to town to sell, then back out

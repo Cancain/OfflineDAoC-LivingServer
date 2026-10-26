@@ -5,7 +5,6 @@
 @who *
 @levels 35-50
 @needs solo
-heading to the frontier, anyone want to run with me?
 @needs
 @invites news
 @needs keep_news
@@ -117,3 +116,13 @@ murdaigean tonight, who is in?
 @about place
 murdaigean keeps changing hands, love it
 @about
+
+# The talking update audit: said from the frontier, not from anywhere
+@kind rvr
+@topic frontier
+@who *
+@realm *
+@levels 35-50
+@needs solo,in_frontier
+@invites ask_anyone
+out in the frontier, anyone want to run with me?

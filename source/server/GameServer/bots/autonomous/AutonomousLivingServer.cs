@@ -72,6 +72,7 @@ public static partial class AutonomousLivingServer
             Load("rows of deleted characters", PruneDeletedCharacters);
         GameEventMgr.AddHandler(GamePlayerEvent.LevelUp, new DOLEventHandler(OnPlayerLevelUp));
         GameEventMgr.AddHandler(GamePlayerEvent.RRLevelUp, new DOLEventHandler(OnPlayerRealmRankUp));
+        GameEventMgr.AddHandler(GameLivingEvent.Dying, new DOLEventHandler(OnLivingDying));
         _nextNemesisPrune = Environment.TickCount64 + NemesisPruneIntervalMs;
         _flushTimer = new Timer(_ =>
         {
@@ -84,11 +85,27 @@ public static partial class AutonomousLivingServer
                      $"nemesis {NemesisOn}, schedule {Properties.BOT_SCHEDULE_MODE}, breaks {Properties.BOT_LIVING_BREAKS}).");
     }
 
+    /// <summary>The talking update audit: a real player died; groupmate gamebots react (AutonomousBotGroupChatter).</summary>
+    private static void OnLivingDying(DOLEvent e, object sender, EventArgs args)
+    {
+        if (sender is not GamePlayer { Group: not null } player)
+            return;
+        try
+        {
+            AutonomousBotGroupChatter.OnPlayerDying(player);
+        }
+        catch (Exception exception)
+        {
+            Log.Warn("Bot voices: groupmate reaction to a death", exception);
+        }
+    }
+
     [GameServerStoppedEvent]
     public static void OnServerStopped(DOLEvent e, object sender, EventArgs args)
     {
         GameEventMgr.RemoveHandler(GamePlayerEvent.LevelUp, new DOLEventHandler(OnPlayerLevelUp));
         GameEventMgr.RemoveHandler(GamePlayerEvent.RRLevelUp, new DOLEventHandler(OnPlayerRealmRankUp));
+        GameEventMgr.RemoveHandler(GameLivingEvent.Dying, new DOLEventHandler(OnLivingDying));
         _flushTimer?.Dispose();
         _flushTimer = null;
         FlushAll(wait: true);

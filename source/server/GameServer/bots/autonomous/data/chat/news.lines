@@ -25,7 +25,6 @@ heard {enemy} is hitting {keep}, defenders needed
 {enemy} at {keep} again, they never leave it alone
 defend {keep}! {enemy} on the doors
 @who Leveler
-{keep} getting hit if anyone cares, im stuck at my camp
 @who *
 @needs !witness,newbie
 it says {keep} is under attack? is that one ours?
@@ -377,3 +376,13 @@ heads up, {size} {enemy} spotted in {zone}
 {enemy} group of {size} out there, careful
 @who Daredevil
 {size} {enemy}? lets go find them
+
+# The talking update audit: only a bot at a camp is stuck at one
+@kind news
+@topic siege_defend
+@who Leveler
+@realm *
+@levels 1-50
+@needs !witness,at_camp
+@invites news_siege_defend
+{keep} getting hit if anyone cares, im stuck at my camp

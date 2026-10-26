@@ -1,7 +1,9 @@
 using System;
+using DOL.Database;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DOL.GS.ServerRules;
 
 namespace DOL.GS;
 
@@ -200,4 +202,90 @@ public static class AutonomousChatLiveAnswers
     public static string WhereIAm(GameBot bot, GamePlayer asker, Random random) =>
         bot == null ? null : AutonomousBotChatCoordinator.WhereText(string.IsNullOrWhiteSpace(bot.CurrentZone?.Description) ? "the frontier" : bot.CurrentZone.Description.Trim(),
             bot.CurrentZone != null && asker != null && bot.CurrentZone == asker.CurrentZone, bot.Level, bot.CharacterClass?.Name ?? "adventurer", random);
+
+    #region Questions with real answers (the talking update audit)
+
+    /// <summary>What a bot knows about itself, for "r u 50 yet", "are u a healer", "do u have speed", "u got pots?".</summary>
+    public static AutonomousChatQuestions.BotFacts FactsOf(GameBot bot)
+    {
+        int potions = 0, equipped = 0, crafted = 0;
+        try
+        {
+            potions = bot.Inventory?.AllItems.Count(item => item != null && item.SlotPosition >= (int)eInventorySlot.FirstBackpack &&
+                                                          item.SlotPosition <= (int)eInventorySlot.LastBackpack &&
+                                                          item.Name?.Contains("potion", StringComparison.OrdinalIgnoreCase) == true) ?? 0;
+            // "whered u get that armor": worn pieces, and how many a crafter made (the item's Creator).
+            foreach (DbInventoryItem item in bot.Inventory?.EquippedItems ?? [])
+            {
+                if (item == null || item.SlotPosition is < (int)eInventorySlot.MinEquipable or > (int)eInventorySlot.MaxEquipable)
+                    continue;
+                equipped++;
+                if (!string.IsNullOrWhiteSpace(item.Creator))
+                    crafted++;
+            }
+        }
+        catch (InvalidOperationException)
+        {
+        }
+        bool speed = bot.Spells?.Any(spell => spell?.SpellType == eSpellType.SpeedEnhancement && spell.Level <= bot.Level) == true;
+        return new AutonomousChatQuestions.BotFacts(bot.DatabaseID, bot.Level, bot.CharacterClass?.Name ?? bot.ClassName, bot.Realm,
+            bot.RealmLevel, AutonomousBotPersonality.For(bot).Type, speed, potions, bot.Guild?.Name, equipped, crafted,
+            bot.InCombat || BotGroupInvite.DutyOf(bot) != BotGroupInvite.Duty.None);
+    }
+
+    private static readonly Dictionary<eRealm, (long At, AutonomousChatQuestions.WorldFacts Facts)> Worlds = new();
+
+    /// <summary>What a realm knows of the world (who holds Darkness Falls, the relics, the keeps, the places), cached 10 s.</summary>
+    public static AutonomousChatQuestions.WorldFacts WorldFor(eRealm realm)
+    {
+        long now = GameLoop.GameLoopTime;
+        lock (Worlds)
+            if (Worlds.TryGetValue(realm, out var cached) && now - cached.At < 10_000)
+                return cached.Facts;
+        var relics = new List<(string, eRealm, eRealm, bool)>();
+        var keeps = new List<(string, eRealm)>();
+        try
+        {
+            foreach (GameRelic relic in RelicMgr.GetRelics() ?? [])
+                if (relic != null)
+                    relics.Add((relic.Name, relic.Realm, relic.OriginalRealm, relic.IsMounted));
+            foreach (var keep in GameServer.KeepManager?.GetAllKeeps() ?? [])
+                if (keep != null && !keep.IsPortalKeep && !BattlegroundBrackets.IsBattlegroundRegion(keep.Region))
+                    keeps.Add((keep.Name, keep.Realm));
+        }
+        catch (Exception)
+        {
+            // The world isn't up (tests): answer from places alone.
+        }
+        eRealm df = eRealm.None;
+        try { df = DFEnterJumpPoint.DarknessFallOwner; } catch (Exception) { }
+        var facts = new AutonomousChatQuestions.WorldFacts(df, relics, keeps, AutonomousChatPlaces.All);
+        lock (Worlds)
+            Worlds[realm] = (now, facts);
+        return facts;
+    }
+
+    /// <summary>
+    /// A bot's answer to a question it can answer truly: about itself when the question is said to it (<paramref name="addressed"/>:
+    /// named, by tell, in its group), or about the world (place levels, Darkness Falls, relics, keeps). Null when it can't.
+    /// </summary>
+    public static string AnswerQuestion(GameBot bot, string text, bool addressed, Random random)
+    {
+        if (bot == null || string.IsNullOrWhiteSpace(text))
+            return null;
+        // "torvald u still a thane?": the bot's own name is not part of the question (the holdout check).
+        string unnamed = AutonomousChatThreads.WithoutName(text, bot.Name);
+        if (!string.IsNullOrWhiteSpace(unnamed))
+            text = unnamed;
+        eAutonomousChatIntent intent = AutonomousChatIntentModel.Predict(text);
+        if (intent is eAutonomousChatIntent.BotCheck or eAutonomousChatIntent.Abuse)
+            return null;
+        string self = addressed ? AutonomousChatQuestions.SelfQuestion(text) : null;
+        string answer = self != null
+            ? AutonomousChatQuestions.AnswerSelf(self, text, FactsOf(bot), random)
+            : AutonomousChatQuestions.AnswerWorld(text, bot.Realm, WorldFor(bot.Realm), random);
+        return answer == null ? null : AutonomousBotVoices.StyleFor(bot, answer);
+    }
+
+    #endregion
 }

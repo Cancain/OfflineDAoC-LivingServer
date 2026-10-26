@@ -12,7 +12,6 @@ pull?
 ready when you are
 @invites none
 need a sec, sitting for power
-oom, give me a minute
 med break
 @needs in_group,!in_capital
 buffs dropping soon
@@ -25,7 +24,6 @@ good group tonight
 brb, door
 back
 @invites
-anyone need power?
 loot is yours, i dont need it
 anyone need this drop?
 @invites ask
@@ -130,3 +128,25 @@ pet has aggro, all good
 @topic heal_big
 @needs in_player_group,!in_capital,is_healer
 group heal coming
+
+# The talking update audit: only a power user goes oom
+@kind group
+@topic group
+@who *
+@realm *
+@class Wizard,Theurgist,Sorcerer,Cabalist,Necromancer,Cleric,Friar,Minstrel,Healer,Shaman,Runemaster,Spiritmaster,Bonedancer,Skald,Eldritch,Enchanter,Mentalist,Animist,Druid,Bard,Warden
+@levels 1-50
+@needs in_group,!in_capital
+@invites none
+oom, give me a minute
+
+# The talking update audit: a bot offering power is one that can give it
+@kind group
+@topic group
+@who *
+@realm *
+@class Cabalist,Necromancer,Spiritmaster,Bonedancer,Mentalist,Theurgist
+@levels 1-50
+@needs in_group,!in_capital
+@invites ask_anyone
+anyone need power?

@@ -19,7 +19,9 @@ public static class AutonomousChatPlaces
 {
     private static readonly Logger Log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
 
-    public sealed record Place(string Key, string Realm, string Type, string[] Aliases, string[] Zones);
+    /// <summary>A place; <paramref name="Levels"/> is its monsters' usual level range (20th-80th percentile, from the world data
+    /// by tools/bot-voices/place_levels.py) or a battleground's bracket, or null.</summary>
+    public sealed record Place(string Key, string Realm, string Type, string[] Aliases, string[] Zones, int[] Levels = null);
 
     private static readonly Lazy<Place[]> Loaded = new(Load);
 
@@ -50,9 +52,14 @@ public static class AutonomousChatPlaces
         static string[] Strings(JsonElement e, string name) => e.TryGetProperty(name, out JsonElement v) && v.ValueKind == JsonValueKind.Array
             ? v.EnumerateArray().Select(x => x.GetString()).Where(x => !string.IsNullOrEmpty(x)).ToArray()
             : [];
+        static int[] Levels(JsonElement e) => e.TryGetProperty("levels", out JsonElement v) && v.ValueKind == JsonValueKind.Array &&
+                                              v.GetArrayLength() == 2
+            ? v.EnumerateArray().Select(x => x.GetInt32()).ToArray()
+            : null;
         return document.RootElement.GetProperty("places").EnumerateArray().Select(e => new Place(
             e.GetProperty("key").GetString(), e.TryGetProperty("realm", out JsonElement realm) ? realm.GetString() : "*",
-            e.TryGetProperty("type", out JsonElement type) ? type.GetString() : "zone", Strings(e, "aliases"), Strings(e, "zones"))).ToArray();
+            e.TryGetProperty("type", out JsonElement type) ? type.GetString() : "zone", Strings(e, "aliases"), Strings(e, "zones"),
+            Levels(e))).ToArray();
     }
 
     /// <summary>The places a bot in this zone (or region, for capitals and dungeons) is at: "Vale of Mularn" is the vale and

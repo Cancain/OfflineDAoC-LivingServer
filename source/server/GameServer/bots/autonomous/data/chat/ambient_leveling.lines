@@ -196,7 +196,6 @@ heard there is a named that wanders near {camp}, anyone seen it?
 three purples in {dungeon} and we did not wipe. legendary night
 @invites
 @who NoLifer
-once i hit 50 it is straight to the frontier, no stops
 mapping out which realm abilities to buy first at 50
 @who Leveler
 @invites joke
@@ -245,3 +244,12 @@ any merchant buys it, they all pay the same
 every merchant takes everything, just sell it to the closest one
 try the exchange first, merchants pay less
 the nearest merchant will take it, price is the same everywhere
+
+# The talking update audit: not said by a 50
+@kind ambient
+@topic leveling
+@who NoLifer
+@realm *
+@levels 35-49
+@invites chat
+once i hit 50 it is straight to the frontier, no stops

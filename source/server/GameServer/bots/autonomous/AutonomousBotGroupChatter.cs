@@ -68,11 +68,35 @@ public static class AutonomousBotGroupChatter
             return false;
         if (!AutonomousBotVoices.TryLine(bot, "group", out VC.Picked picked))
             return false;
-        Send(bot, picked.Text);
+        Send(bot, picked.Text, picked.Line?.Invites ?? "");
         if (!string.IsNullOrEmpty(picked.Correction))
-            AutonomousLivingServer.Later(bot, 1_200 + Random.Shared.Next(1_400), () => bot.Group == group, () => Send(bot, picked.Correction));
+            AutonomousLivingServer.Later(bot, 1_200 + Random.Shared.Next(1_400), () => bot.Group == group, () => Send(bot, picked.Correction, remember: false));
         Answer(bot, group, picked);
         return true;
+    }
+
+    /// <summary>
+    /// The talking update audit: the player dies in a group of gamebots and nobody said a word. Now a groupmate does, a moment
+    /// later: one that can rez says it will ("rez coming, dont release"), another "ouch, sorry". Not during a wipe call.
+    /// </summary>
+    public static void OnPlayerDying(GamePlayer player)
+    {
+        if (!AutonomousBotVoices.Enabled || player?.Group == null || Random.Shared.NextDouble() >= 0.75)
+            return;
+        Group group = player.Group;
+        GameBot[] mates = group.GetMembersInTheGroup().OfType<GameBot>()
+            .Where(mate => mate.IsAutonomousWorldBot && !mate.IsTemporaryGroupHelper && mate.IsAlive)
+            .OrderByDescending(mate => mate.ResurrectionSpell != null && mate.ResurrectionSpell.Level <= mate.Level)
+            .ThenBy(_ => Random.Shared.Next()).ToArray();
+        if (mates.Length == 0)
+            return;
+        GameBot speaker = mates[0];
+        AutonomousLivingServer.Later(speaker, 1_500 + Random.Shared.Next(2_000), () => speaker.Group == group && speaker.IsAlive && !player.IsAlive,
+            () =>
+            {
+                if (AutonomousBotVoices.TryLine(speaker, "combat", out VC.Picked picked, topic: "player_down", relax: true))
+                    Send(speaker, picked.Text, "none", player.Name);
+            });
     }
 
     /// <summary>
@@ -87,7 +111,7 @@ public static class AutonomousBotGroupChatter
         AutonomousLivingServer.Later(bot, 2_500 + Random.Shared.Next(3_500), () => bot.Group == group && bot.IsAlive && !bot.InCombat, () =>
         {
             if (AutonomousBotVoices.TryLine(bot, "lfg", out VC.Picked picked, topic: "join", relax: true))
-                Send(bot, picked.Text);
+                Send(bot, picked.Text, "none");
         });
     }
 
@@ -131,6 +155,10 @@ public static class AutonomousBotGroupChatter
             .OrderBy(_ => Random.Shared.Next()).ToArray();
         if (mates.Length == 0)
             return;
+        // The talking update: "why?", "ty", a laugh or an answer to a groupmate's question follows on from what was said.
+        if (AutonomousBotChatCoordinator.TryThreadReply(player, message, AutonomousChatThreads.GroupChannel(group),
+                AutonomousBotChatCoordinator.ThreadScope.Group))
+            return;
         Next next = Groups.GetValue(group, _ => new Next());
         lock (next)
         {
@@ -140,14 +168,27 @@ public static class AutonomousBotGroupChatter
         }
         GameBot[] named = mates.Where(mate => AutonomousBotChatCoordinator.ContainsMention(message, mate.Name)).ToArray();
         GameBot[] pool = named.Length > 0 ? named : mates;
+        // "eithne what spec r u": the name says who it is for (the holdout check).
+        if (named.Length > 0 && AutonomousChatThreads.WithoutName(message, named[0].Name) is { Length: > 0 } unnamed)
+            message = unnamed;
         if (AutonomousChatKnowledge.TryAnswer(player, message, out string knowledge))
         {
             GameBot answerer = pool[0];
             AutonomousLivingServer.Later(answerer, AutonomousBotChatCoordinator.ReplyDelayMs(knowledge, 0, Random.Shared),
-                () => answerer.Group == group && answerer.IsAlive, () => Send(answerer, AutonomousBotVoices.StyleFor(answerer, knowledge)));
+                () => answerer.Group == group && answerer.IsAlive, () => Send(answerer, AutonomousBotVoices.StyleFor(answerer, knowledge), "", player.Name));
             return;
         }
         eAutonomousChatIntent intent = AutonomousChatIntentModel.Predict(message);
+        // The talking update audit: "adds!!", "INC", "train coming RUN" in a PvE group drew "im nowhere near the frontier". A
+        // groupmate takes the warning ("got it", "on it").
+        if (intent == eAutonomousChatIntent.Alarm)
+        {
+            GameBot heard = pool[0];
+            if (AutonomousBotVoices.TryLine(heard, "reply", out VC.Picked ok, answers: "player_headsup", relax: true))
+                AutonomousLivingServer.Later(heard, AutonomousBotChatCoordinator.ReplyDelayMs(ok.Text, 0, Random.Shared) / 2,
+                    () => heard.Group == group && heard.IsAlive, () => Send(heard, ok.Text, "none", player.Name));
+            return;
+        }
         // A group is small: one answer, two for a hello or a ding.
         int count = Math.Min(AutonomousBotChatCoordinator.PlayerReplyCount(intent, false, named.Length > 0, pool.Length, Random.Shared),
             intent is eAutonomousChatIntent.Greeting or eAutonomousChatIntent.Ding ? 2 : 1);
@@ -161,16 +202,21 @@ public static class AutonomousBotGroupChatter
                 continue;
             due = AutonomousBotChatCoordinator.ReplyDelayMs(reply, due, Random.Shared);
             string text = reply;
-            AutonomousLivingServer.Later(mate, due, () => mate.Group == group && mate.IsAlive && !mate.InCombat, () => Send(mate, text));
+            AutonomousLivingServer.Later(mate, due, () => mate.Group == group && mate.IsAlive && !mate.InCombat, () => Send(mate, text, "", player.Name));
         }
     }
 
-    internal static void Send(GameBot bot, string text)
+    /// <summary>A bot's line in /group. The talking update: remembered in the group's thread (with what it invites, and the
+    /// player it answered), so "why?", "ty" and answers to its questions follow on as in /faction.</summary>
+    internal static void Send(GameBot bot, string text, string invites = "", string to = null, bool remember = true)
     {
         if (bot.Group != null && AutonomousLivingServer.GroupHasPlayer(bot.Group))
         {
             bot.Group.SendMessageToGroupMembers(bot, text, eChatType.CT_Group, eChatLoc.CL_ChatWindow);
             BotChatTranscript.Bot("group", bot.Name, bot.Realm, text);
+            if (remember)
+                AutonomousChatThreads.Log.Record(AutonomousChatThreads.GroupChannel(bot.Group), bot.DatabaseID, bot.Name, text, invites,
+                    GameLoop.GameLoopTime, to);
         }
     }
 }

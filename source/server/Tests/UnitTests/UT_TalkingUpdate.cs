@@ -289,7 +289,6 @@ namespace DOL.GS.Tests
         [TestCase("where is the cleric trainer in camelot")]
         [TestCase("hi")]
         [TestCase("")]
-        [TestCase("y")]
         public void ALongerQuestionIsNotAFollowUp(string message) => Assert.That(AutonomousChatThreads.FollowUpWord(message), Is.Null);
 
         [Test]

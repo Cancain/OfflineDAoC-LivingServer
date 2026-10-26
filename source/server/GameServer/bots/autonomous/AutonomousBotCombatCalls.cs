@@ -321,7 +321,7 @@ public static class AutonomousBotCombatCalls
         if (!AutonomousBotVoices.TryLine(bot, "combat", out VC.Picked picked, topic: topic, relax: true,
                 filter: topic is "pull" or "add" ? line => PullLineFits(line.Text, enemies) : null))
             return false;
-        AutonomousBotGroupChatter.Send(bot, picked.Text);
+        AutonomousBotGroupChatter.Send(bot, picked.Text, "none");
         return true;
     }
 
