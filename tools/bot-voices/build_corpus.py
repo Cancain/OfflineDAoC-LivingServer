@@ -403,7 +403,11 @@ def parse_file(path, problems):
         for said in family:
             check_text(said, tags, where, problems)
             line = dict(tags, text=said, where=where, **{'class': list(tags['class'])})
-            line.pop('about')
+            # Kept only when set and the line names a place, so a test can tell talk about a place from a claim to be there.
+            if not (line.pop('about') and places_in(said)):
+                pass
+            else:
+                line['about'] = True
             if len(family) > 1:
                 line['weight'] = round(weight, 4)
                 line['_family'] = True

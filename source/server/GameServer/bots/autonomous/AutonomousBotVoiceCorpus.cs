@@ -25,6 +25,9 @@ public sealed class AutonomousBotVoiceCorpus
 
         /// <summary>A reply's or closing's answers: the opener invitations it fits.</summary>
         public string[] Answers { get; init; } = [];
+
+        /// <summary>The line names a place only to talk about it ("@about place"), not to say the speaker is there.</summary>
+        public bool About { get; init; }
     }
 
     public sealed record Beat(string Role, string[] Variants, bool Optional, int PauseSeconds)
@@ -118,6 +121,7 @@ public sealed class AutonomousBotVoiceCorpus
         {
             Invites = Str(e, "invites"),
             Answers = Strs(e, "answers"),
+            About = Bool(e, "about"),
         };
     }
 

@@ -116,15 +116,15 @@ namespace DOL.GS.Tests
             string[] claimKinds = ["ambient", "lfg", "rvr", "camp", "group", "ding", "death", "news"];
             var keysByAlias = AutonomousChatPlaces.All.SelectMany(p => p.Aliases.Select(a => (Alias: a, p.Key)))
                 .Where(x => x.Alias.Length >= 5).ToArray();
-            var offenders = Corpus.Lines.Where(line => claimKinds.Contains(line.Kind))
+            var offenders = Corpus.Lines.Where(line => claimKinds.Contains(line.Kind) && !line.About)
                 .Where(line => keysByAlias.Any(x => System.Text.RegularExpressions.Regex.IsMatch(line.Text.ToLowerInvariant(),
                     $@"(?<![a-z']){System.Text.RegularExpressions.Regex.Escape(x.Alias)}(?![a-z])")))
                 .Where(line => !line.Needs.Any(n => n.TrimStart('!').StartsWith("at:") || n.TrimStart('!').StartsWith("going:") ||
                                                     n.TrimStart('!').StartsWith("near:")))
                 .Select(line => line.Text).ToArray();
-            // Lines marked "@about place" have their tag removed at build time, so a few talk-about lines remain; keep them few.
-            Assert.That(offenders.Length, Is.LessThan(Corpus.Lines.Count(line => claimKinds.Contains(line.Kind)) / 10),
-                string.Join("\n", offenders.Take(20)));
+            // Lines marked "@about place" carry "about" in corpus.json (2026-10-26; before, the tag was dropped and this allowed a
+            // tenth of the lines through). Any other line that names a place must say where the speaker is.
+            Assert.That(offenders, Is.Empty, string.Join("\n", offenders.Take(20)));
         }
 
         #endregion
