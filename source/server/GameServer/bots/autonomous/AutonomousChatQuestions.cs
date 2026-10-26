@@ -16,7 +16,7 @@ namespace DOL.GS;
 public static class AutonomousChatQuestions
 {
     /// <summary>What a bot knows about itself.</summary>
-    /// <param name="Equipped">Worn armor and weapon pieces; <paramref name="Crafted"/> of them made by a crafter.</param>
+    /// <param name="Equipped">Worn armor, weapon and jewelry pieces; <paramref name="Crafted"/> of them made by a crafter (IsCrafted).</param>
     /// <param name="Busy">In a fight, or on something it can't leave (a keep, a relic, a raid).</param>
     public sealed record BotFacts(long Id, int Level, string ClassName, eRealm Realm, int RealmLevel, BotPersonalityType Type,
         bool HasSpeed, int Potions, string Guild, int Equipped = 0, int Crafted = 0, bool Busy = false);
@@ -71,15 +71,15 @@ public static class AutonomousChatQuestions
 
     #region About the bot
 
-    /// <summary>The realm rank as players wrote it: RealmLevel 0 is 1L1, 13 is 2L4.</summary>
-    public static string RankText(int realmLevel) => $"{realmLevel / 10 + 1}L{realmLevel % 10 + 1}";
+    /// <summary>The realm rank as the server writes it (API/Player.cs GetRR): RealmLevel 0 is 1L0, 13 is 2L3.</summary>
+    public static string RankText(int realmLevel) => $"{realmLevel / 10 + 1}L{realmLevel % 10}";
 
     private static readonly (Regex Pattern, string Kind)[] SelfQuestions =
     [
-        (new Regex(@"\b(what (lvl|level) (are|r) (you|u)|what (lvl|level) (you|u)|(you|u|r u|are you|are u) (\d+|fifty) yet|how high (are|r) (you|u)|(r|are) (u|you) (\d+)\b|ur level|your level|(you|u) (hit|dinged|reach|reached|made) (\d+|fifty)\b)"), "level"),
-        (new Regex(@"\b(what class (are|r) (you|u)|what (are|r) (you|u) playing|what do (you|u) play|(are|r) (you|u) an?|(you|u|ur) an? (healer|tank|caster|cleric|druid|bard|shaman|healer)|ur a \w+ right|youre a \w+ right)\b"), "class"),
+        (new Regex(@"\b(what (lvl|level) (are|r) (you|u)|what (lvl|level) (you|u)|(you|u|r u|are you|are u) (\d+|fifty) yet|how high (are|r) (you|u)|(r|are) (u|you) (\d{2}|[5-9])( yet| already| now)?$|ur level|your level|(you|u) (hit|dinged|reach|reached|made) (\d+|fifty)\b)"), "level"),
+        (new Regex(@"\b(what class (are|r) (you|u)|what (are|r) (you|u) playing|what do (you|u) play|(you|u|ur) an? (healer|tank|caster|cleric|druid|bard|shaman|healer))\b"), "class"),
         (new Regex(@"\b(whats (ur|your) (rr|realm rank|rank)|what (rr|realm rank) (are|r) (you|u)|(ur|your) (rr|realm rank))\b"), "rank"),
-        (new Regex(@"\b((do|can) (you|u) (have|do|cast|sing) speed|(you|u) got speed|(you|u) have speed|any speed|speed\?)\b"), "speed"),
+        (new Regex(@"\b((do|can) (you|u) (have|do|cast|sing) speed|(you|u) got speed|(you|u) have speed|any speed)\b"), "speed"),
         (new Regex(@"\b((you|u) (got|have) (any )?(pots|potions)|any (pots|potions)|spare (pots|potions))\b"), "pots"),
         (new Regex(@"\b(how long (have )?(you|u) (been )?(play|playing|playin|played)|since when (do|have) (you|u)|when did (you|u) start|(you|u) (been )?(play|playing|playin|played) since|since (launch|release|beta)\b|how old is (ur|your) (toon|char|character)|(you|u) (been )?playing (forever|long|a while))"), "playing"),
         (new Regex(@"\b((did|have) (you|u) (ever )?(finish|finished|done|do|get|got) (ur|your|the) epic|(ur|your) epic|done (ur|your|the) epic)\b"), "epic"),
@@ -138,7 +138,8 @@ public static class AutonomousChatQuestions
         {
             case "level":
             {
-                Match asked = Regex.Match(t, @"\b(\d{1,2})\b");
+                // "im 30, what lvl r u": the player's own level is not the one asked about (review 2026-10-26).
+                Match asked = Regex.Match(Regex.Replace(t, @"\b(im|i m|i am|im lvl|im level|me) \d{1,2}\b", ""), @"\b(\d{1,2})\b");
                 if (bot.Level >= 50)
                     return random.Next(2) == 0 ? "yep, 50" : "50, finally";
                 if (asked.Success && int.TryParse(asked.Groups[1].Value, out int level) && level != bot.Level)
@@ -161,7 +162,7 @@ public static class AutonomousChatQuestions
             }
             case "rank":
                 return bot.RealmLevel <= 0
-                    ? random.Next(2) == 0 ? "1L1 lol, havent done much rvr" : "still rr1, mostly pve"
+                    ? random.Next(2) == 0 ? "rr1 lol, havent done much rvr" : "still rr1, mostly pve"
                     : random.Next(2) == 0 ? $"{RankText(bot.RealmLevel)}" : $"only {RankText(bot.RealmLevel)} lol";
             case "speed":
                 return bot.HasSpeed
@@ -227,9 +228,10 @@ public static class AutonomousChatQuestions
                     return random.Next(2) == 0 ? "what gear lol, still working on it" : "barely have any yet, earning it";
                 if (bot.Crafted * 2 >= bot.Equipped)
                     return random.Next(2) == 0 ? "crafted mostly" : "crafter made most of it";
+                // Drops and merchant buys look alike here, so a bot with nothing crafted doesn't claim either.
                 return bot.Crafted > 0
-                    ? random.Next(2) == 0 ? "drops mostly, a crafted piece or two" : "mix of drops and crafted"
-                    : random.Next(2) == 0 ? "drops, camped for it" : "all drops so far";
+                    ? random.Next(2) == 0 ? "a mix, a crafted piece or two" : "mostly picked up along the way, a couple crafted"
+                    : random.Next(2) == 0 ? "picked it up along the way" : "drops and merchant stuff mostly";
             case "busy":
                 return bot.Busy
                     ? random.Next(2) == 0 ? "bit busy right now, whats up?" : "kinda, in the middle of something. whats up?"
@@ -250,17 +252,17 @@ public static class AutonomousChatQuestions
                         BotPersonalityType.Crafter => "crafting mostly",
                         BotPersonalityType.Explorer => "might wander somewhere new",
                         BotPersonalityType.Socialite => "whatever the guild is doing",
-                        _ => bot.Level >= 50 ? "not sure yet" : random.Next(2) == 0 ? "prob just leveling tbh" : "leveling, same as always",
+                        _ => bot.Level >= 50 ? "not sure yet" : random.Next(2) == 0 ? "prob just leveling" : "leveling, same as always",
                     };
                 return bot.Type switch
                 {
                     BotPersonalityType.Daredevil => random.Next(2) == 0 ? "probably, if theres a fight" : "maybe, depends whats going on",
-                    BotPersonalityType.Crafter => random.Next(2) == 0 ? "prob just crafting tbh" : "crafting more likely",
+                    BotPersonalityType.Crafter => random.Next(2) == 0 ? "prob just crafting" : "crafting more likely",
                     BotPersonalityType.Explorer => random.Next(2) == 0 ? "might wander somewhere new" : "not sure yet, maybe explore a bit",
                     BotPersonalityType.Socialite => random.Next(2) == 0 ? "whatever the guild is doing" : "if people are going, sure",
                     _ => bot.Level >= 50
                         ? random.Next(2) == 0 ? "maybe, not sure yet" : "probably at some point"
-                        : random.Next(2) == 0 ? "nah, leveling" : "prob just leveling tbh",
+                        : random.Next(2) == 0 ? "nah, leveling" : "prob just leveling",
                 };
             case "spec":
                 return random.Next(2) == 0 ? "still figuring it out lol" : "mostly my main line, bit of the rest";
@@ -362,7 +364,9 @@ public static class AutonomousChatQuestions
     public static string AnswerDarknessFalls(string text, eRealm realm, eRealm owner, Random random)
     {
         string t = Normalize(text);
-        if (!Regex.IsMatch(t, @"\b(df|darkness falls)\b") || !Regex.IsMatch(t, @"\b(ours|our|who|whos|own|owns|has|have|open|get in|got)\b"))
+        // Who holds it, not "anyone have a df group?" or "who wants to do df?" (review 2026-10-26).
+        if (!Regex.IsMatch(t, @"\b(df|darkness falls)\b") || !Regex.IsMatch(t,
+                @"\b((is|s) (df|darkness falls) (ours|open|theirs|still ours)|who (has|owns|holds|got|has got) (df|darkness)|(do|did) we (still )?(have|own|hold|get|lose) (df|darkness)|(df|darkness falls) (open|ours|still ours)|can we get (in|into) (df|darkness)|(we|hibs|mids|albs|they) (still )?(have|own|hold|got|lost|take|took) (df|darkness))\b"))
             return null;
         if (owner == eRealm.None)
             return "not sure who has it right now";
@@ -393,7 +397,9 @@ public static class AutonomousChatQuestions
     public static string AnswerKeep(string text, eRealm realm, IReadOnlyList<(string Name, eRealm Owner)> keeps, Random random)
     {
         string t = " " + Normalize(text) + " ";
-        if (keeps == null || !Regex.IsMatch(t, @"\b(ours|our|who|whos|own|owns|has|have|lost|lose|still|took|take|taken)\b"))
+        // Who holds a keep, not "anyone have a group at benowyc?" or "anyone still at bledmeer?" (review 2026-10-26).
+        if (keeps == null || !Regex.IsMatch(t,
+                @"\b(who (has|owns|holds|got|took|has got)|ours|theirs|do we (still )?(have|own|hold)|(did|have) we (lose|lost|take|took)|(we|they) (lost|took|take|have taken|took back)|still (have|own|hold))\b"))
             return null;
         foreach ((string name, eRealm owner) in keeps)
         {
@@ -451,7 +457,9 @@ public static class AutonomousChatQuestions
     /// <summary>Any of the world answers for this question, or null.</summary>
     public static string AnswerWorld(string text, eRealm realm, WorldFacts world, Random random) =>
         // Only a question gets a world answer: "zerg heading for our relic keep" is an alarm, not "do we own our relics?".
-        world == null || !IsQuestion(text) ? null
+        // A group request that names a place is not a question about it ("anyone want to do vendo at 25?", "who is at benowyc?").
+        world == null || !IsQuestion(text) || AutonomousChatShortTalk.QuestionShape(text) is "ask_anyone" or "ask_inplace" or "ask_on" ||
+        AutonomousChatIntentModel.Predict(text) == eAutonomousChatIntent.Grouping ? null
             : AnswerCommand(text, random)
               ?? AnswerPlaceLevel(text, realm, world.Places, random)
               ?? AnswerDarknessFalls(text, realm, world.DfOwner, random)

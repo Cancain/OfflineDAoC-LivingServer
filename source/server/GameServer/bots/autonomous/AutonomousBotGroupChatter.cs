@@ -94,7 +94,13 @@ public static class AutonomousBotGroupChatter
         AutonomousLivingServer.Later(speaker, 1_500 + Random.Shared.Next(2_000), () => speaker.Group == group && speaker.IsAlive && !player.IsAlive,
             () =>
             {
-                if (AutonomousBotVoices.TryLine(speaker, "combat", out VC.Picked picked, topic: "player_down", relax: true))
+                // Not in a wipe, which has its own call; and "ill rez you" only from a bot that will come and do it (review 2026-10-26).
+                var members = group.GetMembersInTheGroup();
+                if (members.Count(member => member.IsAlive) * 2 < members.Count)
+                    return;
+                bool willRez = AutonomousBotChatCoordinator.WillComeRez(speaker, player);
+                if (AutonomousBotVoices.TryLine(speaker, "combat", out VC.Picked picked, topic: "player_down", relax: true,
+                        withoutFlags: willRez ? null : ["can_rez"]))
                     Send(speaker, picked.Text, "none", player.Name);
             });
     }

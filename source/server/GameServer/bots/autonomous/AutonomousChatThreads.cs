@@ -121,8 +121,10 @@ public static class AutonomousChatThreads
     [
         (new Regex(@"^(why|why\s?not|how come|whys that|why is that|why tho|why though|how so|what for|for what|y what happened|y tho|y not|(y|why) (there|that|that one|him|her|them|now|so|then|that way))$"), "why"),
         (new Regex(@"^(really|rly|srsly|seriously|for real|no way|are you sure|u sure|you sure|honestly|truly)$"), "really"),
-        (new Regex(@"^(how long|how long did (that|it) take( (u|you))?|how long did u take|how much longer|how long was that|how high|how many|how long (u|you|have you|have u) (been )?(here|there|at it|doing that|camping|at this))$"), "howlong"),
+        (new Regex(@"^(how long|how long did (that|it) take( (u|you))?|how long did u take|how much longer|how long was that|how long (u|you|have you|have u) (been )?(here|there|at it|doing that|camping|at this))$"), "howlong"),
         (new Regex(@"^(how|how do you mean|how do u mean|how do you do that|how did you|how'd you|hows that work|how does that work|\w+ how|how so)$"), "how"),
+        // "how many?" after "zerg at the mile gate" is a count, not a time (review 2026-10-26).
+        (new Regex(@"^(how many|how many of them|how many were there|how big|how high|how many mobs|how many adds)$"), "howmany"),
         // "o ya what stats", "any good?" about something the bot found (the holdout check).
         (new Regex(@"^((find|get|got|see) (anything|any|something) (good|nice|cool|decent)|what did (it|u|you) (get|drop)|what dropped|what drop|(what stats|what bonuses|what are the stats|whats it do|what does it do|any good|good stats|how good|is it good|what con|what color|what kind of stats|stats))$"), "detail"),
         // "into what" after "just respecced", "what was it" after "had a nice drop": the bot says a little more, not "nvm".
@@ -212,6 +214,30 @@ public static class AutonomousChatThreads
         return Regex.Matches(message, @"[A-Za-z]{2,}|\d+|\b[ykn]\b", RegexOptions.IgnoreCase).Count >= 1;
     }
 
+    private static readonly HashSet<string> ConfirmFiller = new(StringComparer.Ordinal)
+    {
+        "the", "that", "this", "those", "one", "you", "for", "too", "now", "then", "there", "here", "and", "with", "are", "was", "yet",
+        "lol", "still", "just", "really",
+    };
+
+    /// <summary>
+    /// Whether a short "...?" checks the bot's own line ("second gate?" after "meet at the gate", "the one by the inn?" after
+    /// "try the horse from cotswold"): it shares a word with that line or points at something in it. Not "50 yet?" or "mids?"
+    /// after an unrelated line, which a "yep" would answer falsely (review 2026-10-26). Pure.
+    /// </summary>
+    public static bool ConfirmFits(string message, string botLine)
+    {
+        string said = AutonomousChatQuestions.Normalize(message);
+        if (AutonomousChatQuestions.SelfQuestion(said) != null || Regex.IsMatch(said, @"\d|\b(lvl|level|rr|rank|yet)\b"))
+            return false;
+        if (Regex.IsMatch(said, @"^(the|that|this|those|which|second|first|third|next|last|other|by|near|at|in|on|past|behind|left|right|north|south|east|west) "))
+            return true;
+        var theirs = new HashSet<string>(AutonomousChatQuestions.Normalize(botLine).Split(' ').Where(word => word.Length >= 3 && !ConfirmFiller.Contains(word)),
+            StringComparer.Ordinal);
+        return said.Split(' ').Any(word => word.Length >= 3 && !ConfirmFiller.Contains(word) && (theirs.Contains(word) ||
+            theirs.Any(other => other.Length >= 4 && word.Length >= 4 && (other.StartsWith(word, StringComparison.Ordinal) || word.StartsWith(other, StringComparison.Ordinal)))));
+    }
+
     /// <summary>"gz on the ding!", "np", "yw anytime": a bot line that a "ty" closes, with nothing more to say. Pure.</summary>
     public static bool EndsAnExchange(string line) =>
         AutonomousChatIntentModel.Predict(line) is eAutonomousChatIntent.Congrats or eAutonomousChatIntent.Thanks ||
@@ -220,7 +246,7 @@ public static class AutonomousChatThreads
     /// <summary>"lfm vendo need a tank pst", "1 more for spindel": a bot's call for players to join.</summary>
     public static bool CallsForGroup(string line) =>
         Regex.IsMatch((line ?? string.Empty).ToLowerInvariant(),
-            @"\b(lfm|lf\dm|lf \d ?more|need (a |one |1 )?(tank|healer|puller|cc|mezzer|caster|nuker|dps|more)|room for (one|1|2|two|a)|spots? (left|open)|one more|1 more|anyone want to (group|join|come|go|run|do|duo)|anyone wanna (group|join|come|go|run|do|duo)|want to join|want to come|wanna come|come with)\b");
+            @"\b(lfm|lf\dm|lf \d ?more|need (a |one |1 )?(tank|healer|puller|cc|mezzer|caster|nuker|dps|more)|room for (one|1|2|two|a)|spots? (left|open)|(one|1) more for|need (one|1) more|anyone want to (group|join|come|go|run|do|duo)|anyone wanna (group|join|come|go|run|do|duo)|want to join|want to come|wanna come|come with)\b");
 
     private static readonly Regex Joins = new(@"^(x|xx|me|me pls|me plz|me please|x me|x pls|inv|inv pls|inv plz|inv me|inv me pls|im in|i m in|count me in|ill come|i ll come|i can come|i can|me me|i ll join|ill join|i want in|sign me up)$");
 

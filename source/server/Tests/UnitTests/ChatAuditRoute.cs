@@ -65,6 +65,8 @@ namespace DOL.GS.Tests
             string word = AutonomousChatThreads.FollowUpWord(text);
             if (word == "y")
                 word = last is { Asked: true } ? null : "why";
+            if (word == "confirm" && (last == null || !AutonomousChatThreads.ConfirmFits(text, last.Text)))
+                word = null;
             if (word != null && last != null)
                 return ("thread followup_" + word, null);
             if (open != null && AutonomousChatThreads.SaysYes(text) == false)

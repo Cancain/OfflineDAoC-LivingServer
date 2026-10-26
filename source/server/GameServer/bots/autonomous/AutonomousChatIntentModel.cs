@@ -136,6 +136,9 @@ public static partial class AutonomousChatIntentModel
         {
             if (!Insults.Contains(words[i]))
                 continue;
+            // "are you a noob friendly guild?", "u a newb too? just started" (review 2026-10-26)
+            if (i + 1 < words.Length && words[i + 1] is "friendly" or "too" or "like" or "guild" or "here" or "also" or "myself" or "either" or "zone" or "area")
+                continue;
             if (!WeakInsults.Contains(words[i]))
                 return true;
             // "youre trash", "you are terrible", "ur so awful" (not "where do u sell trash loot")
@@ -165,7 +168,8 @@ public static partial class AutonomousChatIntentModel
             [eAutonomousChatIntent.Trading] = new(StringComparer.OrdinalIgnoreCase) { "buy", "sell", "price", "auction", "exchange", "merchant" },
             [eAutonomousChatIntent.Dungeon] = new(StringComparer.OrdinalIgnoreCase) { "dungeon", "tomb", "caves", "cave" },
             [eAutonomousChatIntent.RvR] = new(StringComparer.OrdinalIgnoreCase) { "rvr", "frontier", "relic" },
-            [eAutonomousChatIntent.Grouping] = new(StringComparer.OrdinalIgnoreCase) { "group", "party", "invite", "lfg" },
+            // Not a bare "group" or "party": "love this group" talks about one (review 2026-10-26). Requests are read by the word rules.
+            [eAutonomousChatIntent.Grouping] = new(StringComparer.OrdinalIgnoreCase) { "invite", "lfg" },
         };
 
     private static readonly Model Trained = Train();

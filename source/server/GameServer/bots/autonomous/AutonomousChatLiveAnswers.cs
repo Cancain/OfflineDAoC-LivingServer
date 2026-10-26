@@ -214,13 +214,14 @@ public static class AutonomousChatLiveAnswers
             potions = bot.Inventory?.AllItems.Count(item => item != null && item.SlotPosition >= (int)eInventorySlot.FirstBackpack &&
                                                           item.SlotPosition <= (int)eInventorySlot.LastBackpack &&
                                                           item.Name?.Contains("potion", StringComparison.OrdinalIgnoreCase) == true) ?? 0;
-            // "whered u get that armor": worn pieces, and how many a crafter made (the item's Creator).
+            // "whered u get that armor": worn pieces, and how many a crafter made (IsCrafted; Creator also holds the mob a drop came
+            // from, review 2026-10-26).
             foreach (DbInventoryItem item in bot.Inventory?.EquippedItems ?? [])
             {
                 if (item == null || item.SlotPosition is < (int)eInventorySlot.MinEquipable or > (int)eInventorySlot.MaxEquipable)
                     continue;
                 equipped++;
-                if (!string.IsNullOrWhiteSpace(item.Creator))
+                if (item.IsCrafted)
                     crafted++;
             }
         }

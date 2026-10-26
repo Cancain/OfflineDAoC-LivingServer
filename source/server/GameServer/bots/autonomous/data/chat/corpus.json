@@ -66627,8 +66627,8 @@
    "answers": [
     "player_order"
    ],
-   "text": "on it now",
-   "id": "971277dd8d04"
+   "text": "k np",
+   "id": "64b87592d6f0"
   },
   {
    "kind": "reply",
@@ -66647,8 +66647,8 @@
    "answers": [
     "player_order"
    ],
-   "text": "will do, boss",
-   "id": "ee92a3d81ac3"
+   "text": "kk will try",
+   "id": "554b89dba9c6"
   },
   {
    "kind": "reply",
@@ -66667,8 +66667,8 @@
    "answers": [
     "player_order"
    ],
-   "text": "k, got it",
-   "id": "f9c32a3b953a"
+   "text": "alright alright",
+   "id": "07294aa6d131"
   },
   {
    "kind": "reply",
@@ -66687,48 +66687,8 @@
    "answers": [
     "player_order"
    ],
-   "text": "sure thing, going",
-   "id": "40b8b85e7cfa"
-  },
-  {
-   "kind": "reply",
-   "topic": "general",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "answers": [
-    "player_order"
-   ],
-   "text": "k, going",
-   "id": "a0c69c97ef39"
-  },
-  {
-   "kind": "reply",
-   "topic": "general",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "answers": [
-    "player_order"
-   ],
-   "text": "yep, on it",
-   "id": "ad8e7289dd09"
+   "text": "k, will try",
+   "id": "7f97dee0d413"
   },
   {
    "kind": "reply",
@@ -67581,6 +67541,126 @@
    ],
    "text": "meh, not worth the story",
    "id": "742e9ced28cb"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "followup_howmany"
+   ],
+   "text": "a bunch",
+   "id": "c3b42dc06d24"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "followup_howmany"
+   ],
+   "text": "didnt count, enough",
+   "id": "8ab04d3e9d48"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "followup_howmany"
+   ],
+   "text": "stopped counting after a while",
+   "id": "1cad1a1ca92e"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "followup_howmany"
+   ],
+   "text": "more than i wanted lol",
+   "id": "0603e43538c2"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "followup_howmany"
+   ],
+   "text": "a few, maybe more",
+   "id": "19d0c328c471"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "followup_howmany"
+   ],
+   "text": "too many lol",
+   "id": "388167d28e6d"
   },
   {
    "kind": "tell",

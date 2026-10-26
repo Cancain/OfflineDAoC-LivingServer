@@ -182,6 +182,8 @@ namespace DOL.GS.Tests
                 ChatThreadLog.Said open = log.OpenQuestion(channel, 5_000, AutonomousChatThreads.AnswerWindowMs);
                 if (word == "y")
                     word = last is { Asked: true } ? null : "why";
+                if (word == "confirm" && (last == null || !AutonomousChatThreads.ConfirmFits(text, last.Text)))
+                    word = null;
                 bool tell = item.channel == "tell";
                 bool addressed = tell || item.channel == "group" || item.expect == "directed" || !string.IsNullOrEmpty(item.to);
                 if (word != null && last != null)

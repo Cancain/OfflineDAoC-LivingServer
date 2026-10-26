@@ -143,14 +143,16 @@ public static class AutonomousChatShortTalk
                          (text.TrimEnd().EndsWith('?') || said[0] is "anyone" or "any1" or "anybody" or "who" or "need" or "u" or "you" && text.Contains('?')) &&
                          HasPhrase(said, "need a hand", "need buffs", "need some buffs", "need coins", "need money", "need some coin",
                              "need some money", "need a buff", "need help with that", "need a rez", "need a port", "need speed");
-        if (needOffer || HasPhrase(said, "want some buffs", "want buffs", "want a buff", "i can pl", "can pl u", "can pl you", "want em",
+        // "if you need a healer pst me, lfg 30 cleric" is an lfg, not an offer (review 2026-10-26).
+        bool lfg = said.Any(word => word is "lfg" or "lfm" or "lf1m" or "lf2m" or "lf3m");
+        if (!lfg && (needOffer || HasPhrase(said, "want some buffs", "want buffs", "want a buff", "i can pl", "can pl u", "can pl you", "want em",
                 "u want it", "you want it", "want them", "i have spare", "i got spare", "have some spare", "got some spare", "got an extra", "have an extra", "ill give u",
                 "ill give you", "i can give you", "i can give u", "trade u the", "trade you the", "want me to buff", "want me to help",
                 "want me to rez", "want a rez", "want some help", "want a pl", "u want a pl", "want a port", "want speed", "want a speed",
                 "if any1 needs", "if anyone needs", "if anybody needs", "if u need", "if you need", "if ya need", "anyone need anything",
                 "can make you", "can make u", "i can craft", "ill craft", "i can make") ||
             // "anyone want free spellcraft on their armor", "free buffs at the bind": something given away.
-            OffersFree(said))
+            OffersFree(said)))
             return "player_offer";
         // "wb Sigrun": the bot welcomed back says ty (the audit: "wb sigrun" drew "hi hi, welcome back" for the player).
         if (said.Length is > 0 and <= 4 && said[0] is "wb" or "welcome" && (said[0] == "wb" || said.Length > 1 && said[1] == "back"))
@@ -163,8 +165,10 @@ public static class AutonomousChatShortTalk
                 "stealthers near", "stealther near", "stealthers around", "stealther around"))
             return "player_headsup";
         // "dont rez me yet", "hold the pull", "wait for me": a groupmate says ok.
+        // Not "anyone need pow pots?" or "i always need pow" (review 2026-10-26).
         if (HasPhrase(said, "dont rez", "don t rez", "no rez yet", "wait to rez", "dont res", "dont pull", "hold the pull", "hold pulls",
-                "wait for me", "wait up", "hold up", "sec need pow", "need pow", "wait for the cleric", "wait for heals", "wait for buffs"))
+                "wait for me", "wait up", "hold up", "sec need pow", "wait for the cleric", "wait for heals", "wait for buffs") ||
+            said.Length <= 4 && !text.Contains('?') && HasPhrase(said, "need pow", "need power", "need mana", "oom sec", "need to med"))
             return "player_wait";
         if (AsksHowAreYou(text))
             return "ask_howareyou";
@@ -297,11 +301,9 @@ public static class AutonomousChatShortTalk
     {
         if (words.Contains("or"))
             return false;
+        // A bot's name before the order is taken out by the caller ("aldric pull the next one" is read as "pull the next one"), so a
+        // first word that is not a verb is no order: "mobs pull hard here" (review 2026-10-26).
         int start = words.Length > 1 && words[0] is "ok" or "k" or "pls" or "please" or "plz" ? 1 : 0;
-        // "aldric pull the next one": a name first.
-        if (start == 0 && words.Length >= 3 && !OrderVerbs.Contains(words[0]) && OrderVerbs.Contains(words[1]) && !ClassWords.Contains(words[0]) &&
-            words[0] is not ("i" or "we" or "u" or "you" or "they" or "dont" or "cant" or "im" or "lets" or "to" or "will" or "can"))
-            start = 1;
         if (start >= words.Length || !OrderVerbs.Contains(words[start]))
             return false;
         // "help me" alone is ask_help; "run!" is a warning; "go go" is cheering.
@@ -344,8 +346,11 @@ public static class AutonomousChatShortTalk
     public static string NeededRole(string text)
     {
         string[] words = AutonomousChatIntentModel.Words(text);
-        if (!HasPhrase(words, "lfm", "lf1m", "lf2m", "lf3m", "need", "looking for", "lf") )
+        // The role comes after what is asked for: "lfg 30 cleric, need a group" names the player's own class (review 2026-10-26).
+        int asked = Array.FindIndex(words, word => word is "lfm" or "lf1m" or "lf2m" or "lf3m" or "need" or "needs" or "lf" or "looking");
+        if (asked < 0)
             return null;
+        words = words.Skip(asked + 1).ToArray();
         foreach ((string role, string[] forms) in new[]
                  {
                      ("healer", new[] { "healer", "healers", "heals", "heal", "cleric", "druid", "shaman" }),
@@ -602,7 +607,7 @@ public static class AutonomousChatShortTalk
                 "anyone close", "can someone", "can anyone"))
             return Is(eAutonomousChatIntent.Rez, out intent);
         // "gotta log ty for the grp all": a goodbye with thanks in it is a goodbye (the holdout check).
-        if (thanks && !question && HasPhrase(words, "gotta log", "got to log", "gotta go", "got to go", "logging off", "logging out", "gotta run",
+        if (thanks && !question && !HasPhrase(words, "back to", "run back", "go back", "run to") && HasPhrase(words, "gotta log", "got to log", "gotta go", "got to go", "logging off", "logging out", "gotta run",
                 "heading to bed", "off to bed", "going to bed", "calling it", "night all", "gn all", "gnight"))
             return Is(eAutonomousChatIntent.Farewell, out intent);
         if (thanks)
@@ -648,29 +653,39 @@ public static class AutonomousChatShortTalk
             !question && (n <= 6 && HasPhrase(words, "well met") || words[0] == "gm" && words.Skip(1).All(word => GreetingObjects.Contains(word) || IsNoise(word))))
             return Is(eAutonomousChatIntent.Greeting, out intent);
         // "night guys work in the morning", "nite all" (the audit: read as nothing).
-        if (!question && words[0] is "night" or "nite" or "gnite" && n <= 8)
+        if (!question && words[0] is "night" or "nite" or "gnite" && (n <= 3 || n <= 8 && words[1] is "all" or "guys" or "everyone" or "folks" or
+                "peeps" or "night" or "nite" or "yall" or "work" or "gotta" or "bed" or "wife" or "kids"))
             return Is(eAutonomousChatIntent.Farewell, out intent);
 
         // "inc", "inc 10 mids at amg", "zerg at the mile gate"; not "decent inc these days" or "made good inc today" (income;
         // the audit).
         bool income = HasPhrase(words, "decent inc", "good inc", "bad inc", "nice inc", "great inc", "my inc", "some inc", "steady inc",
             "inc these days", "inc today", "inc from", "inc per") || words.Contains("income");
+        // "pushing", "heading for our" and "watch out for" warn only with an enemy in the line: not "pushing the 40s finally",
+        // "heading for our guild house" or "watch out for the pat" (review 2026-10-26).
+        bool enemy = words.Any(word => word is "albs" or "mids" or "hibs" or "alb" or "mid" or "hib" or "enemy" or "enemies" or "zerg" or
+            "stealther" or "stealthers" or "gankers" or "realm" or "group" or "fg" or "train" or "assassins" or "infils" or "nightshades" or
+            "shadowblades" or "ns" or "sb" or "sbs");
         if (!income && (Any(words, AlarmWords) || HasPhrase(words, "under attack", "under siege", "albs at", "mids at", "hibs at",
-                "enemies at", "enemy at", "stealthers at", "zerg at", "zerg heading", "zerg coming", "heading for our", "pushing on",
-                "pushing our", "pushing the", "stealthers near", "stealther near", "stealthers by", "watch out for", "hibs pushing",
-                "mids pushing", "albs pushing", "at our relic", "hitting our", "train coming", "train inc") ||
+                "enemies at", "enemy at", "stealthers at", "zerg at", "zerg heading", "zerg coming", "stealthers near", "stealther near",
+                "stealthers by", "hibs pushing", "mids pushing", "albs pushing", "at our relic", "hitting our", "train coming", "train inc") ||
+                enemy && HasPhrase(words, "heading for our", "pushing on", "pushing our", "pushing the", "watch out for") ||
                 n <= 2 && words.All(word => word is "adds" or "add" or "run" or "train" or "runner" or "runners") ||
                 // "stealther on me help", "add on me" (the holdout check)
                 Any(words, GankWords) && HasPhrase(words, "hit me", "hitting me", "attacked me", "attacking me", "on me", "jumped me", "killing me",
                     "just hit", "just opened", "camping the", "at the gate", "near the") ||
-                n <= 6 && HasPhrase(words, "on me") && words.Any(word => word is "add" or "adds" or "stealther" or "stealthers" or "assassin" or
+                n <= 6 && HasPhrase(words, "on me") && !HasPhrase(words, "keep", "pull", "bring", "get them", "get it", "hold") &&
+                words.Any(word => word is "add" or "adds" or "stealther" or "stealthers" or "assassin" or
                     "infil" or "nightshade" or "ns" or "shadowblade" or "sb" or "mob" or "mobs" or "pat" or "patrol" or "train" or "zerg")))
             return Is(eAutonomousChatIntent.Alarm, out intent);
 
         // "gotta log, wife wants the pc", "thats it for me tonite gn all", "u too, later" (the holdout check): a goodbye first.
-        if (!question && (HasPhrase(words, "gotta log", "got to log", "gotta go", "got to go", "logging off", "logging out", "gotta run",
+        // Not "lfg later", "ill buy later", "gotta run back to camp" (review 2026-10-26).
+        bool errand = HasPhrase(words, "back to", "run back", "go back", "go get", "go sell", "go buy", "go to", "run to") ||
+                      Any(words, GroupWords) || Any(words, TradeWords);
+        if (!question && !errand && (HasPhrase(words, "gotta log", "got to log", "gotta go", "got to go", "logging off", "logging out", "gotta run",
                 "thats it for me", "that s it for me", "done for tonight", "done for tonite", "done for the night", "im done for", "gn all",
-                "gnite all", "nite all") || n <= 3 && words[^1] is "later" or "laters" or "cya" or "bye"))
+                "gnite all", "nite all") || n <= 3 && words[^1] is "later" or "laters" or "cya" or "bye" && !words.Contains("maybe")))
             return Is(eAutonomousChatIntent.Farewell, out intent);
         // "pc crashed" is a computer, not a price check (the audit).
         bool computer = HasPhrase(words, "pc crashed", "my pc", "new pc", "pc died", "pc froze", "pc is", "pc keeps", "pc broke");
@@ -689,17 +704,25 @@ public static class AutonomousChatShortTalk
         // "group" asks for one only in a question or with a request word ("group?", "any group for vendo", "need a group").
         bool strongGroup = words.Any(word => GroupWords.Contains(word) && word is not ("group" or "grp" or "groups" or "grps" or "party" or "forming"));
         bool groupAsked = Any(words, GroupWords) && (question || n <= 5 && words[0] is "group" or "grp" or "party" || HasPhrase(words, "need a", "need", "any", "looking", "want", "wanna", "join",
-            "pst", "send tell", "/tell", "invite", "room", "spot", "spots", "forming", "lf", "anyone", "any1", "who", "starting", "up for"));
-        if (!notRequest && (strongGroup || groupAsked || HasPhrase(words, "looking for", "need a healer", "need a tank", "need healer",
+            "pst", "send tell", "/tell", "invite", "room", "spot", "spots", "forming", "lf", "anyone", "any1", "who wants", "whos up", "who is up", "starting", "up for"));
+        // "my group disbanded, lfg 30 cleric", "our group needs a healer pst" still ask (review 2026-10-26); "3 hours lfg and
+        // still no grp" and "not lfg" don't.
+        bool complaining = HasPhrase(words, "not lfg", "not looking", "no lfg", "still no grp", "still no group", "hours lfg", "so dead",
+            "chat is dead", "another wipe");
+        bool asksAnyway = !complaining && (words.Any(word => word is "lfg" or "lfm" or "lf1m" or "lf2m" or "lf3m" or "pst") ||
+            HasPhrase(words, "lf grp", "lf group", "lf a group", "need a", "needs a", "need healer", "need tank", "looking for a group", "looking for group"));
+        if ((!notRequest || asksAnyway) && (strongGroup || groupAsked || HasPhrase(words, "looking for", "need a healer", "need a tank", "need healer",
                 "need tank", "room for", "want to team", "team up", "spots open", "spot open", "spots left", "spot left", "send tells",
                 "send tell", "send me a tell", "tag along")))
             return Is(eAutonomousChatIntent.Grouping, out intent);
-        // A group only talked about is nothing to answer as a request (and not the classifier's "group" signal either).
+        // A group only talked about ("love this group", "my old group quit") is nothing to answer as a request, and not the
+        // classifier's "group" signal either.
         if (notRequest && Any(words, GroupWords))
             return Is(eAutonomousChatIntent.Unknown, out intent);
 
         if (n <= 6 && Any(words, FarewellWords) || HasPhrase(words, "bed time", "bedtime", "time for bed", "fall asleep", "off to sleep") ||
-            System.Text.RegularExpressions.Regex.IsMatch(" " + string.Join(' ', words) + " ", @" im off (?!to )") ||
+            System.Text.RegularExpressions.Regex.IsMatch(" " + string.Join(' ', words) + " ",
+                @" im off (?!(to|work|today|tomorrow|tmrw|tonight|this|from|next|on|for|the) )") ||
             HasPhrase(words, "logging off", "log off", "heading to bed", "off to bed",
                 "going to bed", "good night", "night all", "night everyone", "gotta go", "got to go", "calling it", "im out", "i'm out",
                 "see you later", "see ya later", "later all", "later guys", "later everyone"))

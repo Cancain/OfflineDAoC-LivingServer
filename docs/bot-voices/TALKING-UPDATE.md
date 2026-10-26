@@ -132,7 +132,8 @@ out"), follow-ups were missed, "inc" read as income and tells about groups as in
 
 - **Questions get real answers.** About the bot, when it is asked by name, by tell or in your group: its level, class,
   realm rank, speed, potions, guild, main or alt, epic, how long it has played, whether it is busy, its plans (by
-  personality), and where its gear came from (worn pieces, and how many a crafter made). About the world: a place's
+  personality), and its gear (how much of what it wears a crafter made; it can't tell a drop from a merchant buy, so
+  it doesn't claim either). About the world: a place's
   monster levels (the 20th-80th percentile of each zone's monster levels in the world data, written to `places.json` by
   `tools/bot-voices/place_levels.py`), battleground brackets, who holds Darkness Falls, the relics and keeps, and a few
   commands (/stuck, /anon, /bind, /played, /relic). Any other factual question gets an honest "not sure" now and then,
@@ -142,7 +143,8 @@ out"), follow-ups were missed, "inc" read as income and tells about groups as in
   "the one by the inn?", "whered they go", "o ya what stats", "into what"; "no thanks" to a bot's offer; "ty" to the bot
   that just helped (not for its own "gz" or "np"); a laugh to the joker; "x" or "me" to a bot's call for a group.
 - **New kinds of line**: good news ("finally hit 50") gets grats, an offer ("need buffs?") thanks, "wait for me" an ok,
-  "wb" a thanks, an order ("heal me") an "on it" or an honest "cant heal, im a thane", a warning a "ty for the heads up",
+  "wb" a thanks, an order ("heal me") a plain "k" (bots don't act on orders, so they don't promise to) or an honest
+  "cant heal, im a thane", a warning a "ty for the heads up",
   real-life talk (late nights, school, food, the computer, pets, weather, TV, work, a sore back) a reply in kind.
 - **Fewer misreadings**: "inc" as income, "group" only talked about ("my old group quit", "love this group"), sarcasm
   ("thanks for the train"), insults aimed at a class rather than a person ("ppl say spiritmasters are useless"), "pc"
@@ -194,7 +196,15 @@ take a player, so a player who answered one would have nowhere to go.
 - `UT_TalkingAudit`: the 320 audit lines (floor 93%) and the 320 holdout lines fixed after them (floor 92%), plus
   cases for names, threads, closings, self answers, place levels and world answers. `ChatAuditRoute` mirrors the live
   reply path for these; keep the two in step.
-- All 3,681 tests in `Tests.dll` pass (2026-10-26, Linux, no game world). CI on Windows ran the server tests and the
+- A second independent review (2026-10-26) of the audit code found 16 problems, all fixed and covered by
+  `TheReviewsMisreadsAreFixed`. The worst was a "...?" follow-up answering "yep" to a question about the bot ("u 50?" by
+  tell). Others: the gear count took a drop's mob name for a crafter, realm rank was written one rank high (2L4 for 2L3),
+  Darkness Falls and keep answers fired on group requests ("anyone have a df group?"), real lfg lines that mentioned a
+  lost group were dropped, goodbyes and alarms read too broadly ("lfg later", "pushing the 40s"), "how many?" got a
+  time, memory lines replaced factual answers, and the death reaction promised a rez from bots out of range.
+  `ChatAuditRoute` still doesn't model everything live does: memory replies, knowledge lookups, the role and level filter
+  on /lfm answers, and follow-ups across channels by tell. Its rates are for how a line is read, not a full replay.
+- All 3,682 tests in `Tests.dll` pass (2026-10-26, Linux, no game world). CI on Windows ran the server tests and the
   launcher tests on the branch.
 - An independent review of the code (2026-10-26) found eight defects, all fixed: the defaults not reaching existing
   worlds, help offers answered as duo offers, "pulling" said after the player pulled, "mezzed" before a resist, relic

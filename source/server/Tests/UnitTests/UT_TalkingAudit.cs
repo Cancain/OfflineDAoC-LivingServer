@@ -88,6 +88,46 @@ namespace DOL.GS.Tests
             Assert.That(AutonomousChatQuestions.AnswerSelf("busy", "u busy", bare with { Busy = true }, r), Does.Contain("busy").Or.Contains("middle"));
         }
 
+        // The independent review of the audit (2026-10-26): each of these was misread.
+        [Test]
+        public void TheReviewsMisreadsAreFixed()
+        {
+            var r = new Random(1);
+            Assert.That(AutonomousChatThreads.ConfirmFits("50 yet?", "heading to vendo now"), Is.False, "a question about the bot, not its line");
+            Assert.That(AutonomousChatThreads.ConfirmFits("mids?", "anyone up for spindel"), Is.False);
+            Assert.That(AutonomousChatThreads.ConfirmFits("second gate?", "meet at the gate"), Is.True);
+            Assert.That(AutonomousChatThreads.ConfirmFits("the one by the inn?", "try the horse from cotswold"), Is.True);
+            foreach (string line in new[] { "anyone have a df group?", "who wants to do df?", "anyone have a group at benowyc?",
+                         "anyone still at bledmeer?", "anyone want to do vendo at 25?" })
+                Assert.That(AutonomousChatQuestions.AnswerWorld(line, eRealm.Midgard, ChatAuditRoute.World, r), Is.Null, line);
+            Assert.That(AutonomousChatQuestions.AnswerWorld("is df ours?", eRealm.Midgard, ChatAuditRoute.World, r), Is.Not.Null);
+            Assert.That(AutonomousChatQuestions.AnswerWorld("who owns benowyc", eRealm.Midgard, ChatAuditRoute.World, r), Is.Not.Null);
+            Assert.That(AutonomousChatIntentModel.Predict("my group disbanded, lfg 30 cleric"), Is.EqualTo(eAutonomousChatIntent.Grouping));
+            Assert.That(AutonomousChatIntentModel.Predict("our group needs a healer pst"), Is.EqualTo(eAutonomousChatIntent.Grouping));
+            foreach (string line in new[] { "love this group", "who ruined the group" })
+                Assert.That(AutonomousChatIntentModel.Predict(line), Is.Not.EqualTo(eAutonomousChatIntent.Grouping), line);
+            foreach (string line in new[] { "lfg later", "ill buy later", "finally im off work", "night raids on emain are the best" })
+                Assert.That(AutonomousChatIntentModel.Predict(line), Is.Not.EqualTo(eAutonomousChatIntent.Farewell), line);
+            Assert.That(AutonomousChatIntentModel.Predict("ty for the rez, gotta run back to camp"), Is.EqualTo(eAutonomousChatIntent.Thanks));
+            foreach (string line in new[] { "pushing the 40s finally", "keep the mobs on me", "heading for our guild house" })
+                Assert.That(AutonomousChatIntentModel.Predict(line), Is.Not.EqualTo(eAutonomousChatIntent.Alarm), line);
+            Assert.That(AutonomousChatIntentModel.Predict("mids pushing our keep"), Is.EqualTo(eAutonomousChatIntent.Alarm));
+            Assert.That(AutonomousChatThreads.FollowUpWord("how many?"), Is.EqualTo("howmany"));
+            Assert.That(AutonomousChatQuestions.SelfQuestion("are u a crafter?"), Is.EqualTo("craft"));
+            Assert.That(AutonomousChatQuestions.SelfQuestion("r u 2 duoing"), Is.Not.EqualTo("level"));
+            var mid = new AutonomousChatQuestions.BotFacts(1, 34, "Thane", eRealm.Midgard, 0, BotPersonalityType.Leveler, false, 0, null);
+            Assert.That(AutonomousChatQuestions.AnswerSelf("level", "im 30, what lvl r u", mid, r), Does.Contain("34").And.Not.Contain("nope"));
+            Assert.That(AutonomousChatQuestions.AnswerSelf("plans", "u still lvling?", mid, r), Does.Not.StartWith("nah"));
+            Assert.That(AutonomousChatIntentModel.Predict("are you a noob friendly guild?"), Is.Not.EqualTo(eAutonomousChatIntent.Abuse));
+            Assert.That(AutonomousChatShortTalk.QuestionShape("anyone need pow pots?"), Is.Not.EqualTo("player_wait"));
+            Assert.That(AutonomousChatShortTalk.QuestionShape("if you need a healer pst me, lfg 30 cleric"), Is.Not.EqualTo("player_offer"));
+            Assert.That(AutonomousChatShortTalk.QuestionShape("mobs pull hard here"), Is.Not.EqualTo("player_order"));
+            Assert.That(AutonomousChatShortTalk.NeededRole("lfg 30 cleric, need a group"), Is.Null);
+            Assert.That(AutonomousBotChatCoordinator.SaysInvited("i invited bob, hes coming"), Is.False);
+            Assert.That(AutonomousChatThreads.CallsForGroup("one more pull then bed"), Is.False);
+            Assert.That(AutonomousChatThreads.CallsForGroup("need 1 more for vendo"), Is.True);
+        }
+
         // Each of these was read wrong before the audit; the comment says what it drew.
         [TestCase("is thid open for lvl 21", "faction", "fact world")]                 // "if you see the zerg coming, call it out"
         [TestCase("what lvl for vendo caverns", "faction", "fact world")]              // "bring a group the pulls stack"
@@ -143,13 +183,13 @@ namespace DOL.GS.Tests
             var healer = new AutonomousChatQuestions.BotFacts(7, 50, "Druid", eRealm.Hibernia, 25, BotPersonalityType.Crafter, true, 0, "Tir Guard");
             Assert.That(AutonomousChatQuestions.AnswerSelf("level", "r u 50 yet", healer, r), Does.Contain("50"));
             Assert.That(AutonomousChatQuestions.AnswerSelf("class", "are u a healer", healer, r), Does.StartWith("yep"));
-            Assert.That(AutonomousChatQuestions.AnswerSelf("rank", "whats ur rr", healer, r), Does.Contain("3L6"));
+            Assert.That(AutonomousChatQuestions.AnswerSelf("rank", "whats ur rr", healer, r), Does.Contain("3L5"));
             Assert.That(AutonomousChatQuestions.AnswerSelf("speed", "do u have speed", healer, r), Does.Not.Contain("no"));
             Assert.That(AutonomousChatQuestions.AnswerSelf("pots", "u got pots", healer, r), Does.Contain("none").Or.Contains("out"));
             Assert.That(AutonomousChatQuestions.AnswerSelf("guild", "what guild are you in", healer, r), Is.EqualTo("Tir Guard"));
             Assert.That(AutonomousChatQuestions.AnswerSelf("craft", "can u make me a set", healer, r), Does.Not.Contain("not a crafter"));
-            Assert.That(AutonomousChatQuestions.RankText(0), Is.EqualTo("1L1"));
-            Assert.That(AutonomousChatQuestions.RankText(13), Is.EqualTo("2L4"));
+            Assert.That(AutonomousChatQuestions.RankText(0), Is.EqualTo("1L0"));
+            Assert.That(AutonomousChatQuestions.RankText(13), Is.EqualTo("2L3"));
             var thane = ChatAuditRoute.Me;
             Assert.That(AutonomousChatQuestions.CantDo("heal me", thane), Does.StartWith("cant heal"));
             Assert.That(AutonomousChatQuestions.CantDo("pull the next one", thane), Is.Null);
