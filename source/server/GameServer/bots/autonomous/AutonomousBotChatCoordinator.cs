@@ -99,6 +99,57 @@ public static class AutonomousBotChatCoordinator
         return true;
     }
 
+    /// <summary>
+    /// The talking update: a bot tells /faction about an event in its own words (a "news" corpus line of the topic, filled with
+    /// the event's names), and others react ("again??", "omw"). <paramref name="witness"/>: the speaker was there. False when
+    /// no line fits or nobody can say it (the caller sends its written notice instead).
+    /// </summary>
+    public static bool TrySayEventNews(GameBot preferred, bool witness, string topic, IReadOnlyDictionary<string, string> slots)
+    {
+        if (!AutonomousBotVoices.Enabled || string.IsNullOrEmpty(topic) || preferred == null || !HasFactionAudience(preferred.Realm))
+            return false;
+        GameBot speaker = Eligible(preferred) ? preferred : null;
+        if (speaker == null)
+        {
+            witness = false;
+            speaker = AutonomousBotRegistry.Snapshot().Where(bot => bot.Realm == preferred.Realm && Eligible(bot))
+                .OrderBy(_ => Random.Shared.Next()).FirstOrDefault();
+        }
+        return speaker != null && SayNews(speaker, witness, topic, slots);
+    }
+
+    /// <summary>World news no realm notice told (AutonomousChatNews): said by a bot that was near it if there is one.</summary>
+    public static void TellNews(ChatNewsItem item)
+    {
+        if (item == null || !AutonomousBotVoices.Enabled || !HasFactionAudience(item.Realm))
+            return;
+        GameBot[] bots = AutonomousBotRegistry.Snapshot().Where(bot => bot.Realm == item.Realm && Eligible(bot)).ToArray();
+        GameBot witness = item.RegionId == 0 ? null : bots
+            .Where(bot => bot.CurrentRegionID == item.RegionId &&
+                          (long)(bot.X - item.X) * (bot.X - item.X) + (long)(bot.Y - item.Y) * (bot.Y - item.Y) < 8_000L * 8_000)
+            .OrderBy(_ => Random.Shared.Next()).FirstOrDefault();
+        GameBot speaker = witness ?? bots
+            // Frontier news is told by a frontier regular, the rest by anyone.
+            .OrderByDescending(bot => item.Topic.StartsWith("keep") || item.Topic.StartsWith("relic") || item.Topic.StartsWith("df")
+                ? bot.Level >= 35 ? 1 : 0 : 0)
+            .ThenBy(_ => Random.Shared.Next()).FirstOrDefault();
+        if (speaker != null)
+            SayNews(speaker, witness != null, item.Topic, item.Slots());
+    }
+
+    private static bool SayNews(GameBot speaker, bool witness, string topic, IReadOnlyDictionary<string, string> slots)
+    {
+        if (!AutonomousBotVoices.TryLine(speaker, "news", out VC.Picked picked, topic: topic, slots: slots,
+                flags: witness ? ["witness"] : null, withoutFlags: witness ? null : ["witness"]))
+            return false;
+        lock (Sync)
+            LastFactionAmbient[speaker.Realm] = GameLoop.GameLoopTime;
+        BroadcastFaction(speaker.Name, speaker.Realm, picked.Text);
+        SendCorrection(speaker, true, picked.Correction);
+        ScheduleBotReplies(speaker, picked.Text, true, false, picked.Line);
+        return true;
+    }
+
     /// <summary>A typo-prone writer's "*word" fix, a moment after the line with the typo.</summary>
     private static void SendCorrection(GameBot speaker, bool faction, string correction)
     {

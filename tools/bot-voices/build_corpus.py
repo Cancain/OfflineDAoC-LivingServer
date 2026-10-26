@@ -18,6 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CHAT = ROOT / 'source/server/GameServer/bots/autonomous/data/chat'
 OUT = CHAT / 'corpus.json'
+PLACES_FILE = CHAT / 'places.json'
 
 KINDS = {'ambient', 'reply', 'lfg', 'trade', 'rvr', 'greet', 'thanks', 'grudge', 'gossip', 'ding', 'death',
          'camp', 'debate',
@@ -25,14 +26,20 @@ KINDS = {'ambient', 'reply', 'lfg', 'trade', 'rvr', 'greet', 'thanks', 'grudge',
          'grats', 'rez_ask', 'rez_thanks', 'rez_offer', 'corpse', 'sickness', 'first', 'alarm', 'nemesis', 'revenge',
          'session', 'linkdead', 'combat',
          # 0.36-se.4: group talk (/group with you, /say near you), a starter's closing line, guild idle chat
-         'group', 'closing', 'guild'}
+         'group', 'closing', 'guild',
+         # The talking update: news of the world (AutonomousChatNews), and private tells a bot starts
+         'news', 'tell'}
 # Lines that start a conversation; each says what kind of answer it invites (@invites, or inferred below).
-OPENER_KINDS = {'ambient', 'lfg', 'trade', 'rvr', 'camp', 'group', 'guild'}
+OPENER_KINDS = {'ambient', 'lfg', 'trade', 'rvr', 'camp', 'group', 'guild', 'news', 'tell'}
+# Kinds whose lines speak about the speaker's own here and now, so a place they name must be true (or @about).
+CLAIM_KINDS = OPENER_KINDS | {'ding', 'death', 'first', 'session', 'combat', 'news'}
 # What an opener invites; replies say what they answer (@answers). "ask_<topic>" is a specific question that
 # falls back to the "ask" replies; "none" gets no reply.
 INVITES = {'none', 'chat', 'joke', 'boast', 'complaint', 'news', 'lfg', 'trade', 'ask', 'ask_where', 'ask_advice',
            'ask_opinion', 'ask_anyone', 'ask_howareyou', 'ask_permission', 'ask_choice', 'ask_doing', 'ask_plans'}
-INVITE_RE = re.compile(r'(none|chat|joke|boast|complaint|news|lfg|trade|ask(_[a-z0-9]+)*)')
+# "news_<topic>" (the talking update): a reaction answers that piece of news, then any news. "followup_<word>": a bot's
+# answer when a player asks "why?", "really?", "how?", "what?" or "where?" right after the bot's own line.
+INVITE_RE = re.compile(r'(none|chat|joke|boast|complaint|news(_[a-z0-9]+)*|lfg|trade|ask(_[a-z0-9]+)*|followup_[a-z]+)')
 TYPES = {'Leveler', 'Crafter', 'Socialite', 'Explorer', 'Daredevil', 'NoLifer'}
 REALMS = {'alb', 'mid', 'hib'}
 CLASSES = {
@@ -49,7 +56,45 @@ FLAGS = {'in_group', 'solo', 'in_town', 'in_dungeon', 'in_rvr', 'at_camp', 'trav
          # 0.36-se.4: where and when (the PC's clock: day 6-17, evening 17-23, night 23-6), and who the bot is with
          'outdoors', 'in_capital', 'day', 'evening', 'night', 'in_player_group', 'can_rez', 'in_battleground', 'in_frontier',
          'will_rez',   # will_rez: set only when answering a rez ask the bot will really come to
-         'player_rezzed_me'}   # gossip: the player really rezzed this bot (bot memory)
+         'player_rezzed_me',   # gossip: the player really rezzed this bot (bot memory)
+         # The talking update: what is true in the world right now (AutonomousChatNews and the RvR event layer).
+         'df_ours',            # the bot's realm holds Darkness Falls
+         'defending',          # one of the realm's keeps is under siege now ({keep} is that keep)
+         'attacking',          # the realm's army is besieging an enemy keep now ({keep} is the target)
+         'keep_news',          # a frontier keep changed hands in the last hour
+         'keep_lost_recent', 'keep_won_recent',   # the realm lost or took a keep in the last hour ({keep})
+         'relic_lost_recent', 'relic_won_recent',  # the realm lost or took a relic in the last few hours ({relic})
+         'raid_won_recent', 'raid_wiped_recent',   # a realm raid won or wiped in the last hour ({raid}, {boss})
+         'df_changed_recent',  # Darkness Falls changed hands in the last hour
+         'in_combat',          # the bot is fighting right now
+         'witness',            # news: the bot was at the place when it happened
+         'recruiting',         # lfg: the bot's group is really looking for members ({need} is what it needs)
+         'xp_low', 'xp_mid', 'xp_high',   # under 2 bubbles, 2-7, 8+ into the level ({bubbles})
+         'is_healer', 'is_tank', 'is_caster', 'is_support',   # the bot's role in a group
+         'newbie', 'veteran'}  # level 1-14, level 40+ (voices.json experience tiers)
+# Places a line may claim the speaker is at, heading to, or either (@needs at:<place>, going:<place>, near:<place>).
+PLACE_NEED_RE = re.compile(r'(at|going|near):(.+)')
+
+
+def load_places():
+    data = json.loads(PLACES_FILE.read_text(encoding='utf-8'))['places']
+    aliases = sorted(((a, p) for p in data for a in p['aliases']), key=lambda x: -len(x[0]))
+    return {p['key']: p for p in data}, [(re.compile(r"(?<![a-z'])" + re.escape(a) + r"(?![a-z])"), p) for a, p in aliases]
+
+
+PLACES, PLACE_ALIASES = load_places()
+
+
+def places_in(text):
+    """The places a text names, by whole-word alias (longest first, so "tomb of mithra" is not also "mithra")."""
+    t = SLOT_RE.sub(' ', text.lower())
+    found = []
+    for pattern, place in PLACE_ALIASES:
+        if pattern.search(t):
+            if place['key'] not in (f['key'] for f in found):
+                found.append(place)
+            t = pattern.sub(' ', t)
+    return found
 TIME_FLAGS = {'day', 'evening', 'night'}
 INTENTS = {'unknown', 'greeting', 'banter', 'abuse', 'grouping', 'grinding', 'travel', 'dungeon', 'rvr',
            'trading', 'help', 'farewell', 'ignoreoutofworld',
@@ -61,7 +106,9 @@ SLOTS = {'me', 'class', 'level', 'realm', 'zone', 'monster', 'npc', 'item', 'cou
          # Living Server
          'target', 'what', 'size', 'classes', 'killer', 'killer_class',
          # 0.36-se.4: the plural of {monster} ("2 hill cats"), and where a travelling bot is going
-         'monsters', 'destination'}
+         'monsters', 'destination',
+         # The talking update: what a piece of news is about
+         'relic', 'raid', 'boss', 'winner', 'loser', 'bubbles', 'need'}
 MEMORY_SLOTS = {'player', 'player_class', 'place'}
 MAX_RAW = 140
 
@@ -121,6 +168,18 @@ def check_text(text, tags, where, problems):
     if PLURAL_MONSTER_RE.search(text):
         problems.append(f'{where}: {{monster}} is one monster; write {{monsters}} for the plural: {text}')
     needs = set(tags.get('needs', []))
+    named = places_in(text)
+    # The talking update: a line that names a place either claims the speaker is there or on the way (@needs at:,
+    # going:, near:) or says it is only talking about the place (@about place). Live 2026-10: "heading into myrkwood"
+    # was said from anywhere in Midgard, and darkness falls lines from inside Tomb of Mithra.
+    if named and tags['kind'] in CLAIM_KINDS and not tags.get('about'):
+        claimed = {PLACE_NEED_RE.fullmatch(n.lstrip('!')).group(2) for n in needs if PLACE_NEED_RE.fullmatch(n.lstrip('!'))}
+        if not claimed & {p['key'] for p in named}:
+            problems.append(f'{where}: names {", ".join(p["key"] for p in named)}; add @needs at:/going:/near:<place> '
+                            f'if the speaker is there, or @about place if it only talks about it: {text}')
+    for place in named:
+        if place['realm'] != '*' and place['type'] not in ('frontier', 'capital') and tags.get('realm', '*') != place['realm']:
+            problems.append(f'{where}: names {place["key"]} ({place["realm"]}) in a line for realm {tags.get("realm", "*")}: {text}')
     if TIME_WORDS_RE.search(text) and not any(f.lstrip('!') in TIME_FLAGS for f in needs):
         problems.append(f'{where}: says a time of day; add @needs evening or night (or day, !day...): {text}')
     if '{zone}' in text and tags['kind'] in OPENER_KINDS and not needs & {
@@ -142,7 +201,11 @@ def check_tags(tags, where, problems):
         if c not in allowed:
             problems.append(f'{where}: class {c} is not in realm {tags["realm"]}')
     for f in tags['needs']:
-        if f.lstrip('!') not in FLAGS:
+        place = PLACE_NEED_RE.fullmatch(f.lstrip('!'))
+        if place:
+            if place.group(2) not in PLACES:
+                problems.append(f'{where}: unknown place {place.group(2)} (see places.json)')
+        elif f.lstrip('!') not in FLAGS:
             problems.append(f'{where}: unknown flag {f}')
     if tags['intent'] and tags['intent'] not in INTENTS:
         problems.append(f'{where}: unknown @intent {tags["intent"]}')
@@ -163,7 +226,7 @@ def check_tags(tags, where, problems):
 
 def fresh_tags():
     return dict(kind='ambient', topic='general', who=[], realm='*', **{'class': []}, levels=[1, 50], needs=[],
-                intent='', mood='', weight=1.0, invites='', answers=[])
+                intent='', mood='', weight=1.0, invites='', answers=[], about=False)
 
 
 DOING_RE = re.compile(r"\bwhat (is|are|r) (every(one|body)|you|u|yall|you (all|guys)|u guys)( all)? (up to|doing)\b|"
@@ -292,6 +355,11 @@ def parse_file(path, problems):
                         tags['invites'] = value
                     elif key == 'answers':
                         tags['answers'] = split_list(value)
+                    elif key == 'about':
+                        # "@about place": the following lines name places without claiming to be there; "@about" ends it.
+                        if value not in ('', 'place'):
+                            problems.append(f'{where}: @about takes "place" or nothing')
+                        tags['about'] = value == 'place'
                     else:
                         problems.append(f'{where}: unknown directive @{key}')
                 except Problem as error:
@@ -314,7 +382,7 @@ def parse_file(path, problems):
             if any(not v for v in variants):
                 problems.append(f'{where}: empty alternative')
             for v in variants:
-                check_text(v, dict(kind='debate', needs=scene['needs']), where, problems)
+                check_text(v, dict(kind='debate', needs=scene['needs'], realm=scene['realm']), where, problems)
                 if re.match(r'\??[A-F]:\s', v):
                     problems.append(f'{where}: an alternative starts with a role marker: {v}')
             scene['beats'].append(dict(role=role, text=variants[0], variants=variants, optional=bool(optional),
@@ -323,6 +391,7 @@ def parse_file(path, problems):
         check_tags(tags, where, problems)
         check_text(text, tags, where, problems)
         line = dict(tags, text=text, where=where, **{'class': list(tags['class'])})
+        line.pop('about')
         if tags['kind'] in OPENER_KINDS:
             line['invites'] = tags['invites'] or infer_invites(text, tags['kind'])
             # A plain "ask" tag takes a more specific question type when the words show one ("how is everyone?").

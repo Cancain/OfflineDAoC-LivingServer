@@ -14,7 +14,9 @@ namespace DOL.GS.Tests
     {
         // Slots the server fills (AutonomousBotVoices.SlotsFor and SharedSlots).
         private static readonly string[] KnownSlots =
-            ["me", "class", "level", "realm", "zone", "monster", "item", "count", "q", "keep", "frontier", "enemy", "capital", "dungeon", "camp", "monsters", "destination"];
+            ["me", "class", "level", "realm", "zone", "monster", "item", "count", "q", "keep", "frontier", "enemy", "capital", "dungeon", "camp", "monsters", "destination",
+             // The talking update: the xp bubbles, what a recruiting group needs, and the names in a piece of news.
+             "bubbles", "need", "relic", "raid", "boss", "winner", "loser"];
 
         // Slots that need bot memory of the player; general callers never fill them, so those lines are skipped
         // unless the Living Server memory or rez code passes them in.

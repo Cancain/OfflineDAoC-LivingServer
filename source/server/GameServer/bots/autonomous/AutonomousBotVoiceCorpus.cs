@@ -190,8 +190,13 @@ public sealed class AutonomousBotVoiceCorpus
     {
         foreach (string need in needs)
         {
-            bool met = need.StartsWith('!') ? !flags.Contains(need[1..]) : flags.Contains(need);
-            if (!met)
+            bool negated = need.StartsWith('!');
+            string flag = negated ? need[1..] : need;
+            // The talking update: "near:myrkwood" is being in Myrkwood or on the way there (flags "at:" and "going:").
+            bool has = flag.StartsWith("near:", StringComparison.Ordinal)
+                ? flags.Contains("at:" + flag[5..]) || flags.Contains("going:" + flag[5..])
+                : flags.Contains(flag);
+            if (has == negated)
                 return false;
         }
         return true;
@@ -273,6 +278,30 @@ public sealed class AutonomousBotVoiceCorpus
 
         /// <summary>The local hour on the PC's clock, for "tonight" by day (null: no time adaptation).</summary>
         public int? LocalHour { get; init; }
+
+        /// <summary>
+        /// Slots that come with a flag (the talking update): a line that needs "keep_lost_recent" fills {keep} with the keep
+        /// that was lost, and one that needs "defending" with the keep under siege, whatever {keep} is for other lines.
+        /// </summary>
+        public IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> NeedSlots { get; init; }
+    }
+
+    /// <summary>The slots a line is filled with: the request's, then those of each flag the line needs.</summary>
+    public static IReadOnlyDictionary<string, string> SlotsForLine(Line line, IReadOnlyDictionary<string, string> slots,
+        IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> needSlots)
+    {
+        if (needSlots == null || needSlots.Count == 0 || line.Needs.Length == 0)
+            return slots;
+        Dictionary<string, string> merged = null;
+        foreach (string need in line.Needs)
+        {
+            if (need.StartsWith('!') || !needSlots.TryGetValue(need, out var extra) || extra == null)
+                continue;
+            merged ??= slots == null ? new Dictionary<string, string>(StringComparer.Ordinal) : new Dictionary<string, string>(slots, StringComparer.Ordinal);
+            foreach (var pair in extra)
+                merged[pair.Key] = pair.Value;
+        }
+        return merged ?? slots;
     }
 
     /// <summary>A picked line: its text as sent, the corpus line, and a typo correction the speaker may send after it ("*word").</summary>
@@ -313,7 +342,7 @@ public sealed class AutonomousBotVoiceCorpus
             }
             Line line = pool[index].Line;
             pool.RemoveAt(index);
-            if (!TryFill(line.Text, request.Slots, out string filled))
+            if (!TryFill(line.Text, SlotsForLine(line, request.Slots, request.NeedSlots), out string filled))
                 continue;
             if (request.LocalHour is int hour)
                 filled = ForTimeOfDay(filled, hour);
