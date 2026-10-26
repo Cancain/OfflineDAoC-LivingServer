@@ -355763,9 +355763,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot is that a scout found lights under avalon marsh last week. nobody could show the spot again",
+   "text": "gossip in camelot is that a scout found a stair in avalon marsh last week. nobody has found it since",
    "about": true,
-   "id": "f094d39c6e88"
+   "id": "bcd18278b61a"
   },
   {
    "kind": "ambient",
@@ -355784,9 +355784,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot is that a scout saw a stair in avalon marsh again. nobody could show the spot again",
+   "text": "gossip in camelot is that a scout found a stair under avalon marsh last week. no one has found the spot since",
    "about": true,
-   "id": "62f53ff83a84"
+   "id": "3618bbe19025"
   },
   {
    "kind": "ambient",
@@ -355805,9 +355805,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot is that a scout saw a stair in avalon marsh last week. no one could find it again",
+   "text": "gossip in camelot is that a scout found lights under avalon marsh last week. no one has found the spot since",
    "about": true,
-   "id": "fe2b608cbb22"
+   "id": "3e1452139715"
   },
   {
    "kind": "ambient",
@@ -355826,9 +355826,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot is that a scout saw lights in the marsh last week. nobody could find it since",
+   "text": "gossip in camelot is that a scout saw a stair in the marsh last week. nobody has found the spot since",
    "about": true,
-   "id": "26cb55c7eea6"
+   "id": "f227d4a74a5d"
   },
   {
    "kind": "ambient",
@@ -355847,9 +355847,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot is that a scout saw lights under the marsh again. nobody could show it again",
+   "text": "gossip in camelot is that a scout saw lights in avalon marsh again. nobody has found it since",
    "about": true,
-   "id": "45773b39b749"
+   "id": "34229c78c407"
   },
   {
    "kind": "ambient",
@@ -355868,9 +355868,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot is that someone found a stair in avalon marsh again. nobody could find the spot since",
+   "text": "gossip in camelot is that someone found a stair under the marsh again. no one has found the spot since",
    "about": true,
-   "id": "4e47dd03f693"
+   "id": "7334aed34c61"
   },
   {
    "kind": "ambient",
@@ -355889,9 +355889,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot is that someone found a stair in the marsh last week. no one could find the spot again",
+   "text": "gossip in camelot is that someone found lights in avalon marsh last week. no one has found the spot since",
    "about": true,
-   "id": "991227e4d5be"
+   "id": "ac4f92597e80"
   },
   {
    "kind": "ambient",
@@ -355910,9 +355910,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot is that someone found a stair under the marsh last week. no one could show the spot since",
+   "text": "gossip in camelot is that someone found lights in the marsh again. nobody has found it since",
    "about": true,
-   "id": "e84136aecc18"
+   "id": "5a1a1b7d8c54"
   },
   {
    "kind": "ambient",
@@ -355931,9 +355931,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot is that someone found lights in the marsh again. nobody can show the spot since",
+   "text": "gossip in camelot is that someone found lights under avalon marsh last week. nobody has found the spot since",
    "about": true,
-   "id": "84cb0bc52e56"
+   "id": "370f33b40539"
   },
   {
    "kind": "ambient",
@@ -355952,9 +355952,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot is that someone found lights under the marsh last week. no one can find the spot again",
+   "text": "gossip in camelot is that someone found lights under the marsh again. nobody has found it since",
    "about": true,
-   "id": "db89918826cb"
+   "id": "2160f2b401a9"
   },
   {
    "kind": "ambient",
@@ -355973,9 +355973,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot is that someone saw lights in the marsh again. no one could show it since",
+   "text": "gossip in camelot is that someone saw a stair in the marsh last week. no one has found it since",
    "about": true,
-   "id": "c64cc81aba36"
+   "id": "69f9f99ddbb6"
   },
   {
    "kind": "ambient",
@@ -355994,9 +355994,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot is that someone saw lights in the marsh last week. no one could find the spot again",
+   "text": "gossip in camelot says a scout found a stair in avalon marsh again. no one has found the spot since",
    "about": true,
-   "id": "dd29ae0d985a"
+   "id": "586cee391b1a"
   },
   {
    "kind": "ambient",
@@ -356015,9 +356015,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot says a scout saw a stair under avalon marsh last week. no one can find it again",
+   "text": "gossip in camelot says a scout saw a stair under avalon marsh again. no one has found the spot since",
    "about": true,
-   "id": "7acb3ee99c9f"
+   "id": "11e877691ab8"
   },
   {
    "kind": "ambient",
@@ -356036,9 +356036,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot says a scout saw lights in the marsh last week. no one can show the spot again",
+   "text": "gossip in camelot says a scout saw a stair under the marsh last week. nobody has found the spot since",
    "about": true,
-   "id": "1c72480c3405"
+   "id": "986208504292"
   },
   {
    "kind": "ambient",
@@ -356057,9 +356057,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot says someone found a stair in avalon marsh again. no one can show it since",
+   "text": "gossip in camelot says a scout saw lights in avalon marsh again. no one has found the spot since",
    "about": true,
-   "id": "89247953efcd"
+   "id": "97e395e3115a"
   },
   {
    "kind": "ambient",
@@ -356078,9 +356078,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot says someone found lights in the marsh again. no one could find it since",
+   "text": "gossip in camelot says someone found a stair in avalon marsh last week. nobody has found it since",
    "about": true,
-   "id": "82d2202f31fd"
+   "id": "b98aaead1935"
   },
   {
    "kind": "ambient",
@@ -356099,9 +356099,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot says someone found lights under avalon marsh again. nobody could show it since",
+   "text": "gossip in camelot says someone found lights under avalon marsh again. nobody has found the spot since",
    "about": true,
-   "id": "ffb4c9974356"
+   "id": "1a4b2bf8f5e3"
   },
   {
    "kind": "ambient",
@@ -356120,9 +356120,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot says someone found lights under avalon marsh last week. no one could show it again",
+   "text": "gossip in camelot says someone saw a stair in avalon marsh again. no one has found it since",
    "about": true,
-   "id": "efba3155cb80"
+   "id": "5c3f822e9e28"
   },
   {
    "kind": "ambient",
@@ -356141,9 +356141,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot says someone saw a stair in the marsh again. nobody could find the spot again",
+   "text": "gossip in camelot says someone saw a stair under avalon marsh again. no one has found it since",
    "about": true,
-   "id": "81d6179fd8a9"
+   "id": "8042a619ccc8"
   },
   {
    "kind": "ambient",
@@ -356162,9 +356162,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot says someone saw a stair in the marsh last week. no one could show it since",
+   "text": "gossip in camelot says someone saw a stair under the marsh last week. no one has found the spot since",
    "about": true,
-   "id": "f51debd362e1"
+   "id": "78a5361a4cd5"
   },
   {
    "kind": "ambient",
@@ -356183,9 +356183,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot says someone saw lights in avalon marsh again. nobody could find the spot again",
+   "text": "gossip in camelot says someone saw a stair under the marsh last week. nobody has found the spot since",
    "about": true,
-   "id": "253a2b8a8eb0"
+   "id": "ab4f992b31a8"
   },
   {
    "kind": "ambient",
@@ -356204,9 +356204,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot says someone saw lights in avalon marsh last week. no one could show the spot since",
+   "text": "gossip in camelot says someone saw lights under the marsh again. nobody has found the spot since",
    "about": true,
-   "id": "3f52afba60f6"
+   "id": "628d75ad2b08"
   },
   {
    "kind": "ambient",
@@ -356225,9 +356225,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot says someone saw lights under avalon marsh last week. no one can show it since",
+   "text": "gossip in camelot says someone saw lights under the marsh last week. no one has found it since",
    "about": true,
-   "id": "a6a13dc10d27"
+   "id": "fffc62effe46"
   },
   {
    "kind": "ambient",
@@ -356246,9 +356246,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in camelot says someone saw lights under the marsh last week. no one can show it since",
+   "text": "word in camelot is that a scout found lights in avalon marsh last week. no one has found it since",
    "about": true,
-   "id": "f94a110c287e"
+   "id": "4b6a5f172de6"
   },
   {
    "kind": "ambient",
@@ -356267,9 +356267,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that a scout found a stair under the marsh last week. nobody can show it again",
+   "text": "word in camelot is that a scout found lights in the marsh again. nobody has found the spot since",
    "about": true,
-   "id": "600a5ab2399a"
+   "id": "f55b97544712"
   },
   {
    "kind": "ambient",
@@ -356288,9 +356288,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that a scout found lights in avalon marsh again. nobody can find it again",
+   "text": "word in camelot is that a scout found lights under avalon marsh again. no one has found the spot since",
    "about": true,
-   "id": "aca039541300"
+   "id": "79eecdb59422"
   },
   {
    "kind": "ambient",
@@ -356309,9 +356309,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that a scout saw a stair in the marsh again. nobody can find it again",
+   "text": "word in camelot is that a scout found lights under avalon marsh last week. no one has found it since",
    "about": true,
-   "id": "e450b4fab584"
+   "id": "8e622f827ce5"
   },
   {
    "kind": "ambient",
@@ -356330,9 +356330,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that a scout saw a stair in the marsh last week. nobody could show the spot again",
+   "text": "word in camelot is that a scout saw a stair in the marsh last week. nobody has found the spot since",
    "about": true,
-   "id": "2e8a98430d5d"
+   "id": "a79c524167e8"
   },
   {
    "kind": "ambient",
@@ -356351,9 +356351,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that a scout saw lights in avalon marsh again. no one can show the spot since",
+   "text": "word in camelot is that a scout saw lights in avalon marsh last week. nobody has found it since",
    "about": true,
-   "id": "5cbbda54e011"
+   "id": "35b587df4002"
   },
   {
    "kind": "ambient",
@@ -356372,9 +356372,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that a scout saw lights under avalon marsh again. no one can find the spot since",
+   "text": "word in camelot is that a scout saw lights under the marsh again. nobody has found the spot since",
    "about": true,
-   "id": "bbf9e0444bde"
+   "id": "018da055cc09"
   },
   {
    "kind": "ambient",
@@ -356393,9 +356393,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that someone found a stair in avalon marsh again. no one could show the spot since",
+   "text": "word in camelot is that someone found a stair in the marsh again. no one has found it since",
    "about": true,
-   "id": "39e64b98cbea"
+   "id": "8a151d4023dd"
   },
   {
    "kind": "ambient",
@@ -356414,9 +356414,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that someone found lights in avalon marsh last week. no one can find the spot again",
+   "text": "word in camelot is that someone found lights under avalon marsh again. no one has found it since",
    "about": true,
-   "id": "9bc5d185ef65"
+   "id": "6f6b6e5c280f"
   },
   {
    "kind": "ambient",
@@ -356435,9 +356435,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that someone found lights under avalon marsh again. nobody can find it again",
+   "text": "word in camelot is that someone found lights under avalon marsh last week. nobody has found the spot since",
    "about": true,
-   "id": "6b1efd9eb413"
+   "id": "8285db903f65"
   },
   {
    "kind": "ambient",
@@ -356456,9 +356456,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that someone saw a stair in the marsh last week. no one can show it since",
+   "text": "word in camelot is that someone saw a stair under avalon marsh last week. no one has found it since",
    "about": true,
-   "id": "82866e10ee2c"
+   "id": "02c50ae27f93"
   },
   {
    "kind": "ambient",
@@ -356477,9 +356477,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that someone saw a stair in the marsh last week. no one could find the spot since",
+   "text": "word in camelot is that someone saw a stair under the marsh again. nobody has found the spot since",
    "about": true,
-   "id": "f7f6e03db91e"
+   "id": "962442d027b6"
   },
   {
    "kind": "ambient",
@@ -356498,9 +356498,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that someone saw lights in the marsh again. nobody could show it again",
+   "text": "word in camelot is that someone saw lights in the marsh last week. nobody has found it since",
    "about": true,
-   "id": "5bbf682d8273"
+   "id": "6a9bf0275620"
   },
   {
    "kind": "ambient",
@@ -356519,9 +356519,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot is that someone saw lights under avalon marsh last week. nobody could find the spot since",
+   "text": "word in camelot is that someone saw lights under avalon marsh again. nobody has found it since",
    "about": true,
-   "id": "9a1279321e15"
+   "id": "4eebca30f7bf"
   },
   {
    "kind": "ambient",
@@ -356540,9 +356540,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot says a scout found a stair under the marsh last week. nobody can find the spot again",
+   "text": "word in camelot is that someone saw lights under avalon marsh last week. nobody has found the spot since",
    "about": true,
-   "id": "eb1b3886b427"
+   "id": "59083066980b"
   },
   {
    "kind": "ambient",
@@ -356561,9 +356561,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot says a scout found lights in avalon marsh again. no one could find the spot since",
+   "text": "word in camelot says a scout found a stair under avalon marsh last week. no one has found the spot since",
    "about": true,
-   "id": "076b90df41c5"
+   "id": "c2efe3be9b54"
   },
   {
    "kind": "ambient",
@@ -356582,9 +356582,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot says a scout found lights in avalon marsh again. nobody can show it since",
+   "text": "word in camelot says a scout found a stair under the marsh last week. nobody has found it since",
    "about": true,
-   "id": "f0be7e61911a"
+   "id": "7c34f9013cfb"
   },
   {
    "kind": "ambient",
@@ -356603,9 +356603,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot says a scout saw a stair in the marsh again. nobody can find the spot again",
+   "text": "word in camelot says a scout found lights in the marsh again. no one has found it since",
    "about": true,
-   "id": "583f5c257491"
+   "id": "bceef9c11380"
   },
   {
    "kind": "ambient",
@@ -356624,9 +356624,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot says a scout saw a stair under the marsh last week. nobody could show it again",
+   "text": "word in camelot says a scout saw a stair in the marsh again. no one has found it since",
    "about": true,
-   "id": "784e261141d1"
+   "id": "dd6bf66fe894"
   },
   {
    "kind": "ambient",
@@ -356645,9 +356645,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot says a scout saw lights in avalon marsh last week. no one can show it again",
+   "text": "word in camelot says a scout saw lights under avalon marsh last week. no one has found the spot since",
    "about": true,
-   "id": "ecf7d8f9f6ff"
+   "id": "86a4d34b619b"
   },
   {
    "kind": "ambient",
@@ -356666,9 +356666,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot says someone found a stair under avalon marsh again. nobody can show it again",
+   "text": "word in camelot says a scout saw lights under avalon marsh last week. nobody has found the spot since",
    "about": true,
-   "id": "0e87fd958a38"
+   "id": "1d168be13c5f"
   },
   {
    "kind": "ambient",
@@ -356687,9 +356687,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot says someone found lights in the marsh again. no one can find the spot since",
+   "text": "word in camelot says someone found a stair under avalon marsh last week. no one has found the spot since",
    "about": true,
-   "id": "83924b654194"
+   "id": "65d39980761e"
   },
   {
    "kind": "ambient",
@@ -356708,9 +356708,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot says someone saw a stair in avalon marsh again. no one can show it again",
+   "text": "word in camelot says someone saw a stair in the marsh again. no one has found the spot since",
    "about": true,
-   "id": "385ae1d6777b"
+   "id": "e5417c11e31d"
   },
   {
    "kind": "ambient",
@@ -356729,9 +356729,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot says someone saw lights in avalon marsh again. nobody could show the spot since",
+   "text": "word in camelot says someone saw a stair in the marsh again. nobody has found it since",
    "about": true,
-   "id": "b1a0ebd02c50"
+   "id": "72302c679d76"
   },
   {
    "kind": "ambient",
@@ -356750,9 +356750,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in camelot says someone saw lights in avalon marsh last week. nobody can find the spot since",
+   "text": "word in camelot says someone saw lights under the marsh last week. nobody has found it since",
    "about": true,
-   "id": "02fca941182f"
+   "id": "13e7d70790a3"
   },
   {
    "kind": "ambient",
@@ -379230,191 +379230,6 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "mantids hid allta fearann hidden for ages, makes you wonder what else is still out there",
-   "about": true,
-   "id": "07ee865196d8"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "mantids hid allta fearann hidden for ages, makes you wonder what else they are hiding",
-   "about": true,
-   "id": "84607562aff7"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "mantids hid allta fearann secret for ages, makes you wonder what else is still out there",
-   "about": true,
-   "id": "e2d24f84625d"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "mantids hid allta fearann secret for ages, makes you wonder what else they are hiding",
-   "about": true,
-   "id": "1ae0fdcec439"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "mantids hid allta fearann secret for generations, makes you wonder what else is still out there",
-   "about": true,
-   "id": "685a54c2edcf"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "mantids hid their untamed land hidden for ages, makes you wonder what else is still out there",
-   "id": "f90b1a2333b4"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "mantids hid their untamed land hidden for generations, makes you wonder what else is still out there",
-   "id": "7af311ee859d"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "mantids hid their untamed land hidden for generations, makes you wonder what else they are hiding",
-   "id": "33eb514d81ae"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "mantids hid their untamed land secret for ages, makes you wonder what else is still out there",
-   "id": "74fbd27018c0"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "mantids hid their untamed land secret for generations, makes you wonder what else is still out there",
-   "id": "cdb6770b9ced"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
    "text": "mantids kept allta fearann hidden for ages, makes you wonder what else is still out there",
    "about": true,
    "id": "c601e3e0c3bb"
@@ -379434,9 +379249,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "mantids kept allta fearann hidden for generations, makes you wonder what else is still out there",
+   "text": "mantids kept allta fearann hidden for ages, makes you wonder what else they are hiding",
    "about": true,
-   "id": "4f9e44e380df"
+   "id": "56e71049c698"
   },
   {
    "kind": "ambient",
@@ -379472,6 +379287,44 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
+   "text": "mantids kept allta fearann hidden through ages, makes you wonder what else they are hiding",
+   "about": true,
+   "id": "e624e83ad3e5"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "mantids kept allta fearann hidden through generations, makes you wonder what else is still out there",
+   "about": true,
+   "id": "c307e7bbd1ab"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
    "text": "mantids kept allta fearann hidden through generations, makes you wonder what else they are hiding",
    "about": true,
    "id": "af8710de4ab6"
@@ -379491,9 +379344,47 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "mantids kept allta fearann secret for ages, makes you wonder what else they are hiding",
+   "text": "mantids kept allta fearann secret for ages, makes you wonder what else is still out there",
    "about": true,
-   "id": "8bc9161f8b66"
+   "id": "14de3b83e837"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "mantids kept allta fearann secret for generations, makes you wonder what else is still out there",
+   "about": true,
+   "id": "7e5fd9dcd98b"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "mantids kept allta fearann secret for generations, makes you wonder what else they are hiding",
+   "about": true,
+   "id": "9999ee13cf6f"
   },
   {
    "kind": "ambient",
@@ -379567,8 +379458,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "mantids kept their untamed land hidden through ages, makes you wonder what else they are hiding",
-   "id": "9691eb619348"
+   "text": "mantids kept allta fearann secret through generations, makes you wonder what else they are hiding",
+   "about": true,
+   "id": "abcd56323086"
   },
   {
    "kind": "ambient",
@@ -379585,8 +379477,26 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "mantids kept their untamed land hidden through generations, makes you wonder what else is still out there",
-   "id": "7842a2900502"
+   "text": "mantids kept their untamed land hidden for ages, makes you wonder what else they are hiding",
+   "id": "7a1f0a9b2d5c"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "mantids kept their untamed land hidden for generations, makes you wonder what else is still out there",
+   "id": "e4e953b683e7"
   },
   {
    "kind": "ambient",
@@ -379621,8 +379531,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "mantids kept their untamed land secret for ages, makes you wonder what else they are hiding",
-   "id": "a4f0f1df63cd"
+   "text": "mantids kept their untamed land secret for ages, makes you wonder what else is still out there",
+   "id": "5ef7480b7aa1"
   },
   {
    "kind": "ambient",
@@ -379657,8 +379567,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "mantids kept their untamed land secret through ages, makes you wonder what else they are hiding",
-   "id": "a38fc22f1c24"
+   "text": "mantids kept their untamed land secret for generations, makes you wonder what else they are hiding",
+   "id": "451fd9d8cadd"
   },
   {
    "kind": "ambient",
@@ -379675,8 +379585,26 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "mantids kept their untamed land secret through generations, makes you wonder what else is still out there",
-   "id": "97d202a2d762"
+   "text": "mantids kept their untamed land secret through ages, makes you wonder what else is still out there",
+   "id": "b21e5c721385"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "mantids kept their untamed land secret through ages, makes you wonder what else they are hiding",
+   "id": "a38fc22f1c24"
   },
   {
    "kind": "ambient",
@@ -379711,9 +379639,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the mantids hid allta fearann hidden for ages, makes you wonder what else they are hiding",
+   "text": "the mantids kept allta fearann hidden for ages, makes you wonder what else is still out there",
    "about": true,
-   "id": "4260fee4d984"
+   "id": "59e3bcb980db"
   },
   {
    "kind": "ambient",
@@ -379730,9 +379658,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the mantids hid allta fearann hidden for generations, makes you wonder what else they are hiding",
+   "text": "the mantids kept allta fearann hidden for ages, makes you wonder what else they are hiding",
    "about": true,
-   "id": "199f75389188"
+   "id": "9c99fceeaacc"
   },
   {
    "kind": "ambient",
@@ -379749,230 +379677,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the mantids hid allta fearann hidden through ages, makes you wonder what else they are hiding",
+   "text": "the mantids kept allta fearann hidden for generations, makes you wonder what else is still out there",
    "about": true,
-   "id": "27b07514bb92"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the mantids hid allta fearann hidden through generations, makes you wonder what else they are hiding",
-   "about": true,
-   "id": "d6bea8725118"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the mantids hid allta fearann secret for generations, makes you wonder what else is still out there",
-   "about": true,
-   "id": "01097822fe5e"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the mantids hid allta fearann secret through ages, makes you wonder what else is still out there",
-   "about": true,
-   "id": "ac83030a326b"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the mantids hid allta fearann secret through ages, makes you wonder what else they are hiding",
-   "about": true,
-   "id": "50b0da2d1913"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the mantids hid allta fearann secret through generations, makes you wonder what else they are hiding",
-   "about": true,
-   "id": "d7dc0273565c"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the mantids hid their untamed land hidden for ages, makes you wonder what else is still out there",
-   "id": "4ee9fba2eeba"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the mantids hid their untamed land hidden for ages, makes you wonder what else they are hiding",
-   "id": "e66a38ae5909"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the mantids hid their untamed land hidden for generations, makes you wonder what else is still out there",
-   "id": "6f94f9861e46"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the mantids hid their untamed land secret for ages, makes you wonder what else is still out there",
-   "id": "4104715c91a9"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the mantids hid their untamed land secret for ages, makes you wonder what else they are hiding",
-   "id": "aaab5a824454"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the mantids hid their untamed land secret through ages, makes you wonder what else they are hiding",
-   "id": "da25cfe272d3"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the mantids hid their untamed land secret through generations, makes you wonder what else is still out there",
-   "id": "833035529899"
+   "id": "7636edf80ce7"
   },
   {
    "kind": "ambient",
@@ -380027,9 +379734,160 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the mantids kept allta fearann secret for ages, makes you wonder what else they are hiding",
+   "text": "the mantids kept allta fearann hidden through ages, makes you wonder what else they are hiding",
    "about": true,
-   "id": "f5b724378672"
+   "id": "cf31a2e38a1c"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept allta fearann hidden through generations, makes you wonder what else they are hiding",
+   "about": true,
+   "id": "c51b544fb380"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept allta fearann secret for ages, makes you wonder what else is still out there",
+   "about": true,
+   "id": "b07b793fd44f"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept allta fearann secret for generations, makes you wonder what else is still out there",
+   "about": true,
+   "id": "fae769087a9f"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept allta fearann secret through ages, makes you wonder what else is still out there",
+   "about": true,
+   "id": "e63df77bed7a"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept allta fearann secret through ages, makes you wonder what else they are hiding",
+   "about": true,
+   "id": "a1ee9b56c2c5"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept allta fearann secret through generations, makes you wonder what else is still out there",
+   "about": true,
+   "id": "119831f1e27e"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept allta fearann secret through generations, makes you wonder what else they are hiding",
+   "about": true,
+   "id": "8281cde62b45"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept their untamed land hidden for ages, makes you wonder what else is still out there",
+   "id": "1a26e4fed572"
   },
   {
    "kind": "ambient",
@@ -380102,6 +379960,150 @@
    "invites": "chat",
    "text": "the mantids kept their untamed land hidden through ages, makes you wonder what else is still out there",
    "id": "12bf33d86acd"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept their untamed land hidden through ages, makes you wonder what else they are hiding",
+   "id": "47c96c38f4b7"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept their untamed land hidden through generations, makes you wonder what else is still out there",
+   "id": "44e9da5ef6ba"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept their untamed land hidden through generations, makes you wonder what else they are hiding",
+   "id": "d5cd353d7c0e"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept their untamed land secret for ages, makes you wonder what else is still out there",
+   "id": "37db3d8ddc06"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept their untamed land secret for generations, makes you wonder what else they are hiding",
+   "id": "f1de97ecd666"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept their untamed land secret through ages, makes you wonder what else is still out there",
+   "id": "6fb09f8db493"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept their untamed land secret through generations, makes you wonder what else is still out there",
+   "id": "bd94703f7b01"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the mantids kept their untamed land secret through generations, makes you wonder what else they are hiding",
+   "id": "df9af652d88e"
   },
   {
    "kind": "ambient",
@@ -386001,9 +386003,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip around the city is a ranger found another stair in connacht last week. no one could find the place since",
+   "text": "gossip around the city is a ranger found another stair under connacht last month. no one has found it since",
    "about": true,
-   "id": "f69a89491e12"
+   "id": "f723ede28523"
   },
   {
    "kind": "ambient",
@@ -386022,29 +386024,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip around the city is someone found a stair in a hill last month. nobody could find it again",
-   "id": "602bed302ddb"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [
-    "Socialite"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    40,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "gossip around the city is someone found another stair under connacht last month. no one could show it since",
+   "text": "gossip around the city is a ranger saw a door under connacht this week. no one has found the place since",
    "about": true,
-   "id": "6d85a21d3e5f"
+   "id": "852796691a7f"
   },
   {
    "kind": "ambient",
@@ -386063,9 +386045,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip around the city is someone saw another door under connacht last week. no one can show it since",
+   "text": "gossip around the city is someone found a stair in connacht last week. no one has found the place since",
    "about": true,
-   "id": "e6c9eeeb8b9f"
+   "id": "d195699583c3"
   },
   {
    "kind": "ambient",
@@ -386084,8 +386066,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip around the city says a ranger found a stair in a hill this week. no one could find the place since",
-   "id": "dca0696e05c2"
+   "text": "gossip around the city is someone found another door in a hill this week. nobody has found it since",
+   "id": "b02a66f6898c"
   },
   {
    "kind": "ambient",
@@ -386104,9 +386086,49 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip around the city says a ranger found a stair in connacht last week. no one could show the place since",
+   "text": "gossip around the city is someone saw a stair under a hill this month. nobody has found the place since",
+   "id": "7685a1a72352"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    40,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "gossip around the city is someone saw another stair in a hill last week. nobody has found the place since",
+   "id": "73ed583e4412"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    40,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "gossip around the city says a ranger saw a door under connacht last month. no one has found it since",
    "about": true,
-   "id": "6931d1766a26"
+   "id": "f0dbb757b387"
   },
   {
    "kind": "ambient",
@@ -386125,29 +386147,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip around the city says a ranger found another stair under a hill this week. nobody can show it since",
-   "id": "16beb5ffc700"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [
-    "Socialite"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    40,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "gossip around the city says a ranger saw another door under connacht this month. no one could show the place since",
+   "text": "gossip around the city says a ranger saw another stair in connacht this month. no one has found it since",
    "about": true,
-   "id": "21a0f0b6832f"
+   "id": "7b60d273dbe6"
   },
   {
    "kind": "ambient",
@@ -386166,9 +386168,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip around the city says someone saw another door under connacht this week. nobody could find it since",
+   "text": "gossip around the city says someone found another stair under connacht this week. no one has found it since",
    "about": true,
-   "id": "d98b2bac1a9d"
+   "id": "61bc0b941332"
   },
   {
    "kind": "ambient",
@@ -386187,9 +386189,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip around tir na nog is a ranger saw a stair under connacht last week. nobody could show the place again",
+   "text": "gossip around tir na nog is a ranger saw a door under a hill last week. nobody has found the place since",
    "about": true,
-   "id": "c4c5d397b055"
+   "id": "bf060b442be0"
   },
   {
    "kind": "ambient",
@@ -386208,9 +386210,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip around tir na nog is someone found a stair under a hill last week. nobody could show it since",
+   "text": "gossip around tir na nog says a ranger saw a stair in a hill last month. no one has found it since",
    "about": true,
-   "id": "a3ca27f850c5"
+   "id": "88ec2acad186"
   },
   {
    "kind": "ambient",
@@ -386229,9 +386231,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip around tir na nog says a ranger found another door in a hill last month. nobody can find the place since",
+   "text": "gossip around tir na nog says a ranger saw a stair under connacht last month. no one has found it since",
    "about": true,
-   "id": "39c2cdf8424a"
+   "id": "4b367094976f"
   },
   {
    "kind": "ambient",
@@ -386250,9 +386252,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip around tir na nog says someone found a door in a hill this week. nobody can show it again",
+   "text": "gossip around tir na nog says someone found a door in a hill last month. no one has found the place since",
    "about": true,
-   "id": "ad26c3e879a3"
+   "id": "0785aa441c5b"
   },
   {
    "kind": "ambient",
@@ -386271,8 +386273,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in the city is a ranger saw a door in a hill last month. no one can show it again",
-   "id": "ec9918778859"
+   "text": "gossip in the city is a ranger found a stair under a hill last month. nobody has found it since",
+   "id": "0b01d9dfe5a7"
   },
   {
    "kind": "ambient",
@@ -386291,8 +386293,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in the city is a ranger saw another stair in a hill last month. nobody can find it since",
-   "id": "5c9d60e2cc78"
+   "text": "gossip in the city is a ranger saw another stair in a hill last week. no one has found the place since",
+   "id": "460622d2f8d0"
   },
   {
    "kind": "ambient",
@@ -386311,9 +386313,29 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in the city says someone found a stair in connacht this week. no one can find the place again",
+   "text": "gossip in the city is someone found a door under a hill last month. nobody has found it since",
+   "id": "c691bf7ccc09"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    40,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "gossip in the city is someone saw a door under connacht this week. nobody has found the place since",
    "about": true,
-   "id": "dcfa5a54d6af"
+   "id": "f43d06784f7d"
   },
   {
    "kind": "ambient",
@@ -386332,9 +386354,29 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in the city says someone saw a door in connacht this month. nobody could show it again",
+   "text": "gossip in the city is someone saw a stair under a hill last month. nobody has found the place since",
+   "id": "364f35bc6377"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    40,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "gossip in the city says a ranger saw a door under connacht this week. no one has found it since",
    "about": true,
-   "id": "e3438c946cbc"
+   "id": "243654399381"
   },
   {
    "kind": "ambient",
@@ -386353,9 +386395,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in tir na nog is a ranger saw a stair in connacht this month. no one can show the place again",
+   "text": "gossip in the city says a ranger saw another door in connacht last week. no one has found the place since",
    "about": true,
-   "id": "1102df4d2f99"
+   "id": "6853911359f8"
   },
   {
    "kind": "ambient",
@@ -386374,9 +386416,29 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in tir na nog says a ranger found a stair under a hill this week. no one could find it again",
+   "text": "gossip in the city says someone found another stair under a hill last week. nobody has found the place since",
+   "id": "d764ab31bb68"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    40,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "gossip in the city says someone found another stair under connacht last month. nobody has found the place since",
    "about": true,
-   "id": "49e28d86f496"
+   "id": "b91d20d90321"
   },
   {
    "kind": "ambient",
@@ -386395,9 +386457,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in tir na nog says a ranger saw another stair under a hill last month. no one could show the place since",
+   "text": "gossip in tir na nog is a ranger found a door under connacht this month. nobody has found the place since",
    "about": true,
-   "id": "b4b4a1f36f79"
+   "id": "b181fafc849c"
   },
   {
    "kind": "ambient",
@@ -386416,9 +386478,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in tir na nog says someone found a door in a hill this month. nobody can find the place again",
+   "text": "gossip in tir na nog is a ranger found another stair under connacht last month. no one has found the place since",
    "about": true,
-   "id": "52e3ce38510e"
+   "id": "303ae4228d96"
   },
   {
    "kind": "ambient",
@@ -386437,29 +386499,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word around the city is someone found a door in a hill last week. no one can show the place since",
-   "id": "15c00963865b"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [
-    "Socialite"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    40,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "word around the city is someone found another door under connacht last month. no one could find it again",
+   "text": "gossip in tir na nog is a ranger saw a door in a hill this week. no one has found the place since",
    "about": true,
-   "id": "5e7a791261c9"
+   "id": "67b301e056ae"
   },
   {
    "kind": "ambient",
@@ -386478,9 +386520,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word around the city is someone saw a door in connacht this week. nobody could find it again",
+   "text": "gossip in tir na nog is someone saw another stair under connacht this week. no one has found the place since",
    "about": true,
-   "id": "c6b1af415751"
+   "id": "e8b4b4357940"
   },
   {
    "kind": "ambient",
@@ -386499,9 +386541,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word around the city is someone saw a door under connacht last month. no one can find it since",
+   "text": "gossip in tir na nog says a ranger found a stair under connacht this month. nobody has found it since",
    "about": true,
-   "id": "49281e4380c7"
+   "id": "a59c34ff028a"
   },
   {
    "kind": "ambient",
@@ -386520,49 +386562,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word around the city says a ranger found a stair in a hill last week. no one can find the place since",
-   "id": "d4c88cb308d5"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [
-    "Socialite"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    40,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "word around the city says a ranger found another door under a hill last week. nobody could find the place since",
-   "id": "302ca9eef569"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [
-    "Socialite"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    40,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "word around the city says a ranger saw another stair in connacht last month. no one can show it since",
+   "text": "gossip in tir na nog says someone found a door in a hill last month. no one has found the place since",
    "about": true,
-   "id": "cd19b9e6bf12"
+   "id": "65e091db0a65"
   },
   {
    "kind": "ambient",
@@ -386581,49 +386583,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word around the city says someone saw a stair in a hill last week. no one can find the place since",
-   "id": "f1e723de82c9"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [
-    "Socialite"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    40,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "word around the city says someone saw a stair in a hill this week. nobody could find it since",
-   "id": "227715227cae"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [
-    "Socialite"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    40,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "word around tir na nog is a ranger found a door under connacht last month. no one can find the place again",
+   "text": "word around the city is someone saw another stair in connacht this week. nobody has found the place since",
    "about": true,
-   "id": "1dae250af157"
+   "id": "4ed0e699697b"
   },
   {
    "kind": "ambient",
@@ -386642,9 +386604,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word around tir na nog is a ranger found a stair under connacht last month. nobody can find the place since",
+   "text": "word around the city says someone saw a stair under connacht this month. nobody has found it since",
    "about": true,
-   "id": "d8b79e2122d3"
+   "id": "8bf0d93ca5aa"
   },
   {
    "kind": "ambient",
@@ -386663,9 +386625,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word around tir na nog is a ranger found another stair in a hill last month. nobody can find it again",
+   "text": "word around the city says someone saw another door in connacht last week. no one has found the place since",
    "about": true,
-   "id": "89f9ce0cbf97"
+   "id": "1ba2ad86b67d"
   },
   {
    "kind": "ambient",
@@ -386684,9 +386646,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word around tir na nog is a ranger saw a door in a hill this week. no one could find the place again",
+   "text": "word around tir na nog is a ranger found a door under connacht last week. nobody has found the place since",
    "about": true,
-   "id": "632b4ea98eb5"
+   "id": "db725e695c81"
   },
   {
    "kind": "ambient",
@@ -386705,9 +386667,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word around tir na nog says a ranger found a door in connacht this week. nobody can show it again",
+   "text": "word around tir na nog is a ranger found another door under a hill this week. nobody has found the place since",
    "about": true,
-   "id": "f066968ebb78"
+   "id": "eeaf98df27c6"
   },
   {
    "kind": "ambient",
@@ -386726,9 +386688,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word around tir na nog says someone saw a door in connacht last month. nobody could find it again",
+   "text": "word around tir na nog is someone found a stair in connacht this week. no one has found it since",
    "about": true,
-   "id": "a4c05a7a3b53"
+   "id": "fc91d756ade2"
   },
   {
    "kind": "ambient",
@@ -386747,9 +386709,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word around tir na nog says someone saw another door under connacht last week. nobody can find it again",
+   "text": "word around tir na nog says a ranger found a stair in connacht last week. nobody has found the place since",
    "about": true,
-   "id": "212190b76a07"
+   "id": "022de89ff857"
   },
   {
    "kind": "ambient",
@@ -386768,9 +386730,49 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word around tir na nog says someone saw another stair under a hill this month. nobody could show it again",
+   "text": "word in the city is a ranger found another door under a hill this month. no one has found it since",
+   "id": "4ea46f84a9be"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    40,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "word in the city says someone found a stair in a hill last week. nobody has found it since",
+   "id": "76637becd4f3"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    40,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "word in the city says someone found another stair in connacht this week. nobody has found it since",
    "about": true,
-   "id": "e496181f2b16"
+   "id": "07d5e6bf958f"
   },
   {
    "kind": "ambient",
@@ -386789,8 +386791,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in the city is someone found a door in a hill last week. nobody could find it again",
-   "id": "561b9206fbd0"
+   "text": "word in the city says someone saw another stair under a hill last month. nobody has found it since",
+   "id": "4d0a53fa1054"
   },
   {
    "kind": "ambient",
@@ -386809,69 +386811,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in the city is someone found another door in a hill last week. no one can show the place since",
-   "id": "70746e01d587"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [
-    "Socialite"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    40,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "word in the city says someone found a door in a hill last month. nobody can find it again",
-   "id": "51a20f03cc34"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [
-    "Socialite"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    40,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "word in the city says someone found a door in a hill this week. no one could find it since",
-   "id": "de5645ab2cef"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [
-    "Socialite"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    40,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "word in the city says someone saw a door under connacht last week. no one can find it again",
+   "text": "word in tir na nog is a ranger found a stair in connacht this month. nobody has found it since",
    "about": true,
-   "id": "7fa152dbb1b5"
+   "id": "1e881e934980"
   },
   {
    "kind": "ambient",
@@ -386890,9 +386832,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in the city says someone saw another door in connacht last week. nobody could find it since",
+   "text": "word in tir na nog is someone found another door in connacht this week. no one has found it since",
    "about": true,
-   "id": "af815d24e919"
+   "id": "92c6d1ed7b00"
   },
   {
    "kind": "ambient",
@@ -386911,9 +386853,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in tir na nog is someone saw a door under connacht last week. nobody could find it again",
+   "text": "word in tir na nog is someone found another stair in a hill last month. no one has found it since",
    "about": true,
-   "id": "f3e323cda70b"
+   "id": "79c13a90e145"
   },
   {
    "kind": "ambient",
@@ -386932,9 +386874,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in tir na nog says a ranger found a door under a hill last week. no one could show it again",
+   "text": "word in tir na nog is someone saw a stair under a hill last month. nobody has found it since",
    "about": true,
-   "id": "7ce7827a061c"
+   "id": "ddf8e0adde46"
   },
   {
    "kind": "ambient",
@@ -386953,9 +386895,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in tir na nog says someone found a stair under connacht this week. nobody could show the place since",
+   "text": "word in tir na nog is someone saw a stair under connacht this month. no one has found the place since",
    "about": true,
-   "id": "bb5d9c025196"
+   "id": "5b6d4797c984"
   },
   {
    "kind": "ambient",
@@ -386974,9 +386916,72 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in tir na nog says someone saw a stair under connacht last month. nobody could show the place since",
+   "text": "word in tir na nog says a ranger found a door under connacht last month. nobody has found the place since",
    "about": true,
-   "id": "c21797910bf2"
+   "id": "c3a272ddeba7"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    40,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "word in tir na nog says a ranger found a stair under a hill last month. no one has found the place since",
+   "about": true,
+   "id": "beca0190544d"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    40,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "word in tir na nog says a ranger saw a stair in connacht last month. no one has found it since",
+   "about": true,
+   "id": "dbbaeab17ea9"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    40,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "word in tir na nog says a ranger saw another stair under connacht last month. nobody has found it since",
+   "about": true,
+   "id": "d259142b4866"
   },
   {
    "kind": "ambient",
@@ -416145,9 +416150,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that a hunter found a stair under the ice again. no one could show it since",
+   "text": "gossip in jordheim is that a hunter found a stair behind the ice again. no one has found it since",
    "about": true,
-   "id": "fe709d89ee39"
+   "id": "7e7841775a9c"
   },
   {
    "kind": "ambient",
@@ -416166,9 +416171,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that a hunter saw a stair behind the ice last week. no one can show it since",
+   "text": "gossip in jordheim is that a hunter found a stair under a waterfall last week. no one has found it since",
    "about": true,
-   "id": "6b4ca032483c"
+   "id": "eea7bf14d1c2"
   },
   {
    "kind": "ambient",
@@ -416187,9 +416192,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that a hunter saw a stair under the ice again. no one can show the spot again",
+   "text": "gossip in jordheim is that a hunter found lights behind a waterfall last week. nobody has found the spot since",
    "about": true,
-   "id": "add79a9337ac"
+   "id": "c3e77151de87"
   },
   {
    "kind": "ambient",
@@ -416208,9 +416213,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that a hunter saw lights under a waterfall again. no one can show the spot since",
+   "text": "gossip in jordheim is that a hunter saw a stair behind a waterfall again. no one has found it since",
    "about": true,
-   "id": "33201df51930"
+   "id": "c58bfabcc0fe"
   },
   {
    "kind": "ambient",
@@ -416229,9 +416234,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that a hunter saw lights under a waterfall last week. nobody could find it again",
+   "text": "gossip in jordheim is that a hunter saw lights under the ice again. no one has found the spot since",
    "about": true,
-   "id": "90b37e88de80"
+   "id": "448ea3c34b86"
   },
   {
    "kind": "ambient",
@@ -416250,9 +416255,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that a hunter saw lights under the ice again. no one could show it since",
+   "text": "gossip in jordheim is that someone found lights behind the ice last week. nobody has found it since",
    "about": true,
-   "id": "4f6eeba6abaf"
+   "id": "305accbc21c1"
   },
   {
    "kind": "ambient",
@@ -416271,9 +416276,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that someone found lights behind a waterfall last week. no one could show it since",
+   "text": "gossip in jordheim is that someone found lights under the ice again. nobody has found the spot since",
    "about": true,
-   "id": "4f8a02194869"
+   "id": "84b4a11451bb"
   },
   {
    "kind": "ambient",
@@ -416292,9 +416297,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that someone found lights behind a waterfall last week. nobody can show it again",
+   "text": "gossip in jordheim is that someone found lights under the ice last week. nobody has found the spot since",
    "about": true,
-   "id": "308f56af1589"
+   "id": "438ed5300019"
   },
   {
    "kind": "ambient",
@@ -416313,9 +416318,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that someone found lights behind the ice last week. nobody can find the spot again",
+   "text": "gossip in jordheim is that someone saw a stair behind the ice again. no one has found it since",
    "about": true,
-   "id": "e60cc3a04b1e"
+   "id": "e7f7a44b43d5"
   },
   {
    "kind": "ambient",
@@ -416334,9 +416339,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that someone found lights under a waterfall again. nobody could find the spot since",
+   "text": "gossip in jordheim is that someone saw a stair under the ice last week. no one has found the spot since",
    "about": true,
-   "id": "677322c3abdd"
+   "id": "eb831768de35"
   },
   {
    "kind": "ambient",
@@ -416355,9 +416360,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that someone found lights under the ice again. no one could find it again",
+   "text": "gossip in jordheim is that someone saw lights under a waterfall last week. nobody has found the spot since",
    "about": true,
-   "id": "39444607f940"
+   "id": "57f4ae8fcd33"
   },
   {
    "kind": "ambient",
@@ -416376,9 +416381,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that someone found lights under the ice again. nobody can show it again",
+   "text": "gossip in jordheim says a hunter found a stair behind the ice again. no one has found the spot since",
    "about": true,
-   "id": "054074997e99"
+   "id": "e65d8cdb691a"
   },
   {
    "kind": "ambient",
@@ -416397,9 +416402,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that someone saw a stair behind a waterfall again. no one can show the spot since",
+   "text": "gossip in jordheim says a hunter found a stair behind the ice last week. no one has found the spot since",
    "about": true,
-   "id": "422f2a627a01"
+   "id": "df5da14c6d4d"
   },
   {
    "kind": "ambient",
@@ -416418,9 +416423,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that someone saw lights behind a waterfall again. nobody can show it again",
+   "text": "gossip in jordheim says a hunter found lights behind a waterfall again. no one has found it since",
    "about": true,
-   "id": "a8113e377eae"
+   "id": "217310756b83"
   },
   {
    "kind": "ambient",
@@ -416439,9 +416444,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that someone saw lights behind the ice last week. nobody can show the spot again",
+   "text": "gossip in jordheim says a hunter found lights behind a waterfall last week. no one has found the spot since",
    "about": true,
-   "id": "1d3d7ad5c7f0"
+   "id": "6ec2d06e5218"
   },
   {
    "kind": "ambient",
@@ -416460,9 +416465,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim is that someone saw lights under the ice last week. nobody can show it again",
+   "text": "gossip in jordheim says a hunter found lights under the ice again. no one has found it since",
    "about": true,
-   "id": "62388019043c"
+   "id": "e2f73cb166ee"
   },
   {
    "kind": "ambient",
@@ -416481,9 +416486,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim says a hunter found a stair behind a waterfall last week. no one could show the spot since",
+   "text": "gossip in jordheim says a hunter saw a stair under a waterfall last week. nobody has found it since",
    "about": true,
-   "id": "6ce6c4c08a21"
+   "id": "87c1c95c2330"
   },
   {
    "kind": "ambient",
@@ -416502,9 +416507,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim says a hunter found lights behind the ice again. nobody can find the spot since",
+   "text": "gossip in jordheim says a hunter saw lights behind a waterfall again. nobody has found the spot since",
    "about": true,
-   "id": "1ada7d0100ac"
+   "id": "50731e72aee0"
   },
   {
    "kind": "ambient",
@@ -416523,9 +416528,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim says a hunter saw lights behind the ice last week. nobody can show the spot again",
+   "text": "gossip in jordheim says a hunter saw lights under a waterfall again. no one has found the spot since",
    "about": true,
-   "id": "c511e6109858"
+   "id": "846a28c38965"
   },
   {
    "kind": "ambient",
@@ -416544,9 +416549,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim says someone found lights behind the ice again. no one could show it since",
+   "text": "gossip in jordheim says someone found a stair behind a waterfall last week. nobody has found the spot since",
    "about": true,
-   "id": "3abed3f6f2c4"
+   "id": "ddd1060b3b5c"
   },
   {
    "kind": "ambient",
@@ -416565,9 +416570,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "gossip in jordheim says someone saw lights under the ice again. nobody could find the spot again",
+   "text": "gossip in jordheim says someone found lights behind a waterfall again. no one has found it since",
    "about": true,
-   "id": "50a00e62ac78"
+   "id": "4164df38281a"
   },
   {
    "kind": "ambient",
@@ -416586,9 +416591,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim is that a hunter found a stair under a waterfall again. nobody could find the spot since",
+   "text": "gossip in jordheim says someone found lights behind the ice again. nobody has found it since",
    "about": true,
-   "id": "268138d7164b"
+   "id": "139362286e2a"
   },
   {
    "kind": "ambient",
@@ -416607,9 +416612,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim is that a hunter found a stair under a waterfall again. nobody could show it again",
+   "text": "gossip in jordheim says someone saw a stair behind a waterfall last week. nobody has found the spot since",
    "about": true,
-   "id": "f97913f1bea4"
+   "id": "7a0d8715525e"
   },
   {
    "kind": "ambient",
@@ -416628,9 +416633,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim is that a hunter found lights under the ice last week. no one can show the spot again",
+   "text": "gossip in jordheim says someone saw lights behind a waterfall last week. nobody has found it since",
    "about": true,
-   "id": "6b60519c9315"
+   "id": "4418a916a498"
   },
   {
    "kind": "ambient",
@@ -416649,9 +416654,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim is that a hunter found lights under the ice last week. no one could show it since",
+   "text": "gossip in jordheim says someone saw lights under a waterfall again. no one has found it since",
    "about": true,
-   "id": "eda8cf96beef"
+   "id": "343f12eccd29"
   },
   {
    "kind": "ambient",
@@ -416670,9 +416675,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim is that a hunter saw a stair behind a waterfall again. no one can find it again",
+   "text": "word in jordheim is that a hunter found a stair behind a waterfall again. nobody has found it since",
    "about": true,
-   "id": "5d6928460820"
+   "id": "55e52a294555"
   },
   {
    "kind": "ambient",
@@ -416691,9 +416696,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim is that a hunter saw a stair behind the ice last week. no one can show it since",
+   "text": "word in jordheim is that a hunter found a stair behind the ice last week. no one has found it since",
    "about": true,
-   "id": "f56064266709"
+   "id": "f83daef8280b"
   },
   {
    "kind": "ambient",
@@ -416712,9 +416717,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim is that someone found a stair under a waterfall again. nobody could find it again",
+   "text": "word in jordheim is that a hunter found lights behind a waterfall again. nobody has found the spot since",
    "about": true,
-   "id": "f973d233da43"
+   "id": "21dd3d31527d"
   },
   {
    "kind": "ambient",
@@ -416733,9 +416738,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim is that someone found lights under a waterfall again. no one can find the spot again",
+   "text": "word in jordheim is that a hunter found lights behind a waterfall last week. nobody has found it since",
    "about": true,
-   "id": "c3a8832659db"
+   "id": "565c098d4ec8"
   },
   {
    "kind": "ambient",
@@ -416754,9 +416759,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim is that someone found lights under the ice last week. nobody can show it again",
+   "text": "word in jordheim is that a hunter found lights behind the ice again. nobody has found it since",
    "about": true,
-   "id": "ff7e28195e3b"
+   "id": "159365244e96"
   },
   {
    "kind": "ambient",
@@ -416775,9 +416780,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim is that someone saw a stair under a waterfall last week. no one can find the spot again",
+   "text": "word in jordheim is that a hunter saw a stair under a waterfall again. no one has found it since",
    "about": true,
-   "id": "198adef5a2f0"
+   "id": "b72dfb0a1561"
   },
   {
    "kind": "ambient",
@@ -416796,9 +416801,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim is that someone saw a stair under a waterfall last week. nobody can find the spot since",
+   "text": "word in jordheim is that a hunter saw a stair under a waterfall again. nobody has found it since",
    "about": true,
-   "id": "9826663887d7"
+   "id": "52535d53a01b"
   },
   {
    "kind": "ambient",
@@ -416817,9 +416822,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says a hunter found a stair behind a waterfall again. nobody could find the spot again",
+   "text": "word in jordheim is that a hunter saw a stair under the ice again. nobody has found the spot since",
    "about": true,
-   "id": "ce833cd88b08"
+   "id": "8177864c29ed"
   },
   {
    "kind": "ambient",
@@ -416838,9 +416843,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says a hunter found a stair under the ice last week. no one could find the spot since",
+   "text": "word in jordheim is that a hunter saw lights behind a waterfall last week. no one has found the spot since",
    "about": true,
-   "id": "29a0d17e6ef6"
+   "id": "5dbe097fa966"
   },
   {
    "kind": "ambient",
@@ -416859,9 +416864,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says a hunter found lights under the ice last week. no one could find the spot again",
+   "text": "word in jordheim is that a hunter saw lights under a waterfall last week. nobody has found the spot since",
    "about": true,
-   "id": "e9339c2ee925"
+   "id": "f9e51dec915e"
   },
   {
    "kind": "ambient",
@@ -416880,9 +416885,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says a hunter found lights under the ice last week. nobody could find the spot again",
+   "text": "word in jordheim is that a hunter saw lights under the ice last week. nobody has found it since",
    "about": true,
-   "id": "3184a0fdf015"
+   "id": "1208fb688a9d"
   },
   {
    "kind": "ambient",
@@ -416901,9 +416906,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says a hunter saw a stair behind a waterfall last week. nobody could find it since",
+   "text": "word in jordheim is that someone found a stair under a waterfall again. nobody has found it since",
    "about": true,
-   "id": "192d5c16667e"
+   "id": "6073741e1bb5"
   },
   {
    "kind": "ambient",
@@ -416922,9 +416927,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says a hunter saw a stair under the ice last week. no one can find the spot again",
+   "text": "word in jordheim says a hunter found a stair behind the ice last week. nobody has found it since",
    "about": true,
-   "id": "be5d5ab05f9a"
+   "id": "6fca171c2931"
   },
   {
    "kind": "ambient",
@@ -416943,9 +416948,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says a hunter saw lights behind the ice last week. no one could find it again",
+   "text": "word in jordheim says a hunter found lights behind a waterfall again. nobody has found the spot since",
    "about": true,
-   "id": "c31a7af9c416"
+   "id": "0b170071eab9"
   },
   {
    "kind": "ambient",
@@ -416964,9 +416969,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says a hunter saw lights under a waterfall last week. no one could show it since",
+   "text": "word in jordheim says a hunter found lights behind a waterfall last week. nobody has found it since",
    "about": true,
-   "id": "e293481aa9d6"
+   "id": "28958be2599e"
   },
   {
    "kind": "ambient",
@@ -416985,9 +416990,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says someone found a stair behind the ice last week. nobody could show the spot since",
+   "text": "word in jordheim says a hunter saw a stair behind the ice again. no one has found the spot since",
    "about": true,
-   "id": "68728e0b37d7"
+   "id": "b24bba744812"
   },
   {
    "kind": "ambient",
@@ -417006,9 +417011,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says someone found a stair under a waterfall again. nobody could show the spot since",
+   "text": "word in jordheim says a hunter saw a stair behind the ice again. nobody has found it since",
    "about": true,
-   "id": "f33dfb707cb1"
+   "id": "bc054650d8ba"
   },
   {
    "kind": "ambient",
@@ -417027,9 +417032,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says someone found a stair under the ice again. no one could find it again",
+   "text": "word in jordheim says a hunter saw a stair behind the ice last week. nobody has found the spot since",
    "about": true,
-   "id": "2ce7fb0f46f0"
+   "id": "bfd5488341c1"
   },
   {
    "kind": "ambient",
@@ -417048,9 +417053,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says someone found lights under a waterfall last week. nobody can show it again",
+   "text": "word in jordheim says a hunter saw a stair under a waterfall again. no one has found it since",
    "about": true,
-   "id": "3e8b8bc1c600"
+   "id": "9e88490f76a3"
   },
   {
    "kind": "ambient",
@@ -417069,9 +417074,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says someone found lights under the ice again. no one can show it again",
+   "text": "word in jordheim says someone found lights under a waterfall last week. no one has found the spot since",
    "about": true,
-   "id": "b163b4c1bee9"
+   "id": "82b17cb3eb41"
   },
   {
    "kind": "ambient",
@@ -417090,9 +417095,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says someone saw a stair behind a waterfall last week. no one can find it again",
+   "text": "word in jordheim says someone found lights under the ice last week. nobody has found it since",
    "about": true,
-   "id": "1c9c93655e46"
+   "id": "39b885aff27c"
   },
   {
    "kind": "ambient",
@@ -417111,9 +417116,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says someone saw a stair behind a waterfall last week. no one can find the spot since",
+   "text": "word in jordheim says someone saw a stair under the ice again. no one has found it since",
    "about": true,
-   "id": "fb9e1b2dcb92"
+   "id": "d4aaac434255"
   },
   {
    "kind": "ambient",
@@ -417132,9 +417137,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "word in jordheim says someone saw a stair behind a waterfall last week. nobody could find it again",
+   "text": "word in jordheim says someone saw a stair under the ice last week. nobody has found the spot since",
    "about": true,
-   "id": "e0d3a7acf706"
+   "id": "4896f2fc6d8d"
   },
   {
    "kind": "ambient",
