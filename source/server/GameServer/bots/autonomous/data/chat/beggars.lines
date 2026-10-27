@@ -188,7 +188,16 @@ i hope [your next pull goes wrong|your loot is all trash drops|your horse throws
 [what do you want|what]? [unless its coin|unless you are bringing coin|if its not coin], [im busy|go away|dont bother]
 [busy|very busy]. begging [is a full time job|takes all day|doesnt do itself]. [coin?|unless you have coin]
 [you whisper|you send tells] but [no coin|no silver|no gifts]? [typical|heh|tch]
+[questions cost a copper|answers cost coin], {player}. [pay first|coin first]
+
+# ---- tell_group: a tell about grouping, inviting or joining (in-game check 2026-10-27: "how long have you been on
+# this corner?" drew "no groups") ----------------------------------------------------------------------------------------
+@kind beggar
+@topic tell_group
+@who *
 [i dont group|no groups], {player}. [i have a corner|i have a job|i beg]. [but coin is welcome|coin though?]
+[group|grouping]? [and leave my corner|and lose my spot]? [never|not a chance], {player}
+the only party i join is the one with [coin|a purse]. [got one?|you have one?]
 
 # ---- outraged: the moment a player asks the BEGGAR for gold or items ---------------------------------
 @kind beggar

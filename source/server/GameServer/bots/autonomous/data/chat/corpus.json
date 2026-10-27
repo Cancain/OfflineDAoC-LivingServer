@@ -264056,13 +264056,81 @@
    "needs": [],
    "intent": "",
    "mood": "",
+   "weight": 0.5,
+   "text": "questions cost a copper, {player}. pay first",
+   "id": "f69c99c74eb5"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.5,
+   "text": "questions cost a copper, {player}. coin first",
+   "id": "e66625c3ea64"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.5,
+   "text": "answers cost coin, {player}. pay first",
+   "id": "40aba95305c5"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.5,
+   "text": "answers cost coin, {player}. coin first",
+   "id": "0f3d4e1e84b0"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
    "weight": 0.2887,
    "text": "i dont group, {player}. i have a corner. but coin is welcome",
    "id": "92a54602c279"
   },
   {
    "kind": "beggar",
-   "topic": "tell",
+   "topic": "tell_group",
    "who": [],
    "realm": "*",
    "class": [],
@@ -264079,7 +264147,7 @@
   },
   {
    "kind": "beggar",
-   "topic": "tell",
+   "topic": "tell_group",
    "who": [],
    "realm": "*",
    "class": [],
@@ -264096,7 +264164,7 @@
   },
   {
    "kind": "beggar",
-   "topic": "tell",
+   "topic": "tell_group",
    "who": [],
    "realm": "*",
    "class": [],
@@ -264113,7 +264181,7 @@
   },
   {
    "kind": "beggar",
-   "topic": "tell",
+   "topic": "tell_group",
    "who": [],
    "realm": "*",
    "class": [],
@@ -264130,7 +264198,7 @@
   },
   {
    "kind": "beggar",
-   "topic": "tell",
+   "topic": "tell_group",
    "who": [],
    "realm": "*",
    "class": [],
@@ -264147,7 +264215,7 @@
   },
   {
    "kind": "beggar",
-   "topic": "tell",
+   "topic": "tell_group",
    "who": [],
    "realm": "*",
    "class": [],
@@ -264164,7 +264232,7 @@
   },
   {
    "kind": "beggar",
-   "topic": "tell",
+   "topic": "tell_group",
    "who": [],
    "realm": "*",
    "class": [],
@@ -264181,7 +264249,7 @@
   },
   {
    "kind": "beggar",
-   "topic": "tell",
+   "topic": "tell_group",
    "who": [],
    "realm": "*",
    "class": [],
@@ -264198,7 +264266,7 @@
   },
   {
    "kind": "beggar",
-   "topic": "tell",
+   "topic": "tell_group",
    "who": [],
    "realm": "*",
    "class": [],
@@ -264215,7 +264283,7 @@
   },
   {
    "kind": "beggar",
-   "topic": "tell",
+   "topic": "tell_group",
    "who": [],
    "realm": "*",
    "class": [],
@@ -264232,7 +264300,7 @@
   },
   {
    "kind": "beggar",
-   "topic": "tell",
+   "topic": "tell_group",
    "who": [],
    "realm": "*",
    "class": [],
@@ -264246,6 +264314,210 @@
    "weight": 0.2887,
    "text": "no groups, {player}. i beg. coin though?",
    "id": "ffb75e3cc9f2"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "text": "group? and leave my corner? never, {player}",
+   "id": "7535679fb167"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "text": "group? and leave my corner? not a chance, {player}",
+   "id": "846a25769a9d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "text": "group? and lose my spot? never, {player}",
+   "id": "4bbb764fef46"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "text": "group? and lose my spot? not a chance, {player}",
+   "id": "6ffd11ee4794"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "text": "grouping? and leave my corner? never, {player}",
+   "id": "b9a7c2d4cfe4"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "text": "grouping? and leave my corner? not a chance, {player}",
+   "id": "ecc5462dd03b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "text": "grouping? and lose my spot? never, {player}",
+   "id": "5302bb8fffe8"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "text": "grouping? and lose my spot? not a chance, {player}",
+   "id": "fa0f563c1efc"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.5,
+   "text": "the only party i join is the one with coin. got one?",
+   "id": "e86af333f84a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.5,
+   "text": "the only party i join is the one with coin. you have one?",
+   "id": "537d410d2ee0"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.5,
+   "text": "the only party i join is the one with a purse. got one?",
+   "id": "ea3a3705af24"
+  },
+  {
+   "kind": "beggar",
+   "topic": "tell_group",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.5,
+   "text": "the only party i join is the one with a purse. you have one?",
+   "id": "5b35d84eba2d"
   },
   {
    "kind": "beggar",

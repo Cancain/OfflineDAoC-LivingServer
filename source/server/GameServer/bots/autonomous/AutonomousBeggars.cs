@@ -763,7 +763,9 @@ public static class AutonomousBeggars
         State state = States.GetOrAdd(bot.DatabaseID, _ => new State());
         AutonomousLivingServer.Later(bot, 2_500 + Random.Shared.Next(3_000), () => AutonomousLivingServer.IsSpeaker(bot), () =>
         {
-            if (AutonomousBotVoices.TryEventLine(bot, "beggar", out string line, "tell", SlotsFor(bot, state, player)))
+            // A tell about grouping gets "no groups"; anything else a word from the corner.
+            string topic = Regex.IsMatch(message, @"\b(group|grp|grouping|invite|inv|join|duo|party|pt)\b", RegexOptions.IgnoreCase) ? "tell_group" : "tell";
+            if (AutonomousBotVoices.TryEventLine(bot, "beggar", out string line, topic, SlotsFor(bot, state, player)))
                 AutonomousLivingServer.Tell(bot, player, line);
         });
         return true;
