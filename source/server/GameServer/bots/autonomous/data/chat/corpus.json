@@ -302501,6 +302501,738 @@
    "id": "ea7b363ebf96"
   },
   {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "lol get in line behind the beggars",
+   "id": "750f5ac8ae2f"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "sell your drops to a merchant, it adds up fast",
+   "id": "42de940543b5"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "kill stuff. it drops coin. thats the whole economy",
+   "id": "3080292dd0ab"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.7071,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "broke too, sorry",
+   "id": "3ef86cf31b02"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.7071,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "im broke too, sorry",
+   "id": "79300b006d8b"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "nope. coin is earned",
+   "id": "5c392c16a1ec"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.7071,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "the beggars in the capital are going to hear about this",
+   "id": "498158332a9c"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.7071,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "the beggars in town are going to hear about this",
+   "id": "8b37dd8a5227"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.7071,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "grind a bit, the coin comes with it",
+   "id": "b48b4d8360c8"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.7071,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "level a bit, the coin comes with it",
+   "id": "376004a9af29"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "asking for gold in faction, bold move",
+   "id": "019a9d84a1d6"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "no handouts, but merchants buy anything you loot",
+   "id": "865ef1bc93bf"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "cant spare any, saving for my epic",
+   "id": "4794801e91ff"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "heh no",
+   "id": "f7cef8a5ed71"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.5,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "everyone started with nothing. go hunt",
+   "id": "f21ef14f83c7"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.5,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "everyone started with nothing. go kill something",
+   "id": "5ac1606b7b8f"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.5,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "we all started with nothing. go hunt",
+   "id": "b13abf861a62"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.5,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "we all started with nothing. go kill something",
+   "id": "9fa35b3d8ded"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "sell the junk in your bags, easy silver",
+   "id": "88f092b95f94"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "sell the junk in your bags, quick silver",
+   "id": "61812340aa65"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "sell everything grey in your bags, easy silver",
+   "id": "417079813340"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "sell everything grey in your bags, quick silver",
+   "id": "e93ab63c1856"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "vendor the junk in your bags, easy silver",
+   "id": "f20d3c9a4931"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "vendor the junk in your bags, quick silver",
+   "id": "e5e6bbf5378a"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "vendor everything grey in your bags, easy silver",
+   "id": "8e6fc98b92b0"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3536,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "vendor everything grey in your bags, quick silver",
+   "id": "e8c7d5585a94"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.7071,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "if i had spare gold i would not be out here farming",
+   "id": "a4adc0038607"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.7071,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "if i had spare gold i would not be out here grinding",
+   "id": "e97ba9b4ce0b"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.7071,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "lol no. but the exchange has cheap starter gear",
+   "id": "eb5d0b200a0c"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.7071,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "lol nope. but the exchange has cheap starter gear",
+   "id": "4014e88e64f4"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [
+    "Crafter"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "craft something and sell it, thats what i do",
+   "id": "2f233bb8eed2"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [
+    "NoLifer"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "i farmed every copper i have. go farm yours",
+   "id": "747c324d5548"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "aww. cant spare coin but good luck out there :)",
+   "id": "e9dcf59fa62f"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [
+    "Daredevil"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "i spend all mine on repairs, sorry",
+   "id": "4ad9ecfde2a0"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "coin comes with levels. level",
+   "id": "999fcd54bc33"
+  },
+  {
+   "kind": "reply",
+   "topic": "general",
+   "who": [
+    "Explorer"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "ask_charity"
+   ],
+   "text": "found more coin in old ruins than anyone ever gave me. go look",
+   "id": "ac5356a48692"
+  },
+  {
    "kind": "ambient",
    "topic": "class",
    "who": [],

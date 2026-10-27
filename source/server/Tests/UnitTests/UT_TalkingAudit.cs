@@ -187,6 +187,12 @@ namespace DOL.GS.Tests
             Assert.That(AutonomousBotChatCoordinator.ShowsTradeInterest("how much?"), Is.True);
             Assert.That(AutonomousBotChatCoordinator.ShowsTradeInterest("gl selling that"), Is.False);
             Assert.That(AutonomousBotChatCoordinator.ShowsTradeInterest("nah too pricey"), Is.False);
+            // In-game check 2026-10-27: asks for coin drew "dunno" and an exchange advert.
+            foreach (string ask in new[] { "could someone lend me a gold? new magician, no money", "new viking here, can anyone spare a few coins for gear?",
+                         "anyone spare some gold? I'm broke" })
+                Assert.That(AutonomousChatShortTalk.QuestionShape(ask), Is.EqualTo("ask_charity"), ask);
+            Assert.That(AutonomousChatShortTalk.QuestionShape("anyone need some gold? i have spare"), Is.Not.EqualTo("ask_charity"));
+            Assert.That(AutonomousBotVoices.Corpus.Lines.Count(line => line.Kind == "reply" && line.Answers.Contains("ask_charity")), Is.GreaterThanOrEqualTo(10));
             foreach (string line in new[] { "pushing the 40s finally", "keep the mobs on me", "heading for our guild house" })
                 Assert.That(AutonomousChatIntentModel.Predict(line), Is.Not.EqualTo(eAutonomousChatIntent.Alarm), line);
             Assert.That(AutonomousChatIntentModel.Predict("mids pushing our keep"), Is.EqualTo(eAutonomousChatIntent.Alarm));

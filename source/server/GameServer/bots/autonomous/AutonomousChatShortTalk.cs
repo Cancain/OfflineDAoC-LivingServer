@@ -154,6 +154,10 @@ public static class AutonomousChatShortTalk
             // "anyone want free spellcraft on their armor", "free buffs at the bind": something given away.
             OffersFree(said)))
             return "player_offer";
+        // "can anyone spare a few coins for gear?": asking for charity gets a no with advice or a jab, not "dunno" or an exchange
+        // advert (in-game check 2026-10-27, Midgard and Hibernia). The same test marks the player for the beggars.
+        if (AutonomousBeggars.AsksForCharity(text))
+            return "ask_charity";
         // "wb Sigrun": the bot welcomed back says ty (the audit: "wb sigrun" drew "hi hi, welcome back" for the player).
         if (said.Length is > 0 and <= 4 && said[0] is "wb" or "welcome" && (said[0] == "wb" || said.Length > 1 && said[1] == "back"))
             return "player_wb";
