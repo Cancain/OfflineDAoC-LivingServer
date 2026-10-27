@@ -314,7 +314,7 @@ public static class AutonomousBotChatCoordinator
             AutonomousChatThreads.Log.Close(offered);
             if (Random.Shared.NextDouble() < 0.7)
                 foreach (string answers in AutonomousChatThreads.ClosingSets(offered, message))
-                    if (AutonomousBotVoices.TryLine(offerer, "closing", out VC.Picked fine, answers: answers, relax: true, slots: named))
+                    if (AutonomousBotVoices.TryLine(offerer, "closing", out VC.Picked fine, answers: answers, relax: true, slots: named, filter: NotAPromise))
                     {
                         SendThreadLine(offerer, player, scope, channel, fine.Text, "");
                         break;
@@ -365,7 +365,7 @@ public static class AutonomousBotChatCoordinator
             return true;
         }
         foreach (string answers in AutonomousChatThreads.ClosingSets(question, message))
-            if (AutonomousBotVoices.TryLine(asker, "closing", out VC.Picked closing, answers: answers, relax: true, slots: named))
+            if (AutonomousBotVoices.TryLine(asker, "closing", out VC.Picked closing, answers: answers, relax: true, slots: named, filter: NotAPromise))
             {
                 SendThreadLine(asker, player, scope, channel, closing.Text, "");
                 break;
@@ -583,7 +583,7 @@ public static class AutonomousBotChatCoordinator
                 AutonomousChatThreads.Log.Close(question);
                 if (yes)
                     return AutonomousBotVoices.StyleFor(bot, JoinReply(bot, player, Random.Shared));
-                if (AutonomousBotVoices.TryLine(bot, "closing", out VC.Picked declined, answers: "lfg", relax: true))
+                if (AutonomousBotVoices.TryLine(bot, "closing", out VC.Picked declined, answers: "lfg", relax: true, filter: NotAPromise))
                     return declined.Text;
                 return AutonomousBotVoices.StyleFor(bot, "np, maybe later");
             }
@@ -591,7 +591,7 @@ public static class AutonomousBotChatCoordinator
             {
                 AutonomousChatThreads.Log.Close(question);
                 foreach (string answers in AutonomousChatThreads.ClosingAnswers(question.Invites))
-                    if (AutonomousBotVoices.TryLine(bot, "closing", out VC.Picked closing, answers: answers, relax: true))
+                    if (AutonomousBotVoices.TryLine(bot, "closing", out VC.Picked closing, answers: answers, relax: true, filter: NotAPromise))
                         return closing.Text;
             }
         }
@@ -1372,7 +1372,10 @@ public static class AutonomousBotChatCoordinator
         }
         if (scheduled.Count == 0 || lastReply == null || lastReply.TrimEnd().EndsWith('?') || Random.Shared.NextDouble() >= ClosingChance(invites))
             return;
-        if (!AutonomousBotVoices.TryLine(starter, "closing", out VC.Picked closing, answers: VC.InviteFamily(invites)))
+        // A trade answered with interest ("pst me the details") gets a follow-up, a turned-down one "ill keep it then".
+        bool interested = VC.InviteFamily(invites) == "trade" && ShowsTradeInterest(lastReply);
+        if (!AutonomousBotVoices.TryLine(starter, "closing", out VC.Picked closing, answers: VC.InviteFamily(invites),
+                filter: line => interested == (line.Topic == "interested")))
             return;
         Schedule(starter, ReplyDelayMs(closing.Text, due, Random.Shared) + 800, () =>
         {
@@ -1554,6 +1557,20 @@ public static class AutonomousBotChatCoordinator
     private static bool Eligible(GameBot bot) => bot?.IsAutonomousWorldBot == true && !bot.IsTemporaryGroupHelper &&
         bot.IsAlive && bot.ObjectState == GameObject.eObjectState.Active && !bot.InCombat && !bot.IsCasting &&
         !bot.IsOnStableMasterRoute && !bot.IsOnHorse && !AutonomousBeggars.Is(bot);   // beggars talk only on their corner
+
+    /// <summary>Closings said to a player never promise a tell the bot will not send ("sending a tell" is for bot-to-bot trades).</summary>
+    private static bool NotAPromise(VC.Line line) => line.Topic != "interested";
+
+    /// <summary>A reply to a trade post that wants it: "pst me the details", "how much", "ill take it". Pure.</summary>
+    public static bool ShowsTradeInterest(string reply)
+    {
+        if (string.IsNullOrWhiteSpace(reply))
+            return false;
+        string text = reply.ToLowerInvariant();
+        return new[] { "pst", "send me", "how much", "i'll take", "ill take", "i will take", "interested", "quote", "/tell me", "tell me",
+                "whats the price", "what's the price", "price?", "dibs", "i want it", "ill buy", "i'll buy", "i will buy" }
+            .Any(text.Contains);
+    }
 
     internal static bool HasFactionAudience(eRealm realm) => ClientService.Instance.GetPlayersOfRealm(realm).Count > 0;
 

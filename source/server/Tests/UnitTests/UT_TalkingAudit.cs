@@ -182,6 +182,11 @@ namespace DOL.GS.Tests
             Assert.That(AutonomousChatIntentModel.Predict("thanks! how many are there, should I bring my cleric?"), Is.Not.EqualTo(eAutonomousChatIntent.Thanks));
             Assert.That(AutonomousChatIntentModel.Predict("ty, any more?"), Is.EqualTo(eAutonomousChatIntent.Thanks));
             Assert.That(AutonomousChatIntentModel.Predict("thanks for the rez!"), Is.EqualTo(eAutonomousChatIntent.Thanks));
+            // In-game check 2026-10-27: "pst me the details :)" to a trade post drew "ill keep it then".
+            Assert.That(AutonomousBotChatCoordinator.ShowsTradeInterest("pst me the details :)"), Is.True);
+            Assert.That(AutonomousBotChatCoordinator.ShowsTradeInterest("how much?"), Is.True);
+            Assert.That(AutonomousBotChatCoordinator.ShowsTradeInterest("gl selling that"), Is.False);
+            Assert.That(AutonomousBotChatCoordinator.ShowsTradeInterest("nah too pricey"), Is.False);
             foreach (string line in new[] { "pushing the 40s finally", "keep the mobs on me", "heading for our guild house" })
                 Assert.That(AutonomousChatIntentModel.Predict(line), Is.Not.EqualTo(eAutonomousChatIntent.Alarm), line);
             Assert.That(AutonomousChatIntentModel.Predict("mids pushing our keep"), Is.EqualTo(eAutonomousChatIntent.Alarm));

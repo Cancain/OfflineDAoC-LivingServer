@@ -307722,7 +307722,87 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "interested",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "trade"
+   ],
+   "text": "sending a tell",
+   "id": "778b3ab06dfb"
+  },
+  {
+   "kind": "closing",
+   "topic": "interested",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "trade"
+   ],
+   "text": "ok pst incoming",
+   "id": "f988613037c0"
+  },
+  {
+   "kind": "closing",
+   "topic": "interested",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "trade"
+   ],
+   "text": "sweet, tell sent",
+   "id": "32a70e5bb340"
+  },
+  {
+   "kind": "closing",
+   "topic": "interested",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "answers": [
+    "trade"
+   ],
+   "text": "k, check your tells",
+   "id": "2444c73d0836"
+  },
+  {
+   "kind": "closing",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307742,7 +307822,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307762,7 +307842,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307782,7 +307862,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307802,7 +307882,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307822,7 +307902,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307842,7 +307922,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307862,7 +307942,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307882,7 +307962,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307902,7 +307982,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307922,7 +308002,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307942,7 +308022,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307962,7 +308042,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -307982,7 +308062,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308002,7 +308082,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308022,7 +308102,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308042,7 +308122,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308062,7 +308142,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308082,7 +308162,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308102,7 +308182,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308122,7 +308202,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308142,7 +308222,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308162,7 +308242,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308182,7 +308262,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308202,7 +308282,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308222,7 +308302,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308242,7 +308322,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308262,7 +308342,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308282,7 +308362,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308302,7 +308382,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308322,7 +308402,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
@@ -308342,7 +308422,7 @@
   },
   {
    "kind": "closing",
-   "topic": "general",
+   "topic": "",
    "who": [],
    "realm": "*",
    "class": [],
