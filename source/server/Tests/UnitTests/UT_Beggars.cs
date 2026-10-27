@@ -17,7 +17,7 @@ namespace DOL.GS.Tests
             for (long id = 1; id <= 300_000; id++)
             {
                 bool crafter = AutonomousBotPersonality.TypeFor(id) == BotPersonalityType.Crafter;
-                bool beggar = AutonomousBeggars.IsBeggarId(id);
+                bool beggar = AutonomousBeggars.IsBeggarByRoll(id);
                 if (crafter) crafters++;
                 if (beggar)
                 {
@@ -30,6 +30,23 @@ namespace DOL.GS.Tests
             Assert.That(share, Is.InRange(0.036, 0.044));
             Assert.That(AutonomousBeggars.IsBeggarId(0), Is.False);
             Assert.That(AutonomousBeggars.IsBeggarId(-5), Is.False);
+        }
+
+        [Test]
+        public void EveryRealmGetsItsShareOfBeggars()
+        {
+            // In-game check 2026-10-27: the roll alone gave Albion 1 beggar, Midgard 2 and Hibernia 4.
+            var roster = Enumerable.Range(1, 2700).Select(i => ((long)(i * 7 + 13), 1 + (i - 1) / 900)).ToArray();
+            HashSet<long> beggars = AutonomousBeggars.ChooseBeggars(roster);
+            foreach (var realm in roster.GroupBy(bot => bot.Item2))
+            {
+                int crafters = realm.Count(bot => AutonomousBotPersonality.TypeFor(bot.Item1) == BotPersonalityType.Crafter);
+                int mine = realm.Count(bot => beggars.Contains(bot.Item1));
+                Assert.That(mine, Is.EqualTo(Math.Max(1, (int)Math.Round(crafters * AutonomousBeggars.ShareOfCrafters, MidpointRounding.AwayFromZero))), $"realm {realm.Key}");
+                Assert.That(realm.Where(bot => beggars.Contains(bot.Item1)).All(bot => AutonomousBotPersonality.TypeFor(bot.Item1) == BotPersonalityType.Crafter), Is.True);
+            }
+            Assert.That(AutonomousBeggars.ChooseBeggars(roster.Reverse()), Is.EquivalentTo(beggars), "The same bots beg whatever the roster order.");
+            Assert.That(AutonomousBeggars.ChooseBeggars(new[] { (5L, 1) }), Is.Empty.Or.Count.EqualTo(1));
         }
 
         [TestCase("spare some gold?")]

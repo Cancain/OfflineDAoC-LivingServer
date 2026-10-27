@@ -48,10 +48,67 @@ public static class AutonomousBeggars
 
     public static bool On => Properties.BOT_LIVING_BEGGARS;
 
-    /// <summary>Whether a bot id is one of the beggars: a Crafter whose stable roll is under the share. Pure.</summary>
-    public static bool IsBeggarId(long botId) => botId > 0 &&
+    /// <summary>
+    /// Whether a bot id is one of the beggars. On a running server: the realm's share of its own Crafters
+    /// (<see cref="ChooseBeggars"/>, from the roster once per run). Without a server (tests): a Crafter whose stable roll is
+    /// under the share.
+    /// </summary>
+    public static bool IsBeggarId(long botId)
+    {
+        if (botId <= 0)
+            return false;
+        HashSet<long> chosen = Chosen();
+        return chosen != null ? chosen.Contains(botId) : IsBeggarByRoll(botId);
+    }
+
+    /// <summary>The roll alone: a Crafter whose stable roll is under the share. Pure.</summary>
+    public static bool IsBeggarByRoll(long botId) => botId > 0 &&
         AutonomousBotPersonality.TypeFor(botId) == BotPersonalityType.Crafter &&
         AutonomousBotSchedule.Unit(botId, Salt) < ShareOfCrafters;
+
+    /// <summary>
+    /// The beggars of a roster: in each realm, the share of that realm's Crafters (rounded, at least one) with the lowest
+    /// stable rolls, so every capital gets its fair number and the same bots beg every run. The roll alone gave Albion one
+    /// beggar of 96 Crafters, Midgard two of 117 and Hibernia four of 103 (in-game check 2026-10-27). Pure.
+    /// </summary>
+    public static HashSet<long> ChooseBeggars(IEnumerable<(long Id, int Realm)> roster)
+    {
+        var chosen = new HashSet<long>();
+        foreach (var realm in roster.Where(bot => bot.Id > 0 && AutonomousBotPersonality.TypeFor(bot.Id) == BotPersonalityType.Crafter)
+                     .GroupBy(bot => bot.Realm))
+        {
+            int count = Math.Max(1, (int)Math.Round(realm.Count() * ShareOfCrafters, MidpointRounding.AwayFromZero));
+            foreach (var bot in realm.OrderBy(bot => AutonomousBotSchedule.Unit(bot.Id, Salt)).ThenBy(bot => bot.Id).Take(count))
+                chosen.Add(bot.Id);
+        }
+        return chosen;
+    }
+
+    private static HashSet<long> _chosen;
+    private static readonly object ChosenSync = new();
+
+    private static HashSet<long> Chosen()
+    {
+        if (_chosen != null || GameServer.Instance == null || GameServer.Database == null)
+            return _chosen;
+        lock (ChosenSync)
+        {
+            if (_chosen != null)
+                return _chosen;
+            try
+            {
+                _chosen = ChooseBeggars(GameServer.Database.SelectAllObjects<OfflineWorldBotRecord>()
+                    .Where(record => !record.IsRetired).Select(record => (record.BotId, record.Realm)));
+                Log.Info($"BEGGARS_CHOSEN count={_chosen.Count}");
+            }
+            catch (Exception exception)
+            {
+                Log.Warn("Beggars: could not read the roster, using the roll", exception);
+                return null;
+            }
+            return _chosen;
+        }
+    }
 
     /// <summary>An autonomous gamebot that is a beggar while the setting is on.</summary>
     public static bool Is(GameBot bot) => On && bot?.IsAutonomousWorldBot == true && !bot.IsTemporaryGroupHelper &&
