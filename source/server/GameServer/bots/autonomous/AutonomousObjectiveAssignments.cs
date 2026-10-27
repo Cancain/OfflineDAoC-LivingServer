@@ -98,6 +98,9 @@ public static class AutonomousObjectiveAssignments
         record.ObjectivePveKills++;
         bot.MarkAutonomousStateDirty();
         AutonomousCampDangerBench.RecordKill(record.CurrentCampId);
+        // TargetName is the camp's monster while the bot works a camp (a kill elsewhere has no camp and no effect).
+        if (!string.IsNullOrWhiteSpace(record.CurrentCampId))
+            AutonomousCampDangerBench.RecordKill(AutonomousCampDangerBench.SpeciesKey(bot.CurrentRegionID, record.TargetName));
     }
 
     public static bool HasActiveRvrTenure(OfflineWorldBotRecord record, DateTime utcNow)
