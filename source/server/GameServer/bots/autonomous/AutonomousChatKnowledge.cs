@@ -30,6 +30,8 @@ public static class AutonomousChatKnowledge
             return true;
         if (LooksLikeStableQuestion(query) && TryAnswerStable(player.Realm, query, out answer))
             return true;
+        if (TryAnswerTicketsInGeneral(query, out answer))
+            return true;
         if (LooksLikeSpellQuestion(query) && TryAnswerSpell(player, query, out answer))
             return true;
         if (LooksLikeTrainerQuestion(query) && TryAnswerTrainer(player.Realm, query, player.CharacterClass?.ID ?? 0, player, out answer))
@@ -399,6 +401,24 @@ public static class AutonomousChatKnowledge
         HasWord(text, "where") || HasWord(text, "wheres") || HasWord(text, "where's") || HasWord(text, "find") ||
         HasWord(text, "located") || HasWord(text, "location") || HasPhrase(text, "how do i get") || HasPhrase(text, "how do you get") ||
         HasPhrase(text, "how to get");
+
+    /// <summary>
+    /// "where can i buy a horse ticket?" names no destination, so no route matches; it went unanswered in game (2026-10-27).
+    /// Any stable master sells tickets, and /stables lists the routes. Pure.
+    /// </summary>
+    public static bool TryAnswerTicketsInGeneral(string text, out string answer)
+    {
+        answer = string.Empty;
+        string t = (text ?? string.Empty).ToLowerInvariant();
+        bool aboutTickets = t.Contains("ticket") || t.Contains("horse route") || t.Contains("stable");
+        bool asks = t.Contains("where") || t.Contains("buy") || t.Contains("get") || t.Contains("how");
+        if (!aboutTickets || !asks)
+            return false;
+        answer = Pick("any stable master sells them, most towns have one. /stables lists the routes",
+            "stable master in town, they sell tickets to everywhere nearby. /stables shows where they go",
+            "buy them from the stable master, every big town has one");
+        return true;
+    }
 
     private static bool LooksLikeStableQuestion(string text) =>
         text.Contains("stable master", StringComparison.OrdinalIgnoreCase) ||
