@@ -43,7 +43,9 @@ KINDS = {'ambient', 'reply', 'lfg', 'trade', 'rvr', 'greet', 'thanks', 'grudge',
          # Gold spammers (AutonomousGoldSpammers) and the realm's reactions; roleplayers (AutonomousRoleplayers)
          'spam', 'spam_react', 'roleplay',
          # True rumours (AutonomousRumours): a real rare spawn or an undefended keep, and reactions
-         'rumour', 'rumour_reply'}
+         'rumour', 'rumour_reply',
+         # Bonds (AutonomousBotBonds): a bot tells /faction about a friend, a reunion or a no-show, others react
+         'bond', 'bond_reply'}
 # Lines that start a conversation; each says what kind of answer it invites (@invites, or inferred below).
 OPENER_KINDS = {'ambient', 'lfg', 'trade', 'rvr', 'camp', 'group', 'guild', 'news', 'tell'}
 # Kinds whose lines speak about the speaker's own here and now, so a place they name must be true (or @about).
@@ -130,7 +132,9 @@ SLOTS = {'me', 'class', 'level', 'realm', 'zone', 'monster', 'npc', 'item', 'cou
          # Beggars: a gift or sale ({coin}) and the beggar's whole purse ({hoard})
          'coin', 'hoard',
          # Deeds: the player's earned nickname; storylines: the two protagonists; spammers: the fake site
-         'nickname', 'name_a', 'name_b', 'site'}
+         'nickname', 'name_a', 'name_b', 'site',
+         # Bonds: the other gamebot and its class
+         'other', 'other_class'}
 MEMORY_SLOTS = {'player', 'player_class', 'place'}
 MAX_RAW = 140
 
@@ -181,7 +185,7 @@ def check_text(text, tags, where, problems):
         elif slot in MEMORY_SLOTS and 'knows_player' not in tags['needs'] and 'player_nearby' not in tags['needs'] and tags['kind'] not in (
                 'greet', 'thanks', 'grudge', 'gossip', 'alarm', 'nemesis', 'revenge') and not (
                 slot == 'player' and tags['kind'] in ('reply', 'closing')) and not (
-                tags['kind'] in ('beggar', 'deed', 'deed_reply', 'storyline', 'rumour', 'rumour_reply')) and not (
+                tags['kind'] in ('beggar', 'deed', 'deed_reply', 'storyline', 'rumour', 'rumour_reply', 'bond', 'bond_reply')) and not (
                 tags['kind'] == 'debate' and str(tags.get('topic', '')).startswith('story_')):
                 # in a reply, {player} is whoever is answered; a beggar's, whoever it begs or chases; a deed's, who did it;
                 # a storyline's, the player who took a side

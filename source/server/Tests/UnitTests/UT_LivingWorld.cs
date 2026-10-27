@@ -50,7 +50,8 @@ namespace DOL.GS.Tests
         public void OnlyAHardNamedKillIsNews()
         {
             Assert.That(Deeds.NamedKill(0, true), Is.EqualTo(Deeds.Kind.NamedSolo));
-            Assert.That(Deeds.NamedKill(-1, true), Is.EqualTo(Deeds.Kind.None), "a blue named solo is not news");
+            Assert.That(Deeds.NamedKill(-1, true), Is.EqualTo(Deeds.Kind.NamedSolo), "a blue named solo counts (since 2026-10-27)");
+            Assert.That(Deeds.NamedKill(-2, true), Is.EqualTo(Deeds.Kind.None), "a green named solo is not news");
             Assert.That(Deeds.NamedKill(-1, false), Is.EqualTo(Deeds.Kind.NamedGroup));
             Assert.That(Deeds.NamedKill(-2, false), Is.EqualTo(Deeds.Kind.None));
         }
@@ -62,6 +63,7 @@ namespace DOL.GS.Tests
             Assert.That(Deeds.Death(false, true, -2, false, 0), Is.EqualTo(Deeds.Kind.SillyDeath));
             Assert.That(Deeds.Death(false, true, 1, false, 0), Is.EqualTo(Deeds.Kind.None), "an orange monster is a fair death");
             Assert.That(Deeds.Death(false, false, 0, true, 4), Is.EqualTo(Deeds.Kind.Ganked));
+            Assert.That(Deeds.Death(false, false, 0, true, 3), Is.EqualTo(Deeds.Kind.Ganked), "three on one is a gank (since 2026-10-27)");
             Assert.That(Deeds.Death(false, false, 0, true, 2), Is.EqualTo(Deeds.Kind.None), "a fair fight is not a gank");
         }
 
@@ -235,6 +237,8 @@ namespace DOL.GS.Tests
         [TestCase("spam_react", "react,banned", 40)]
         [TestCase("roleplay", "ambient,mock,answer", 40)]
         [TestCase("storyline", "side_thanks,side_scorn", 20)]
+        [TestCase("bond", "friends,reunion,flake", 25)]
+        [TestCase("bond_reply", "friends,reunion,flake", 12)]
         public void EveryTopicHasLines(string kind, string topics, int floor)
         {
             foreach (string topic in topics.Split(','))

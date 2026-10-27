@@ -50,7 +50,7 @@ public static class AutonomousPlayerDeeds
     public static bool On => Properties.BOT_LIVING_DEEDS;
 
     public const int WitnessRadius = 3_000;
-    public const int GankCount = 4;                  // enemies around a player's death that make it a gank
+    public const int GankCount = 3;                  // enemies around a player's death that make it a gank (4 until 2026-10-27: a death to three never counted)
     public const int StreakKills = 3;                // enemy kills within StreakWindow
     public static readonly TimeSpan StreakWindow = TimeSpan.FromMinutes(10);
     public static readonly TimeSpan KindRest = TimeSpan.FromMinutes(15);     // one telling of a kind per player this often
@@ -105,12 +105,12 @@ public static class AutonomousPlayerDeeds
     public static bool IsNamed(string name, bool noRealm, bool isBotOrGuard) =>
         noRealm && !isBotOrGuard && !string.IsNullOrWhiteSpace(name) && char.IsUpper(name.Trim()[0]);
 
-    /// <summary>A named kill worth telling: yellow or harder (blue in a group). Grey and green named are not news. Pure.</summary>
+    /// <summary>A named kill worth telling: blue or harder, alone or in a group. Grey and green named are not news. Pure.
+    /// (Solo needed yellow until 2026-10-27; a level 50 rarely finds a yellow named, so it never happened in game.)</summary>
     public static Kind NamedKill(int conToPlayer, bool solo) =>
-        solo ? conToPlayer >= 0 ? Kind.NamedSolo : Kind.None
-             : conToPlayer >= -1 ? Kind.NamedGroup : Kind.None;
+        conToPlayer < -1 ? Kind.None : solo ? Kind.NamedSolo : Kind.NamedGroup;
 
-    /// <summary>A player's death: a fall (no killer), a silly death (green or grey monster), a gank (4+ enemies around). Pure.</summary>
+    /// <summary>A player's death: a fall (no killer), a silly death (green or grey monster), a gank (3+ enemies around). Pure.</summary>
     public static Kind Death(bool noKiller, bool killerIsMonster, int killerConToPlayer, bool killerIsEnemy, int enemiesAround) =>
         noKiller ? Kind.Fell
         : killerIsMonster && killerConToPlayer <= -2 ? Kind.SillyDeath

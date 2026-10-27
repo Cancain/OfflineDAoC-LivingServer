@@ -113,6 +113,18 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void BondTalkRestsPerRealmAndTopic()
+        {
+            long now = 1_000_000_000_000;
+            Assert.That(AutonomousBotBonds.TryReserveTalk(eRealm.Midgard, "flake", now), Is.True);
+            Assert.That(AutonomousBotBonds.TryReserveTalk(eRealm.Midgard, "flake", now + 60_000), Is.False, "one flake grumble per realm per rest");
+            Assert.That(AutonomousBotBonds.TryReserveTalk(eRealm.Midgard, "friends", now + 60_000), Is.True, "another topic");
+            Assert.That(AutonomousBotBonds.TryReserveTalk(eRealm.Hibernia, "flake", now + 60_000), Is.True, "another realm");
+            Assert.That(AutonomousBotBonds.TryReserveTalk(eRealm.Midgard, "flake",
+                now + (long)AutonomousBotBonds.TalkRest.TotalMilliseconds), Is.True, "after the rest");
+        }
+
+        [Test]
         public void BondsLoadIntoAPerBotIndex()
         {
             AutonomousBotBonds.Load(new[]

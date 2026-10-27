@@ -301118,6 +301118,3669 @@
    "id": "d9f8f931d5d7"
   },
   {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "another clean run with {other}. thats two now. adding to my friends list",
+   "id": "970d288cac4c"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} is officially on my friends list. best {other_class} ive grouped with in weeks",
+   "id": "e7150f57616a"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "if you ever get a group invite from {other}, take it. trust me",
+   "id": "dacd4b16104f"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "two runs with {other} and not one wipe. keeping that {other_class}",
+   "id": "5fb97e2c5241"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} knows how to play a {other_class}. rare these days",
+   "id": "e3a2ded036ed"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "just finished another run with {other}. we work well together",
+   "id": "49e138f502d4"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} for realm hero. ok not really but good group",
+   "id": "cc9b9a372c40"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "note to self: always invite {other}",
+   "id": "6bbdd7d5d8d5"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} and i should just duo forever at this point",
+   "id": "0574af80d6c3"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "cant believe i almost declined {other}'s invite the first time",
+   "id": "05474a385a29"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "great group again with {other} in {place}. same time tomorrow?",
+   "id": "131a6edf34c7"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} never lets me die. best {other_class} in the realm",
+   "id": "39842ad71e8b"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "some groups just click. {other}, you know who you are",
+   "id": "d7697e899658"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "added {other} to friends. dont make me regret it lol",
+   "id": "e1bac997bb2d"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "grouped with {other} twice now, smooth both times. thats rare",
+   "id": "b91de042cb27"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "whoever taught {other} to play {other_class}, thank you",
+   "id": "32607590df0a"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other}! good runs. next time im bringing more pots",
+   "id": "d7c123f6eac4"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "second great run with {other}. im starting to think its not luck",
+   "id": "9718007b2587"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} is my new favorite person. two runs, zero drama",
+   "id": "e015b64c50ef"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "already planning the next run with {other}. who else wants in?",
+   "id": "79c7ac78bba6"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} pulls fast and doesnt waste time. my kind of {other_class}",
+   "id": "3a6c5cb6eff8"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "two runs with {other} and i got most of a level. grouping with them again",
+   "id": "662848c12393"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [
+    "NoLifer"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "played with a lot of {other_class}s since launch. {other} is one of the good ones",
+   "id": "73078514af26"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [
+    "Daredevil"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} didnt even blink when i pulled the whole camp. keeper",
+   "id": "14905be51ca1"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [
+    "Crafter"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} if you ever need anything made, its on the house",
+   "id": "7a048c04d5fd"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [
+    "Explorer"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} is up for any dungeon i suggest. finally a real adventurer",
+   "id": "95933ea7c310"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} is a keeper. two runs, no wipes",
+   "id": "41ae497cd9c9"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} is a keeper. grouping again soon",
+   "id": "47a9634fa542"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} is a keeper. added to friends",
+   "id": "c8fd5fb060c0"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} is good people. two runs, no wipes",
+   "id": "8469a7d3800e"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} is good people. grouping again soon",
+   "id": "0babe7fa3248"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} is good people. added to friends",
+   "id": "809c7fe5af60"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} is solid. two runs, no wipes",
+   "id": "42f62d0757ab"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} is solid. grouping again soon",
+   "id": "2bc03598e9f2"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} is solid. added to friends",
+   "id": "1a274b612a33"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} the {other_class} is a keeper. two runs, no wipes",
+   "id": "e043708a9e2b"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} the {other_class} is a keeper. grouping again soon",
+   "id": "88721e689852"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} the {other_class} is a keeper. added to friends",
+   "id": "9b71b082fa57"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} the {other_class} is good people. two runs, no wipes",
+   "id": "3590447c5691"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} the {other_class} is good people. grouping again soon",
+   "id": "4b1a4018fbc8"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} the {other_class} is good people. added to friends",
+   "id": "841c0fcd7e9c"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} the {other_class} is solid. two runs, no wipes",
+   "id": "fa1c2f45e1bb"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} the {other_class} is solid. grouping again soon",
+   "id": "9c4278c19196"
+  },
+  {
+   "kind": "bond",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2357,
+   "text": "{other} the {other_class} is solid. added to friends",
+   "id": "8886e365e64a"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "the old crew is back. grouped with {other} again",
+   "id": "491d83788595"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "look who it is, {other} in my group again",
+   "id": "31b517406965"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} again! this is going to be a good run",
+   "id": "523e8174b36c"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "back with {other}. the camp doesnt stand a chance",
+   "id": "38328c2ba128"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} and me again. place your bets on how long the camp lasts",
+   "id": "8ae1507e55fe"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "good to see you {other}. same plan as last time?",
+   "id": "54d9e1b27c46"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "grouped with {other} again. no wipes allowed this time either",
+   "id": "211eefb6ee52"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "oh nice, {other} is in. we're going to be fine",
+   "id": "ce4d57082ece"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} said yes to my invite. good night ahead",
+   "id": "4f15933c5d6a"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "regrouping with {other}. been too long",
+   "id": "95ba413ddd76"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} again, my favorite {other_class}",
+   "id": "8a401e5c168c"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "got {other} in the group. i can relax a little now",
+   "id": "7ca7b1bbf206"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other}, out hunting with you again. like old times",
+   "id": "7ef78a38507b"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "ahh {other}. last time we cleared the whole camp twice",
+   "id": "5fd5618729e7"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "the band is back together. {other}, lets go",
+   "id": "480bc74fbc45"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} back in my group means i might actually not die tonight",
+   "id": "41b69a8e949b"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} is in my group!! the gang is back",
+   "id": "f25c4963280c"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "everyone say hi to {other}, my favorite {other_class}",
+   "id": "e30406c646d7"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} again. good, this means fast xp",
+   "id": "3f8dbf38d49b"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [
+    "NoLifer"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} again. some things dont change since launch",
+   "id": "033cfda12485"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [
+    "Daredevil"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} is back. time to pull bigger",
+   "id": "258c08f8acd5"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [
+    "Crafter"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} is back in my group. bringing extra pots this time",
+   "id": "e13e3b6ed44c"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [
+    "Explorer"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} again. wonder where we'll end up this time",
+   "id": "b428bab3ac85"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "{other} again. good times",
+   "id": "0171740da344"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "{other} again. lets go",
+   "id": "4573881531d9"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "{other} again. this will be fun",
+   "id": "c69e98c1c491"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "{other} again. the old crew",
+   "id": "fed4340abb5b"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "back with {other}. good times",
+   "id": "16dcf08ef59c"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "back with {other}. lets go",
+   "id": "7cb01d8dc089"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "back with {other}. this will be fun",
+   "id": "b89a0e02a264"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "back with {other}. the old crew",
+   "id": "49063583624d"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "{other} rejoined. good times",
+   "id": "19e570943378"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "{other} rejoined. lets go",
+   "id": "c5ac6f4ef679"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "{other} rejoined. this will be fun",
+   "id": "aa0411339fb6"
+  },
+  {
+   "kind": "bond",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2887,
+   "text": "{other} rejoined. the old crew",
+   "id": "f109adc5a744"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "waited at {place} for {other}. never showed",
+   "id": "accb0244e81a"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} said yes to the invite and then vanished. classic",
+   "id": "54427c14a29a"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "hey {other}, the meeting point was {place}, not wherever you are",
+   "id": "b0ea4bef309c"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "we sat at {place} for ages waiting on {other}. went without them",
+   "id": "ccd53973a611"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "note to self: {other} accepts invites and doesnt come",
+   "id": "c093e804c580"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} is either lost or asleep. we left without you",
+   "id": "29de7e3aeebd"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "group of us waiting at {place} and {other} just... didnt come",
+   "id": "990ed83e7ef8"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "if anyone sees {other}, tell them the group left",
+   "id": "cc05981316de"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} got the invite, got the directions, got lost i guess",
+   "id": "b8813516a506"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "waited for {other}. kept waiting. left",
+   "id": "688219c3442d"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "next time {other} invites me im asking where they are first",
+   "id": "37ee52d06dfa"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} must be stuck on a rock somewhere near {place}",
+   "id": "77cbd725fa28"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other}, we waited. we really did",
+   "id": "75f4f32f2154"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "the {other_class} {other} never made it to {place}. we went anyway",
+   "id": "cbe4e7251a48"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "somebody give {other} a map please",
+   "id": "ff0f76548772"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other}, if your horse died on the way, i forgive you. barely",
+   "id": "57eeca38e5a0"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "was supposed to have a {other_class} tonight. {other} never showed",
+   "id": "2ff12a86aa0e"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "ok {other}, that's twice now. or it feels like twice",
+   "id": "7b71c3746097"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [
+    "Socialite"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "aww {other} never made it to {place}. hope theyre ok",
+   "id": "5dbb0d8b1431"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "lost good xp time waiting for {other} at {place}. not again",
+   "id": "b25f9145407b"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [
+    "NoLifer"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "been playing forever and people still dont show up. {other}, this means you",
+   "id": "7980c383be8a"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [
+    "Daredevil"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "didnt need {other} anyway. pulled without them",
+   "id": "6c4a8cd8e9e0"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [
+    "Crafter"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} missed the run. more loot for the rest of us i guess",
+   "id": "32261216b670"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [
+    "Explorer"
+   ],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "maybe {other} found something more interesting than {place}. still rude",
+   "id": "8a3539a0a1f9"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} never showed at {place}. we left",
+   "id": "de1d66f80620"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} never showed at {place}. went without them",
+   "id": "5382b2c27e08"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} never showed at {place}. typical",
+   "id": "1d60f5909277"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} never showed. we left",
+   "id": "c01ab23bdf7c"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} never showed. went without them",
+   "id": "4cfc36f7da11"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} never showed. typical",
+   "id": "2a9a9327bbf0"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} got lost at {place}. we left",
+   "id": "88a011e9bb8f"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} got lost at {place}. went without them",
+   "id": "b49521c06ea9"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} got lost at {place}. typical",
+   "id": "30bdcf2a8e5d"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} got lost. we left",
+   "id": "8f945e4a9bb4"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} got lost. went without them",
+   "id": "44c4ba5911ba"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} got lost. typical",
+   "id": "0b4ca7402a94"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} went missing at {place}. we left",
+   "id": "5999fd0f7ca0"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} went missing at {place}. went without them",
+   "id": "767f64e45e67"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} went missing at {place}. typical",
+   "id": "b2118a5f4652"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} went missing. we left",
+   "id": "cae4c66c45b8"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} went missing. went without them",
+   "id": "cd9da5676d7d"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} went missing. typical",
+   "id": "daddb7c11020"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} never showed at {place}. we left",
+   "id": "e6a9b5f2dc62"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} never showed at {place}. went without them",
+   "id": "cec9e98e673c"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} never showed at {place}. typical",
+   "id": "3736cd46dc40"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} never showed. we left",
+   "id": "a6a2149f30da"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} never showed. went without them",
+   "id": "ea1cd194ce52"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} never showed. typical",
+   "id": "eccf223c559a"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} got lost at {place}. we left",
+   "id": "925015665e08"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} got lost at {place}. went without them",
+   "id": "03f2acfdd24f"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} got lost at {place}. typical",
+   "id": "e4b99798f43e"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} got lost. we left",
+   "id": "e46881d73525"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} got lost. went without them",
+   "id": "50effea033a1"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} got lost. typical",
+   "id": "eb0a21ee718a"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} went missing at {place}. we left",
+   "id": "6b7fa0d1b11b"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} went missing at {place}. went without them",
+   "id": "d201f4257cae"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} went missing at {place}. typical",
+   "id": "16f2526bb79a"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} went missing. we left",
+   "id": "480f87b6d74c"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} went missing. went without them",
+   "id": "c1d35d977726"
+  },
+  {
+   "kind": "bond",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "{other} the {other_class} went missing. typical",
+   "id": "45c91216f6f5"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} is good people",
+   "id": "847a4fd6f8f5"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "grouped with {other} once, can confirm",
+   "id": "344ca674d1e7"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "nice, a good group is hard to find",
+   "id": "7661bdc64d6f"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "save some of {other} for the rest of us",
+   "id": "002699e7bd07"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "need a {other_class} too, {other} busy tomorrow?",
+   "id": "9273929d00d0"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "good groups make the grind",
+   "id": "3a377082b833"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "i want a {other} for my group",
+   "id": "f22ab5da6ec5"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "glad someone is having good runs tonight",
+   "id": "3802e21c945f"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other}? never heard of them. now i want to",
+   "id": "1bb9acd6277f"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "gratz on finding a keeper",
+   "id": "8c26083ec85c"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "a good {other_class} is worth gold",
+   "id": "6c42c2819b4c"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "hold on to that one",
+   "id": "a4c3dcb472b2"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "nice, {other} is solid",
+   "id": "e5a3c1492644"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "nice, keep them",
+   "id": "3842bddb91c9"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "nice",
+   "id": "6e6bdadfb51b"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "gratz, {other} is solid",
+   "id": "30c437b140d7"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "gratz, keep them",
+   "id": "39185815146b"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "gratz",
+   "id": "495a0467cf6d"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "good find, {other} is solid",
+   "id": "c1b6056136f9"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "good find, keep them",
+   "id": "4a04bd31c38b"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "friends",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "good find",
+   "id": "e4fd55355e7a"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "have fun you two",
+   "id": "8295d0115492"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "dont wipe",
+   "id": "2c4ad98dfd20"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "the old crew, love it",
+   "id": "5abc25d5dcc4"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "say hi to {other} for me",
+   "id": "a29695d6f745"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "good luck out there",
+   "id": "4fcd09f92c6f"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "some groups just work",
+   "id": "e397412b3451"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "save some xp for the rest of us",
+   "id": "71519a8b67f0"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} is in? lucky",
+   "id": "a0143a530aeb"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "gl out there",
+   "id": "a1014cccdb3a"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "gl tonight",
+   "id": "56556859844e"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "gl",
+   "id": "e4552aca5546"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "have fun out there",
+   "id": "d02d212b4d88"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "have fun tonight",
+   "id": "d7cb6c0b21bd"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "have fun",
+   "id": "caa9806db592"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "good hunting out there",
+   "id": "02a504f830db"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "good hunting tonight",
+   "id": "26bee93ee5d5"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "good hunting",
+   "id": "a019b74d6ad8"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "nice, the old crew",
+   "id": "1afa6565a3a8"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "nice, a real group",
+   "id": "b4f9db23ce7e"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "nice, good group",
+   "id": "d76e2d40f0d3"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "cool, the old crew",
+   "id": "3cc36568d89c"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "cool, a real group",
+   "id": "67799d3422ae"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "cool, good group",
+   "id": "66a253c0a50d"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "good, the old crew",
+   "id": "195193b644ca"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "good, a real group",
+   "id": "3d089aad267f"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "reunion",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "good, good group",
+   "id": "dce472f38fd4"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} did that to me too",
+   "id": "d134627998ca"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "happens. the roads are a mess",
+   "id": "2c8ddaf41856"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "maybe their horse broke",
+   "id": "a3d7d50f10e6"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "i got lost once on the way to {place}. once",
+   "id": "386a22f8162c"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} probably died to a wandering add",
+   "id": "d6bfdf028db7"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "been there. waited an hour once",
+   "id": "dad494d694b7"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "some people just accept every invite",
+   "id": "94f721242979"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "mark them down. we all have a list",
+   "id": "e8085e54c561"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "at least you went without them",
+   "id": "7676145440be"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "happens to everyone. ok not to me",
+   "id": "aaa9dd1e945d"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "{other} owes you a drink",
+   "id": "f26f0c2fb429"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "text": "probably linkdead, give them a break",
+   "id": "c06f22484e71"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.4082,
+   "text": "lol {other}",
+   "id": "e48416268acc"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.4082,
+   "text": "lol",
+   "id": "ea00cdadba47"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.4082,
+   "text": "ouch {other}",
+   "id": "e6e027fb8cd2"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.4082,
+   "text": "ouch",
+   "id": "76b47ab8d120"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.4082,
+   "text": "classic {other}",
+   "id": "47072dcf7ee1"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.4082,
+   "text": "classic",
+   "id": "611e595c4900"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "happens, at least you went",
+   "id": "a1555db04fdd"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "happens, next time",
+   "id": "9c4dfb506520"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "happens",
+   "id": "1f3660d38c13"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "been there, at least you went",
+   "id": "25e5262918e6"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "been there, next time",
+   "id": "97c3a1055c57"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "been there",
+   "id": "4fa99a637108"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "it happens, at least you went",
+   "id": "000ea8978dd3"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "it happens, next time",
+   "id": "49140d70af65"
+  },
+  {
+   "kind": "bond_reply",
+   "topic": "flake",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.3333,
+   "text": "it happens",
+   "id": "a5afdecb289e"
+  },
+  {
    "kind": "camp",
    "topic": "spawn",
    "who": [],

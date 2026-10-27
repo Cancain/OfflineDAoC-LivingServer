@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -176,30 +177,53 @@ public static class AutonomousBotBonds
         Outcome outcome = OutcomeOf(taskStarted, ranItsCourse, wipes);
         if (outcome == Outcome.NotStarted) return;
         GameBot[] bots = members.Where(IsRemembered).Distinct().ToArray();
+        var newFriends = new List<(GameBot Bot, GameBot Other)>();
         foreach (GameBot bot in bots)
             foreach (GameBot other in bots)
-                if (other != bot)
-                    Remember(bot, other, place, row =>
+                if (other != bot && Remember(bot, other, place, row =>
                     {
                         row.Grouped++;
                         if (outcome == Outcome.Good) row.Good++;
                         row.Wipes += Math.Max(0, wipes);
-                    });
+                    }))
+                    newFriends.Add((bot, other));
+        if (newFriends.Count > 0)
+        {
+            var (speaker, friend) = newFriends[Random.Shared.Next(newFriends.Count)];
+            Tell(speaker, friend, "friends", place, 20_000 + Random.Shared.Next(70_000));
+        }
+    }
+
+    /// <summary>A new party with an old friend in it: now and then one of the two says so.</summary>
+    public static void OnPartyFormed(IReadOnlyList<GameBot> members)
+    {
+        if (!On || members == null || Random.Shared.NextDouble() >= ReunionTalkChance) return;
+        var pairs = new List<(GameBot, GameBot)>();
+        foreach (GameBot bot in members.Where(IsRemembered))
+            foreach (GameBot other in members.Where(IsRemembered))
+                if (other != bot && View(bot, other) is { } score && IsFriend(score))
+                    pairs.Add((bot, other));
+        if (pairs.Count == 0) return;
+        var (speaker, friend) = pairs[Random.Shared.Next(pairs.Count)];
+        Tell(speaker, friend, "reunion", speaker.CurrentZone?.Description, 5_000 + Random.Shared.Next(20_000));
     }
 
     /// <summary>The members who waited remember the one who never came.</summary>
     public static void OnNoShow(IReadOnlyList<GameBot> waiting, GameBot flake, string place)
     {
         if (!On || waiting == null || !IsRemembered(flake)) return;
-        foreach (GameBot bot in waiting.Where(IsRemembered).Distinct())
-            if (bot != flake)
-                Remember(bot, flake, place, row => row.Flaked++);
+        GameBot[] waited = waiting.Where(IsRemembered).Distinct().Where(bot => bot != flake).ToArray();
+        foreach (GameBot bot in waited)
+            Remember(bot, flake, place, row => row.Flaked++);
+        if (waited.Length > 0 && Random.Shared.NextDouble() < FlakeTalkChance)
+            Tell(waited[Random.Shared.Next(waited.Length)], flake, "flake", place, 30_000 + Random.Shared.Next(90_000));
     }
 
     private static bool IsRemembered(GameBot bot) =>
         bot != null && bot.IsAutonomousWorldBot && !bot.IsTemporaryGroupHelper && bot.DatabaseID > 0;
 
-    private static void Remember(GameBot bot, GameBot other, string place, Action<OfflineBotBondRecord> change)
+    /// <returns>Whether this made <paramref name="other"/> a friend.</returns>
+    private static bool Remember(GameBot bot, GameBot other, string place, Action<OfflineBotBondRecord> change)
     {
         string now = DateTime.UtcNow.ToString("O");
         int before = 0;
@@ -224,7 +248,76 @@ public static class AutonomousBotBonds
             Log.Info($"BOND_GRUDGE bot=\"{bot.Name}\" other=\"{other.Name}\" realm={GlobalConstants.RealmToName(bot.Realm)} score={after}");
         if (!known)
             ForgetExtra(bot.DatabaseID, other.DatabaseID);
+        return !IsFriend(before) && IsFriend(after);
     }
+
+    #region Talk
+
+    /// <summary>One line of a topic per realm this often, so bonds season /faction instead of filling it.</summary>
+    public static readonly TimeSpan TalkRest = TimeSpan.FromMinutes(10);
+    public const double ReunionTalkChance = 0.4, FlakeTalkChance = 0.5;
+    private static readonly ConcurrentDictionary<(eRealm Realm, string Topic), long> NextTalk = new();
+
+    /// <summary>Whether a topic may be told in a realm now (and if so, holds it for <see cref="TalkRest"/>). Pure but for the clock.</summary>
+    public static bool TryReserveTalk(eRealm realm, string topic, long now)
+    {
+        var key = (realm, topic);
+        if (NextTalk.TryGetValue(key, out long next) && now < next)
+            return false;
+        NextTalk[key] = now + (long)TalkRest.TotalMilliseconds;
+        return true;
+    }
+
+    /// <summary>The speaker tells its realm's /faction about <paramref name="other"/> after a delay, and a bot or two react.</summary>
+    private static void Tell(GameBot speaker, GameBot other, string topic, string place, int delayMs)
+    {
+        if (!AutonomousLivingServer.IsSpeaker(speaker) || AutonomousBeggars.Is(speaker) || other == null)
+            return;
+        eRealm realm = speaker.Realm;
+        if (!AutonomousBotChatCoordinator.HasFactionAudience(realm) || !TryReserveTalk(realm, topic, GameLoop.GameLoopTime))
+            return;
+        var slots = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["other"] = other.Name ?? string.Empty,
+            ["other_class"] = AutonomousLivingServer.ClassOf(other).ToLowerInvariant(),
+        };
+        if (!string.IsNullOrWhiteSpace(place))
+            slots["place"] = place;
+        string otherName = other.Name;
+        AutonomousLivingServer.Later(speaker, delayMs, () => AutonomousLivingServer.CanTalk(speaker), () =>
+        {
+            if (!AutonomousBotChatCoordinator.HasFactionAudience(realm) || AutonomousBotDebates.IsRunning(realm))
+                return;
+            if (!AutonomousBotVoices.TryEventLine(speaker, "bond", out string line, topic, slots))
+                return;
+            AutonomousBotChatCoordinator.BroadcastFaction(speaker.Name, realm, line);
+            AutonomousBotChatCoordinator.Note(AutonomousChatThreads.Faction(realm), speaker, line, "chat");
+            Log.Info($"BOND_TALK topic={topic} bot=\"{speaker.Name}\" other=\"{otherName}\" realm={GlobalConstants.RealmToName(realm)}");
+            React(realm, speaker, other, topic, slots);
+        });
+    }
+
+    private static void React(eRealm realm, GameBot teller, GameBot other, string topic, Dictionary<string, string> slots)
+    {
+        int count = Random.Shared.Next(3);   // 0-2
+        if (count == 0) return;
+        GameBot[] reactors = AutonomousBotRegistry.Snapshot()
+            .Where(bot => bot != teller && bot != other && bot.Realm == realm && AutonomousLivingServer.CanTalk(bot) && !AutonomousBeggars.Is(bot))
+            .OrderBy(_ => Random.Shared.Next()).Take(count).ToArray();
+        int due = 0;
+        foreach (GameBot bot in reactors)
+        {
+            due += 4_000 + Random.Shared.Next(10_000);
+            GameBot speaker = bot;
+            AutonomousLivingServer.Later(speaker, due, () => AutonomousLivingServer.CanTalk(speaker), () =>
+            {
+                if (AutonomousBotVoices.TryEventLine(speaker, "bond_reply", out string line, topic, slots))
+                    AutonomousBotChatCoordinator.BroadcastFaction(speaker.Name, realm, line);
+            });
+        }
+    }
+
+    #endregion
 
     private static void ForgetExtra(long botId, long added)
     {

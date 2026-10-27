@@ -1794,6 +1794,8 @@ public static partial class AutonomousBotGroupCoordinator
             GameBot[] formedMembers = BotMembers(group);
             WriteSessionMetadata(session, formedMembers);
             AutonomousBotGuildSocial.OnGroupFormed(formedMembers, objectiveKind == eAutonomousObjectiveKind.RvR);
+            if (pve)
+                AutonomousBotBonds.OnPartyFormed(formedMembers);
             Log.Info($"AUTONOMOUS_GROUP_FORMED group={session.Id} realm={GlobalConstants.RealmToName(leader.Realm)} " +
                      $"size={formedMembers.Length} lockedSize={session.LockedSize} objective={objectiveKind} " +
                      (pve ? $"leaderWaitedSeconds={leaderWaitedMs / 1000} friendPairs={AutonomousBotBonds.FriendPairs(formedMembers)} " : "") +

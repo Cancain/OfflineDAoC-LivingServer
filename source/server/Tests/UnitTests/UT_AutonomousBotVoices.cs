@@ -27,7 +27,9 @@ namespace DOL.GS.Tests
             // Beggars (AutonomousBeggars): a gift or sale, the beggar's purse, and the merchant by its corner
             "coin", "hoard", "npc",
             // Deeds, storylines and gold spammers (AutonomousPlayerDeeds, AutonomousBotStorylines, AutonomousGoldSpammers)
-            "nickname", "name_a", "name_b", "site"];
+            "nickname", "name_a", "name_b", "site",
+            // Bonds (AutonomousBotBonds): the other gamebot and its class
+            "other", "other_class"];
 
         private static readonly string[] OutOfEra =
             ["world of warcraft", "discord", "twitch", "youtube", "lmao", "covid", "smh", "tbh", "ngl", "yeet"];
