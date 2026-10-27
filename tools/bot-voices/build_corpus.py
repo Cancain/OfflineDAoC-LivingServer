@@ -260,6 +260,11 @@ DOING_RE = re.compile(r"\bwhat (is|are|r) (every(one|body)|you|u|yall|you (all|g
 LATER_RE = re.compile(r"\b(tonight|later|tomorrow|this weekend|after)\b")
 
 
+NOT_A_CHOICE_RE = re.compile(
+    r"\bor (something|anything|what|so|not|is it just me|is that just me|just me|is it me|am i|is that a myth|is that true|just a|no|nah|"
+    r"is it|is that|a bot|bot|an npc|a waste|waste|real|human|a person|a real)\b|\b(real|human) or\b")
+
+
 def infer_invites(text, kind):
     """What an opener without @invites invites: questions by their shape, otherwise a light reaction."""
     t = SLOT_RE.sub('x', text.lower()).strip()
@@ -273,7 +278,10 @@ def infer_invites(text, kind):
             return 'ask_howareyou'
         if re.search(r"\b(mind if i|ok if i|okay if i|is it ok if)\b", t):
             return 'ask_permission'
-        if re.search(r"\bor\b", t) and not re.search(r"\bor (something|so|anything|what)\b", t):
+        # Not a choice: "or just me", "or not", "or is it a myth", "real or scripted" (the same list as
+        # AutonomousChatShortTalk.IsEitherOr; in-game check 2026-10-27: "anyone else waiting on a group or just me?" drew
+        # "whichever is more fun").
+        if re.search(r"\bor\b", t) and not NOT_A_CHOICE_RE.search(t):
             return 'ask_choice'
         # "where to next?": where the group goes, answered "your call" or "somewhere with more xp", not directions.
         if re.search(r"\bwhere (to next|now|next|are we (heading|going|off to)|should we (go|head)|we (going|heading))\b", t):

@@ -347454,7 +347454,7 @@
    "intent": "",
    "mood": "",
    "weight": 1.0,
-   "invites": "ask_choice",
+   "invites": "chat",
    "text": "anyone else waiting on a group or just me?",
    "id": "16493e9354e2"
   },
@@ -634418,7 +634418,7 @@
    "intent": "",
    "mood": "",
    "weight": 1.0,
-   "invites": "ask_choice",
+   "invites": "ask_opinion",
    "text": "is crafting worth it or just a money sink?",
    "id": "a967cd533a35"
   },
