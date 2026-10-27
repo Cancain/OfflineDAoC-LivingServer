@@ -20,6 +20,9 @@ playing parts of it. Counts are for the whole log. Startup errors repeat once pe
 
 ### NpcService NullReferenceException in `BotBrain.BotState_Aggro.Think`
 
+**Status: fixed in code 2026-10-27, not yet deployed.** Both properties now read their field once, and the ordered pull is
+cleared only if it hasn't changed (`Interlocked.CompareExchange`). Watch the next long run for a repeat.
+
 - **Seen:** once, 10/27 07:50:51, build af39287. The service caught it and removed the bot from the world:
   `RemoveFromWorld ... GameBot name=Roisellin ... reg=248`. Region 248 is a realm raid dungeon.
 - **Stack:**
@@ -68,6 +71,9 @@ playing parts of it. Counts are for the whole log. Startup errors repeat once pe
 
 ### Live dashboard snapshot: access denied
 
+**Status: fixed in code 2026-10-27, not yet deployed.** The move is retried up to 4 times, 100 ms apart, on the dashboard's timer
+thread. If the file stays locked, a one-line warning replaces the stack trace.
+
 - **Seen:** 5 times, e.g. 06:10:45 and 06:30:45 (build af39287):
   `Live bot dashboard snapshot failed ... System.UnauthorizedAccessException: Access to the path is denied.
   at AutonomousBotDashboard.Publish ... line 120 (File.Move)`
@@ -98,7 +104,7 @@ server. Fix them as data clean-ups when convenient.
 | 60 | NpcTemplate | `Tried to load a null spell into NPC template # spell ID: #` (incl. spell 0) | Template spell lists with bad IDs |
 | 140 | DoorMgr | `Failed to register door in pathfinding provider, possible navmesh/object location mismatch` (Postern Door, Keep Door, Relic Gate, door) | Doors off the navmesh. Check per door; no global navmesh rebuilds |
 | 8 | Region | `Error loading NPC ClassType: DOL.GS.Scripts.RPTradeInMerchant` (GameNPC used instead) | The class doesn't exist in this build |
-| 4 | ScriptMgr | `LoadCommands: An item with the same key has already been added. Key: &tc` | Two command handlers claim `/tc` |
+| 4 | ScriptMgr | `LoadCommands: An item with the same key has already been added. Key: &tc` | Two command handlers claimed `/tc`. **Fixed 2026-10-27 (not deployed):** `/transfercorpse` lost its `/tc` alias; `/tc` is the Realm Exchange teleport |
 | 4 each | ScriptMgr | `Couldn't find a SpellHandler constructor for UniPortal / UniPortalKeep / ArmorFactorBuff` | Spell types without handlers |
 | 4 | SkillBase | `Requested value 'ground' was not found ... spellid` | Bad enum value in a spell row |
 | 4 each | LootGeneratorOneTimeDrop | `Can't find MobName Hrodrek / Dob / Murgar / Neese / Cheshire` | One-time drops for mobs not in the world |
