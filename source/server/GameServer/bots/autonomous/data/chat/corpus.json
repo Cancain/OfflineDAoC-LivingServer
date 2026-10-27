@@ -284660,7 +284660,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
+   "weight": 0.2887,
    "text": "you wanted my gold, {player}? earn it. like i do",
    "id": "566df5418513"
   },
@@ -284677,7 +284677,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
+   "weight": 0.2887,
    "text": "you wanted my gold, {player}? earn it. by begging",
    "id": "6f1af0ba5717"
   },
@@ -284694,7 +284694,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
+   "weight": 0.2887,
    "text": "you wanted my gold, {player}? earn it. the honest way",
    "id": "39e23468b9e1"
   },
@@ -284711,58 +284711,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "you wanted my gold, {player}? go kill something. like i do",
-   "id": "0f3a8136c9f3"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "you wanted my gold, {player}? go kill something. by begging",
-   "id": "b3f9c0293312"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "you wanted my gold, {player}? go kill something. the honest way",
-   "id": "833f032cf519"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
+   "weight": 0.2887,
    "text": "you wanted my gold, {player}? work for it. like i do",
    "id": "3fe5670d39ae"
   },
@@ -284779,7 +284728,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
+   "weight": 0.2887,
    "text": "you wanted my gold, {player}? work for it. by begging",
    "id": "a01da9986b06"
   },
@@ -284796,7 +284745,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
+   "weight": 0.2887,
    "text": "you wanted my gold, {player}? work for it. the honest way",
    "id": "eba15d4061ed"
   },
@@ -284813,7 +284762,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
+   "weight": 0.2887,
    "text": "u wanted my gold, {player}? earn it. like i do",
    "id": "3714d3a0131c"
   },
@@ -284830,7 +284779,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
+   "weight": 0.2887,
    "text": "u wanted my gold, {player}? earn it. by begging",
    "id": "2bf14136a1bc"
   },
@@ -284847,7 +284796,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
+   "weight": 0.2887,
    "text": "u wanted my gold, {player}? earn it. the honest way",
    "id": "4298adf96d84"
   },
@@ -284864,58 +284813,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "u wanted my gold, {player}? go kill something. like i do",
-   "id": "18fffc87b9b2"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "u wanted my gold, {player}? go kill something. by begging",
-   "id": "4db6568fe84b"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "u wanted my gold, {player}? go kill something. the honest way",
-   "id": "0763844f3af0"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
+   "weight": 0.2887,
    "text": "u wanted my gold, {player}? work for it. like i do",
    "id": "c92e3a191bbf"
   },
@@ -284932,7 +284830,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
+   "weight": 0.2887,
    "text": "u wanted my gold, {player}? work for it. by begging",
    "id": "4d4dea7d0573"
   },
@@ -284949,9 +284847,281 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
+   "weight": 0.2887,
    "text": "u wanted my gold, {player}? work for it. the honest way",
    "id": "0d4abce06ffd"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "you wanted my gold, {player}? go kill something. oh wait, you cant",
+   "id": "da0596e3ff59"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "you wanted my gold, {player}? go kill something. oh wait, you wont",
+   "id": "99863a69957b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "you wanted my gold, {player}? go kill something. oh wait, u cant",
+   "id": "06b7f785fe3d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "you wanted my gold, {player}? go kill something. oh wait, u wont",
+   "id": "766fdf108250"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "you wanted my gold, {player}? go kill something. then again, you cant",
+   "id": "dafed7caa933"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "you wanted my gold, {player}? go kill something. then again, you wont",
+   "id": "77d7216e5b3e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "you wanted my gold, {player}? go kill something. then again, u cant",
+   "id": "7a146a57ca42"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "you wanted my gold, {player}? go kill something. then again, u wont",
+   "id": "43377b06212a"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "u wanted my gold, {player}? go kill something. oh wait, you cant",
+   "id": "b34654b96d3b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "u wanted my gold, {player}? go kill something. oh wait, you wont",
+   "id": "14e1376c2275"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "u wanted my gold, {player}? go kill something. oh wait, u cant",
+   "id": "607d1643b5d2"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "u wanted my gold, {player}? go kill something. oh wait, u wont",
+   "id": "75869ffc5ac3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "u wanted my gold, {player}? go kill something. then again, you cant",
+   "id": "dd185cffa92e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "u wanted my gold, {player}? go kill something. then again, you wont",
+   "id": "7b62c47ed90d"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "u wanted my gold, {player}? go kill something. then again, u cant",
+   "id": "0774886a3f39"
+  },
+  {
+   "kind": "beggar",
+   "topic": "insult",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.25,
+   "text": "u wanted my gold, {player}? go kill something. then again, u wont",
+   "id": "4714b616f38d"
   },
   {
    "kind": "beggar",
@@ -292171,9 +292341,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "back off my corner, {player}. three steps",
-   "id": "db0588788abd"
+   "weight": 0.2887,
+   "text": "back off from my corner, {player}. three steps",
+   "id": "661ed2d8696e"
   },
   {
    "kind": "beggar",
@@ -292188,9 +292358,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "back off my corner, {player}. five steps",
-   "id": "22d62e901f89"
+   "weight": 0.2887,
+   "text": "back off from my corner, {player}. five steps",
+   "id": "1672686a8223"
   },
   {
    "kind": "beggar",
@@ -292205,9 +292375,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "back off my corner, {player}. all the way to the gates",
-   "id": "1aca6e1b1cd5"
+   "weight": 0.2887,
+   "text": "back off from my corner, {player}. all the way to the gates",
+   "id": "0b42a2631490"
   },
   {
    "kind": "beggar",
@@ -292222,9 +292392,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "back away from my corner, {player}. three steps",
-   "id": "f4775a7f0746"
+   "weight": 0.2887,
+   "text": "step away from my corner, {player}. three steps",
+   "id": "43362183e561"
   },
   {
    "kind": "beggar",
@@ -292239,9 +292409,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "back away from my corner, {player}. five steps",
-   "id": "428e4d190b3e"
+   "weight": 0.2887,
+   "text": "step away from my corner, {player}. five steps",
+   "id": "e0742210fe4c"
   },
   {
    "kind": "beggar",
@@ -292256,9 +292426,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "back away from my corner, {player}. all the way to the gates",
-   "id": "37d209b39401"
+   "weight": 0.2887,
+   "text": "step away from my corner, {player}. all the way to the gates",
+   "id": "de840ceec274"
   },
   {
    "kind": "beggar",
@@ -292273,9 +292443,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "step back off my corner, {player}. three steps",
-   "id": "b0585787852b"
+   "weight": 0.2887,
+   "text": "get off my corner, {player}. three steps",
+   "id": "cc9b1c20990a"
   },
   {
    "kind": "beggar",
@@ -292290,9 +292460,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "step back off my corner, {player}. five steps",
-   "id": "1f925adf8c70"
+   "weight": 0.2887,
+   "text": "get off my corner, {player}. five steps",
+   "id": "6fcb30f62dca"
   },
   {
    "kind": "beggar",
@@ -292307,9 +292477,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "step back off my corner, {player}. all the way to the gates",
-   "id": "345e0516ffa8"
+   "weight": 0.2887,
+   "text": "get off my corner, {player}. all the way to the gates",
+   "id": "a0ab8cceb0c9"
   },
   {
    "kind": "beggar",
@@ -292324,9 +292494,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "step back away from my corner, {player}. three steps",
-   "id": "4114d85396b0"
+   "weight": 0.2887,
+   "text": "off my corner, {player}. three steps",
+   "id": "14866faaf159"
   },
   {
    "kind": "beggar",
@@ -292341,9 +292511,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "step back away from my corner, {player}. five steps",
-   "id": "92d6480bc551"
+   "weight": 0.2887,
+   "text": "off my corner, {player}. five steps",
+   "id": "9f84c0d594e3"
   },
   {
    "kind": "beggar",
@@ -292358,111 +292528,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "step back away from my corner, {player}. all the way to the gates",
-   "id": "a3c47e909c30"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "off off my corner, {player}. three steps",
-   "id": "4962ed17bd11"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "off off my corner, {player}. five steps",
-   "id": "5572e278b8f5"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "off off my corner, {player}. all the way to the gates",
-   "id": "f0f56e4f664a"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "off away from my corner, {player}. three steps",
-   "id": "ed7d3ff06cb8"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "off away from my corner, {player}. five steps",
-   "id": "f9e86ffe2196"
-  },
-  {
-   "kind": "beggar",
-   "topic": "corner",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "off away from my corner, {player}. all the way to the gates",
-   "id": "3dcb37f8d827"
+   "weight": 0.2887,
+   "text": "off my corner, {player}. all the way to the gates",
+   "id": "1214b3950cb8"
   },
   {
    "kind": "beggar",
@@ -464439,9 +464507,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed in a quake, and the little ones picked another leader. spraggon politics never change",
+   "text": "spraggon den caved in during a quake, and the spraggons picked a new leader. politics never stop",
    "about": true,
-   "id": "1adb7823c7ab"
+   "id": "bfa53da30bd4"
   },
   {
    "kind": "ambient",
@@ -464458,9 +464526,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed in a quake, and the spraggons chose another leader. politics never change",
+   "text": "spraggon den caved in during a quake, so the little ones picked another chief. spraggon politics dont stop",
    "about": true,
-   "id": "f60f93b372ba"
+   "id": "d22daf94fa28"
   },
   {
    "kind": "ambient",
@@ -464477,9 +464545,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed in a quake, and the spraggons chose another leader. spraggon politics never stop",
+   "text": "spraggon den caved in during a quake, so the spraggons chose another chief. spraggon politics never change",
    "about": true,
-   "id": "5c757206712f"
+   "id": "4e454a33b342"
   },
   {
    "kind": "ambient",
@@ -464496,9 +464564,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed in a quake, and the spraggons picked another leader. spraggon politics never stop",
+   "text": "spraggon den caved in once, and the little ones chose a new leader. spraggon politics never change",
    "about": true,
-   "id": "0855c1db6553"
+   "id": "cba231ebea0c"
   },
   {
    "kind": "ambient",
@@ -464515,9 +464583,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed in a quake, so the little ones chose a new leader. politics dont stop",
+   "text": "spraggon den caved in once, and the spraggons chose a new chief. politics never change",
    "about": true,
-   "id": "cdaa18ce8c32"
+   "id": "9caa3418102b"
   },
   {
    "kind": "ambient",
@@ -464534,9 +464602,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed in a quake, so the little ones chose a new leader. spraggon politics dont change",
+   "text": "spraggon den caved in once, and the spraggons picked a new chief. politics never stop",
    "about": true,
-   "id": "3a026e07339f"
+   "id": "b03bb8c524c4"
   },
   {
    "kind": "ambient",
@@ -464553,9 +464621,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed in a quake, so the little ones picked another leader. politics dont stop",
+   "text": "spraggon den caved in once, and the spraggons picked a new leader. spraggon politics dont change",
    "about": true,
-   "id": "6fd9d556c74b"
+   "id": "f0744c68236a"
   },
   {
    "kind": "ambient",
@@ -464572,9 +464640,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed in a quake, so the spraggons picked another chief. politics dont stop",
+   "text": "spraggon den caved in once, so the little ones picked a new chief. politics never change",
    "about": true,
-   "id": "b87a449955e5"
+   "id": "6aaf4ea8e1a6"
   },
   {
    "kind": "ambient",
@@ -464591,9 +464659,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed once, and the little ones chose a new leader. spraggon politics never stop",
+   "text": "spraggon den caved in once, so the spraggons chose a new chief. politics dont change",
    "about": true,
-   "id": "3f8654eb7505"
+   "id": "b37708fc3c93"
   },
   {
    "kind": "ambient",
@@ -464610,9 +464678,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed once, and the little ones picked another chief. politics dont change",
+   "text": "spraggon den caved in once, so the spraggons chose a new chief. politics never change",
    "about": true,
-   "id": "43a338a405e0"
+   "id": "f4a9db07f806"
   },
   {
    "kind": "ambient",
@@ -464629,9 +464697,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed once, and the spraggons chose a new leader. politics dont stop",
+   "text": "spraggon den caved in once, so the spraggons chose another leader. politics dont stop",
    "about": true,
-   "id": "e9875890fbb8"
+   "id": "688ba9718129"
   },
   {
    "kind": "ambient",
@@ -464648,9 +464716,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed once, and the spraggons picked a new leader. politics dont change",
+   "text": "spraggon den collapsed during a quake, and the little ones picked another chief. politics dont change",
    "about": true,
-   "id": "12c7b0a21bcf"
+   "id": "17452e4a238c"
   },
   {
    "kind": "ambient",
@@ -464667,9 +464735,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den collapsed once, so the spraggons chose a new chief. spraggon politics dont stop",
+   "text": "spraggon den collapsed during a quake, and the little ones picked another chief. politics never change",
    "about": true,
-   "id": "debfb52f059c"
+   "id": "a1c89c58735d"
   },
   {
    "kind": "ambient",
@@ -464686,9 +464754,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den fell in in a quake, and the spraggons picked a new chief. politics dont change",
+   "text": "spraggon den collapsed during a quake, and the spraggons chose another leader. politics never stop",
    "about": true,
-   "id": "ebeb776d8434"
+   "id": "363f57bffab8"
   },
   {
    "kind": "ambient",
@@ -464705,9 +464773,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den fell in in a quake, so the little ones picked another chief. politics never stop",
+   "text": "spraggon den collapsed once, and the little ones chose a new leader. politics dont change",
    "about": true,
-   "id": "9dba4131b08f"
+   "id": "f557823f5f52"
   },
   {
    "kind": "ambient",
@@ -464724,9 +464792,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den fell in in a quake, so the little ones picked another chief. spraggon politics never stop",
+   "text": "spraggon den collapsed once, and the spraggons chose a new leader. spraggon politics dont stop",
    "about": true,
-   "id": "2274f72ecccb"
+   "id": "0fc269947dee"
   },
   {
    "kind": "ambient",
@@ -464743,9 +464811,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den fell in in a quake, so the spraggons chose another leader. spraggon politics dont stop",
+   "text": "spraggon den collapsed once, so the little ones chose a new leader. spraggon politics never stop",
    "about": true,
-   "id": "9a2c85e92714"
+   "id": "2a2d12394092"
   },
   {
    "kind": "ambient",
@@ -464762,9 +464830,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den fell in once, and the little ones chose another chief. politics never stop",
+   "text": "spraggon den collapsed once, so the little ones chose another chief. spraggon politics dont stop",
    "about": true,
-   "id": "5fd5f1790b19"
+   "id": "673c4643fa96"
   },
   {
    "kind": "ambient",
@@ -464781,9 +464849,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den fell in once, and the little ones picked a new chief. spraggon politics never stop",
+   "text": "spraggon den collapsed once, so the little ones picked a new leader. politics dont change",
    "about": true,
-   "id": "fb6cd2a961e6"
+   "id": "93112984916d"
   },
   {
    "kind": "ambient",
@@ -464800,9 +464868,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den fell in once, and the little ones picked another chief. politics never stop",
+   "text": "spraggon den collapsed once, so the little ones picked another chief. spraggon politics never change",
    "about": true,
-   "id": "6f61b6a28b45"
+   "id": "4e2638c0a947"
   },
   {
    "kind": "ambient",
@@ -464819,9 +464887,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "spraggon den fell in once, so the little ones picked another chief. politics dont stop",
+   "text": "spraggon den collapsed once, so the spraggons chose a new chief. politics never stop",
    "about": true,
-   "id": "a3380d27f24b"
+   "id": "e55d30bc5b2f"
   },
   {
    "kind": "ambient",
@@ -464838,9 +464906,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den collapsed in a quake, and the little ones chose a new leader. spraggon politics never stop",
+   "text": "spraggon den collapsed once, so the spraggons picked another leader. spraggon politics never stop",
    "about": true,
-   "id": "6a4653663f88"
+   "id": "da71fee9d90b"
   },
   {
    "kind": "ambient",
@@ -464857,9 +464925,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den collapsed in a quake, and the little ones chose another leader. politics dont stop",
+   "text": "the spraggon den caved in during a quake, and the little ones picked another leader. politics never stop",
    "about": true,
-   "id": "7e17682f1309"
+   "id": "ab859b3fbede"
   },
   {
    "kind": "ambient",
@@ -464876,9 +464944,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den collapsed in a quake, and the spraggons picked another leader. politics dont change",
+   "text": "the spraggon den caved in during a quake, and the spraggons chose another leader. politics never change",
    "about": true,
-   "id": "78b51a5eeadf"
+   "id": "0ce0c91ea3c6"
   },
   {
    "kind": "ambient",
@@ -464895,9 +464963,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den collapsed in a quake, so the little ones chose a new leader. spraggon politics dont stop",
+   "text": "the spraggon den caved in during a quake, so the little ones chose another chief. politics never stop",
    "about": true,
-   "id": "ddf5bde7ae92"
+   "id": "72050491d71e"
   },
   {
    "kind": "ambient",
@@ -464914,9 +464982,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den collapsed in a quake, so the little ones picked a new chief. politics dont stop",
+   "text": "the spraggon den caved in during a quake, so the spraggons chose a new leader. politics never stop",
    "about": true,
-   "id": "c70e3aa05e35"
+   "id": "796811442841"
   },
   {
    "kind": "ambient",
@@ -464933,9 +465001,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den collapsed in a quake, so the little ones picked a new leader. spraggon politics dont change",
+   "text": "the spraggon den caved in once, and the little ones chose another leader. spraggon politics never change",
    "about": true,
-   "id": "c1009c07c11d"
+   "id": "8cbf9aa68f2c"
   },
   {
    "kind": "ambient",
@@ -464952,9 +465020,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den collapsed once, and the little ones picked another chief. spraggon politics never stop",
+   "text": "the spraggon den caved in once, and the little ones picked another leader. politics never stop",
    "about": true,
-   "id": "5a86f69a25ec"
+   "id": "d7c2f367c1ca"
   },
   {
    "kind": "ambient",
@@ -464971,9 +465039,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den collapsed once, and the little ones picked another leader. spraggon politics never change",
+   "text": "the spraggon den caved in once, so the spraggons picked a new leader. spraggon politics never change",
    "about": true,
-   "id": "b4b30e38ddf8"
+   "id": "97d7bd7ebfd3"
   },
   {
    "kind": "ambient",
@@ -464990,9 +465058,256 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den collapsed once, and the spraggons chose a new leader. politics never stop",
+   "text": "the spraggon den caved in once, so the spraggons picked another chief. spraggon politics dont stop",
    "about": true,
-   "id": "a693151e0738"
+   "id": "93cc8c6c77a3"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den caved in once, so the spraggons picked another leader. spraggon politics never stop",
+   "about": true,
+   "id": "5fb4bcaf4da4"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den collapsed during a quake, and the little ones chose a new leader. spraggon politics dont stop",
+   "about": true,
+   "id": "64bcdc103a3e"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den collapsed during a quake, and the spraggons chose a new chief. politics dont stop",
+   "about": true,
+   "id": "c0c1938c4a21"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den collapsed during a quake, and the spraggons picked a new leader. politics never change",
+   "about": true,
+   "id": "ac76d372dbb4"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den collapsed during a quake, so the little ones chose a new leader. politics never stop",
+   "about": true,
+   "id": "1a901fbdb392"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den collapsed during a quake, so the little ones chose another leader. spraggon politics never change",
+   "about": true,
+   "id": "8baa45922eae"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den collapsed during a quake, so the spraggons chose a new chief. spraggon politics never change",
+   "about": true,
+   "id": "1195e2769040"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den collapsed during a quake, so the spraggons chose another chief. spraggon politics dont change",
+   "about": true,
+   "id": "b02c815515c4"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den collapsed during a quake, so the spraggons chose another chief. spraggon politics never change",
+   "about": true,
+   "id": "5482d6a8e93a"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den collapsed once, and the little ones chose a new leader. spraggon politics never stop",
+   "about": true,
+   "id": "3bc42412ac3e"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den collapsed once, and the little ones picked a new chief. politics dont change",
+   "about": true,
+   "id": "b326a4d32b59"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den collapsed once, and the spraggons chose a new leader. spraggon politics never change",
+   "about": true,
+   "id": "90f32132c60d"
+  },
+  {
+   "kind": "ambient",
+   "topic": "lore",
+   "who": [],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "the spraggon den collapsed once, so the little ones chose a new chief. politics dont change",
+   "about": true,
+   "id": "87f6c984a72e"
   },
   {
    "kind": "ambient",
@@ -465028,9 +465343,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den collapsed once, so the little ones picked a new chief. spraggon politics never stop",
+   "text": "the spraggon den collapsed once, so the little ones chose another leader. spraggon politics dont change",
    "about": true,
-   "id": "87fe69d661cc"
+   "id": "afef73607be4"
   },
   {
    "kind": "ambient",
@@ -465047,9 +465362,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den collapsed once, so the little ones picked a new leader. spraggon politics never stop",
+   "text": "the spraggon den collapsed once, so the little ones picked a new chief. spraggon politics never change",
    "about": true,
-   "id": "d97bda9c7e9d"
+   "id": "49881c196fe4"
   },
   {
    "kind": "ambient",
@@ -465066,9 +465381,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den collapsed once, so the spraggons picked another chief. politics never change",
+   "text": "the spraggon den collapsed once, so the spraggons chose another chief. politics dont change",
    "about": true,
-   "id": "9344279ee16b"
+   "id": "73440b9f6532"
   },
   {
    "kind": "ambient",
@@ -465085,256 +465400,9 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "the spraggon den fell in in a quake, and the little ones chose another chief. politics never change",
+   "text": "the spraggon den collapsed once, so the spraggons chose another leader. spraggon politics dont change",
    "about": true,
-   "id": "1285a0584989"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in in a quake, and the little ones picked another chief. spraggon politics never stop",
-   "about": true,
-   "id": "b982b3866322"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in in a quake, and the spraggons chose a new leader. politics dont change",
-   "about": true,
-   "id": "3aa30a6ef90f"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in in a quake, and the spraggons picked another chief. spraggon politics dont change",
-   "about": true,
-   "id": "3aaeb0796231"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in in a quake, so the little ones chose another leader. politics dont stop",
-   "about": true,
-   "id": "1fbb15c14e32"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in in a quake, so the little ones chose another leader. spraggon politics dont change",
-   "about": true,
-   "id": "06e34ea0233c"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in in a quake, so the little ones picked a new chief. spraggon politics never stop",
-   "about": true,
-   "id": "f3f51120cb0f"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in in a quake, so the spraggons chose another chief. spraggon politics never change",
-   "about": true,
-   "id": "bd49df69fdb7"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in once, and the little ones chose a new leader. spraggon politics dont stop",
-   "about": true,
-   "id": "843ce49a61e5"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in once, and the spraggons chose a new chief. spraggon politics dont change",
-   "about": true,
-   "id": "f988b1d59da4"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in once, and the spraggons picked a new leader. spraggon politics dont stop",
-   "about": true,
-   "id": "1f8ebf163e14"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in once, so the little ones chose a new leader. spraggon politics never stop",
-   "about": true,
-   "id": "dc97cbeaa7a0"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in once, so the little ones picked another chief. politics never stop",
-   "about": true,
-   "id": "ed90083da248"
-  },
-  {
-   "kind": "ambient",
-   "topic": "lore",
-   "who": [],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "the spraggon den fell in once, so the spraggons picked a new chief. spraggon politics never stop",
-   "about": true,
-   "id": "954925997eb3"
+   "id": "09349b5dad46"
   },
   {
    "kind": "ambient",
@@ -631328,6 +631396,27 @@
    "intent": "",
    "mood": "",
    "weight": 1.0,
+   "invites": "ask",
+   "text": "{player}, hey! long day?",
+   "id": "117155e3e9a7"
+  },
+  {
+   "kind": "tell",
+   "topic": "hello_friend",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player",
+    "player_leveling"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
    "invites": "ask_advice",
    "text": "{player} hi, how is the leveling going?",
    "id": "516e1d95e353"
@@ -631343,7 +631432,8 @@
     50
    ],
    "needs": [
-    "knows_player"
+    "knows_player",
+    "player_leveling"
    ],
    "intent": "",
    "mood": "",
@@ -631351,26 +631441,6 @@
    "invites": "ask",
    "text": "hey {player}, dinged yet?",
    "id": "ccc55a175cc2"
-  },
-  {
-   "kind": "tell",
-   "topic": "hello_friend",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "knows_player"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
-   "invites": "ask",
-   "text": "{player}, hey! long day?",
-   "id": "117155e3e9a7"
   },
   {
    "kind": "tell",
@@ -632479,26 +632549,6 @@
    "intent": "",
    "mood": "",
    "weight": 1.0,
-   "invites": "ask_xp",
-   "text": "{player}, how close are you to your next level?",
-   "id": "50b14c4a9a13"
-  },
-  {
-   "kind": "tell",
-   "topic": "guildmate",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "knows_player"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
    "invites": "ask",
    "text": "{player}, are we doing anything this weekend?",
    "id": "be7af3b7e5e9"
@@ -632539,26 +632589,6 @@
    "intent": "",
    "mood": "",
    "weight": 1.0,
-   "invites": "ask_advice",
-   "text": "{player}, quick question, what armor are you wearing at your level?",
-   "id": "a7091131b9d1"
-  },
-  {
-   "kind": "tell",
-   "topic": "guildmate",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [
-    "knows_player"
-   ],
-   "intent": "",
-   "mood": "",
-   "weight": 1.0,
    "invites": "ask",
    "text": "hey, you ok? havent seen you on much",
    "id": "043cf5f9e07e"
@@ -632582,6 +632612,48 @@
    "invites": "ask_where",
    "text": "{player}! guild is quiet tonight, where is everyone?",
    "id": "4105c1e5083b"
+  },
+  {
+   "kind": "tell",
+   "topic": "guildmate",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player",
+    "player_leveling"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "invites": "ask_xp",
+   "text": "{player}, how close are you to your next level?",
+   "id": "50b14c4a9a13"
+  },
+  {
+   "kind": "tell",
+   "topic": "guildmate",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [
+    "knows_player",
+    "player_leveling"
+   ],
+   "intent": "",
+   "mood": "",
+   "weight": 1.0,
+   "invites": "ask_advice",
+   "text": "{player}, quick question, what armor are you wearing at your level?",
+   "id": "a7091131b9d1"
   },
   {
    "kind": "tell",
@@ -632700,7 +632772,8 @@
     50
    ],
    "needs": [
-    "knows_player"
+    "knows_player",
+    "player_leveling"
    ],
    "intent": "",
    "mood": "",

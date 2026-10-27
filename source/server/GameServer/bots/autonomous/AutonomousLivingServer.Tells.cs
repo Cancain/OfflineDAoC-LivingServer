@@ -138,6 +138,10 @@ public static partial class AutonomousLivingServer
         bool Near(GameBot bot) => bot.CurrentRegion == player.CurrentRegion && bot.IsWithinRadius(player, WorldMgr.SAY_DISTANCE * 2);
         double Distance(GameBot bot) => bot.CurrentRegion == player.CurrentRegion ? bot.GetDistanceTo(player) : double.MaxValue;
         var options = new List<(double Score, GameBot Bot, string Topic, IReadOnlyDictionary<string, string> Slots, string[] Flags)>();
+        // Lines about levelling ("dinged yet?") only for a player under the cap (in-game check 2026-10-27: a level 50 was asked).
+        bool leveling = player.Level < GamePlayer.MAX_LEVEL;
+        string[] Known = leveling ? ["knows_player", "player_leveling"] : ["knows_player"];
+        string[] Stranger = leveling ? ["player_leveling"] : [];
 
         // Friends: hello, thanks for the group, news, a hand for a low-level friend. Not one standing next to the player (it
         // greets in /say instead).
@@ -147,7 +151,7 @@ public static partial class AutonomousLivingServer
             if (!AutonomousBotRegistry.TryGet(row.BotId, out GameBot bot) || !Free(bot) || Near(bot))
                 continue;
             Dictionary<string, string> slots = MemorySlots(row, player);
-            string[] flags = ["knows_player"];
+            string[] flags = Known;
             double score = Random.Shared.NextDouble() + Math.Min(3, row.Grouped + row.Rezzed) * 0.2;
             if (FitsHelpOffer(bot.Level, player.Level, bot.CurrentZone == player.CurrentZone, Distance(bot)))
                 options.Add((score + 0.6, bot, "help_offer", slots, flags));
@@ -161,7 +165,7 @@ public static partial class AutonomousLivingServer
         if (player.Guild != null && !AutonomousBotGuildSocial.CountsAsGuildless(player.Guild))
             foreach (GameBot bot in AutonomousBotRegistry.Snapshot().Where(b => b.Guild == player.Guild && Free(b) && !Near(b)).Take(12))
                 options.Add((Random.Shared.NextDouble(), bot, "guildmate",
-                    new Dictionary<string, string>(StringComparer.Ordinal) { ["player"] = player.Name }, ["knows_player"]));
+                    new Dictionary<string, string>(StringComparer.Ordinal) { ["player"] = player.Name }, Known));
 
         // A solo bot nearby asks to duo.
         if (player.Group == null && player.CurrentZone != null)
@@ -175,7 +179,7 @@ public static partial class AutonomousLivingServer
                     continue;
                 options.Add((Random.Shared.NextDouble() + 0.4, bot, "group_offer",
                     known ? MemorySlots(row, player) : new Dictionary<string, string>(StringComparer.Ordinal) { ["player"] = player.Name },
-                    known ? ["knows_player"] : []));
+                    known ? Known : Stranger));
             }
 
         return options.OrderByDescending(o => o.Score).Take(10).Select(o => (o.Bot, o.Topic, o.Slots, o.Flags)).ToArray();

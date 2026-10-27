@@ -77,6 +77,18 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void Tells_AboutLevelling_OnlyGoToPlayersUnderTheCap()
+        {
+            // In-game check 2026-10-27: a level 50 got "how close are you to your next level?" by tell.
+            VC.Line[] levelling = Corpus.Lines.Where(line => line.Kind == "tell" &&
+                System.Text.RegularExpressions.Regex.IsMatch(line.Text, @"\b(level|leveling|levelling|dinged|ding)\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase) &&
+                line.Topic is "hello_friend" or "guildmate").ToArray();
+            Assert.That(levelling, Is.Not.Empty);
+            foreach (VC.Line line in levelling)
+                Assert.That(line.Needs, Does.Contain("player_leveling"), line.Text);
+        }
+
+        [Test]
         public void Runtime_LoadsTheSameCorpus()
         {
             Assert.That(AutonomousBotVoices.Corpus, Is.Not.Null, "The server finds the embedded corpus.");

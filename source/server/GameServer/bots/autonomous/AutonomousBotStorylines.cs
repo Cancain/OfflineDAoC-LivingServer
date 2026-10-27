@@ -60,6 +60,12 @@ public static class AutonomousBotStorylines
         new("storylines", row => row.StoryKey, StringComparer.OrdinalIgnoreCase);
 
     private static readonly ConcurrentDictionary<eRealm, DateTime> LastEpisodeUtc = new();
+
+    /// <summary>The realm's episode that ended last: players often weigh in after reading it, so a side still counts for
+    /// <see cref="SideWindow"/> after it ends.</summary>
+    private static readonly ConcurrentDictionary<eRealm, (string StoryKey, long BotA, long BotB, DateTime EndedUtc)> LastEpisode = new();
+
+    public static readonly TimeSpan SideWindow = TimeSpan.FromMinutes(10);
     private static readonly ConcurrentDictionary<eRealm, DateTime> NextNewArcUtc = new();
     private static Timer _flushTimer;
 
@@ -281,6 +287,7 @@ public static class AutonomousBotStorylines
         if (string.IsNullOrEmpty(storyKey) || !Stories.TryGet(storyKey, out OfflineBotStorylineRecord existing))
             return;
         LastEpisodeUtc[realm] = nowUtc;
+        LastEpisode[realm] = (storyKey, existing.BotA, existing.BotB, nowUtc);
         var arcs = Arcs(AutonomousBotVoices.Corpus?.Scenes);
         Stories.Change(storyKey, () => existing, row =>
         {
@@ -304,13 +311,21 @@ public static class AutonomousBotStorylines
     #region A player takes a side
 
     /// <summary>
-    /// A player's /faction line while a storyline episode runs (AutonomousBotChatCoordinator.OnPlayerFactionChat): naming one
+    /// A player's /faction line while a storyline episode runs, or up to ten minutes after one ended
+    /// (AutonomousBotChatCoordinator.OnPlayerFactionChat): naming one
     /// protagonist takes a side. The latest side counts. The first time, the one backed thanks them by tell and the other
     /// tells them off.
     /// </summary>
     public static void OnPlayerFactionChat(GamePlayer player, string message)
     {
-        if (!On || player == null || AutonomousBotDebates.RunningStory(player.Realm) is not { } story)
+        if (!On || player == null)
+            return;
+        (string StoryKey, long BotA, long BotB) story;
+        if (AutonomousBotDebates.RunningStory(player.Realm) is { } running)
+            story = running;
+        else if (LastEpisode.TryGetValue(player.Realm, out var last) && DateTime.UtcNow - last.EndedUtc <= SideWindow)
+            story = (last.StoryKey, last.BotA, last.BotB);
+        else
             return;
         if (!AutonomousBotRegistry.TryGet(story.BotA, out GameBot a) || !AutonomousBotRegistry.TryGet(story.BotB, out GameBot b))
             return;

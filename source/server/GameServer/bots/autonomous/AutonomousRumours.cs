@@ -89,7 +89,7 @@ public static class AutonomousRumours
                 if (Say(realm, "named_up", slots, now))
                 {
                     LastAbout[key] = now;
-                    Log.Info($"RUMOUR_NAMED realm={realm} target=\"{monster.Name}\" zone=\"{zone.Description}\"");
+                    Log.Info($"RUMOUR_NAMED realm={GlobalConstants.RealmToName(realm)} target=\"{monster.Name}\" zone=\"{zone.Description}\"");
                 }
                 return 0;
             }, 60_000 + Random.Shared.Next(180_000));
@@ -138,7 +138,7 @@ public static class AutonomousRumours
                 if (Say(realm, "keep_thin", slots, now))
                 {
                     LastAbout[key] = now;
-                    Log.Info($"RUMOUR_KEEP realm={realm} keep=\"{keep.Name}\" guards={alive}/{guards.Length}");
+                    Log.Info($"RUMOUR_KEEP realm={GlobalConstants.RealmToName(realm)} keep=\"{keep.Name}\" guards={alive}/{guards.Length}");
                 }
                 break;
             }

@@ -112,7 +112,7 @@ public static class AutonomousGoldSpammers
             do name = SpammerName(Random.Shared);
             while (AutonomousBotRegistry.TryGetByName(name, out _) || ClientService.Instance.GetPlayerByExactName(name) != null);
             Waves[realm] = new Wave { Name = name, Site = FakeSite(Random.Shared), AdsLeft = 3 + Random.Shared.Next(4), NextAt = now };
-            Log.Info($"GOLD_SPAMMER_START realm={realm} name=\"{name}\"");
+            Log.Info($"GOLD_SPAMMER_START realm={GlobalConstants.RealmToName(realm)} name=\"{name}\"");
         }
     }
 
@@ -139,7 +139,7 @@ public static class AutonomousGoldSpammers
         // Banned: the ads stop and the realm cheers.
         wave.Banned = true;
         wave.NextAt = now + 60_000;
-        Log.Info($"GOLD_SPAMMER_BANNED realm={realm} name=\"{wave.Name}\" ads={wave.AdsSaid}");
+        Log.Info($"GOLD_SPAMMER_BANNED realm={GlobalConstants.RealmToName(realm)} name=\"{wave.Name}\" ads={wave.AdsSaid}");
         React(realm, wave.Name, "banned", 1 + Random.Shared.Next(3), 30_000 + Random.Shared.Next(60_000));
     }
 

@@ -18,9 +18,11 @@ hey {player}, i was just thinking about our last group
 {player}! where have you been hiding?
 hey {player}, long time, how are things?
 hi {player}, what are you up to tonight?
+{player}, hey! long day?
+@needs knows_player,player_leveling
 {player} hi, how is the leveling going?
 hey {player}, dinged yet?
-{player}, hey! long day?
+@needs knows_player
 @needs knows_player,evening
 @invites chat
 evening {player}, good to see a friendly name on
@@ -147,12 +149,14 @@ heads up, we lost df
 @needs knows_player
 @invites ask
 hey, anyone in the guild grouping tonight?
-{player}, how close are you to your next level?
 {player}, are we doing anything this weekend?
 yo, got a question about your spec, got a sec?
-{player}, quick question, what armor are you wearing at your level?
 hey, you ok? havent seen you on much
 {player}! guild is quiet tonight, where is everyone?
+@needs knows_player,player_leveling
+{player}, how close are you to your next level?
+{player}, quick question, what armor are you wearing at your level?
+@needs knows_player
 @invites chat
 heya guildie
 {player}, we should get the guild out to rvr soon
@@ -165,7 +169,9 @@ need anything made? i have some free time at the forge
 we miss you in /gu, say hi sometime
 @who Leveler
 @invites ask
+@needs knows_player,player_leveling
 {player}, want to level together some night this week?
+@needs knows_player
 @who NoLifer
 @invites chat
 guild needs more people in the frontier, think about it

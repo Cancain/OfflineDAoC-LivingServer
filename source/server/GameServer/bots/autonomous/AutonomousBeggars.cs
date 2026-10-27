@@ -129,6 +129,7 @@ public static class AutonomousBeggars
         public Vector3 Corner;
         public string CornerNpc = "the merchant";
         public Vector3? Spot;                 // where it is begging now (null: the corner)
+        public bool OpenerDue;                // heard of it from afar: the "heard" opener waits until it reaches the player
         public long NextLookAt, NextMoveAt, NextLineAt, NextBotBegAt, NextHoardAt, NextErrandAt, NextProgressAt;
         public GamePlayer Approaching;
         public long ApproachUntil;
@@ -776,11 +777,15 @@ public static class AutonomousBeggars
         bot.TurnTo(player);
         SetActivity(bot, state, $"Chasing {player.Name} off the corner", $"{player.Name} asked for coin or items ({how})");
         Log.Info($"BEGGAR_HOSTILE beggar=\"{bot.Name}\" player=\"{player.Name}\" how={how}");
-        AutonomousLivingServer.Later(bot, 900 + Random.Shared.Next(1_200), () => state.Mark == player, () =>
-        {
-            bot.Emote(Random.Shared.Next(2) == 0 ? eEmote.Angry : eEmote.Roar);
-            Say(bot, heard ? "heard" : "outraged", SlotsFor(bot, state, player));
-        });
+        // Asked in person: outraged at once. Heard of it on the street: the opener waits until it has walked over (Chase), or
+        // the player would never hear it.
+        state.OpenerDue = heard;
+        if (!heard)
+            AutonomousLivingServer.Later(bot, 900 + Random.Shared.Next(1_200), () => state.Mark == player, () =>
+            {
+                bot.Emote(Random.Shared.Next(2) == 0 ? eEmote.Angry : eEmote.Roar);
+                Say(bot, "outraged", SlotsFor(bot, state, player));
+            });
         return true;
     }
 
@@ -816,10 +821,19 @@ public static class AutonomousBeggars
         else if (bot.FollowTarget != player)
             bot.Follow(player, FollowDistance, FollowLeash + 2_000);
 
+        if (state.OpenerDue && bot.IsWithinRadius(player, WorldMgr.SAY_DISTANCE))
+        {
+            state.OpenerDue = false;
+            state.NextInsultAt = now + 6_000 + Random.Shared.Next(3_000);
+            bot.TurnTo(player);
+            bot.Emote(Random.Shared.Next(2) == 0 ? eEmote.Angry : eEmote.Roar);
+            Say(bot, "heard", SlotsFor(bot, state, player));
+            return;
+        }
         if (now < state.NextInsultAt)
             return;
         state.NextInsultAt = now + 6_000 + Random.Shared.Next(7_000);
-        if (!bot.IsWithinRadius(player, WorldMgr.SAY_DISTANCE))
+        if (state.OpenerDue || !bot.IsWithinRadius(player, WorldMgr.SAY_DISTANCE))
             return;
         state.CornerTurn = !state.CornerTurn && Random.Shared.NextDouble() < 0.45;
         if (Random.Shared.NextDouble() < 0.35)

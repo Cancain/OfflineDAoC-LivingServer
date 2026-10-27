@@ -218,6 +218,8 @@ public static class AutonomousBotDebates
         public long NextAt;
         /// <summary>When the current beat started waiting for a busy speaker; 0 when not waiting.</summary>
         public long WaitingSince;
+        /// <summary>When the realm's last player left the game (or went through a zone change or release); 0 while one is in.</summary>
+        public long NoAudienceSince;
         /// <summary>The last line said: by whom (role and bot), when, and every line so far (for what a player's line is about).</summary>
         public string LastRole;
         public long LastSpeakerId;
@@ -300,6 +302,9 @@ public static class AutonomousBotDebates
         }
     }
 
+    /// <summary>How long a running scene waits for the realm's players to be back in the game before it ends.</summary>
+    public const long NoAudienceGraceMs = 2 * 60_000;
+
     private static bool HasAudience(eRealm realm) => ClientService.Instance.GetPlayersOfRealm(realm).Count > 0;
 
     private static bool Eligible(GameBot bot, eRealm realm) => bot?.IsAutonomousWorldBot == true && !bot.IsTemporaryGroupHelper &&
@@ -340,8 +345,22 @@ public static class AutonomousBotDebates
         }
         if (!HasAudience(realm))
         {
+            // A player releasing, porting or changing zones is briefly out of the game: the scene waits for them, and
+            // only ends when nobody of the realm has been in the game for NoAudienceGraceMs.
             if (running != null)
-                End(realm, "nobody of the realm is online");
+            {
+                if (running.NoAudienceSince == 0)
+                    running.NoAudienceSince = now;
+                else if (now - running.NoAudienceSince >= NoAudienceGraceMs)
+                    End(realm, "nobody of the realm is online");
+            }
+            return;
+        }
+        if (running != null && running.NoAudienceSince != 0)
+        {
+            // Back: carry on where it paused, without firing the beats that came due meanwhile all at once.
+            running.NextAt = Math.Max(running.NextAt, now + 2_000);
+            running.NoAudienceSince = 0;
             return;
         }
         if (running == null)
@@ -418,7 +437,7 @@ public static class AutonomousBotDebates
         if (story == null)
             MarkHeard(realm, scene.Id, heard);
         if (Log.IsInfoEnabled)
-            Log.Info($"BOT_DEBATE_START realm={realm} scene={scene.Id} speakers={cast.Count}");
+            Log.Info($"BOT_DEBATE_START realm={GlobalConstants.RealmToName(realm)} scene={scene.Id} speakers={cast.Count}");
     }
 
     private static void PlayBeat(eRealm realm, Running running, long now)
@@ -460,7 +479,7 @@ public static class AutonomousBotDebates
                     {
                         running.WaitingSince = now;
                         if (Log.IsInfoEnabled)
-                            Log.Info($"BOT_DEBATE_WAIT realm={realm} scene={running.Scene.Id} role={beat.Role} beat={running.Beat}");
+                            Log.Info($"BOT_DEBATE_WAIT realm={GlobalConstants.RealmToName(realm)} scene={running.Scene.Id} role={beat.Role} beat={running.Beat}");
                     }
                     running.Beat--; // retry this beat
                     running.NextAt = now + BusyRetryMs;
@@ -677,7 +696,7 @@ public static class AutonomousBotDebates
             if (Scenes.Remove(realm, out Running running))
             {
                 if (Log.IsInfoEnabled)
-                    Log.Info($"BOT_DEBATE_END realm={realm} scene={running.Scene.Id} reason=\"{reason}\"");
+                    Log.Info($"BOT_DEBATE_END realm={GlobalConstants.RealmToName(realm)} scene={running.Scene.Id} reason=\"{reason}\"");
                 if (running.StoryKey != null)
                     AutonomousBotStorylines.OnEpisodeEnded(realm, running.StoryKey, running.Scene.Id, reason == "finished", DateTime.UtcNow);
             }
