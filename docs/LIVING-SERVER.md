@@ -224,7 +224,9 @@ companion bots and real players are not.
 - **Size:** each bot remembers at most 40 others; the least memorable go first.
 - **Logs:** `BOND_FRIENDS` and `BOND_GRUDGE` when a pair crosses a line, and `friendPairs=` on each
   `AUTONOMOUS_GROUP_FORMED`.
-- **Not yet:** bots don't talk about it. Greeting a friend, grumbling about a flake and the Herald are later steps.
+- **Talk** (since 2026-10-27, `bonds.lines`): a bot tells its realm's /faction when a groupmate becomes a friend, now and
+  then when a new party has an old friend in it (40%), and grumbles about a no-show (50%). One line per topic per realm
+  every 10 minutes, with up to two reactions. Logs `BOND_TALK`. The Herald doesn't show bonds yet.
 
 ### Deeds, storylines, spammers, roleplayers and rumours
 - **Deeds and reputation** (`bot_living_deeds`): bots that see you solo a named monster, go on a kill streak, get zerged

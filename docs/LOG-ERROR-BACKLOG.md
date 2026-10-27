@@ -102,8 +102,8 @@ thread. If the file stays locked, a one-line warning replaces the stack trace.
   Also 06:20:57 `GameClient.Player is being replaced but hasn't been deleted yet (current: ... Claudecheck ...)`.
 - **Status:** the new client now ignores repeat PLAY clicks for 10 seconds (commit c5a7724). That isn't deployed yet,
   since it is a new-client file.
-- **Still open:** the server could ignore a second world-init for a player who is already entering, instead of failing
-  and dropping the client.
+- **Server side, fixed in code 2026-10-27 (commit 2aafcec), not yet deployed:** a second world-init that arrives while the
+  first is still loading the character is ignored (`WORLD_ENTER_REPEAT_IGNORED`). This also covers the classic client.
 
 ### PvE matchmaking: most waits run out
 
@@ -165,7 +165,7 @@ These are mostly the bots' own diagnostics, counted over about six hours:
 
 | Count | Warning | Note |
 |---:|---|---|
-| 6,351 | `AUTONOMOUS_DEATH_ROUTE_REPLAN` | e.g. a level 16 necromancer with 13 deaths to "living entombed". Bots dying repeatedly on one route. Check the worst offenders. |
+| 6,351 | `AUTONOMOUS_DEATH_ROUTE_REPLAN` | Logged at every solo death, not only repeats (corrected 2026-10-27). In 11:17-16:06 there were 6,412 from 2,011 bots, and 79% were a bot's first death without experience since its last. The real gap was the camp danger bench counting per camp cell: one deadly monster was benched again and again, cell by cell (e.g. rencan tri 8 times over 5 cells). **Fixed in code (commit f3e0233, not deployed):** the monster in its region is benched as a whole (`AUTONOMOUS_SPECIES_DANGER_BENCH`). |
 | 799 | `AUTONOMOUS_BETWEEN_TASK_TIMEOUT` | |
 | 597 | `AUTONOMOUS_GROUP_MATCHMAKING_TIMEOUT` | |
 | 317 | `AUTONOMOUS_GROUP_RESURRECTION_TIMEOUT` | |
@@ -185,8 +185,9 @@ Not log errors, but found while playing and not yet fixed or verified:
   deployed. Next run: check whether keeps ever drop under 30% of their guards and whether rare named respawn while a
   player who would care is online.
 - **Deeds have never been earned in game:**
-  - Ganked needs 4+ enemies within 2,000 units; a death to 3 Hibernians at Hadrian's Wall didn't count.
-  - A solo named kill needs yellow con or harder, which a level 50 can't easily find.
+  - Ganked needed 4+ enemies within 2,000 units; a death to 3 Hibernians at Hadrian's Wall didn't count. Now 3+
+    (commit 2aafcec, not deployed).
+  - A solo named kill needed yellow con or harder, which a level 50 can't easily find. Now blue or harder.
   - `PLAYER_DEED_SKIP` logging (fd6dbbd) is not yet deployed.
 - **No way to hand a beggar coin in the new client.** The server takes gifts, but the client has no obvious give or
   trade action.

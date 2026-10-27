@@ -275,10 +275,10 @@ lines (`beggars.lines`, kind `beggar`, 19 topics), spiced the way the dunces are
 `bot_living_deeds` (on by default; `AutonomousPlayerDeeds`). When you do something a gamebot of your realm sees (a
 groupmate first, else any bot within 3,000 units), it tells /faction 2-10 minutes later and one to three bots react:
 
-- **Named kills:** a named monster (capitalised name, no realm) you kill alone at yellow or harder (`named_solo`), or with
-  your group at blue or harder (`named_group`).
+- **Named kills:** a named monster (capitalised name, no realm) you kill alone (`named_solo`) or with your group
+  (`named_group`) at blue or harder. (Solo needed yellow until 2026-10-27.)
 - **Kill streaks:** three or more enemies killed within ten minutes (`rvr_streak`).
-- **Your deaths:** zerged by four or more enemies (`ganked`), killed by a green or grey monster (`silly_death`), or a
+- **Your deaths:** zerged by three or more enemies (`ganked`; four until 2026-10-27), killed by a green or grey monster (`silly_death`), or a
   fall or drowning (`fell`).
 
 Only what a bot saw counts: an unseen deed, an ordinary enemy kill included, is not told and does not count toward
@@ -403,7 +403,7 @@ Everything above was tested without a running world. These need the PC:
     "spare some gold?" in /say makes it follow and insult you, that asking in /faction from outside and then walking
     into the city brings the beggars to you, that it stops when you zone out of the city, and that
     it walks and paths sensibly between merchants (no walking into walls). Watch `BEGGAR_SOLD` and `BEGGAR_LISTED`.
-15. Deeds: solo a yellow named, die to a grey monster, chain three enemy kills. A bot that was there should tell
+15. Deeds: solo a blue or harder named, die to a grey monster, chain three enemy kills. A bot that was there should tell
     /faction within 10 minutes (`PLAYER_DEED` in the log); check that the named check (capitalised names) doesn't catch
     quest NPCs or other things that aren't monsters.
 16. Storylines: `STORYLINE_EPISODE` in the log; the first episode should come within a few hours of play. Name one of
