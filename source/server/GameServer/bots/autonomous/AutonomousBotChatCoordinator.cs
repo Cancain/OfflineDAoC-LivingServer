@@ -789,7 +789,9 @@ public static class AutonomousBotChatCoordinator
 
     public static bool TryAdvertiseExchangeItem(GameBot seller, string exactItemName)
     {
-        if (!Eligible(seller) || !IsAdvertisableItemName(exactItemName) || !HasFactionAudience(seller.Realm))
+        // A running scene owns /faction (in-game check 2026-10-27: an exchange advert landed in a storyline's second line).
+        if (!Eligible(seller) || !IsAdvertisableItemName(exactItemName) || !HasFactionAudience(seller.Realm) ||
+            AutonomousBotDebates.IsRunning(seller.Realm))
             return false;
         lock (Sync)
         {
@@ -1354,7 +1356,8 @@ public static class AutonomousBotChatCoordinator
                     : standIns.FirstOrDefault(bot => Eligible(bot) && !bot.InCombat && (faction || HasLocalAudience(bot)));
                 if (speaker == null)
                     return 0;
-                if (faction && HasFactionAudience(speaker.Realm))
+                // Bot-to-bot talk holds its tongue when a scene started after it was scheduled.
+                if (faction && HasFactionAudience(speaker.Realm) && !AutonomousBotDebates.IsRunning(speaker.Realm))
                 {
                     BroadcastFaction(speaker.Name, speaker.Realm, text);
                     said.Add();
@@ -1381,7 +1384,7 @@ public static class AutonomousBotChatCoordinator
         {
             if (!ClosingFollowsAReply(said.Count))
                 return;
-            if (faction && HasFactionAudience(starter.Realm))
+            if (faction && HasFactionAudience(starter.Realm) && !AutonomousBotDebates.IsRunning(starter.Realm))
                 BroadcastFaction(starter.Name, starter.Realm, closing.Text);
             else if (!faction && HasLocalAudience(starter))
                 starter.Say(closing.Text);
