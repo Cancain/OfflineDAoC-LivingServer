@@ -119,7 +119,8 @@ def clean_world(database: Path, policy: dict, defaults: dict) -> dict:
     tables = {row[0] for row in con.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     cleared = []
     extra = ["FactionAggroLevel"]   # per-character standings (clean_slate.py clears them too)
-    for table in policy["ProgressTables"] + policy["ClearTables"] + extra:
+    # OptionalProgressTables are the Living Server's bot guilds, memory, nemeses, server firsts and chat heard: progress too.
+    for table in policy["ProgressTables"] + policy.get("OptionalProgressTables", []) + policy["ClearTables"] + extra:
         if table in tables and table not in {"Guild", "GuildRank"}:
             con.execute(f'DELETE FROM "{table}"')
             cleared.append(table)
