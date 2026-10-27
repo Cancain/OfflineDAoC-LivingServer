@@ -232,7 +232,11 @@ public static class AutonomousBotStorylines
                 NextNewArcUtc[realm] = nowUtc + NewArcGap;
             }
             if (row.Episode < 1 || row.Episode >= episodes.Length)
+            {
+                // The corpus lost this arc's later episodes: end it, so its pair is free for other stories.
+                Stories.Change(key, () => row, r => r.DoneUtc = nowUtc.ToString("O"));
                 continue;
+            }
             VC.Scene scene = SceneFor(episodes[row.Episode], row.Side);
             var slots = new Dictionary<string, string>(StringComparer.Ordinal)
             {
@@ -274,11 +278,11 @@ public static class AutonomousBotStorylines
     /// <summary>An episode ended (AutonomousBotDebates.End): played to its end, it moves the arc on; cut short, it is tried again later.</summary>
     public static void OnEpisodeEnded(eRealm realm, string storyKey, string sceneId, bool finished, DateTime nowUtc)
     {
-        if (string.IsNullOrEmpty(storyKey) || !Stories.TryGet(storyKey, out _))
+        if (string.IsNullOrEmpty(storyKey) || !Stories.TryGet(storyKey, out OfflineBotStorylineRecord existing))
             return;
         LastEpisodeUtc[realm] = nowUtc;
         var arcs = Arcs(AutonomousBotVoices.Corpus?.Scenes);
-        Stories.Change(storyKey, () => null, row =>
+        Stories.Change(storyKey, () => existing, row =>
         {
             if (!finished)
             {

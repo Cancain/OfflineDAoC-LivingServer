@@ -128,9 +128,10 @@ public static class AutonomousGoldSpammers
         {
             wave.AdsLeft--;
             wave.AdsSaid++;
-            if (AutonomousBotVoices.TryLineFor(wave.Name, realm, "spam", "ad", new Dictionary<string, string> { ["site"] = wave.Site }, out string ad))
+            bool said = AutonomousBotVoices.TryLineFor(wave.Name, realm, "spam", "ad", new Dictionary<string, string> { ["site"] = wave.Site }, out string ad);
+            if (said)
                 AutonomousBotChatCoordinator.BroadcastFaction(wave.Name, realm, ad);
-            if (wave.AdsSaid <= 3 && Random.Shared.NextDouble() < 0.8)
+            if (said && wave.AdsSaid <= 3 && Random.Shared.NextDouble() < 0.8)
                 React(realm, wave.Name, "react", 1 + Random.Shared.Next(2), 4_000);
             wave.NextAt = now + 18_000 + Random.Shared.Next(30_000);
             return;

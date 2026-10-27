@@ -66,6 +66,8 @@ public static class AutonomousBotDebates
     /// bots short (in-game check 2026-10-17: camp_etiquette ended after 24 s, "fewer than two speakers left").
     /// </summary>
     public const int MaxBusyWaitMs = 45_000;
+    /// <summary>How long a storyline episode waits for a busy protagonist.</summary>
+    public const int StoryBusyWaitMs = 180_000;
 
     /// <summary>
     /// The rule for one beat. A free cast speaker speaks. A busy one is waited for (up to
@@ -118,15 +120,26 @@ public static class AutonomousBotDebates
     /// its personality wish is preferred, then relaxed. Null when fewer than two people would speak
     /// or a class-bound role can't be filled.
     /// </summary>
-    public static Dictionary<string, long> Cast(VC.Scene scene, IReadOnlyList<Candidate> candidates, Random random)
+    public static Dictionary<string, long> Cast(VC.Scene scene, IReadOnlyList<Candidate> candidates, Random random) =>
+        Cast(scene, candidates, random, null);
+
+    /// <summary>
+    /// The same, with some roles already cast (a storyline's two protagonists): those roles are taken as given and only the
+    /// others are filled from the candidates.
+    /// </summary>
+    public static Dictionary<string, long> Cast(VC.Scene scene, IReadOnlyList<Candidate> candidates, Random random,
+        IReadOnlyDictionary<string, long> fixedRoles)
     {
         var cast = new Dictionary<string, long>(StringComparer.Ordinal);
-        var used = new HashSet<long>();
+        if (fixedRoles != null)
+            foreach (var pair in fixedRoles)
+                cast[pair.Key] = pair.Value;
+        var used = new HashSet<long>(cast.Values);
         // Bots on a town break first: a thread cast from grinding bots stalls at their next pull.
         Candidate[] pool = candidates.Where(c => LevelFits(scene, c.Level)).OrderByDescending(c => c.InTown)
             .ThenBy(_ => random.Next()).ToArray();
         // Roles with requirements first, so the open roles don't take the only fitting bot.
-        foreach (string role in scene.SpeakingRoles.OrderByDescending(r => scene.Roles.TryGetValue(r, out var s) ?
+        foreach (string role in scene.SpeakingRoles.Where(r => !cast.ContainsKey(r)).OrderByDescending(r => scene.Roles.TryGetValue(r, out var s) ?
                      s.Classes.Length * 2 + s.Types.Length + (s.LevelLow > 1 || s.LevelHigh < 50 ? 4 : 0) : 0))
         {
             scene.Roles.TryGetValue(role, out VC.RoleSpec spec);
@@ -199,6 +212,8 @@ public static class AutonomousBotDebates
         public Dictionary<string, string> Shared;
         /// <summary>The storyline this scene is an episode of (AutonomousBotStorylines), or null for an ordinary debate.</summary>
         public string StoryKey;
+        /// <summary>A storyline's two protagonists (roles A and B): never replaced by a stand-in.</summary>
+        public long StoryA, StoryB;
         public int Beat;
         public long NextAt;
         /// <summary>When the current beat started waiting for a busy speaker; 0 when not waiting.</summary>
@@ -225,9 +240,8 @@ public static class AutonomousBotDebates
     public static (string StoryKey, long BotA, long BotB)? RunningStory(eRealm realm)
     {
         lock (Sync)
-            return Scenes.TryGetValue(realm, out Running running) && running.StoryKey != null &&
-                   running.Cast.TryGetValue("A", out long a) && running.Cast.TryGetValue("B", out long b)
-                ? (running.StoryKey, a, b) : null;
+            return Scenes.TryGetValue(realm, out Running running) && running.StoryKey != null
+                ? (running.StoryKey, running.StoryA, running.StoryB) : null;
     }
 
     public static bool IsRunning(eRealm realm)
@@ -359,13 +373,8 @@ public static class AutonomousBotDebates
         {
             scene = story.Scene;
             cast = Cast(scene, online.Where(bot => bot.DatabaseID != story.BotA && bot.DatabaseID != story.BotB).Select(CandidateOf).ToArray(),
-                Random.Shared);
-            if (cast != null)
-            {
-                cast["A"] = story.BotA;
-                cast["B"] = story.BotB;
-            }
-            else
+                Random.Shared, new Dictionary<string, long> { ["A"] = story.BotA, ["B"] = story.BotB });
+            if (cast == null)
                 story = null;   // not enough others to fill the scene: an ordinary debate instead, the episode waits
         }
         if (story == null)
@@ -403,7 +412,8 @@ public static class AutonomousBotDebates
             }
             if (reset)
                 ResetHeard(realm, heard);
-            Scenes[realm] = new Running { Scene = scene, Cast = cast, Beat = 0, NextAt = now, Shared = shared, StoryKey = story?.StoryKey };
+            Scenes[realm] = new Running { Scene = scene, Cast = cast, Beat = 0, NextAt = now, Shared = shared, StoryKey = story?.StoryKey,
+                StoryA = story?.BotA ?? 0, StoryB = story?.BotB ?? 0 };
         }
         if (story == null)
             MarkHeard(realm, scene.Id, heard);
@@ -426,6 +436,21 @@ public static class AutonomousBotDebates
                 continue;
             SpeakerState state = CastState(realm, running, beat.Role);
             long waited = running.WaitingSince == 0 ? 0 : now - running.WaitingSince;
+            // A storyline's protagonist is never replaced: a busy one is waited for (up to three minutes), and one who
+            // left or stays busy ends the episode unfinished, so it plays again later with the same pair.
+            if (running.StoryKey != null && beat.Role is "A" or "B" && state != SpeakerState.Free)
+            {
+                if (state == SpeakerState.Busy && waited < StoryBusyWaitMs)
+                {
+                    if (running.WaitingSince == 0)
+                        running.WaitingSince = now;
+                    running.Beat--;
+                    running.NextAt = now + BusyRetryMs;
+                    return;
+                }
+                End(realm, "a protagonist left");
+                return;
+            }
             GameBot speaker = state == SpeakerState.Free || state == SpeakerState.Busy && waited >= MaxBusyWaitMs || state == SpeakerState.Gone
                 ? SpeakerFor(realm, running, beat.Role) : null;
             switch (DecideBeat(state, waited, speaker != null, SpeakersAround(realm, running)))
@@ -627,6 +652,8 @@ public static class AutonomousBotDebates
     {
         if (running.Cast.TryGetValue(role, out long id) && AutonomousBotRegistry.TryGet(id, out GameBot cast) && Eligible(cast, realm))
             return cast;
+        if (running.StoryKey != null && role is "A" or "B")
+            return null;   // a storyline's protagonist has no stand-in
         running.Scene.Roles.TryGetValue(role, out VC.RoleSpec spec);
         var taken = running.Cast.Values.ToHashSet();
         GameBot replacement = AutonomousBotRegistry.Snapshot()

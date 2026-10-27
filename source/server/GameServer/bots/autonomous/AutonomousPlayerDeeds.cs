@@ -54,6 +54,7 @@ public static class AutonomousPlayerDeeds
     public const int StreakKills = 3;                // enemy kills within StreakWindow
     public static readonly TimeSpan StreakWindow = TimeSpan.FromMinutes(10);
     public static readonly TimeSpan KindRest = TimeSpan.FromMinutes(15);     // one telling of a kind per player this often
+    public static readonly TimeSpan SoloRest = TimeSpan.FromMinutes(5);      // and of any solo named kill
     public const int NamedSoloForNickname = 3, RvrKillsForNickname = 25, SillyDeathsForNickname = 4;
 
     internal static readonly LivingServerTable<string, OfflinePlayerReputationRecord> Reputations =
@@ -132,7 +133,8 @@ public static class AutonomousPlayerDeeds
             : rvrKills >= RvrKillsForNickname ? "rvr"
             : sillyDeaths >= SillyDeathsForNickname ? "silly"
             : null;
-        if (kind == null || kind == currentKind || currentKind is "named" or "rvr" && kind == "silly")
+        // A heroic nickname is for good: it never switches to the other heroic kind, nor back to a silly one.
+        if (kind == null || kind == currentKind || currentKind is "named" or "rvr")
             return null;
         string[] pool = kind switch { "named" => NamedNicknames, "rvr" => RvrNicknames, _ => SillyNicknames };
         return (pool[seed % pool.Length], kind);
@@ -253,9 +255,9 @@ public static class AutonomousPlayerDeeds
     private static void Record(GamePlayer player, Action<OfflinePlayerReputationRecord> change, Kind kind, GameObject where,
         string target, string count, string enemy = null)
     {
-        GameBot witness = kind == Kind.None ? null : WitnessOf(player, where);
-        // Only what a bot saw counts: an unseen deed never becomes reputation.
-        if (kind != Kind.None && witness == null)
+        GameBot witness = WitnessOf(player, where);
+        // Only what a bot saw counts: an unseen deed (an enemy kill too) never becomes reputation.
+        if (witness == null)
             return;
         OfflinePlayerReputationRecord row = Reputations.Change(KeyOf(player.Realm, player.Name),
             () => new OfflinePlayerReputationRecord { PlayerKey = KeyOf(player.Realm, player.Name), PlayerName = player.Name, Realm = (int)player.Realm },
@@ -267,10 +269,14 @@ public static class AutonomousPlayerDeeds
         if (kind == Kind.None)
             return;
         long now = GameLoop.GameLoopTime;
-        string restKey = player.Name + "|" + kind;
-        if (kind != Kind.NamedSolo && LastTold.TryGetValue(restKey, out long last) && now - last < (long)KindRest.TotalMilliseconds)
+        // Each kind at most every 15 minutes per player; a solo named kill per monster, and at most every 5 minutes.
+        string restKey = kind == Kind.NamedSolo ? $"{player.Name}|{kind}|{target}" : $"{player.Name}|{kind}";
+        if (LastTold.TryGetValue(restKey, out long last) && now - last < (long)KindRest.TotalMilliseconds ||
+            kind == Kind.NamedSolo && LastTold.TryGetValue(player.Name + "|solo", out long lastSolo) && now - lastSolo < (long)SoloRest.TotalMilliseconds)
             return;
         LastTold[restKey] = now;
+        if (kind == Kind.NamedSolo)
+            LastTold[player.Name + "|solo"] = now;
         Log.Info($"PLAYER_DEED player=\"{player.Name}\" kind={TopicOf(kind)} target=\"{target}\" witness=\"{witness.Name}\"");
 
         var slots = SlotsOf(player, row);
@@ -313,10 +319,12 @@ public static class AutonomousPlayerDeeds
     {
         bool Fits(GameBot bot) => bot != null && bot.IsAutonomousWorldBot && !bot.IsTemporaryGroupHelper && bot.IsAlive &&
                                   bot.Realm == player.Realm && bot.DatabaseID > 0 && !AutonomousBeggars.Is(bot);
-        GameBot mate = player.Group?.GetMembersInTheGroup().OfType<GameBot>().Where(Fits).OrderBy(_ => Random.Shared.Next()).FirstOrDefault();
+        GameObject at = where ?? player;
+        GameBot mate = player.Group?.GetMembersInTheGroup().OfType<GameBot>()
+            .Where(bot => Fits(bot) && bot.CurrentRegionID == at.CurrentRegionID && bot.IsWithinRadius(at, WitnessRadius))
+            .OrderBy(_ => Random.Shared.Next()).FirstOrDefault();
         if (mate != null)
             return mate;
-        GameObject at = where ?? player;
         return at.GetNPCsInRadius(WitnessRadius).OfType<GameBot>().Where(Fits).OrderBy(_ => Random.Shared.Next()).FirstOrDefault();
     }
 

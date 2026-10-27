@@ -76,6 +76,8 @@ namespace DOL.GS.Tests
             Assert.That(Deeds.Earned("Kaelith", 0, 0, 4, "")?.Kind, Is.EqualTo("silly"));
             Assert.That(Deeds.Earned("Kaelith", 0, 0, 9, "rvr"), Is.Null, "a silly nickname never replaces a heroic one");
             Assert.That(Deeds.Earned("Kaelith", 0, 30, 9, "silly")?.Kind, Is.EqualTo("rvr"), "a heroic one replaces a silly one");
+            Assert.That(Deeds.Earned("Kaelith", 9, 30, 0, "rvr"), Is.Null, "a heroic nickname never flips to the other heroic kind");
+            Assert.That(Deeds.Earned("Kaelith", 9, 80, 0, "named"), Is.Null);
         }
 
         [Test]
@@ -106,6 +108,20 @@ namespace DOL.GS.Tests
                 Assert.That(AutonomousBotStorylines.SceneFor(episodes[4], ""), Is.SameAs(episodes[4].Neutral));
                 Assert.That(AutonomousBotStorylines.SceneFor(episodes[2], "B"), Is.SameAs(episodes[2].Neutral));
             }
+        }
+
+        [Test]
+        public void AnEpisodeKeepsItsPairAndCastsOnlyTheOtherRoles()
+        {
+            VC.Scene scene = AutonomousBotStorylines.Arcs(Corpus.Scenes)["killsteal"][1].Neutral;
+            int others = scene.SpeakingRoles.Count(role => role is not ("A" or "B"));
+            var candidates = Enumerable.Range(100, others)
+                .Select(id => new AutonomousBotDebates.Candidate(id, BotPersonalityType.Socialite, "Cleric", 30)).ToArray();
+            var cast = AutonomousBotDebates.Cast(scene, candidates, new Random(1), new Dictionary<string, long> { ["A"] = 1, ["B"] = 2 });
+            Assert.That(cast, Is.Not.Null, "exactly enough others for the other roles");
+            Assert.That(cast["A"], Is.EqualTo(1));
+            Assert.That(cast["B"], Is.EqualTo(2));
+            Assert.That(cast.Values.Distinct().Count(), Is.EqualTo(cast.Count));
         }
 
         [Test]

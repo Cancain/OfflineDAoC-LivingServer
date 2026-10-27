@@ -122,9 +122,12 @@ public static class AutonomousRumours
                 continue;
             foreach (AbstractGameKeep keep in keeps.Where(keep => keep.Realm != realm).OrderBy(_ => Random.Shared.Next()))
             {
-                GameKeepGuard[] guards = keep.Guards.Values.ToArray();
+                // Only guards meant to be up count: one in the world or waiting to respawn. A captured keep's guards above its
+                // new level are taken out of the world (not dead), so they are not missing defenders.
+                GameKeepGuard[] guards = keep.Guards.Values.Where(guard => guard.ObjectState == GameObject.eObjectState.Active || guard.IsRespawning).ToArray();
+                int alive = guards.Count(guard => guard.IsAlive);
                 string key = $"keep:{keep.KeepID}";
-                if (!IsThin(guards.Length, guards.Count(guard => guard.IsAlive)) || !AboutIsFresh(key, KeepRest, now))
+                if (!IsThin(guards.Length, alive) || !AboutIsFresh(key, KeepRest, now))
                     continue;
                 var slots = new Dictionary<string, string>
                 {
@@ -135,7 +138,7 @@ public static class AutonomousRumours
                 if (Say(realm, "keep_thin", slots, now))
                 {
                     LastAbout[key] = now;
-                    Log.Info($"RUMOUR_KEEP realm={realm} keep=\"{keep.Name}\" guards={guards.Count(guard => guard.IsAlive)}/{guards.Length}");
+                    Log.Info($"RUMOUR_KEEP realm={realm} keep=\"{keep.Name}\" guards={alive}/{guards.Length}");
                 }
                 break;
             }

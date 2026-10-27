@@ -279,12 +279,13 @@ groupmate first, else any bot within 3,000 units), it tells /faction 2-10 minute
 - **Your deaths:** zerged by four or more enemies (`ganked`), killed by a green or grey monster (`silly_death`), or a
   fall or drowning (`fell`).
 
-Only what a bot saw counts: an unseen deed is not told and does not count toward reputation (an ordinary enemy kill
-still adds to your kill count). Each kind is told at most every 15 minutes (every solo named is told). Deeds add up in
+Only what a bot saw counts: an unseen deed, an ordinary enemy kill included, is not told and does not count toward
+reputation. Each kind is told at most every 15 minutes per player; a solo named kill once per monster in 15 minutes and
+at most one every 5 minutes. Deeds add up in
 `offline_player_reputation` (an optional progress table, emptied in release builds). Every 50-100 minutes a bot who was
 not there brings up an online player's reputation ("isnt Kaelith the one who soloed Grimwold?", `rep_named`, `rep_rvr`,
 `rep_silly`). Three solo named kills, 25 enemy kills or four silly deaths earn a nickname ("Kaelith the Slayer",
-"Kaelith Facefloor"), announced in /faction; a heroic nickname replaces a silly one, never the other way round.
+"Kaelith Facefloor"), announced in /faction; a heroic nickname replaces a silly one and is then for good.
 `deeds.lines`: about 1,800 lines.
 
 ### 13. Storylines
@@ -294,7 +295,8 @@ not there brings up an online player's reputation ("isnt Kaelith the one who sol
 The same two bots (roles A and B, saved in `offline_bot_storylines`) play every episode and name each other; the other
 roles are cast fresh. A realm plays at most one episode every 75 minutes, an arc's episodes are 6-20 hours apart, a new
 arc starts at most every four hours, and a finished arc starts again with a new pair a week later. An arc waits while its
-pair is offline and is dropped after three days.
+pair is offline and is dropped after three days. The two protagonists are never replaced by stand-ins: an episode waits up
+to three minutes for a busy one, and ends unfinished (to play again later) if one leaves.
 
 Take a side by naming one of the two in /faction during an episode ("Aelwyn is right", "brannoc is lying", "team aelwy").
 The one you backed thanks you by tell, the other tells you off, and the last episode plays that side's ending (`_4a` or
@@ -323,7 +325,8 @@ The one you backed thanks you by tell, the other tells you off, and the last epi
 - **A rare named spawn:** a named monster with a respawn of 20 minutes or more, level 20+, comes back in a realm's lands
   while a player of that realm within ten levels under to five over it is online. One to four minutes later, if it is
   still alive, a bot says so vaguely ("heard Grimwold is up again in Black Mountains South").
-- **A thin keep:** an enemy frontier keep with four or more guards, under 30% of them alive ("scout says Caer Benowyc is
+- **A thin keep:** an enemy frontier keep with four or more guards meant to be up (in the world or respawning; a captured
+  keep's guards above its new level don't count), under 30% of them alive ("scout says Caer Benowyc is
   wide open"). Checked every five minutes.
 
 A realm hears at most one rumour every 20 minutes, a monster at most every six hours, a keep at most every two.
