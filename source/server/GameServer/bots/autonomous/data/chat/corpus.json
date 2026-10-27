@@ -287190,9 +287190,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
-   "text": "i have begging on this corner since before you could walk. MINE",
-   "id": "411ae41fe3e5"
+   "weight": 0.1667,
+   "text": "i have been begging on this corner since before you could walk. MINE",
+   "id": "85ff6cb2fd22"
   },
   {
    "kind": "beggar",
@@ -287207,9 +287207,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
-   "text": "i have begging on this corner since before you could walk. my corner",
-   "id": "91611d719e68"
+   "weight": 0.1667,
+   "text": "i have been begging on this corner since before you could walk. my corner",
+   "id": "b1fbd166f570"
   },
   {
    "kind": "beggar",
@@ -287224,9 +287224,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
-   "text": "i have begging on this corner for years. MINE",
-   "id": "7a3d28178cd5"
+   "weight": 0.1667,
+   "text": "i have been begging on this corner for years. MINE",
+   "id": "8d5016245676"
   },
   {
    "kind": "beggar",
@@ -287241,9 +287241,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
-   "text": "i have begging on this corner for years. my corner",
-   "id": "b3fd309afe93"
+   "weight": 0.1667,
+   "text": "i have been begging on this corner for years. my corner",
+   "id": "810a773a6bef"
   },
   {
    "kind": "beggar",
@@ -287258,9 +287258,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
-   "text": "i have begging on this corner since the realm was young. MINE",
-   "id": "a69d594aa44d"
+   "weight": 0.1667,
+   "text": "i have been begging on this corner since the realm was young. MINE",
+   "id": "92ccfb7ff9ed"
   },
   {
    "kind": "beggar",
@@ -287275,9 +287275,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
-   "text": "i have begging on this corner since the realm was young. my corner",
-   "id": "9d33b3a89fe2"
+   "weight": 0.1667,
+   "text": "i have been begging on this corner since the realm was young. my corner",
+   "id": "cab632d3e817"
   },
   {
    "kind": "beggar",
@@ -287292,9 +287292,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
-   "text": "i have begging by {npc} since before you could walk. MINE",
-   "id": "3bdba45335e1"
+   "weight": 0.1667,
+   "text": "i have been begging by {npc} since before you could walk. MINE",
+   "id": "5818ed6ba6d7"
   },
   {
    "kind": "beggar",
@@ -287309,9 +287309,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
-   "text": "i have begging by {npc} since before you could walk. my corner",
-   "id": "3bd332e7eee0"
+   "weight": 0.1667,
+   "text": "i have been begging by {npc} since before you could walk. my corner",
+   "id": "2f632f0b4f63"
   },
   {
    "kind": "beggar",
@@ -287326,9 +287326,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
-   "text": "i have begging by {npc} for years. MINE",
-   "id": "03a07155a11e"
+   "weight": 0.1667,
+   "text": "i have been begging by {npc} for years. MINE",
+   "id": "7bb046301ab8"
   },
   {
    "kind": "beggar",
@@ -287343,9 +287343,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
-   "text": "i have begging by {npc} for years. my corner",
-   "id": "7fb8c2f8ea73"
+   "weight": 0.1667,
+   "text": "i have been begging by {npc} for years. my corner",
+   "id": "e4306c052d81"
   },
   {
    "kind": "beggar",
@@ -287360,9 +287360,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
-   "text": "i have begging by {npc} since the realm was young. MINE",
-   "id": "11f3c8add80d"
+   "weight": 0.1667,
+   "text": "i have been begging by {npc} since the realm was young. MINE",
+   "id": "169284ae5990"
   },
   {
    "kind": "beggar",
@@ -287377,9 +287377,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
-   "text": "i have begging by {npc} since the realm was young. my corner",
-   "id": "bdda31dfa735"
+   "weight": 0.1667,
+   "text": "i have been begging by {npc} since the realm was young. my corner",
+   "id": "c31ddc6a6bdb"
   },
   {
    "kind": "beggar",
@@ -287394,7 +287394,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
+   "weight": 0.1667,
    "text": "been begging on this corner since before you could walk. MINE",
    "id": "cdbf77f61488"
   },
@@ -287411,7 +287411,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
+   "weight": 0.1667,
    "text": "been begging on this corner since before you could walk. my corner",
    "id": "f2448dff7e41"
   },
@@ -287428,7 +287428,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
+   "weight": 0.1667,
    "text": "been begging on this corner for years. MINE",
    "id": "6aa0a8595670"
   },
@@ -287445,7 +287445,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
+   "weight": 0.1667,
    "text": "been begging on this corner for years. my corner",
    "id": "bfa7e7f9b69b"
   },
@@ -287462,7 +287462,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
+   "weight": 0.1667,
    "text": "been begging on this corner since the realm was young. MINE",
    "id": "94a51f9682e5"
   },
@@ -287479,7 +287479,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
+   "weight": 0.1667,
    "text": "been begging on this corner since the realm was young. my corner",
    "id": "0b554c8b4227"
   },
@@ -287496,7 +287496,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
+   "weight": 0.1667,
    "text": "been begging by {npc} since before you could walk. MINE",
    "id": "1f3aadb9e74e"
   },
@@ -287513,7 +287513,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
+   "weight": 0.1667,
    "text": "been begging by {npc} since before you could walk. my corner",
    "id": "5b2231cd5ef0"
   },
@@ -287530,7 +287530,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
+   "weight": 0.1667,
    "text": "been begging by {npc} for years. MINE",
    "id": "549ac72c245b"
   },
@@ -287547,7 +287547,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
+   "weight": 0.1667,
    "text": "been begging by {npc} for years. my corner",
    "id": "8b0e40b3648a"
   },
@@ -287564,7 +287564,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
+   "weight": 0.1667,
    "text": "been begging by {npc} since the realm was young. MINE",
    "id": "c47b39494e76"
   },
@@ -287581,9 +287581,213 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2041,
+   "weight": 0.1667,
    "text": "been begging by {npc} since the realm was young. my corner",
    "id": "07b8b34532c9"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "ive been begging on this corner since before you could walk. MINE",
+   "id": "7a366c070dea"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "ive been begging on this corner since before you could walk. my corner",
+   "id": "fd6ecf35856c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "ive been begging on this corner for years. MINE",
+   "id": "a4118e8c0802"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "ive been begging on this corner for years. my corner",
+   "id": "f709241709e3"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "ive been begging on this corner since the realm was young. MINE",
+   "id": "a63481899470"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "ive been begging on this corner since the realm was young. my corner",
+   "id": "e3f4464a1d7e"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "ive been begging by {npc} since before you could walk. MINE",
+   "id": "25ab8c24b95c"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "ive been begging by {npc} since before you could walk. my corner",
+   "id": "c9205fcb1a5b"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "ive been begging by {npc} for years. MINE",
+   "id": "27e9a905fe76"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "ive been begging by {npc} for years. my corner",
+   "id": "0655cd785c18"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "ive been begging by {npc} since the realm was young. MINE",
+   "id": "337b2475e542"
+  },
+  {
+   "kind": "beggar",
+   "topic": "corner",
+   "who": [],
+   "realm": "*",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1667,
+   "text": "ive been begging by {npc} since the realm was young. my corner",
+   "id": "f11cbb6fe432"
   },
   {
    "kind": "beggar",
