@@ -95,8 +95,10 @@ if ($Scenario -contains 'fresh') {
     Check (Test-Path (Join-Path ([Environment]::GetFolderPath('Programs')) 'Offline DAoC\Offline DAoC.lnk')) 'fresh: Start menu shortcut'
     $setupDir = Join-Path $root 'Offline DAoC setup files'
     Check (Test-Path (Join-Path $setupDir 'Get-OfflineDAoC.ps1')) 'fresh: the official downloader sits in the setup files folder'
-    Check ($r.Log -match 'STEP Done: Download Offline DAoC' -and $r.Log -match 'STEP Done: Update the game to') 'fresh: download and update steps reported done'
-    Check ($r.Log -match '\[ *(5\d|6\d|7\d)%\] Downloading Offline DAoC|\[ *\d+%\] Unpacking the game') 'fresh: progress was measured while downloading or unpacking'
+    # the steps were recognised from the downloader's own output, not only marked done at the end
+    Check ($r.Log -match '\] Downloading Offline DAoC \| [\d.]+ (MB|GB) of ') 'fresh: download progress measured in bytes'
+    Check ($r.Log -match '\] Unpacking the game \| [\d.]+ (MB|GB) of ') 'fresh: unpacking progress measured in bytes'
+    Check ($r.Log -match '\] Updating the game to ') 'fresh: the official update step recognised from its output'
 
     $r = Setup 'scan' @('--scan', '--game', $fresh)
     Check ($r.Log -match [regex]::Escape("GAME $fresh | $($base)b | LivingServer=ThisBuild")) 'scan: the game is found as this build'

@@ -49,8 +49,10 @@ def fetch_release(tag):
     dest.parent.mkdir(parents=True, exist_ok=True)
     if not dest.exists():
         print(f"Downloading {url}")
-        with urllib.request.urlopen(url) as r, open(dest, "wb") as f:
+        part = dest.with_suffix(".part")
+        with urllib.request.urlopen(url) as r, open(part, "wb") as f:
             shutil.copyfileobj(r, f)
+        part.replace(dest)   # only a complete download gets the real name
     return dest
 
 

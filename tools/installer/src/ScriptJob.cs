@@ -15,6 +15,7 @@ namespace LivingServerSetup
         public event Action<string, bool> Line;   // text, from stderr
         Process proc;
         public string LastError;                  // the script's own message from its last error record
+        bool sawRecord;
 
         public static string PowerShellPath
         {
@@ -99,12 +100,14 @@ namespace LivingServerSetup
             if (err && !CurlBar.IsMatch(line) && !line.StartsWith("#"))
             {
                 // PowerShell's error record: "<script> : <message>" then "At line:...", "+ ..." lines
+                // the error record's own line ("<script>.ps1 : message") wins over any other stderr text
                 var m = Regex.Match(line, @"^(?:.*\.ps1|Exception\S*|throw)\s*:\s*(.+)$");
-                if (m.Success && LastError == null) LastError = m.Groups[1].Value.Trim();
-                else if (LastError == null && !line.StartsWith("At ") && !line.StartsWith("+") && !line.StartsWith("    +")) LastError = line.Trim();
+                if (m.Success) { LastError = m.Groups[1].Value.Trim(); sawRecord = true; }
+                else if (!sawRecord && !line.StartsWith("At ") && !line.TrimStart().StartsWith("+")) LastError = line.Trim();
             }
             if (!(err && CurlBar.IsMatch(line))) Log.Write((err ? "! " : "  ") + line);
-            Line?.Invoke(line, err);
+            // a handler's mistake must never stop the reading: PowerShell would block on a full pipe for ever
+            try { Line?.Invoke(line, err); } catch (Exception e) { Log.Write("(output handler: " + e.Message + ")"); }
         }
 
         public void Kill()

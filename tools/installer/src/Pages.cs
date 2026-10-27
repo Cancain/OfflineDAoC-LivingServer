@@ -106,13 +106,17 @@ namespace LivingServerSetup
             var exeDir = Path.GetDirectoryName(Application.ExecutablePath);
             ThreadPool.QueueUserWorkItem(_ =>
             {
+                Manifests.TryRefresh();   // first: the new client's update fingerprint comes from it
                 var games = new List<GameInfo>();
                 try
                 {
-                    foreach (var p in GameScanner.FindGames(exeDir)) games.Add(GameScanner.Inspect(p));
+                    foreach (var p in GameScanner.FindGames(exeDir))
+                    {
+                        try { games.Add(GameScanner.Inspect(p)); }
+                        catch (Exception ex) { Log.Write("Couldn't read " + p + ": " + ex.Message); }
+                    }
                 }
                 catch (Exception ex) { Log.Write("Search: " + ex.Message); }
-                Manifests.TryRefresh();
                 try
                 {
                     BeginInvoke((Action)(() =>
@@ -128,7 +132,7 @@ namespace LivingServerSetup
         }
 
         static int Rank(GameInfo g) =>
-            g.IsBase && g.Ls != LsState.ThisBuild ? 4 : g.IsBase ? 3 : g.IsUpdatable ? 2 : 0;
+            g.IsBase && (g.Ls != LsState.ThisBuild || g.ClientBehind) ? 4 : g.IsBase ? 3 : g.IsUpdatable ? 2 : 0;
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -198,15 +202,22 @@ namespace LivingServerSetup
             {
                 switch (g.Ls)
                 {
+                    case LsState.None when g.ClientBehind:
+                    case LsState.OtherBuild when g.ClientBehind:
+                        c.Lines.Add(("Its new client missed the " + Payload.BaseRelease + " update: Setup applies the official client update, then adds " + dn + ".", Theme.GoldLight));
+                        c.Badge = "UPDATE"; c.BadgeColor = Theme.Warning; break;
                     case LsState.None:
                         c.Lines.Add(("Adds " + dn + ". Your characters, bots and settings stay.", Theme.Success));
                         c.Badge = "ADD LIVING SERVER"; c.BadgeColor = Theme.Success; break;
                     case LsState.OtherBuild:
                         c.Lines.Add(("Has " + Wizard.BuildLabel(g.LsBuild) + ". Setup upgrades it to " + dn + "; everything you have stays.", Theme.Success));
                         c.Badge = "UPGRADE"; c.BadgeColor = Theme.Success; break;
-                    case LsState.ThisBuild:
+                    case LsState.ThisBuild when !g.ClientBehind:
                         c.Lines.Add((dn + " is installed. Choose this to check it, add the new client, or remove Living Server.", Theme.Muted));
                         c.Badge = "UP TO DATE"; c.BadgeColor = Theme.Gold; break;
+                    case LsState.ThisBuild:
+                        c.Lines.Add((dn + " is installed, but the new client missed its " + Payload.BaseRelease + " update. Setup applies the official client update, then checks Living Server.", Theme.GoldLight));
+                        c.Badge = "UPDATE CLIENT"; c.BadgeColor = Theme.Warning; break;
                     default:
                         c.Lines.Add(("Its server files were changed by hand. Setup can replace them (they are backed up first).", Theme.Warning));
                         c.Badge = "CHANGED"; c.BadgeColor = Theme.Warning; break;
@@ -216,6 +227,7 @@ namespace LivingServerSetup
             {
                 c.Lines.Add(("Setup first updates it to " + Payload.BaseRelease + " with shadowofze's official update (characters, bots and settings stay), then adds Living Server.", Theme.GoldLight));
                 if (g.Ls == LsState.OtherBuild) c.Lines.Add(("Its " + Wizard.BuildLabel(g.LsBuild) + " build comes off for the update; Living Server replaces it.", Theme.Muted));
+                if (g.Ls == LsState.Modified || g.Ls == LsState.Unknown) c.Lines.Add(("Its server or launcher files were changed by hand: Setup asks before it replaces them.", Theme.Warning));
                 c.Badge = "UPDATE"; c.BadgeColor = Theme.Warning;
             }
             else
@@ -327,9 +339,9 @@ namespace LivingServerSetup
             }
             else
             {
-                Title = game.Ls == LsState.ThisBuild && game.IsBase ? "Living Server is already here" : game.IsBase ? "Add Living Server to your game" : "Update your game and add Living Server";
+                Title = game.Ls == LsState.ThisBuild && game.Ready ? "Living Server is already here" : game.IsBase ? "Add Living Server to your game" : "Update your game and add Living Server";
                 Subtitle = game.Title + "  ·  " + game.Path;
-                if (game.Ls == LsState.ThisBuild && game.IsBase)
+                if (game.Ls == LsState.ThisBuild && game.Ready)
                 {
                     keep = Toggle(new OptionToggle("Keep Living Server and check it",
                         "Checks every Living Server file and repairs anything missing. Nothing changes if all is well.", true, "act"), ref y, 486);
@@ -338,10 +350,10 @@ namespace LivingServerSetup
                     keep.Checked = true;
                     y += 10;
                 }
-                else if (!game.IsBase)
+                else if (!game.Ready)
                 {
-                    var note = "Offline DAoC " + game.Edition + " is updated to " + Payload.BaseRelease + " with shadowofze's official updater first. " +
-                               "It backs up everything it replaces, and your account, characters, bots and settings stay.";
+                    var note = (game.IsBase ? "The new client gets its " + Payload.BaseRelease + " update" : "Offline DAoC " + game.Edition + " is updated to " + Payload.BaseRelease) +
+                               " with shadowofze's official updater first. It backs up everything it replaces, and your account, characters, bots and settings stay.";
                     var lbl = Put(new NoteLabel(note), 40, y, 486, 52);
                     y += 62;
                 }
@@ -431,7 +443,8 @@ namespace LivingServerSetup
                 if (o.NewInstall) { dl = Manifests.BaseGame + Manifests.GamePatch + (o.NewClient ? Manifests.NewClient + Manifests.ClientPatch : 0); }
                 else if (!o.Remove)
                 {
-                    if (!game.IsBase) dl += Manifests.GamePatch + (game.NewClient ? Manifests.ClientPatch : 0);
+                    if (!game.IsBase) dl += Manifests.GamePatch;
+                    if (game.NewClient && (!game.IsBase || game.ClientBehind)) dl += Manifests.ClientPatch;
                     if (o.AddClient && !game.NewClient) dl += Manifests.NewClient + Manifests.ClientPatch;
                 }
                 download = dl > 0 ? Theme.Gb(dl) : "nothing";
@@ -453,7 +466,7 @@ namespace LivingServerSetup
                 download = need = free = "";
                 Next.Enabled = false;
             }
-            Next.Text = remove?.Checked == true ? "REMOVE" : keep?.Checked == true ? "CHECK" : game != null && !game.IsBase ? "UPDATE & INSTALL" : "INSTALL";
+            Next.Text = remove?.Checked == true ? "REMOVE" : keep?.Checked == true && client?.Checked != true ? "CHECK" : game != null && !game.Ready ? "UPDATE & INSTALL" : "INSTALL";
             Next.Width = Theme.S(Next.Text.Length > 8 ? 196 : 168);
             Next.Left = Theme.S(SetupForm.W - 40) - Next.Width;
             Back.Left = Next.Left - Theme.S(12) - Back.Width;
@@ -713,7 +726,7 @@ namespace LivingServerSetup
                 Title = r.Outcome == Outcome.Cancelled ? "Stopped" : "Setup didn't finish";
                 Subtitle = r.Outcome == Outcome.Cancelled ? "Nothing is lost: run it again to continue." : "Nothing is lost. Here's what happened.";
                 Next.Text = "TRY AGAIN";
-                Next.Click += (s, e) => form.Wizard.Install(Retry(o));
+                Next.Click += (s, e) => form.Wizard.Install(Retry(o, r));
                 Back.Visible = true;
                 Back.Text = "CLOSE";
                 Back.Click += (s, e) => form.Close();
@@ -721,13 +734,13 @@ namespace LivingServerSetup
                 if (r.CanForce)
                 {
                     var b = Put(new GoldButton("REPLACE ANYWAY", true) { Accent = Theme.Albion }, bx, by, 200, 42);
-                    b.Click += (s, e) => { var x = Retry(o); x.ForceLivingServer = true; form.Wizard.Install(x); };
+                    b.Click += (s, e) => { var x = Retry(o, r); x.ForceLivingServer = true; form.Wizard.Install(x); };
                     bx += 212;
                 }
                 if (r.CanFreshCopy)
                 {
                     var b = Put(new GoldButton("FRESH COPY + MY CHARACTERS", true), bx, by, 280, 42);
-                    b.Click += (s, e) => { var x = Retry(o); x.FreshCopyIfChanged = true; form.Wizard.Install(x); };
+                    b.Click += (s, e) => { var x = Retry(o, r); x.FreshCopyIfChanged = true; form.Wizard.Install(x); };
                     bx += 292;
                 }
                 Put(new GoldButton("SHOW LOG"), bx, by, 132, 42).Click += (s, e) => Program.Open(Log.FilePath);
@@ -743,10 +756,16 @@ namespace LivingServerSetup
             return Math.Min(Theme.S(300), Theme.S(20) + mh + Theme.S(12) + hh + Theme.S(46));
         }
 
-        static InstallOptions Retry(InstallOptions o)
+        /// <summary>The same choices again, aimed at where the game is now: a fresh copy made last time is the game from then on.</summary>
+        static InstallOptions Retry(InstallOptions o, InstallResult r)
         {
             var x = (InstallOptions)typeof(object).GetMethod("MemberwiseClone", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(o, null);
-            if (!x.NewInstall) x.Game = GameScanner.Inspect(x.Game.Path);
+            if (!x.NewInstall)
+            {
+                var path = r.GamePath != null && GameScanner.IsGame(r.GamePath) ? r.GamePath : x.Game.Path;
+                if (!string.Equals(path, x.Game.Path, StringComparison.OrdinalIgnoreCase)) x.FreshCopyIfChanged = false;
+                x.Game = GameScanner.Inspect(path);
+            }
             return x;
         }
 

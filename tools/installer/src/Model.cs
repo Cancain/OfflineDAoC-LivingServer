@@ -124,6 +124,7 @@ namespace LivingServerSetup
         public bool Classic;            // EDITION.txt: the edition without the Sluaghbinder
         public bool NewClient;          // new-client\VERSION.txt
         public bool Unfinished;         // a download or client install that didn't finish
+        public bool ClientBehind;       // the new client hasn't had this release's client update (a refused or failed one)
         public LsState Ls = LsState.Unknown;
         public string LsBuild;          // the fork build installed (Social Expansion / Living Server), if any
         public Dictionary<string, string> Manifest;
@@ -140,6 +141,8 @@ namespace LivingServerSetup
         public bool IsBase => Release == Payload.BaseRelease;
         /// <summary>The release the official update starts from (0.37's patch updates 0.36 / 0.36b / 0.36c).</summary>
         public bool IsUpdatable => Release != null && Manifests.UpdatableFrom.Contains(Release);
+        /// <summary>Living Server fits it as it is: this release, with its new client (if any) updated too.</summary>
+        public bool Ready => IsBase && !ClientBehind;
     }
 
     internal static class GameScanner
@@ -179,7 +182,7 @@ namespace LivingServerSetup
             foreach (var root in roots.Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 bool driveRoot = System.IO.Path.GetPathRoot(root).Equals(root, StringComparison.OrdinalIgnoreCase);
-                Walk(root, driveRoot ? 1 : 3, found, seen, ref budget, driveRoot);
+                Walk(root, driveRoot ? 2 : 3, found, seen, ref budget, driveRoot);
             }
             return found;
         }
@@ -245,6 +248,10 @@ namespace LivingServerSetup
             g.Classic = System.IO.File.Exists(System.IO.Path.Combine(g.Path, "EDITION.txt"));
             g.NewClient = System.IO.File.Exists(System.IO.Path.Combine(g.Path, "new-client", "VERSION.txt"));
             g.Unfinished = System.IO.File.Exists(System.IO.Path.Combine(g.Path, "new-client", "INSTALLING.txt"));
+            if (g.NewClient && g.Release != null && g.Release == Payload.BaseRelease)
+            {
+                try { g.ClientBehind = Hash.File(System.IO.Path.Combine(g.Path, "new-client", "VERSION.txt")) != Manifests.ClientIdentityTo; } catch { }
+            }
             try { InspectLivingServer(g); } catch { g.Ls = LsState.Unknown; }
             return g;
         }
@@ -306,6 +313,8 @@ namespace LivingServerSetup
         public static long NewClient = 29777878306;        // 0.36c, 19 parts
         public static long NewClientUnpacked = 33758711327;
         public static long ClientPatch = 1667048538;       // 0.37c client update, two parts
+        public static string NewInstallBase = "0.36b";
+        public static string ClientIdentityTo = "230e6013e920273c7a399b892b92ab91cfa1381e61e845cb8f89b1692b283244"; // new-client/VERSION.txt once updated
         public static int NewClientParts = 19;
         public static readonly Dictionary<string, long> ClientPartBytes = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
         public static bool Live;
@@ -319,7 +328,7 @@ namespace LivingServerSetup
                 var js = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
                 Dictionary<string, object> Fetch(string v)
                 {
-                    using (var wc = new WebClient())
+                    using (var wc = new QuickClient())
                     {
                         wc.Headers[HttpRequestHeader.UserAgent] = "OfflineDAoC-LivingServer-Setup";
                         var text = Encoding.UTF8.GetString(wc.DownloadData(Upstream + v + "/download-manifest.json")).TrimStart('\uFEFF');
@@ -336,6 +345,8 @@ namespace LivingServerSetup
                 UpdatableFrom.Clear();
                 foreach (var b in bases) UpdatableFrom.Add(b);
                 var nb = (string)patch["NewInstallBase"];          // e.g. 0.36b
+                NewInstallBase = nb;
+                if (cp.TryGetValue("Identity", out var idObj) && idObj is Dictionary<string, object> id && id.TryGetValue("To", out var to)) ClientIdentityTo = ((string)to).ToLowerInvariant();
                 BaseGame = Sum(Fetch(nb)["Parts"]);
                 var client = Fetch(Regex.Replace(nb, "[bc]$", "") + "c");
                 NewClient = Sum(client["Parts"]);
@@ -349,6 +360,18 @@ namespace LivingServerSetup
             {
                 Log.Write("Could not read the release manifests (" + e.Message + "); using the 0.37 sizes.");
             }
+        }
+    }
+
+    /// <summary>A WebClient that gives up after 10 seconds, so an offline PC isn't kept waiting.</summary>
+    internal sealed class QuickClient : WebClient
+    {
+        protected override WebRequest GetWebRequest(Uri address)
+        {
+            var r = base.GetWebRequest(address);
+            r.Timeout = 10000;
+            if (r is HttpWebRequest h) h.ReadWriteTimeout = 10000;
+            return r;
         }
     }
 

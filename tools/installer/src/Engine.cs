@@ -36,7 +36,7 @@ namespace LivingServerSetup
             }
         }
 
-        public bool NeedsUpstream => NewInstall || (!Remove && Game != null && (!Game.IsBase || (AddClient && !Game.NewClient)));
+        public bool NeedsUpstream => NewInstall || (!Remove && Game != null && (!Game.IsBase || Game.ClientBehind || (AddClient && !Game.NewClient)));
     }
 
     internal enum Outcome { Success, Failed, Cancelled }
@@ -134,10 +134,10 @@ namespace LivingServerSetup
                     Add(StepId.UpdateGame, "Update the game to " + Payload.BaseRelease, Manifests.GamePatch + 0.4 * GB, "the official update: your account, characters and bots stay");
                 if (o.AddClient && !o.Game.NewClient)
                     Add(StepId.Client, "Download and unpack the new client", Manifests.NewClient * 1.2, Theme.Gb(Manifests.NewClient) + ", in checked parts");
-                if (client && (!o.Game.IsBase || !o.Game.NewClient))
+                if (client && (!o.Game.IsBase || !o.Game.NewClient || o.Game.ClientBehind))
                     Add(StepId.UpdateClient, "Update the new client", Manifests.ClientPatch * 1.6, "the official update");
             }
-            if (!o.NewInstall && o.Game.IsBase && o.Game.Ls == LsState.ThisBuild && !o.NeedsUpstream)
+            if (!o.NewInstall && o.Game.Ready && o.Game.Ls == LsState.ThisBuild && !o.NeedsUpstream)
                 Add(StepId.LivingServer, "Check " + ls, 0.3 * GB, "every file compared with the package; anything missing is put back");
             else
                 Add(StepId.LivingServer, "Install " + ls, 0.5 * GB, "server, launcher tab and fixes; every file backed up first");
@@ -255,6 +255,10 @@ namespace LivingServerSetup
                 if (Find(StepId.Release) != null)
                 {
                     Activate(StepId.Release, "Putting the released server back for the official update...");
+                    if ((o.Game.Ls == LsState.Modified || o.Game.Ls == LsState.Unknown) && !o.ForceLivingServer)
+                        throw new StepFailed("This game's server or launcher files were changed by hand. To update it, Setup has to put the released ones back over them.",
+                            "Replace anyway keeps a copy of the current files first, in runtime\\server\\deployment-backups\\setup-before-update-<time>.") { CanForce = true };
+                    BackupBeforeRelease(gamePath);
                     previousBuild = o.Game.LsBuild;
                     RunPackageScript("rollback-server-build.ps1", "-GameFolder " + ScriptJob.Quote(gamePath) + " -ToRelease", r);
                     rolledBack = true;
@@ -309,7 +313,7 @@ namespace LivingServerSetup
                 r.CanFreshCopy = f.CanFreshCopy;
                 r.GamePath = gamePath;
                 MarkFailed();
-                if (r.Outcome == Outcome.Failed) RestoreAfterFailedUpdate(r);
+                RestoreAfterFailedUpdate(r);
                 Log.Write((r.Outcome == Outcome.Cancelled ? "CANCELLED: " : "FAILED: ") + r.Message);
                 return Result = r;
             }
@@ -329,6 +333,27 @@ namespace LivingServerSetup
                 watch?.Dispose();
                 Changed?.Invoke();
             }
+        }
+
+        /// <summary>Copies the server and launcher files as they are now, before the released ones go back over them.</summary>
+        static void BackupBeforeRelease(string game)
+        {
+            var dest = Path.Combine(game, "runtime", "server", "deployment-backups", "setup-before-update-" + DateTime.Now.ToString("yyyyMMdd-HHmmss"));
+            var files = new List<string>();
+            foreach (var f in new[] { @"runtime\server", @"runtime\server\lib", @"runtime\server\win-x64" })
+                foreach (var n in new[] { "GameServer.dll", "GameServer.pdb" }) files.Add(Path.Combine(f, n));
+            foreach (var f in new[] { "runtime", @"new-client\runtime" })
+                foreach (var n in new[] { "OfflineDAoC.dll", "OfflineDAoC.exe", "OfflineDAoC.pdb", "OfflineDAoC.deps.json", "OfflineDAoC.runtimeconfig.json" }) files.Add(Path.Combine(f, n));
+            foreach (var rel in files)
+            {
+                var src = Path.Combine(game, rel);
+                if (!File.Exists(src)) continue;
+                var to = Path.Combine(dest, rel);
+                Directory.CreateDirectory(Path.GetDirectoryName(to));
+                File.Copy(src, to, true);
+                if (Hash.File(to) != Hash.File(src)) throw new IOException("The copy of " + rel + " before the update failed verification.");
+            }
+            Log.Write("Kept a copy of the current server and launcher files in " + dest);
         }
 
         void MarkFailed()
@@ -360,6 +385,9 @@ namespace LivingServerSetup
                 var pf = new[] { Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), Environment.GetFolderPath(Environment.SpecialFolder.Windows) };
                 if (pf.Any(p => !string.IsNullOrEmpty(p) && dest.StartsWith(p.TrimEnd('\\') + "\\", StringComparison.OrdinalIgnoreCase)))
                     throw new StepFailed("The game can't live under Program Files or Windows: it saves your world in its own folder.", "Choose a folder like C:\\Games\\OfflineDAoC.");
+                if (GameScanner.IsGame(dest) && GameScanner.Inspect(dest).IsBase && MarkerExists(dest))
+                    throw new StepFailed("Offline DAoC " + GameScanner.Inspect(dest).Edition + " is already installed in " + dest + ".",
+                        "Go back and choose that game on the first page to add Living Server to it, or choose a new folder for a second game.");
                 if (Directory.Exists(dest) && Directory.EnumerateFileSystemEntries(dest).Any() && !ResumableNewInstall(dest))
                     throw new StepFailed("The folder " + dest + " already has files in it, and they aren't an unfinished Offline DAoC install.", "Choose a new folder: Setup never installs over files it didn't put there.");
             }
@@ -378,14 +406,16 @@ namespace LivingServerSetup
         }
 
         /// <summary>A folder this Setup (or the official downloader) began and didn't finish: the downloader continues it.</summary>
-        bool ResumableNewInstall(string dest)
+        bool ResumableNewInstall(string dest) => MarkerExists(dest) || File.Exists(Path.Combine(dest, "new-client", ".install", "base.done"));
+
+        /// <summary>The downloader's "base game finished" marker for this folder (written once the base install is done).</summary>
+        bool MarkerExists(string dest)
         {
             var cache = Path.Combine(setupDir, ".downloads");
             if (!Directory.Exists(cache)) return false;
             var key = System.Security.Cryptography.SHA256.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(dest.ToLowerInvariant()));
             var marker = "base-installed-" + BitConverter.ToString(key).Replace("-", "").Substring(0, 16) + ".txt";
-            return Directory.EnumerateFiles(cache, marker, SearchOption.AllDirectories).Any()
-                || File.Exists(Path.Combine(dest, "new-client", ".install", "base.done"));
+            return Directory.EnumerateFiles(cache, marker, SearchOption.AllDirectories).Any();
         }
 
         public long NeededBytes()
@@ -401,10 +431,11 @@ namespace LivingServerSetup
             else
             {
                 if (!o.Game.IsBase) need += 3L << 30;
+                if (o.FreshCopyIfChanged) need += (long)(Manifests.BaseGame * 3.3) + (o.Game.NewClient ? Manifests.NewClientUnpacked + (4L << 30) : 0);
                 if (o.AddClient && !o.Game.NewClient) need += Manifests.NewClientUnpacked + (4L << 30);
                 need += 512L << 20;
             }
-            bool clientUpdate = o.NewInstall ? o.NewClient : (o.Game.NewClient && !o.Game.IsBase) || (o.AddClient && !o.Game.NewClient);
+            bool clientUpdate = o.NewInstall ? o.NewClient : (o.Game.NewClient && (!o.Game.IsBase || o.Game.ClientBehind)) || (o.AddClient && !o.Game.NewClient);
             if (clientUpdate) need += Manifests.ClientPatch * 3;
             return need;
         }
@@ -416,59 +447,80 @@ namespace LivingServerSetup
             var script = Payload.ExtractDownloader(setupDir);
             bool client = o.NewInstall ? o.NewClient : (o.Game.NewClient || o.AddClient);
             string release = Payload.BaseRelease + (client ? "c" : (o.NewInstall && o.Classic) || (!o.NewInstall && o.Game.Classic) ? "" : "b");
-            string args = "-ReleaseVersion " + release;
+            string local = string.IsNullOrEmpty(o.LocalAssets) ? "" : " -LocalAssets " + ScriptJob.Quote(o.LocalAssets);
+            var runs = new List<string>();
             if (o.NewInstall)
             {
-                args += " -Destination " + ScriptJob.Quote(gamePath);
-                if (client && o.Classic) args += " -Classic";
+                // A new install with the new client downloads the client inside its first step, and the downloader only
+                // marks the base game finished after it. If that step was stopped part-way, finish it with the client
+                // release itself (it continues part by part), then update the game like an existing one.
+                if (client && Directory.Exists(gamePath) && File.Exists(Path.Combine(gamePath, "new-client", ".install", "base.done")) && !MarkerExists(gamePath))
+                {
+                    Log.Write("Continuing the new client's install in " + gamePath);
+                    var baseC = Regex.Replace(Manifests.NewInstallBase, "[bc]$", "") + "c";
+                    runs.Add("-ReleaseVersion " + baseC + " -Destination " + ScriptJob.Quote(gamePath) + (o.Classic ? " -Classic" : "") + local);
+                    runs.Add("-ReleaseVersion " + release + " -Update " + ScriptJob.Quote(gamePath) + " -IfChanged no -AddClient no" + local);
+                }
+                else runs.Add("-ReleaseVersion " + release + " -Destination " + ScriptJob.Quote(gamePath) + (client && o.Classic ? " -Classic" : "") + local);
             }
             else
             {
-                args += " -Update " + ScriptJob.Quote(gamePath) + " -IfChanged " + (o.FreshCopyIfChanged ? "yes" : "no") + " -AddClient " + (o.AddClient ? "yes" : "no");
+                runs.Add("-ReleaseVersion " + release + " -Update " + ScriptJob.Quote(gamePath) + " -IfChanged " + (o.FreshCopyIfChanged ? "yes" : "no") + " -AddClient " + (o.AddClient ? "yes" : "no") + local);
                 if (o.FreshCopyIfChanged)
                 {
                     var fresh = Find(StepId.UpdateGame);
                     if (fresh != null) fresh.Item.Title = "Install a fresh copy and bring your characters over";
                 }
             }
-            if (!string.IsNullOrEmpty(o.LocalAssets)) args += " -LocalAssets " + ScriptJob.Quote(o.LocalAssets);
 
             watch = new DownloadWatch(Path.Combine(setupDir, ".downloads"), gamePath, this);
-            var job = new ScriptJob();
-            string freshFolder = null;
-            bool filesChanged = false;
-            upstreamRunning = true;
-            job.Line += (line, err) =>
-            {
-                if (err) return;
-                OnUpstreamLine(line);
-                var m = Regex.Match(line, @"^Done\. Your game is now in (.+), with your progress\.");
-                if (m.Success) freshFolder = m.Groups[1].Value.Trim();
-                if (line.StartsWith("Some game files in that folder were changed")) filesChanged = true;
-            };
             watch.Start();
-            int code;
-            try { code = job.Run(script, args, cts.Token); }
-            finally { watch.Stop(); upstreamRunning = false; Recompute(); }
-            if (cts.IsCancellationRequested) throw new StepFailed("Stopped.");
-            if (code != 0)
+            upstreamRunning = true;
+            string freshFolder = null;
+            try
             {
-                var msg = job.LastError ?? "The official downloader stopped with code " + code + ".";
-                var f = new StepFailed(msg, "Finished downloads are kept: click Try again and it continues where it stopped.");
-                if (filesChanged)
+                foreach (var args in runs)
                 {
-                    f.CanFreshCopy = true;
-                    f.Hint = "Some of the game's own files were changed by hand, so the official update can't apply to this folder. " +
-                             "Setup can install a fresh copy next to it and bring your account, characters, items and bots over (your old folder isn't changed).";
+                    var job = new ScriptJob();
+                    bool filesChanged = false;
+                    job.Line += (line, err) =>
+                    {
+                        if (err) return;
+                        OnUpstreamLine(line);
+                        var m = Regex.Match(line, @"^Done\. Your game is now in (.+), with your progress\.");
+                        if (m.Success) freshFolder = m.Groups[1].Value.Trim();
+                        if (line.StartsWith("Some game files in that folder were changed")) filesChanged = true;
+                    };
+                    int code = job.Run(script, args, cts.Token);
+                    if (cts.IsCancellationRequested) throw new StepFailed("Stopped.");
+                    if (code != 0)
+                    {
+                        var msg = job.LastError ?? "The official downloader stopped with code " + code + ".";
+                        var f = new StepFailed(msg, "Finished downloads are kept: click Try again and it continues where it stopped.");
+                        if (filesChanged)
+                        {
+                            f.CanFreshCopy = true;
+                            f.Hint = "Some of the game's own files were changed by hand, so the official update can't apply to this folder. " +
+                                     "Setup can install a fresh copy next to it and bring your account, characters, items and bots over.";
+                        }
+                        throw f;
+                    }
                 }
-                throw f;
             }
+            finally { watch.Stop(); upstreamRunning = false; Recompute(); }
+
             if (freshFolder != null)
             {
                 Log.Write("The game now lives in " + freshFolder);
+                // the old folder had its build taken off for the update: put it back there, and carry on in the new one
+                if (rolledBack)
+                {
+                    var note = RestorePrevious(gamePath);
+                    if (note != null) Log.Write(note);
+                }
+                rolledBack = false;
                 gamePath = freshFolder;
                 r.GamePath = freshFolder;
-                rolledBack = false; // the old folder keeps its own state
             }
             foreach (var s in steps.Where(s => IsScriptStep(s.Id) && s.Item.State != StepState.Done))
             { s.Item.State = StepState.Done; s.Fraction = 1; }
@@ -565,9 +617,9 @@ namespace LivingServerSetup
                         try { len = new FileInfo(f).Length; } catch { continue; }
                         if (Regex.IsMatch(name, @"^OfflineDAoC-v[\d.]+b?\.zip\.\d{3}$")) baseBytes += Max(f, len);
                         else if (Regex.IsMatch(name, @"^OfflineDAoC-v[\d.]+b?\.zip$")) joined = len;
-                        else if (Regex.IsMatch(name, @"-part\d+\.zip$") && name.Contains("client-patch")) cpatchBytes += Max(f, len);
+                        else if (name.Contains("client-patch") && name.EndsWith(".zip")) cpatchBytes += Max(f, len);
                         else if (Regex.IsMatch(name, @"^OfflineDAoC-v[\d.]+c-part\d+\.zip$")) clientBytes += Max(f, len);
-                        else if (name.EndsWith("game-patch.zip")) patchBytes += Max(f, len);
+                        else if (name.Contains("game-patch") && name.EndsWith(".zip")) patchBytes += Max(f, len);
                     }
                 }
                 // client parts are deleted once unpacked: count what was seen, and parts finished before this run
@@ -600,7 +652,8 @@ namespace LivingServerSetup
                 {
                     e.Progress(StepId.DownloadGame, baseBytes / (double)Manifests.BaseGame);
                     e.SetStatus("Downloading Offline DAoC", Line(baseBytes, Manifests.BaseGame, rate));
-                    if (baseBytes >= Manifests.BaseGame) { e.Set(StepId.DownloadGame, StepState.Done); e.Activate(StepId.UnpackGame, "Unpacking the game..."); }
+                    // the joined archive appearing means every part is in: unpacking has begun, even if the sizes were stale
+                    if (baseBytes >= Manifests.BaseGame || joined > 0) { e.Set(StepId.DownloadGame, StepState.Done); e.Activate(StepId.UnpackGame, "Unpacking the game..."); }
                 }
                 var up = e.Find(StepId.UnpackGame);
                 if (up != null && up.Item.State == StepState.Active)
@@ -698,8 +751,10 @@ namespace LivingServerSetup
             Log.Write("Living Server package unpacked to " + dir);
             var job = new ScriptJob();
             string refusal = null, partWay = null, lastGreen = null;
+            int extra = 0;
             job.Line += (line, err) =>
             {
+                if (refusal != null && extra < 6 && line.StartsWith("  ")) { refusal += "\n" + line.Trim(); extra++; }
                 var m = Regex.Match(line, @"NOTHING WAS CHANGED:\s*(.+)$");
                 if (m.Success) refusal = m.Groups[1].Value.Trim();
                 m = Regex.Match(line, @"(?:ROLLBACK|RESTORE) STOPPED PART-WAY:\s*(.+)$");
@@ -714,7 +769,7 @@ namespace LivingServerSetup
                 if (refusal != null)
                 {
                     var f = new StepFailed(refusal);
-                    if (refusal.Contains("-Force"))
+                    if (refusal.Contains("-Force") && !o.ForceLivingServer)
                     {
                         f.CanForce = true;
                         f.Hint = "Setup can replace them anyway: the files there now are backed up first, and ROLLBACK.cmd in the " + Payload.RootFolder + " folder puts them back.";
@@ -727,38 +782,48 @@ namespace LivingServerSetup
             if (lastGreen != null) Log.Write(lastGreen);
         }
 
-        /// <summary>After a failed official update the game is unchanged (the patcher puts everything back), but the
-        /// released server was put back for it: reinstall what was there.</summary>
+        /// <summary>After a failed or stopped official update the game is unchanged (the patcher puts everything back),
+        /// but the released server was put back for it: reinstall what was there.</summary>
         void RestoreAfterFailedUpdate(InstallResult r)
         {
             if (!rolledBack) return;
+            var note = RestorePrevious(gamePath);
+            r.Message += " " + (note ?? "Your game is unchanged, but its released server is in place now: run Setup again to add Living Server.");
+        }
+
+        /// <summary>Puts the build that was installed before back into a folder. Returns a sentence for the player, or null.</summary>
+        string RestorePrevious(string folder)
+        {
             try
             {
-                var g = GameScanner.Inspect(gamePath);
-                if (g.IsBase)
+                var g = GameScanner.Inspect(folder);
+                var dummy = new InstallResult();
+                if (g.Ready)
                 {
-                    Log.Write("Putting Living Server back after the failed update...");
-                    RunPackageScript("install-server-build.ps1", "-GameFolder " + ScriptJob.Quote(gamePath), r);
-                    r.Message += " Living Server is installed again, as before.";
-                    return;
+                    Log.Write("Putting Living Server back in " + folder + "...");
+                    var saved = gamePath; gamePath = folder;
+                    try { RunPackageScript("install-server-build.ps1", "-GameFolder " + ScriptJob.Quote(folder), dummy); }
+                    finally { gamePath = saved; }
+                    return "Living Server " + Payload.DisplayName + " is installed in " + folder + " again.";
                 }
-                foreach (var info in Directory.GetFiles(gamePath, "BUILD-INFO.txt", SearchOption.TopDirectoryOnly).Concat(
-                             Directory.GetDirectories(gamePath).SelectMany(d => Directory.GetFiles(d, "BUILD-INFO.txt"))))
+                if (previousBuild == null) return null;
+                foreach (var info in Directory.GetDirectories(folder).Select(d => Path.Combine(d, "BUILD-INFO.txt")).Where(File.Exists))
                 {
-                    var text = File.ReadAllText(info);
-                    if (previousBuild != null && Regex.IsMatch(text, @"(?m)^BuildName=" + Regex.Escape(previousBuild) + @"\s*$"))
-                    {
-                        var installer = Path.Combine(Path.GetDirectoryName(info), "install-server-build.ps1");
-                        if (!File.Exists(installer)) break;
-                        Log.Write("Putting " + previousBuild + " back after the failed update...");
-                        var code = new ScriptJob().Run(installer, "-GameFolder " + ScriptJob.Quote(gamePath), CancellationToken.None);
-                        if (code == 0) { r.Message += " Your " + previousBuild + " build is installed again, as before."; return; }
-                    }
+                    if (!Regex.IsMatch(File.ReadAllText(info), @"(?m)^BuildName=" + Regex.Escape(previousBuild) + @"\s*$")) continue;
+                    var installer = Path.Combine(Path.GetDirectoryName(info), "install-server-build.ps1");
+                    if (!File.Exists(installer)) break;
+                    Log.Write("Putting " + previousBuild + " back in " + folder + "...");
+                    if (new ScriptJob().Run(installer, "-GameFolder " + ScriptJob.Quote(folder), CancellationToken.None) == 0)
+                        return "Your " + Wizard.BuildLabel(previousBuild) + " build is back in " + folder + ", as before.";
+                    break;
                 }
-                if (previousBuild != null)
-                    r.Message += " Your game is unchanged, but its released server is in place now: the " + previousBuild + " build is off until you install it again.";
+                return "In " + folder + " the released server is in place now: " + Wizard.BuildLabel(previousBuild) + " is off until it's installed again.";
             }
-            catch (Exception e) { Log.Write("Restore after the failed update: " + e.Message); }
+            catch (Exception e)
+            {
+                Log.Write("Restoring the earlier build: " + e.Message);
+                return "Putting the earlier build back didn't work (" + e.Message + "): run Setup again.";
+            }
         }
 
         // ---------------------------------------------------------------- the rest
