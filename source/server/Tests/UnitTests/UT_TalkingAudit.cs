@@ -178,6 +178,10 @@ namespace DOL.GS.Tests
             foreach (string line in new[] { "lfg later", "ill buy later", "finally im off work", "night raids on emain are the best" })
                 Assert.That(AutonomousChatIntentModel.Predict(line), Is.Not.EqualTo(eAutonomousChatIntent.Farewell), line);
             Assert.That(AutonomousChatIntentModel.Predict("ty for the rez, gotta run back to camp"), Is.EqualTo(eAutonomousChatIntent.Thanks));
+            // In-game check 2026-10-27: thanks with a real question after it is answered as the question, not "anytime".
+            Assert.That(AutonomousChatIntentModel.Predict("thanks! how many are there, should I bring my cleric?"), Is.Not.EqualTo(eAutonomousChatIntent.Thanks));
+            Assert.That(AutonomousChatIntentModel.Predict("ty, any more?"), Is.EqualTo(eAutonomousChatIntent.Thanks));
+            Assert.That(AutonomousChatIntentModel.Predict("thanks for the rez!"), Is.EqualTo(eAutonomousChatIntent.Thanks));
             foreach (string line in new[] { "pushing the 40s finally", "keep the mobs on me", "heading for our guild house" })
                 Assert.That(AutonomousChatIntentModel.Predict(line), Is.Not.EqualTo(eAutonomousChatIntent.Alarm), line);
             Assert.That(AutonomousChatIntentModel.Predict("mids pushing our keep"), Is.EqualTo(eAutonomousChatIntent.Alarm));

@@ -610,6 +610,11 @@ public static class AutonomousChatShortTalk
         if (thanks && !question && !HasPhrase(words, "back to", "run back", "go back", "run to") && HasPhrase(words, "gotta log", "got to log", "gotta go", "got to go", "logging off", "logging out", "gotta run",
                 "heading to bed", "off to bed", "going to bed", "calling it", "night all", "gn all", "gnight"))
             return Is(eAutonomousChatIntent.Farewell, out intent);
+        // "thanks! how many are there, should I bring my cleric?": thanks with a real question after it asks about what the bot
+        // just said; "anytime" ignored it and a guess read it as class talk (in-game check 2026-10-27). It is left unread, so a
+        // question gets an honest answer or a "not sure". A short "ty, any more?" stays thanks.
+        if (thanks && question && words.Count(word => !ThanksWords.Contains(word)) >= 5)
+            return Is(eAutonomousChatIntent.Unknown, out intent);
         if (thanks)
             return Is(eAutonomousChatIntent.Thanks, out intent);
 
