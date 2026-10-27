@@ -113,6 +113,19 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void NonHealersQueueOnlyWhileHealersCanCarryThem()
+        {
+            Assert.That(AutonomousGroupSupply.RoomForNonHealer(0, 0), Is.True, "a queue can start before a healer comes");
+            Assert.That(AutonomousGroupSupply.RoomForNonHealer(0, AutonomousGroupSupply.Slack), Is.False);
+            Assert.That(AutonomousGroupSupply.RoomForNonHealer(2, 14), Is.True);
+            Assert.That(AutonomousGroupSupply.RoomForNonHealer(2, 15), Is.False, "two healers carry ten others plus the slack");
+            Assert.That(AutonomousGroupSupply.Bucket(50), Is.EqualTo(50));
+            Assert.That(AutonomousGroupSupply.Bucket(49), Is.EqualTo(40));
+            Assert.That(AutonomousGroupSupply.Bucket(7), Is.EqualTo(0));
+            Assert.That(AutonomousGroupSupply.ShouldQueue(null), Is.True);
+        }
+
+        [Test]
         public void BondTalkRestsPerRealmAndTopic()
         {
             long now = 1_000_000_000_000;

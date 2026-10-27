@@ -1633,6 +1633,8 @@ public static partial class AutonomousBotGroupCoordinator
             .GroupBy(bot => bot.Realm)
             .ToDictionary(group => group.Key, group => group.Count());
 
+        if (objectiveKind == eAutonomousObjectiveKind.GroupPve)
+            AutonomousGroupSupply.Update(activeRoster.Where(bot => bot.Group == null && !AutonomousRealmRaid.IsReserved(bot)));
         GameBot[] available = activeRoster
             .Where(bot => bot.IsAlive && !bot.IsTemporaryGroupHelper && !bot.IsPlayerLedGroup && bot.Group == null && bot.CurrentRegion != null &&
                           !AutonomousRealmRaid.IsReserved(bot) &&

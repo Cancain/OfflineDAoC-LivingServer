@@ -542,6 +542,18 @@ public static class AutonomousObjectiveAssignments
         // Recovery and task-boundary callers cannot reintroduce a disabled goal.
         if (AutonomousBotGoalPolicy.IsConfigured && !forcedRaid)
             kind = AutonomousBotGoalPolicy.EnsureAllowed(bot.Level, kind);
+        // No healer free for the queue at this level: solo instead of a 20-minute wait that ends solo anyway (AutonomousGroupSupply).
+        if (kind == eAutonomousObjectiveKind.GroupPve && !forcedRaid && !AutonomousGroupSupply.ShouldQueue(bot))
+        {
+            eAutonomousObjectiveKind solo = AutonomousBotGoalPolicy.IsConfigured
+                ? AutonomousBotGoalPolicy.EnsureAllowed(bot.Level, eAutonomousObjectiveKind.SoloPve) : eAutonomousObjectiveKind.SoloPve;
+            if (solo != eAutonomousObjectiveKind.GroupPve)
+            {
+                kind = solo;
+                DOL.Logging.LoggerManager.Create(typeof(AutonomousObjectiveAssignments)).Debug(
+                    $"AUTONOMOUS_GROUP_HEALER_SHORT bot=\"{bot.Name}\" realm={GlobalConstants.RealmToName(bot.Realm)} level={bot.Level} assigned={kind}");
+            }
+        }
         OfflineWorldBotRecord record = bot.PersistentRecord;
         // eRealm.Albion and _FirstPlayerRealm share a value; ToString() labelled Albion assignments "_firstplayerrealm-...".
         string assignment = $"{GlobalConstants.RealmToName(bucket.Realm).ToLowerInvariant()}-{bucket.Band}-{epoch}-{kind}";
