@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Numerics;
 using System.Reflection;
 using DOL.Database;
@@ -187,10 +188,11 @@ namespace DOL.AI.Brain
         public static bool RetainCommittedDungeonPull(bool alive, bool sameRegion, bool inAggro,
             long now, long until) => alive && sameRegion && inAggro && now < until;
 
-        private bool HasCommittedDungeonPull => _committedDungeonPull != null &&
-            RetainCommittedDungeonPull(_committedDungeonPull.IsAlive,
-                _committedDungeonPull.CurrentRegion == Body.CurrentRegion,
-                AggroList.ContainsKey(_committedDungeonPull), GameLoop.GameLoopTime, _committedDungeonPullUntil);
+        // Read once: ClearAggroList can null the field between a check and a use (NullReferenceException in
+        // BotState_Aggro.Think, 2026-10-27, docs/LOG-ERROR-BACKLOG.md).
+        private bool HasCommittedDungeonPull => _committedDungeonPull is { } pull &&
+            RetainCommittedDungeonPull(pull.IsAlive, pull.CurrentRegion == Body.CurrentRegion,
+                AggroList.ContainsKey(pull), GameLoop.GameLoopTime, _committedDungeonPullUntil);
 
         public virtual void AddToAggroList(GameLiving living, long aggroAmount)
         {
@@ -777,12 +779,13 @@ namespace DOL.AI.Brain
         {
             get
             {
-                if (_orderedPullTarget?.IsAlive == true &&
-                    _orderedPullTarget.ObjectState is GameObject.eObjectState.Active &&
-                    CanAggroTarget(_orderedPullTarget))
-                    return _orderedPullTarget;
+                // Read once, as HasCommittedDungeonPull; clear it only if nobody set a new target meanwhile.
+                GameLiving target = _orderedPullTarget;
+                if (target?.IsAlive == true && target.ObjectState is GameObject.eObjectState.Active && CanAggroTarget(target))
+                    return target;
 
-                _orderedPullTarget = null;
+                if (target != null)
+                    Interlocked.CompareExchange(ref _orderedPullTarget, null, target);
                 return null;
             }
         }
