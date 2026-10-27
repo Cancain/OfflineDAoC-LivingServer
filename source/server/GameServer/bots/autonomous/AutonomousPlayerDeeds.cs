@@ -238,7 +238,11 @@ public static class AutonomousPlayerDeeds
                               player.GetNPCsInRadius(2_000).OfType<GameBot>().Count(bot => bot.Realm == killer.Realm && bot.IsAlive) : 0;
         Kind kind = Death(noKiller, monster, monster ? player.GetConLevel(killer) : 0, enemy, enemies);
         if (kind == Kind.None)
+        {
+            // Why a death was no deed, for in-game checks (2026-10-27: a death to three enemy bots left no trace).
+            Log.Debug($"PLAYER_DEED_SKIP player=\"{player.Name}\" death killer=\"{killer?.Name}\" enemies={enemies} con={(monster ? player.GetConLevel(killer) : 0)}");
             return;
+        }
         Record(player, row =>
         {
             if (kind == Kind.Ganked)
@@ -258,7 +262,10 @@ public static class AutonomousPlayerDeeds
         GameBot witness = WitnessOf(player, where);
         // Only what a bot saw counts: an unseen deed (an enemy kill too) never becomes reputation.
         if (witness == null)
+        {
+            Log.Debug($"PLAYER_DEED_SKIP player=\"{player.Name}\" kind={kind} reason=no_witness");
             return;
+        }
         OfflinePlayerReputationRecord row = Reputations.Change(KeyOf(player.Realm, player.Name),
             () => new OfflinePlayerReputationRecord { PlayerKey = KeyOf(player.Realm, player.Name), PlayerName = player.Name, Realm = (int)player.Realm },
             row =>
