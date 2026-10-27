@@ -121,6 +121,7 @@ namespace DOL.GS.Tests
             ["sold"] = ["npc", "hoard", "coin", "item"],
             ["listed"] = ["npc", "hoard", "coin", "item"],
             ["tell"] = ["player", "player_class", "npc", "hoard"],
+            ["tell_group"] = ["player", "player_class", "npc", "hoard"],
             ["outraged"] = ["player", "player_class", "npc", "hoard"],
             ["heard"] = ["player", "player_class", "npc", "hoard"],
             ["insult"] = ["player", "player_class", "npc", "hoard"],
