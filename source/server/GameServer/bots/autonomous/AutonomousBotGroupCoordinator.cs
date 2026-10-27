@@ -1507,8 +1507,21 @@ public static partial class AutonomousBotGroupCoordinator
                 if (!session.ProcessingAttendanceRemovals && !session.Ending &&
                     session.ObjectiveKind == eAutonomousObjectiveKind.GroupPve)
                 {
-                    FinishGroupTask(session, $"{bot.Name} left the locked PvE party");
-                    return;
+                    // A member who leaves (most often to answer a real player's /invite) no longer ends the party for
+                    // everyone: in game 2026-10-27 one friar joining Claudecheck ended a five-bot party 57 minutes before
+                    // its time. The rest carry on, as after a no-show, while they still have a tank, a healer and a hitter.
+                    session.PveRoles.Remove(MemberKey(bot));
+                    GameBot[] stayed = BotMembers(group);
+                    if (!HasViablePveComposition(session, stayed))
+                    {
+                        FinishGroupTask(session, $"{bot.Name} left the locked PvE party and no viable core roster remained");
+                        return;
+                    }
+                    if (session.Puller == bot)
+                        session.Puller = ChooseLockedPvePuller(session, stayed);
+                    session.PreferredLevelBonus = RollPreferredLevelBonus(stayed.Length) - session.WipePenalty;
+                    Log.Warn($"AUTONOMOUS_GROUP_PARTIAL_ROSTER group={session.Id} removed=\"{bot.Name}\" " +
+                             $"remaining={stayed.Length} reason=left action=continue");
                 }
                 if (!session.ProcessingAttendanceRemovals && BotMembers(group).Length < 2)
                     FinishGroupTask(session, "A member left and fewer than two active bots remain");

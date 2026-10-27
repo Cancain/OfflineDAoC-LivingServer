@@ -155814,10 +155814,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion pays back the keep grinding, one bubble at a time",
-   "id": "81d02351558d"
+   "text": "albion rewards the steady grinders, one bubble at a time",
+   "id": "859c36e17ae8"
   },
   {
    "kind": "ambient",
@@ -155834,10 +155834,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion pays back the keep pulling, each bubble at a time",
-   "id": "69ec3922427c"
+   "text": "albion rewards the steady grinders, one level at a time",
+   "id": "ea9baafd5d1f"
   },
   {
    "kind": "ambient",
@@ -155854,10 +155854,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion pays back the keep pulling, each level at a time",
-   "id": "0bb343718888"
+   "text": "albion rewards those who keep pulling, one bubble at a time",
+   "id": "69c0fd87a749"
   },
   {
    "kind": "ambient",
@@ -155874,10 +155874,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion pays back those who keep pulling, each level at a time",
-   "id": "2535d77debda"
+   "text": "albion rewards those who keep pulling, one level at a time",
+   "id": "ed8a0d8a23fa"
   },
   {
    "kind": "ambient",
@@ -155894,7 +155894,87 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
+   "invites": "chat",
+   "text": "albion rewards those who grind, one bubble at a time",
+   "id": "0cd83c42b330"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "alb",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2041,
+   "invites": "chat",
+   "text": "albion rewards those who grind, one level at a time",
+   "id": "3be8e219e53b"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "alb",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2041,
+   "invites": "chat",
+   "text": "albion pays back the steady grinders, one bubble at a time",
+   "id": "4a9565a36344"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "alb",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2041,
+   "invites": "chat",
+   "text": "albion pays back the steady grinders, one level at a time",
+   "id": "35bd512953e5"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "alb",
+   "class": [],
+   "levels": [
+    1,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.2041,
    "invites": "chat",
    "text": "albion pays back those who keep pulling, one bubble at a time",
    "id": "79cc195e136d"
@@ -155914,10 +155994,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion pays back those who steady grinding, each bubble at a time",
-   "id": "e5042fcee1bc"
+   "text": "albion pays back those who keep pulling, one level at a time",
+   "id": "17e8105e4327"
   },
   {
    "kind": "ambient",
@@ -155934,10 +156014,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion pays back those who steady pulling, one bubble after another",
-   "id": "6aa243ba101a"
+   "text": "albion pays back those who grind, one bubble at a time",
+   "id": "f39ad82143e6"
   },
   {
    "kind": "ambient",
@@ -155954,10 +156034,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion rewards the keep grinding, each bubble at a time",
-   "id": "50debd1707b2"
+   "text": "albion pays back those who grind, one level at a time",
+   "id": "c1f834bc9302"
   },
   {
    "kind": "ambient",
@@ -155974,10 +156054,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion rewards the keep pulling, one level after another",
-   "id": "a51797046fc8"
+   "text": "our realm rewards the steady grinders, one bubble at a time",
+   "id": "36b30286dd93"
   },
   {
    "kind": "ambient",
@@ -155994,10 +156074,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion rewards the keep pulling, one level at a time",
-   "id": "28f17f27558a"
+   "text": "our realm rewards the steady grinders, one level at a time",
+   "id": "3e745038f872"
   },
   {
    "kind": "ambient",
@@ -156014,10 +156094,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion rewards the steady grinding, one bubble after another",
-   "id": "4fe81db07149"
+   "text": "our realm rewards those who keep pulling, one bubble at a time",
+   "id": "e2e17dda0ddf"
   },
   {
    "kind": "ambient",
@@ -156034,10 +156114,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion rewards the steady grinding, one level after another",
-   "id": "c68dc7c67242"
+   "text": "our realm rewards those who keep pulling, one level at a time",
+   "id": "f43a8144fbc5"
   },
   {
    "kind": "ambient",
@@ -156054,10 +156134,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion rewards the steady grinding, one level at a time",
-   "id": "0b713d3b7cdb"
+   "text": "our realm rewards those who grind, one bubble at a time",
+   "id": "8918f911b6e5"
   },
   {
    "kind": "ambient",
@@ -156074,10 +156154,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion rewards the steady pulling, each bubble at a time",
-   "id": "5e79c15f90a8"
+   "text": "our realm rewards those who grind, one level at a time",
+   "id": "333eea358646"
   },
   {
    "kind": "ambient",
@@ -156094,10 +156174,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion rewards the steady pulling, one bubble after another",
-   "id": "122b1aff3003"
+   "text": "our realm pays back the steady grinders, one bubble at a time",
+   "id": "14ec70aa280c"
   },
   {
    "kind": "ambient",
@@ -156114,10 +156194,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "albion rewards the steady pulling, one level at a time",
-   "id": "a644072a4907"
+   "text": "our realm pays back the steady grinders, one level at a time",
+   "id": "ac73e4f586a0"
   },
   {
    "kind": "ambient",
@@ -156134,207 +156214,7 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "albion rewards those who keep grinding, each level at a time",
-   "id": "4f66f2c673a4"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "albion rewards those who keep pulling, each level after another",
-   "id": "1933b310fe80"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "albion rewards those who steady grinding, each bubble after another",
-   "id": "0b3704130462"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "albion rewards those who steady grinding, each level at a time",
-   "id": "bae694c52f2b"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm pays back the keep grinding, one bubble after another",
-   "id": "1f71067e8f27"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm pays back the keep grinding, one level at a time",
-   "id": "edd8df6e0b3e"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm pays back the steady grinding, each bubble at a time",
-   "id": "f60b74f514e6"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm pays back the steady grinding, one bubble at a time",
-   "id": "48c197e6dc2c"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm pays back the steady pulling, one bubble at a time",
-   "id": "756768f469ba"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm pays back those who keep grinding, one level at a time",
-   "id": "7d8bf7039d5c"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
    "text": "our realm pays back those who keep pulling, one bubble at a time",
    "id": "bed71e61b0d9"
@@ -156354,10 +156234,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "our realm pays back those who steady grinding, one bubble at a time",
-   "id": "4980841a5c31"
+   "text": "our realm pays back those who keep pulling, one level at a time",
+   "id": "7c7de69ef008"
   },
   {
    "kind": "ambient",
@@ -156374,10 +156254,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "our realm pays back those who steady pulling, each bubble after another",
-   "id": "593f5832a175"
+   "text": "our realm pays back those who grind, one bubble at a time",
+   "id": "15faef097b13"
   },
   {
    "kind": "ambient",
@@ -156394,370 +156274,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.2041,
    "invites": "chat",
-   "text": "our realm pays back those who steady pulling, each bubble at a time",
-   "id": "100f2c1c0615"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm pays back those who steady pulling, each level after another",
-   "id": "9be0b0ef98fb"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm pays back those who steady pulling, one level after another",
-   "id": "c9ccc4b8f069"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm pays back those who steady pulling, one level at a time",
-   "id": "ecbbf1370fbe"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards the keep grinding, each bubble at a time",
-   "id": "42ef9ff2c743"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards the keep grinding, one bubble at a time",
-   "id": "7eff4c6fe52d"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards the keep grinding, one level at a time",
-   "id": "deb21db4c6d3"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards the keep pulling, each bubble at a time",
-   "id": "868d4e17e465"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards the steady grinding, each bubble at a time",
-   "id": "8b8bf8fc3f95"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards the steady pulling, each bubble at a time",
-   "id": "f5d705fea867"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards those who keep grinding, one level after another",
-   "id": "af58db5dd34a"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards those who keep pulling, each bubble after another",
-   "id": "b367b88a13e8"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards those who keep pulling, one bubble after another",
-   "id": "c78b4ae05f51"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards those who steady grinding, each bubble at a time",
-   "id": "7f143406f63f"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards those who steady grinding, one bubble at a time",
-   "id": "1fa3c13f09eb"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards those who steady grinding, one level at a time",
-   "id": "854807eb4670"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards those who steady pulling, each level at a time",
-   "id": "a3043bb6a3d8"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards those who steady pulling, one bubble at a time",
-   "id": "036bb171ae32"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "alb",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "our realm rewards those who steady pulling, one level at a time",
-   "id": "066079228fa2"
+   "text": "our realm pays back those who grind, one level at a time",
+   "id": "80e01546c856"
   },
   {
    "kind": "ambient",
@@ -183192,8 +182712,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "hibernia pays the patient grind, just keep pulling",
-   "id": "816fc9717ebf"
+   "text": "hibernia rewards the patient hunter, keep pulling",
+   "id": "3d362699f303"
   },
   {
    "kind": "ambient",
@@ -183212,8 +182732,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "hibernia pays the patient hunter, keep pulling",
-   "id": "cae0c368346e"
+   "text": "hibernia rewards the patient hunter, keep going",
+   "id": "18c48cb50605"
   },
   {
    "kind": "ambient",
@@ -183232,188 +182752,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "hibernia pays the patient ones, keep going",
-   "id": "054d7609046c"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "hibernia pays the steady ones, keep going",
-   "id": "05e4a579ce00"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "hibernia pays those who patient grind, keep going",
-   "id": "8f11070b7e65"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "hibernia pays those who patient hunter, just keep going",
-   "id": "78f784ca0724"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "hibernia pays those who patient ones, keep pulling",
-   "id": "474ad4c88fb1"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "hibernia pays those who steady grind, just keep going",
-   "id": "e2d47a7ab6a8"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "hibernia pays those who steady hunter, keep going",
-   "id": "62b84745c0ea"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "hibernia pays those who steady ones, keep going",
-   "id": "756d80d4d451"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "hibernia pays those who steady ones, keep pulling",
-   "id": "26ceae6fd31e"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "hibernia rewards the patient grind, just keep going",
-   "id": "dc5d277cfb5c"
+   "text": "hibernia rewards the patient hunter, just keep pulling",
+   "id": "68842401c713"
   },
   {
    "kind": "ambient",
@@ -183452,8 +182792,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "hibernia rewards the steady grind, just keep pulling",
-   "id": "682ea9f91fbe"
+   "text": "hibernia rewards the steady ones, keep pulling",
+   "id": "80071c88650f"
   },
   {
    "kind": "ambient",
@@ -183472,48 +182812,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "hibernia rewards the steady hunter, just keep going",
-   "id": "7aa47f9ac3b3"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "hibernia rewards the steady hunter, keep pulling",
-   "id": "283d8b11babe"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "hibernia rewards the steady ones, just keep going",
-   "id": "4623d7f19f1e"
+   "text": "hibernia rewards the steady ones, keep going",
+   "id": "0c95636ba647"
   },
   {
    "kind": "ambient",
@@ -183552,8 +182852,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "hibernia rewards those who patient grind, just keep pulling",
-   "id": "bd49c31e169b"
+   "text": "hibernia rewards the steady ones, just keep going",
+   "id": "4623d7f19f1e"
   },
   {
    "kind": "ambient",
@@ -183572,8 +182872,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "hibernia rewards those who patient hunter, just keep going",
-   "id": "2ea9cfb52c41"
+   "text": "hibernia rewards those who grind, keep pulling",
+   "id": "3f00a3f8ba16"
   },
   {
    "kind": "ambient",
@@ -183592,8 +182892,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "hibernia rewards those who steady grind, just keep going",
-   "id": "6501a7225f24"
+   "text": "hibernia rewards those who grind, keep going",
+   "id": "07a4b1d18eda"
   },
   {
    "kind": "ambient",
@@ -183612,8 +182912,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "hibernia rewards those who steady grind, keep going",
-   "id": "09f22ea26e16"
+   "text": "hibernia rewards those who grind, just keep pulling",
+   "id": "fa7e5f08232c"
   },
   {
    "kind": "ambient",
@@ -183632,8 +182932,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "hibernia rewards those who steady hunter, just keep going",
-   "id": "7ed2eed642f0"
+   "text": "hibernia rewards those who grind, just keep going",
+   "id": "a4a84953410d"
   },
   {
    "kind": "ambient",
@@ -183652,8 +182952,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "hibernia rewards those who steady hunter, keep pulling",
-   "id": "491212b2a383"
+   "text": "hibernia pays the patient hunter, keep pulling",
+   "id": "cae0c368346e"
   },
   {
    "kind": "ambient",
@@ -183672,8 +182972,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "hibernia rewards those who steady ones, just keep going",
-   "id": "c4f1d48ca7fe"
+   "text": "hibernia pays the patient hunter, keep going",
+   "id": "0f0f83220606"
   },
   {
    "kind": "ambient",
@@ -183692,8 +182992,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays the patient grind, keep going",
-   "id": "55f21d91a5fd"
+   "text": "hibernia pays the patient hunter, just keep pulling",
+   "id": "ed56340c785e"
   },
   {
    "kind": "ambient",
@@ -183712,8 +183012,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays the patient grind, keep pulling",
-   "id": "f7b0846019ff"
+   "text": "hibernia pays the patient hunter, just keep going",
+   "id": "6bd045fbac7f"
   },
   {
    "kind": "ambient",
@@ -183732,8 +183032,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays the patient hunter, just keep pulling",
-   "id": "fe08be107998"
+   "text": "hibernia pays the steady ones, keep pulling",
+   "id": "61a256b19bbd"
   },
   {
    "kind": "ambient",
@@ -183752,8 +183052,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays the patient ones, keep going",
-   "id": "f7e2bd85ecbf"
+   "text": "hibernia pays the steady ones, keep going",
+   "id": "05e4a579ce00"
   },
   {
    "kind": "ambient",
@@ -183772,8 +183072,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays the steady hunter, just keep going",
-   "id": "bec1ba087c9f"
+   "text": "hibernia pays the steady ones, just keep pulling",
+   "id": "bc21d00581e7"
   },
   {
    "kind": "ambient",
@@ -183792,8 +183092,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays the steady hunter, just keep pulling",
-   "id": "f1734d9d2582"
+   "text": "hibernia pays the steady ones, just keep going",
+   "id": "3c871ba3342f"
   },
   {
    "kind": "ambient",
@@ -183812,8 +183112,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays those who patient grind, just keep pulling",
-   "id": "1cece5bca3c2"
+   "text": "hibernia pays those who grind, keep pulling",
+   "id": "0edf2032b7d0"
   },
   {
    "kind": "ambient",
@@ -183832,8 +183132,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays those who patient grind, keep pulling",
-   "id": "eca94523f217"
+   "text": "hibernia pays those who grind, keep going",
+   "id": "863d4cc2aeab"
   },
   {
    "kind": "ambient",
@@ -183852,8 +183152,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays those who patient hunter, just keep going",
-   "id": "bb76ec7adad3"
+   "text": "hibernia pays those who grind, just keep pulling",
+   "id": "b894280d74fa"
   },
   {
    "kind": "ambient",
@@ -183872,8 +183172,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays those who patient hunter, keep pulling",
-   "id": "3cd1e277974a"
+   "text": "hibernia pays those who grind, just keep going",
+   "id": "824e9eeaa0bb"
   },
   {
    "kind": "ambient",
@@ -183892,8 +183192,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays those who patient ones, just keep going",
-   "id": "ede12970457a"
+   "text": "this realm rewards the patient hunter, keep pulling",
+   "id": "4bb6b8c298da"
   },
   {
    "kind": "ambient",
@@ -183912,8 +183212,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays those who steady grind, just keep pulling",
-   "id": "7cebaa95a6ea"
+   "text": "this realm rewards the patient hunter, keep going",
+   "id": "7ff1ab4df6d6"
   },
   {
    "kind": "ambient",
@@ -183932,8 +183232,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays those who steady hunter, just keep pulling",
-   "id": "4ced32584989"
+   "text": "this realm rewards the patient hunter, just keep pulling",
+   "id": "40578dfff0f4"
   },
   {
    "kind": "ambient",
@@ -183952,8 +183252,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm pays those who steady ones, just keep pulling",
-   "id": "c18a974ac9b2"
+   "text": "this realm rewards the patient hunter, just keep going",
+   "id": "119cab8e2ab5"
   },
   {
    "kind": "ambient",
@@ -183972,68 +183272,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm rewards the steady hunter, just keep going",
-   "id": "7db7e7d2c01f"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "this realm rewards the steady hunter, just keep pulling",
-   "id": "2e1d7caf119d"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "this realm rewards the steady ones, just keep going",
-   "id": "5e516d311065"
-  },
-  {
-   "kind": "ambient",
-   "topic": "general",
-   "who": [
-    "Leveler"
-   ],
-   "realm": "hib",
-   "class": [],
-   "levels": [
-    20,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "chat",
-   "text": "this realm rewards the steady ones, just keep pulling",
-   "id": "18c63db62e30"
+   "text": "this realm rewards the steady ones, keep pulling",
+   "id": "60a0332cdee2"
   },
   {
    "kind": "ambient",
@@ -184072,8 +183312,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm rewards those who patient hunter, just keep pulling",
-   "id": "ef62627508fe"
+   "text": "this realm rewards the steady ones, just keep pulling",
+   "id": "18c63db62e30"
   },
   {
    "kind": "ambient",
@@ -184092,8 +183332,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm rewards those who steady grind, just keep going",
-   "id": "af61073c8065"
+   "text": "this realm rewards the steady ones, just keep going",
+   "id": "5e516d311065"
   },
   {
    "kind": "ambient",
@@ -184112,8 +183352,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm rewards those who steady grind, just keep pulling",
-   "id": "05930f991a03"
+   "text": "this realm rewards those who grind, keep pulling",
+   "id": "eff83be716c9"
   },
   {
    "kind": "ambient",
@@ -184132,8 +183372,288 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "chat",
-   "text": "this realm rewards those who steady ones, keep going",
-   "id": "48a9109aea72"
+   "text": "this realm rewards those who grind, keep going",
+   "id": "4421eb2c82fb"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm rewards those who grind, just keep pulling",
+   "id": "b7e683fcc06a"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm rewards those who grind, just keep going",
+   "id": "bef8ddad67a5"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm pays the patient hunter, keep pulling",
+   "id": "1117494c059a"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm pays the patient hunter, keep going",
+   "id": "36d1459c5ce1"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm pays the patient hunter, just keep pulling",
+   "id": "fe08be107998"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm pays the patient hunter, just keep going",
+   "id": "dc2547f12da5"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm pays the steady ones, keep pulling",
+   "id": "b596fba88949"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm pays the steady ones, keep going",
+   "id": "62bf743d54a5"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm pays the steady ones, just keep pulling",
+   "id": "474c44de5fd9"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm pays the steady ones, just keep going",
+   "id": "11a1c4425552"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm pays those who grind, keep pulling",
+   "id": "e49b919653da"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm pays those who grind, keep going",
+   "id": "3017e12a6061"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm pays those who grind, just keep pulling",
+   "id": "baa0a53faf98"
+  },
+  {
+   "kind": "ambient",
+   "topic": "general",
+   "who": [
+    "Leveler"
+   ],
+   "realm": "hib",
+   "class": [],
+   "levels": [
+    20,
+    50
+   ],
+   "needs": [],
+   "intent": "",
+   "mood": "",
+   "weight": 0.1443,
+   "invites": "chat",
+   "text": "this realm pays those who grind, just keep going",
+   "id": "cd6876c48ddd"
   },
   {
    "kind": "ambient",
@@ -276823,9 +276343,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "heal this, {player}. oh wait, you cant",
-   "id": "8c6aedbf78ad"
+   "weight": 0.2887,
+   "text": "pay this corner, {player}. oh wait, you cant",
+   "id": "0fda408369f3"
   },
   {
    "kind": "beggar",
@@ -276840,9 +276360,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "heal this, {player}. oh wait, you need coin for that",
-   "id": "498d2a9df4e7"
+   "weight": 0.2887,
+   "text": "pay this corner, {player}. oh wait, you need coin for that",
+   "id": "6b22fd5acc73"
   },
   {
    "kind": "beggar",
@@ -276857,9 +276377,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "heal this, {player}. oh wait, you begged for it",
-   "id": "2deaeac7e249"
+   "weight": 0.2887,
+   "text": "pay this corner, {player}. oh wait, you begged for it",
+   "id": "04bcc3356f80"
   },
   {
    "kind": "beggar",
@@ -276874,9 +276394,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "heal this, {player}. oh right, you cant",
-   "id": "a4edb042c044"
+   "weight": 0.2887,
+   "text": "pay this corner, {player}. oh right, you cant",
+   "id": "e6f1e7994927"
   },
   {
    "kind": "beggar",
@@ -276891,9 +276411,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "heal this, {player}. oh right, you need coin for that",
-   "id": "bd401fbb1b39"
+   "weight": 0.2887,
+   "text": "pay this corner, {player}. oh right, you need coin for that",
+   "id": "c08c7a14b150"
   },
   {
    "kind": "beggar",
@@ -276908,9 +276428,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "heal this, {player}. oh right, you begged for it",
-   "id": "644f1b2c51e9"
+   "weight": 0.2887,
+   "text": "pay this corner, {player}. oh right, you begged for it",
+   "id": "1666aac0714b"
   },
   {
    "kind": "beggar",
@@ -276925,9 +276445,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "buff this, {player}. oh wait, you cant",
-   "id": "186e18bfde7d"
+   "weight": 0.2887,
+   "text": "tip this corner, {player}. oh wait, you cant",
+   "id": "0956b30c6337"
   },
   {
    "kind": "beggar",
@@ -276942,9 +276462,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "buff this, {player}. oh wait, you need coin for that",
-   "id": "c27489f9ec7b"
+   "weight": 0.2887,
+   "text": "tip this corner, {player}. oh wait, you need coin for that",
+   "id": "bf581c2b8760"
   },
   {
    "kind": "beggar",
@@ -276959,9 +276479,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "buff this, {player}. oh wait, you begged for it",
-   "id": "ec77d9aad57c"
+   "weight": 0.2887,
+   "text": "tip this corner, {player}. oh wait, you begged for it",
+   "id": "03134a71b2b8"
   },
   {
    "kind": "beggar",
@@ -276976,9 +276496,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "buff this, {player}. oh right, you cant",
-   "id": "92a73e4c1899"
+   "weight": 0.2887,
+   "text": "tip this corner, {player}. oh right, you cant",
+   "id": "706db542489e"
   },
   {
    "kind": "beggar",
@@ -276993,9 +276513,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "buff this, {player}. oh right, you need coin for that",
-   "id": "ab95ec6c4fcb"
+   "weight": 0.2887,
+   "text": "tip this corner, {player}. oh right, you need coin for that",
+   "id": "90f678ef6aa4"
   },
   {
    "kind": "beggar",
@@ -277010,111 +276530,9 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2357,
-   "text": "buff this, {player}. oh right, you begged for it",
-   "id": "fb69fe843967"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "mez this, {player}. oh wait, you cant",
-   "id": "f0384b1ad7c3"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "mez this, {player}. oh wait, you need coin for that",
-   "id": "ff36c87d80df"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "mez this, {player}. oh wait, you begged for it",
-   "id": "ca68b408e202"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "mez this, {player}. oh right, you cant",
-   "id": "cb24c8548147"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "mez this, {player}. oh right, you need coin for that",
-   "id": "3440f1c42aaa"
-  },
-  {
-   "kind": "beggar",
-   "topic": "insult",
-   "who": [],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.2357,
-   "text": "mez this, {player}. oh right, you begged for it",
-   "id": "663c2df17db3"
+   "weight": 0.2887,
+   "text": "tip this corner, {player}. oh right, you begged for it",
+   "id": "685c47352c4d"
   },
   {
    "kind": "beggar",

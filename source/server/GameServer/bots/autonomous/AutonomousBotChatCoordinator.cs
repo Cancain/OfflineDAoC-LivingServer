@@ -1067,7 +1067,10 @@ public static class AutonomousBotChatCoordinator
             string role = AutonomousChatShortTalk.NeededRole(message);
             int level = AutonomousChatLiveAnswers.LevelAsked(message, player.Level);
             GameBot[] fitting = eligible.Where(bot => Math.Abs(bot.Level - level) <= 6 && FillsRole(bot, role)).ToArray();
-            eligible = fitting;
+            // Free bots offer first ("friar here, invite me"): in game 2026-10-27 a friar busy in a five-bot party offered,
+            // and answering the invite pulled it out of that party.
+            GameBot[] free = fitting.Where(bot => bot.Group == null).ToArray();
+            eligible = free.Length > 0 ? free : fitting;
         }
         else if (voices && intent == eAutonomousChatIntent.Congrats)
             // "gz" is for whoever just levelled: only that bot says "ty" (a random bot thanking you would be odd).
