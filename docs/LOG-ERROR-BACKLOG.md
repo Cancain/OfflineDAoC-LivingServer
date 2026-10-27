@@ -50,6 +50,20 @@ cleared only if it hasn't changed (`Interlocked.CompareExchange`). Watch the nex
 
 ### Duplicate merchant page/slot
 
+**Status: fixed in code 2026-10-27, not yet deployed.** The fix is in the server, not the data: `MerchantTradeItems.Layout`
+lays each list out once and caches it for five minutes. The rules:
+
+- Rows are read in a stable order.
+- A copy of an item already in the list is dropped.
+- A different item in a taken slot moves to the first free slot from its own page on.
+
+The window, buying (`GetItem`) and `GetAllItems` all use that one layout, and GM `/merchant articles` edits clear the
+cache. One `MERCHANT_LIST_TIDIED` info line per list replaces the error spam.
+
+On the owner's world data: 51 lists, 1,818 copies dropped, 118 items moved to free slots (they could be hidden before),
+none without room, and every item still shown. No database rows change, so there's no world update to ship. The data could
+still be cleaned in a later release world.
+
 - **Seen:** 361 lines today, 2,076 on 2026-10-22, so this predates the Living Server work. Logged when a merchant list
   loads during play:
   `two merchant items on same page/slot: listID=HibWeaponMerchant5 page=2 slot=6..9`
