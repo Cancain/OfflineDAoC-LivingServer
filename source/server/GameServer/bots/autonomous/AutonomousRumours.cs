@@ -72,8 +72,11 @@ public static class AutonomousRumours
             eRealm realm = AutonomousWorldBotController.ProtectedRealm(npc.CurrentRegionID, zone.ID);
             if (realm == eRealm.None)
                 realm = AutonomousWorldBotController.ProtectedRealm(npc.CurrentRegionID, ushort.MaxValue);
-            if (realm is not (eRealm.Albion or eRealm.Midgard or eRealm.Hibernia) ||
-                !ClientService.Instance.GetPlayersOfRealm(realm).Any(player => Cares(player.Level, npc.Level)))
+            bool cares = (realm is eRealm.Albion or eRealm.Midgard or eRealm.Hibernia) &&
+                         ClientService.Instance.GetPlayersOfRealm(realm).Any(player => Cares(player.Level, npc.Level));
+            // For in-game checks (2026-10-27: a day without a named rumour): every rare named respawn and whether anyone cares.
+            Log.Debug($"RUMOUR_NAMED_CHECK target=\"{npc.Name}\" level={npc.Level} zone=\"{zone.Description}\" lands={realm} caring_player={cares}");
+            if (!cares)
                 return;
             long spawned = npc.SpawnTick;
             string key = $"named:{npc.InternalID ?? npc.Name}";
