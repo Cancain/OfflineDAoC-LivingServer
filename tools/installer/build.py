@@ -89,12 +89,13 @@ def main():
     shutil.copyfile(package, PAYLOAD / "LivingServer.zip")
     print(f"Package: {package.name}  build {info['BuildName']} for Offline DAoC {info['BaseRelease']}  sha256 {sha256(package)}")
 
-    downloader = ROOT / "Get-OfflineDAoC.ps1"
-    got = sha256(downloader)
+    # Compared and embedded with LF line ends, as upstream publishes it: a Windows checkout turns them into CRLF.
+    data = (ROOT / "Get-OfflineDAoC.ps1").read_bytes().replace(b"\r\n", b"\n")
+    got = hashlib.sha256(data).hexdigest()
     if got != DOWNLOADER_SHA256:
         sys.exit(f"Get-OfflineDAoC.ps1 is not the pinned upstream downloader (sha256 {got}). "
                  "If shadowofze released a new one, check it and update DOWNLOADER_SHA256.")
-    shutil.copyfile(downloader, PAYLOAD / "Get-OfflineDAoC.ps1")
+    (PAYLOAD / "Get-OfflineDAoC.ps1").write_bytes(data)
     print(f"Downloader: Get-OfflineDAoC.ps1  sha256 {got} (pinned)")
     if a.no_build:
         return
