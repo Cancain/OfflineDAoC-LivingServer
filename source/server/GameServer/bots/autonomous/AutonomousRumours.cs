@@ -126,6 +126,9 @@ public static class AutonomousRumours
                 // new level are taken out of the world (not dead), so they are not missing defenders.
                 GameKeepGuard[] guards = keep.Guards.Values.Where(guard => guard.ObjectState == GameObject.eObjectState.Active || guard.IsRespawning).ToArray();
                 int alive = guards.Count(guard => guard.IsAlive);
+                // For in-game checks: how close a keep comes to "wide open" (2026-10-27: a day of sieges and no keep rumour).
+                if (guards.Length >= MinimumGuards && alive < guards.Length * 0.6)
+                    Log.Debug($"RUMOUR_KEEP_CHECK hearer={GlobalConstants.RealmToName(realm)} keep=\"{keep.Name}\" guards={alive}/{guards.Length}");
                 string key = $"keep:{keep.KeepID}";
                 if (!IsThin(guards.Length, alive) || !AboutIsFresh(key, KeepRest, now))
                     continue;
