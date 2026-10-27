@@ -105,6 +105,35 @@ thread. If the file stays locked, a one-line warning replaces the stack trace.
 - **Still open:** the server could ignore a second world-init for a player who is already entering, instead of failing
   and dropping the client.
 
+### PvE matchmaking: most waits run out
+
+**Status: changed in code 2026-10-27 (commit 290a5e9), not yet deployed or measured in game.**
+
+- **Seen (11:17-16:06, build a058136):**
+  - 153 PvE parties formed, and 790 waits ran out after 20 minutes.
+  - Of the timeouts, 447 were below level 50, mostly levels 16-30, and 343 were level 50s.
+  - Parties by realm: Albion 64, Hibernia 46, Midgard 43.
+  - Level 50 timeouts by realm: Hibernia 183, Albion 104, Midgard 56.
+- **Causes found in the code:**
+  - Formation took only bots that weren't fighting, and a waiting bot grinds.
+  - Recruits had to be within 8 minutes of the leader, and that never relaxed.
+  - Leaders were a 60% random draw, not the longest waits first.
+  - A party needed 5 members.
+- **Changed:**
+  - mid-fight recruits
+  - patience that widens travel to 11 and then 14 minutes and allows four-man parties after 12 minutes
+  - the longest waits lead first
+  - bots remember each other (see [LIVING-SERVER.md](LIVING-SERVER.md))
+- **Realm gap, not changed (owner decision):**
+  - Albion has three tank classes and three healer classes, and the Paladin counts as both. Midgard and Hibernia have two
+    of each.
+  - Level 50 healers in the 08:49 roster: Albion 96, Midgard 74, Hibernia 53.
+  - The Bard heals in DAoC but isn't a healer in matchmaking. The bots' Bard specs put 16-33 points in Regrowth and its
+    brain doesn't act as a healer, so making it one needs the spec and the AI changed too.
+- **Next run, compare:** PvE `AUTONOMOUS_GROUP_FORMED` per hour by realm,
+  `AUTONOMOUS_GROUP_MATCHMAKING_TIMEOUT` per hour by level, `leaderWaitedSeconds`, no-shows, and four-man parties
+  (`size=4`). The before numbers came from a log script kept outside the repository.
+
 ## Priority 3: errors at every startup (world data)
 
 These print at each server start (counts are about 4x the per-start number). They predate this work. None stops the
