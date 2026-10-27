@@ -450,10 +450,14 @@ public static class AutonomousBotChatCoordinator
         // Asking anyone for gold or items marks the player for the beggars (AutonomousBeggars).
         AutonomousBeggars.OnPlayerAsked(player, message, "faction");
         // Naming one side of a running storyline episode takes that side (AutonomousBotStorylines).
-        AutonomousBotStorylines.OnPlayerFactionChat(player, message);
+        bool tookSide = AutonomousBotStorylines.OnPlayerFactionChat(player, message);
         AutonomousBotDebates.PlayerSpoke(player.Realm, player);
         lock (Sync)
             LastPlayerFactionLine[player.Realm] = GameLoop.GameLoopTime;
+        // A side taken after an episode is answered by the storyline's own tells; a generic reply from the one named read
+        // as a non-sequitur (in-game check 2026-10-27: "Aineella that was a ninja loot" drew "Coruscating Mine has been good").
+        if (tookSide && !AutonomousBotDebates.IsRunning(player.Realm))
+            return;
         if (AutonomousBotGuildSocial.TryAnswerGuildRequest(player, message, true))
             return;
         if (TryThreadReply(player, message, AutonomousChatThreads.Faction(player.Realm), ThreadScope.Faction))

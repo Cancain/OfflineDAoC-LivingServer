@@ -159,8 +159,17 @@ public static class AutonomousBotStorylines
         if (string.IsNullOrWhiteSpace(message) || string.IsNullOrEmpty(nameA) || string.IsNullOrEmpty(nameB))
             return null;
         bool a = Names(message, nameA), b = Names(message, nameB);
-        if (a == b)
+        if (!a && !b)
             return null;
+        if (a && b)
+        {
+            // Both named: read it clause by clause ("Ysalith you ninja looted that rare, Wileralhelm is right" backs A, in-game
+            // check 2026-10-27). A side counts when the clauses that name one of them agree.
+            string[] sides = Regex.Split(message, @"[,.;!?]+|\b(?:and|but)\b", RegexOptions.IgnoreCase)
+                .Where(clause => Names(clause, nameA) != Names(clause, nameB))
+                .Select(clause => SideOf(clause, nameA, nameB)).Distinct().ToArray();
+            return sides.Length == 1 ? sides[0] : null;
+        }
         bool blame = Against.IsMatch(message) && !For.IsMatch(message);
         return a ? blame ? "B" : "A" : blame ? "A" : "B";
     }
@@ -316,22 +325,22 @@ public static class AutonomousBotStorylines
     /// protagonist takes a side. The latest side counts. The first time, the one backed thanks them by tell and the other
     /// tells them off.
     /// </summary>
-    public static void OnPlayerFactionChat(GamePlayer player, string message)
+    public static bool OnPlayerFactionChat(GamePlayer player, string message)
     {
         if (!On || player == null)
-            return;
+            return false;
         (string StoryKey, long BotA, long BotB) story;
         if (AutonomousBotDebates.RunningStory(player.Realm) is { } running)
             story = running;
         else if (LastEpisode.TryGetValue(player.Realm, out var last) && DateTime.UtcNow - last.EndedUtc <= SideWindow)
             story = (last.StoryKey, last.BotA, last.BotB);
         else
-            return;
+            return false;
         if (!AutonomousBotRegistry.TryGet(story.BotA, out GameBot a) || !AutonomousBotRegistry.TryGet(story.BotB, out GameBot b))
-            return;
+            return false;
         string side = SideOf(message, a.Name, b.Name);
         if (side == null || !Stories.TryGet(story.StoryKey, out OfflineBotStorylineRecord row))
-            return;
+            return false;
         bool tell = !row.SideTold || row.Side != side;
         Stories.Change(story.StoryKey, () => row, r =>
         {
@@ -341,7 +350,7 @@ public static class AutonomousBotStorylines
         });
         Log.Info($"STORYLINE_SIDE story={story.StoryKey} player=\"{player.Name}\" side={side}");
         if (!tell)
-            return;
+            return true;
         GameBot backed = side == "A" ? a : b, other = side == "A" ? b : a;
         AutonomousLivingServer.Later(backed, 20_000 + Random.Shared.Next(40_000), () => AutonomousLivingServer.IsSpeaker(backed), () =>
         {
@@ -355,6 +364,7 @@ public static class AutonomousBotStorylines
                     new Dictionary<string, string> { ["player"] = player.Name, ["target"] = backed.Name }))
                 AutonomousLivingServer.Tell(other, player, line);
         });
+        return true;
     }
 
     #endregion

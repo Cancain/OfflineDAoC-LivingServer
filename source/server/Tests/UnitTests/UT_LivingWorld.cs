@@ -147,6 +147,11 @@ namespace DOL.GS.Tests
         [TestCase("both of you stop", null)]
         [TestCase("Aelwyn and Brannoc, kiss and make up", null)]
         [TestCase("anyone lfg?", null)]
+        // Both named (in-game check 2026-10-27): the clauses decide when they agree.
+        [TestCase("Brannoc you ninja looted that rare, Aelwyn is right", "A")]
+        [TestCase("Aelwyn is right and Brannoc is lying", "A")]
+        [TestCase("Aelwyn is lying, Brannoc is right", "B")]
+        [TestCase("Aelwyn is right, Brannoc is right too", null)]
         public void APlayerTakesASideByNamingOne(string line, string side) =>
             Assert.That(AutonomousBotStorylines.SideOf(line, "Aelwyn", "Brannoc"), Is.EqualTo(side));
 
