@@ -259,6 +259,7 @@ namespace DOL.GS
         /// <summary>A bot's /say, recorded in the chat transcript (CHAT_LINE) when a player is near enough to hear it.</summary>
         public override bool Say(string str)
         {
+            str = AutonomousRoleplayers.Voice(this, str);   // a roleplayer speaks in thee and thou
             bool said = base.Say(str);
             if (said && AutonomousLivingServer.PlayerHears(this))
                 BotChatTranscript.Bot("say", Name, Realm, str);

@@ -25,7 +25,9 @@ namespace DOL.GS.Tests
         // Slots only the Living Server event that says the line fills (grats, firsts, alarms, nemesis).
         private static readonly string[] EventSlots = ["target", "what", "size", "classes", "killer", "killer_class",
             // Beggars (AutonomousBeggars): a gift or sale, the beggar's purse, and the merchant by its corner
-            "coin", "hoard", "npc"];
+            "coin", "hoard", "npc",
+            // Deeds, storylines and gold spammers (AutonomousPlayerDeeds, AutonomousBotStorylines, AutonomousGoldSpammers)
+            "nickname", "name_a", "name_b", "site"];
 
         private static readonly string[] OutOfEra =
             ["world of warcraft", "discord", "twitch", "youtube", "lmao", "covid", "smh", "tbh", "ngl", "yeet"];
@@ -146,7 +148,10 @@ namespace DOL.GS.Tests
         {
             // Scenes use no memory slots, so with every server slot filled each required beat can be said.
             Dictionary<string, string> slots = FullSlots();
-            Assert.That(Corpus.Scenes.Where(scene => !Debates.Playable(scene, _ => slots)).Select(scene => scene.Id), Is.Empty);
+            // A storyline episode also gets its two protagonists' names and, for an ending, the player who took a side.
+            var story = new Dictionary<string, string>(slots) { ["name_a"] = "Aelwyn", ["name_b"] = "Brannoc", ["player"] = "Kaelith" };
+            Assert.That(Corpus.Scenes.Where(scene => !Debates.Playable(scene, _ => AutonomousBotStorylines.IsStory(scene) ? story : slots))
+                .Select(scene => scene.Id), Is.Empty);
         }
 
         #endregion

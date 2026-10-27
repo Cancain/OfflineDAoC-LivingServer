@@ -32,6 +32,10 @@ stopped; they are used at the next start. The server keys (category `bots`) are:
 | Breaks and linkdeads | `bot_living_breaks` | False |
 | Body language | `bot_living_body_language` | False |
 | Beggars | `bot_living_beggars` | True |
+| Deeds and reputation | `bot_living_deeds` | True |
+| Storylines | `bot_living_storylines` | True |
+| Spammers and roleplayers | `bot_living_characters` | True |
+| True rumours | `bot_living_rumours` | True |
 
 **ALL OFF** in the tab switches every part off, along with the other Living Server features.
 
@@ -205,6 +209,17 @@ it; the gift really moves to the bot. Ask anyone for gold or items, on any chann
 in your capital that hears of it or sees you follows you around the city insulting you and defending its corner
 until you leave the city. Beggars never group, fight for
 the realm or talk in /faction. Details: [bot-voices/TALKING-UPDATE.md](bot-voices/TALKING-UPDATE.md) section 11.
+
+### Deeds, storylines, spammers, roleplayers and rumours
+- **Deeds and reputation** (`bot_living_deeds`): bots that see you solo a named monster, go on a kill streak, get zerged
+  or die to something silly tell /faction and others react. It builds a reputation the realm brings up, and a nickname.
+- **Storylines** (`bot_living_storylines`): pairs of bots live out four-episode dramas in /faction over days (a kill steal,
+  a guild split, a romance, a ninja-loot trial). Name one of them during an episode to take a side; the ending follows you.
+- **Spammers and roleplayers** (`bot_living_characters`): a gold spammer floods /faction now and then until it is
+  banned; a few bots always speak in thee and thou and get mocked for it.
+- **True rumours** (`bot_living_rumours`): a rare named monster that just spawned, or an enemy keep with its guards down.
+
+Details: [bot-voices/TALKING-UPDATE.md](bot-voices/TALKING-UPDATE.md) sections 12-15.
 
 ## New client (0.36c)
 

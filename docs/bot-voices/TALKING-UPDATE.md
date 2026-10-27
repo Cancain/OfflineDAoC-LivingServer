@@ -268,6 +268,67 @@ me", "i need") with something of value ("gold", "coin", "5g", "loot", "armor", "
 some gold?", "here, take this", "i'll give you some gold"), nor are "give me a sec" or "can i get an invite". About 3,100
 lines (`beggars.lines`, kind `beggar`, 19 topics), spiced the way the dunces are: 2003 chat, no real swear words.
 
+### 12. Deeds and reputation
+
+`bot_living_deeds` (on by default; `AutonomousPlayerDeeds`). When you do something a gamebot of your realm sees (a
+groupmate first, else any bot within 3,000 units), it tells /faction 2-10 minutes later and one to three bots react:
+
+- **Named kills:** a named monster (capitalised name, no realm) you kill alone at yellow or harder (`named_solo`), or with
+  your group at blue or harder (`named_group`).
+- **Kill streaks:** three or more enemies killed within ten minutes (`rvr_streak`).
+- **Your deaths:** zerged by four or more enemies (`ganked`), killed by a green or grey monster (`silly_death`), or a
+  fall or drowning (`fell`).
+
+Only what a bot saw counts: an unseen deed is not told and does not count toward reputation (an ordinary enemy kill
+still adds to your kill count). Each kind is told at most every 15 minutes (every solo named is told). Deeds add up in
+`offline_player_reputation` (an optional progress table, emptied in release builds). Every 50-100 minutes a bot who was
+not there brings up an online player's reputation ("isnt Kaelith the one who soloed Grimwold?", `rep_named`, `rep_rvr`,
+`rep_silly`). Three solo named kills, 25 enemy kills or four silly deaths earn a nickname ("Kaelith the Slayer",
+"Kaelith Facefloor"), announced in /faction; a heroic nickname replaces a silly one, never the other way round.
+`deeds.lines`: about 1,800 lines.
+
+### 13. Storylines
+
+`bot_living_storylines` (on by default; `AutonomousBotStorylines`). Four four-episode dramas per realm, played in
+/faction through the debate engine: `killsteal`, `guildsplit`, `romance` and `ninjaloot` (`storylines.lines`, 24 scenes).
+The same two bots (roles A and B, saved in `offline_bot_storylines`) play every episode and name each other; the other
+roles are cast fresh. A realm plays at most one episode every 75 minutes, an arc's episodes are 6-20 hours apart, a new
+arc starts at most every four hours, and a finished arc starts again with a new pair a week later. An arc waits while its
+pair is offline and is dropped after three days.
+
+Take a side by naming one of the two in /faction during an episode ("Aelwyn is right", "brannoc is lying", "team aelwy").
+The one you backed thanks you by tell, the other tells you off, and the last episode plays that side's ending (`_4a` or
+`_4b`; plain `_4` when nobody took a side), naming you. Storyline scenes never play as ordinary debates.
+
+### 14. Gold spammers and roleplayers
+
+`bot_living_characters` (on by default).
+
+- **Gold spammers** (`AutonomousGoldSpammers`): 20-50 minutes after you log in, then every 1-2.5 hours, a throwaway name
+  of gibberish ("Xkqhoaa") posts three to six gold-selling ads in /faction for a made-up site. Every site has a zero or a
+  three for a letter ("c0m", "n 3 t"), so none is a real address. Bots react ("reported", "/ignore"), then it is
+  "banned" and the realm cheers. A /send to the spammer while it is around gets more spam back. It is only a name in
+  /faction, not a character in the world.
+- **Roleplayers** (`AutonomousRoleplayers`): about 4% of the Socialite and Explorer personalities (about 1.6% of all
+  bots) roleplay. Everything they say, in every channel, comes out in thee and thou ("art thou well? aye, forsooth").
+  Every 20-45 minutes one posts an in-character line in /faction; other bots mock them ("/rp off plz") and they answer in
+  character.
+
+`spammers.lines` and `roleplayers.lines`: about 3,000 lines.
+
+### 15. True rumours
+
+`bot_living_rumours` (on by default; `AutonomousRumours`). Bots pass on rumours only when they are true:
+
+- **A rare named spawn:** a named monster with a respawn of 20 minutes or more, level 20+, comes back in a realm's lands
+  while a player of that realm within ten levels under to five over it is online. One to four minutes later, if it is
+  still alive, a bot says so vaguely ("heard Grimwold is up again in Black Mountains South").
+- **A thin keep:** an enemy frontier keep with four or more guards, under 30% of them alive ("scout says Caer Benowyc is
+  wide open"). Checked every five minutes.
+
+A realm hears at most one rumour every 20 minutes, a monster at most every six hours, a keep at most every two.
+`rumours.lines`: about 370 lines.
+
 ## Content
 
 The corpus went from 2,326 to about 3,820 lines (`talking_audit.lines` holds the audit's reply sets, `replies_pools.lines`
@@ -334,3 +395,11 @@ Everything above was tested without a running world. These need the PC:
     "spare some gold?" in /say makes it follow and insult you, that asking in /faction from outside and then walking
     into the city brings the beggars to you, that it stops when you zone out of the city, and that
     it walks and paths sensibly between merchants (no walking into walls). Watch `BEGGAR_SOLD` and `BEGGAR_LISTED`.
+15. Deeds: solo a yellow named, die to a grey monster, chain three enemy kills. A bot that was there should tell
+    /faction within 10 minutes (`PLAYER_DEED` in the log); check that the named check (capitalised names) doesn't catch
+    quest NPCs or other things that aren't monsters.
+16. Storylines: `STORYLINE_EPISODE` in the log; the first episode should come within a few hours of play. Name one of
+    the two during an episode and check the tells and, days later, the ending that names you.
+17. Gold spammer (`GOLD_SPAMMER_START`, `GOLD_SPAMMER_BANNED`) and a /send to it; a roleplayer's /faction line and the
+    mockery.
+18. Rumours (`RUMOUR_NAMED`, `RUMOUR_KEEP`): go to the place named and check the monster or the empty keep is there.

@@ -59,6 +59,7 @@ public class SocialExpansionSettingsTests
         BotXpByLevel = SocialExpansionSettings.SuggestedBotXp,
         LivingMemory = true, LivingGrats = true, LivingFirsts = true, LivingDeath = true, LivingAlarms = true,
         LivingNemesis = true, ScheduleMode = "clock", LivingBreaks = true, LivingBodyLanguage = true, LivingBeggars = true,
+        LivingDeeds = true, LivingStorylines = true, LivingCharacters = true, LivingRumours = true,
     };
 
     [Test] public void NoRowsMeansTheServerDefaults()
@@ -90,6 +91,8 @@ public class SocialExpansionSettingsTests
         Assert.That(rows["bot_living_breaks"], Is.EqualTo("True"));
         Assert.That(rows["bot_living_body_language"], Is.EqualTo("True"));
         Assert.That(rows["bot_living_beggars"], Is.EqualTo("True"));
+        Assert.That(rows["bot_living_deeds"] + rows["bot_living_storylines"] + rows["bot_living_characters"] + rows["bot_living_rumours"],
+            Is.EqualTo("TrueTrueTrueTrue"));
         var problems = new List<string>();
         Assert.That(SocialExpansionSettings.Load(_database, problems), Is.EqualTo(AllOn));
         Assert.That(problems, Is.Empty);
@@ -141,7 +144,7 @@ public class SocialExpansionSettingsTests
         Assert.That((SocialExpansionSettings.Defaults with { ScheduleMode = "session" }).IsAllOff, Is.False);
         Assert.That((SocialExpansionSettings.Defaults with { LivingBodyLanguage = true }).IsAllOff, Is.False);
         Assert.That(off.LivingBodyLanguage, Is.False);
-        Assert.That(off.LivingBeggars, Is.False);
+        Assert.That(off.LivingBeggars || off.LivingDeeds || off.LivingStorylines || off.LivingCharacters || off.LivingRumours, Is.False);
         Assert.That((SocialExpansionSettings.Defaults.AllOff() with { LivingBeggars = true }).IsAllOff, Is.False);
     }
 

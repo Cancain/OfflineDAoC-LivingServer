@@ -88,6 +88,9 @@ public static partial class AutonomousLivingServer
     /// <summary>The talking update audit: a real player died; groupmate gamebots react (AutonomousBotGroupChatter).</summary>
     private static void OnLivingDying(DOLEvent e, object sender, EventArgs args)
     {
+        // Deeds (bot_living_deeds): a named kill, an enemy kill or the player's own death a bot may have seen.
+        if (sender is GameLiving dead)
+            AutonomousPlayerDeeds.OnDeath(dead, (args as DyingEventArgs)?.Killer);
         if (sender is not GamePlayer { Group: not null } player)
             return;
         try
@@ -193,6 +196,7 @@ public static partial class AutonomousLivingServer
             AutonomousBotSchedule.Pulse(now);
             if (MemoryOn)
                 MemoryPulse(now);
+            AutonomousLivingWorld.Pulse(now);
         }
         catch (Exception exception)
         {
@@ -224,6 +228,8 @@ public static partial class AutonomousLivingServer
     {
         if (string.IsNullOrWhiteSpace(text) || !IsSpeaker(bot))
             return;
+        if (channel is Channel.Group or Channel.Guild)
+            text = AutonomousRoleplayers.Voice(bot, text);   // /say goes through GameBot.Say, /faction through BroadcastFaction
         switch (channel)
         {
             case Channel.Say:
@@ -359,6 +365,7 @@ public static partial class AutonomousLivingServer
     {
         if (string.IsNullOrWhiteSpace(text) || !IsSpeaker(bot) || player?.Client == null)
             return;
+        text = AutonomousRoleplayers.Voice(bot, text);
         ChatUtil.SendSendMessage(player.Client, "Social.ReceiveMessage.Private.Sends", bot.Name, text);
         BotChatTranscript.Bot("tell", bot.Name, bot.Realm, text, player.Name);
         // The talking update: the player's next tell to this bot continues this exchange.

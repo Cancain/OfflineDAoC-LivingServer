@@ -173,7 +173,8 @@ public static class AutonomousBotDebates
         resetRound = false;
         // A scene about bedtime plays at night only (0.36-se.4: scenes can need a time of day).
         IReadOnlySet<string> now = timeFlag == null ? null : new HashSet<string>(StringComparer.Ordinal) { timeFlag };
-        VC.Scene[] fitting = scenes.Where(scene => VC.RealmFits(scene.Realm, realm) &&
+        // Storyline episodes are played only by AutonomousBotStorylines, in order.
+        VC.Scene[] fitting = scenes.Where(scene => !AutonomousBotStorylines.IsStory(scene) && VC.RealmFits(scene.Realm, realm) &&
             (now == null || VC.NeedsMet(scene.Needs, now)) &&
             onlineLevels.Count(level => LevelFits(scene, level)) >= 2).ToArray();
         if (fitting.Length == 0)
@@ -196,6 +197,8 @@ public static class AutonomousBotDebates
         public VC.Scene Scene;
         public Dictionary<string, long> Cast;
         public Dictionary<string, string> Shared;
+        /// <summary>The storyline this scene is an episode of (AutonomousBotStorylines), or null for an ordinary debate.</summary>
+        public string StoryKey;
         public int Beat;
         public long NextAt;
         /// <summary>When the current beat started waiting for a busy speaker; 0 when not waiting.</summary>
@@ -217,6 +220,15 @@ public static class AutonomousBotDebates
     private static readonly ConcurrentDictionary<eRealm, HashSet<string>> Heard = new();
     private static Timer _timer;
     private static int _posted;
+
+    /// <summary>The storyline episode running in a realm's /faction, with its two protagonists, or null.</summary>
+    public static (string StoryKey, long BotA, long BotB)? RunningStory(eRealm realm)
+    {
+        lock (Sync)
+            return Scenes.TryGetValue(realm, out Running running) && running.StoryKey != null &&
+                   running.Cast.TryGetValue("A", out long a) && running.Cast.TryGetValue("B", out long b)
+                ? (running.StoryKey, a, b) : null;
+    }
 
     public static bool IsRunning(eRealm realm)
     {
@@ -329,21 +341,58 @@ public static class AutonomousBotDebates
         GameBot[] online = AutonomousBotRegistry.Snapshot().Where(bot => Eligible(bot, realm)).ToArray();
         HashSet<string> heard = Heard.GetOrAdd(realm, _ => new HashSet<string>(StringComparer.Ordinal));
         VC.Scene scene;
-        bool reset;
-        lock (heard)
-            scene = ChooseScene(AutonomousBotVoices.Corpus.Scenes, realm, heard, online.Select(bot => (int)bot.Level).ToArray(), Random.Shared, out reset,
-                VC.TimeFlag(DateTime.Now.Hour));
-        Dictionary<string, long> cast = scene == null ? null : Cast(scene, online.Select(CandidateOf).ToArray(), Random.Shared);
+        bool reset = false;
+        Dictionary<string, long> cast;
+        // A storyline episode that is due comes first: its two protagonists are fixed, the rest are cast as usual.
+        AutonomousBotStorylines.Next story = null;
+        try
+        {
+            story = AutonomousBotStorylines.TryNext(realm, online, DateTime.UtcNow, Random.Shared);
+        }
+        catch (Exception exception)
+        {
+            Log.Warn("Storylines: could not choose an episode", exception);
+        }
+        scene = null;
+        cast = null;
+        if (story != null)
+        {
+            scene = story.Scene;
+            cast = Cast(scene, online.Where(bot => bot.DatabaseID != story.BotA && bot.DatabaseID != story.BotB).Select(CandidateOf).ToArray(),
+                Random.Shared);
+            if (cast != null)
+            {
+                cast["A"] = story.BotA;
+                cast["B"] = story.BotB;
+            }
+            else
+                story = null;   // not enough others to fill the scene: an ordinary debate instead, the episode waits
+        }
+        if (story == null)
+        {
+            lock (heard)
+                scene = ChooseScene(AutonomousBotVoices.Corpus.Scenes, realm, heard, online.Select(bot => (int)bot.Level).ToArray(), Random.Shared, out reset,
+                    VC.TimeFlag(DateTime.Now.Hour));
+            cast = scene == null ? null : Cast(scene, online.Select(CandidateOf).ToArray(), Random.Shared);
+        }
         Dictionary<string, string> shared = null;
         if (cast != null)
         {
             GameBot opener = online.First(bot => bot.DatabaseID == cast.Values.First());
             shared = AutonomousBotVoices.SharedSlots(realm, opener.Level, Random.Shared);
+            if (story != null)
+                foreach (var pair in story.Slots)
+                    shared[pair.Key] = pair.Value;
             var slotsByRole = cast.ToDictionary(pair => pair.Key,
                 pair => (IReadOnlyDictionary<string, string>)AutonomousBotVoices.SlotsFor(online.First(bot => bot.DatabaseID == pair.Value), Random.Shared, shared),
                 StringComparer.Ordinal);
             if (!Playable(scene, role => slotsByRole.GetValueOrDefault(role)))
+            {
                 cast = null;
+                // An episode that can't be said now waits half an hour (so it never blocks the ordinary debates).
+                if (story != null)
+                    AutonomousBotStorylines.OnEpisodeEnded(realm, story.StoryKey, scene.Id, false, DateTime.UtcNow);
+            }
         }
         lock (Sync)
         {
@@ -354,9 +403,10 @@ public static class AutonomousBotDebates
             }
             if (reset)
                 ResetHeard(realm, heard);
-            Scenes[realm] = new Running { Scene = scene, Cast = cast, Beat = 0, NextAt = now, Shared = shared };
+            Scenes[realm] = new Running { Scene = scene, Cast = cast, Beat = 0, NextAt = now, Shared = shared, StoryKey = story?.StoryKey };
         }
-        MarkHeard(realm, scene.Id, heard);
+        if (story == null)
+            MarkHeard(realm, scene.Id, heard);
         if (Log.IsInfoEnabled)
             Log.Info($"BOT_DEBATE_START realm={realm} scene={scene.Id} speakers={cast.Count}");
     }
@@ -597,8 +647,13 @@ public static class AutonomousBotDebates
     {
         lock (Sync)
         {
-            if (Scenes.Remove(realm, out Running running) && Log.IsInfoEnabled)
-                Log.Info($"BOT_DEBATE_END realm={realm} scene={running.Scene.Id} reason=\"{reason}\"");
+            if (Scenes.Remove(realm, out Running running))
+            {
+                if (Log.IsInfoEnabled)
+                    Log.Info($"BOT_DEBATE_END realm={realm} scene={running.Scene.Id} reason=\"{reason}\"");
+                if (running.StoryKey != null)
+                    AutonomousBotStorylines.OnEpisodeEnded(realm, running.StoryKey, running.Scene.Id, reason == "finished", DateTime.UtcNow);
+            }
             NextStartAt[realm] = GameLoop.GameLoopTime + NextGapMs(Random.Shared);
         }
     }

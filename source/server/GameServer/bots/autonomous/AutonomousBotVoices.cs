@@ -472,6 +472,41 @@ public static class AutonomousBotVoices
         }
     }
 
+    /// <summary>
+    /// A corpus line for a speaker that is not a gamebot (a gold spammer's throwaway character): picked and styled like a
+    /// bot's line, remembered for the realm so it doesn't repeat. False without the corpus.
+    /// </summary>
+    public static bool TryLineFor(string name, eRealm realm, string kind, string topic, IReadOnlyDictionary<string, string> slots,
+        out string text, Random random = null)
+    {
+        text = null;
+        if (Corpus == null || string.IsNullOrEmpty(name))
+            return false;
+        random ??= Random.Shared;
+        try
+        {
+            long id = -1 - Math.Abs((long)StringComparer.OrdinalIgnoreCase.GetHashCode(name));
+            var speaker = new VC.Speaker(id, name, realm, string.Empty, 1, BotPersonalityType.Leveler, new HashSet<string>(StringComparer.Ordinal));
+            var all = new Dictionary<string, string>(StringComparer.Ordinal) { ["me"] = name };
+            if (slots != null)
+                foreach (var pair in slots)
+                    all[pair.Key] = pair.Value;
+            bool picked = Corpus.TryPick(new VC.Request(kind, speaker, all, Recent, DateTime.UtcNow, random)
+            {
+                Topic = topic,
+                RelaxTo = VC.RecentLines.Relaxed,
+                LocalHour = DateTime.Now.Hour,
+            }, out VC.Picked result);
+            text = result?.Text;
+            return picked;
+        }
+        catch (Exception exception)
+        {
+            Log.Warn($"Bot voices: no {kind} line for {name}", exception);
+            return false;
+        }
+    }
+
     /// <summary>A text in this bot's writing style (knowledge answers and other fixed text).</summary>
     public static string StyleFor(GameBot bot, string text) =>
         !Enabled || bot == null || string.IsNullOrEmpty(text) ? text : VC.Style(text, Corpus.VoiceFor(bot.DatabaseID), Random.Shared);

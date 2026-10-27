@@ -449,6 +449,8 @@ public static class AutonomousBotChatCoordinator
         SendFaction(player.Name, player.Realm, message);
         // Asking anyone for gold or items marks the player for the beggars (AutonomousBeggars).
         AutonomousBeggars.OnPlayerAsked(player, message, "faction");
+        // Naming one side of a running storyline episode takes that side (AutonomousBotStorylines).
+        AutonomousBotStorylines.OnPlayerFactionChat(player, message);
         AutonomousBotDebates.PlayerSpoke(player.Realm, player);
         lock (Sync)
             LastPlayerFactionLine[player.Realm] = GameLoop.GameLoopTime;
@@ -927,7 +929,11 @@ public static class AutonomousBotChatCoordinator
         return false;
     }
 
-    public static void BroadcastFaction(string speakerName, eRealm realm, string message)
+    public static void BroadcastFaction(string speakerName, eRealm realm, string message) =>
+        BroadcastFactionAsWritten(speakerName, realm, AutonomousRoleplayers.VoiceByName(speakerName, realm, message));
+
+    /// <summary>A bot's /faction line exactly as written (a roleplayer's own in-character line skips the speech pass).</summary>
+    public static void BroadcastFactionAsWritten(string speakerName, eRealm realm, string message)
     {
         string safe = SendFaction(speakerName, realm, message);
         if (safe != null)

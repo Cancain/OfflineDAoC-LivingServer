@@ -2474,6 +2474,22 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("bots", "bot_living_beggars", "Server life: about 4% of the Crafter bots are beggars. They live in their capital, beg you and passing bots for coin and loot (drag coin or an item onto one to give it), sell what they are given and hoard every copper. Ask anyone for gold or items and the beggars follow you around the city insulting you and defending their corners until you leave. Beggars never group or fight.", true)]
 		public static bool BOT_LIVING_BEGGARS;
 
+		/// <summary>Bots that saw the player do something tell the realm; reputation and nicknames (AutonomousPlayerDeeds).</summary>
+		[ServerProperty("bots", "bot_living_deeds", "Server life: bots of your realm that see you solo a named monster, go on a kill streak in the frontier, get zerged or die to something silly tell /faction a few minutes later, and others react. Deeds build a reputation the realm talks about, and a nickname.", true)]
+		public static bool BOT_LIVING_DEEDS;
+
+		/// <summary>Multi-day dramas between pairs of bots, played as /faction episodes (AutonomousBotStorylines).</summary>
+		[ServerProperty("bots", "bot_living_storylines", "Server life: pairs of bots live out dramas in /faction over days: a kill steal, a guild split, a romance, a ninja-loot trial. The same two bots play every episode; take a side in faction and the ending follows you.", true)]
+		public static bool BOT_LIVING_STORYLINES;
+
+		/// <summary>Gold spammers and roleplayers (AutonomousGoldSpammers, AutonomousRoleplayers).</summary>
+		[ServerProperty("bots", "bot_living_characters", "Server life: now and then a gold spammer floods /faction until it is banned, and a few bots roleplay in thee-and-thou speech while the realm mocks them.", true)]
+		public static bool BOT_LIVING_CHARACTERS;
+
+		/// <summary>True rumours: real rare spawns and undefended enemy keeps (AutonomousRumours).</summary>
+		[ServerProperty("bots", "bot_living_rumours", "Server life: bots pass on rumours that are true: a rare named monster that just spawned, or an enemy keep whose guards are down. Go and see.", true)]
+		public static bool BOT_LIVING_RUMOURS;
+
 
 
 		#endregion
