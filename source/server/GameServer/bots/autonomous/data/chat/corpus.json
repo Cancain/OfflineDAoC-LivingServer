@@ -317204,8 +317204,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we just killed {target}!. {player} carried",
-   "id": "44d3be897caf"
+   "text": "we just killed {target}! {player} carried",
+   "id": "b42511302214"
   },
   {
    "kind": "deed",
@@ -317221,8 +317221,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we just killed {target}!. {player} was the mvp",
-   "id": "aa290701376c"
+   "text": "we just killed {target}! {player} was the mvp",
+   "id": "dec9660e47ce"
   },
   {
    "kind": "deed",
@@ -317238,8 +317238,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we just killed {target}!. {player} did it all",
-   "id": "9347fd43d776"
+   "text": "we just killed {target}! {player} did it all",
+   "id": "39f309b051b1"
   },
   {
    "kind": "deed",
@@ -317255,8 +317255,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we just killed {target}, gz all. {player} carried",
-   "id": "edda95c0f2d6"
+   "text": "we just killed {target}, gz all! {player} carried",
+   "id": "848c94b4abb5"
   },
   {
    "kind": "deed",
@@ -317272,8 +317272,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we just killed {target}, gz all. {player} was the mvp",
-   "id": "476bba447f96"
+   "text": "we just killed {target}, gz all! {player} was the mvp",
+   "id": "b56f1daa7587"
   },
   {
    "kind": "deed",
@@ -317289,8 +317289,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we just killed {target}, gz all. {player} did it all",
-   "id": "bff8f3ced4ad"
+   "text": "we just killed {target}, gz all! {player} did it all",
+   "id": "563ed188c7e6"
   },
   {
    "kind": "deed",
@@ -317306,8 +317306,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we just dropped {target}!. {player} carried",
-   "id": "ea79efc80e5a"
+   "text": "we just dropped {target}! {player} carried",
+   "id": "256ec51698e6"
   },
   {
    "kind": "deed",
@@ -317323,8 +317323,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we just dropped {target}!. {player} was the mvp",
-   "id": "47cf0561bf6d"
+   "text": "we just dropped {target}! {player} was the mvp",
+   "id": "a8f386ee3036"
   },
   {
    "kind": "deed",
@@ -317340,8 +317340,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we just dropped {target}!. {player} did it all",
-   "id": "07549f9e7791"
+   "text": "we just dropped {target}! {player} did it all",
+   "id": "c15f26d352e2"
   },
   {
    "kind": "deed",
@@ -317357,8 +317357,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we just dropped {target}, gz all. {player} carried",
-   "id": "1f1eb2147a07"
+   "text": "we just dropped {target}, gz all! {player} carried",
+   "id": "57e63f4e76dc"
   },
   {
    "kind": "deed",
@@ -317374,8 +317374,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we just dropped {target}, gz all. {player} was the mvp",
-   "id": "1e3d080edc3b"
+   "text": "we just dropped {target}, gz all! {player} was the mvp",
+   "id": "6a4d72e71969"
   },
   {
    "kind": "deed",
@@ -317391,8 +317391,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we just dropped {target}, gz all. {player} did it all",
-   "id": "6eb4df6bd694"
+   "text": "we just dropped {target}, gz all! {player} did it all",
+   "id": "30a2d0fb511c"
   },
   {
    "kind": "deed",
@@ -317408,8 +317408,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we finally got {target}!. {player} carried",
-   "id": "d2f02fda1048"
+   "text": "we finally got {target}! {player} carried",
+   "id": "e983eb5a90dd"
   },
   {
    "kind": "deed",
@@ -317425,8 +317425,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we finally got {target}!. {player} was the mvp",
-   "id": "2dba48014651"
+   "text": "we finally got {target}! {player} was the mvp",
+   "id": "938544fdd383"
   },
   {
    "kind": "deed",
@@ -317442,8 +317442,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we finally got {target}!. {player} did it all",
-   "id": "93f2245ec4dc"
+   "text": "we finally got {target}! {player} did it all",
+   "id": "3be3d655f1b2"
   },
   {
    "kind": "deed",
@@ -317459,8 +317459,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we finally got {target}, gz all. {player} carried",
-   "id": "532c370670fa"
+   "text": "we finally got {target}, gz all! {player} carried",
+   "id": "295882f01bcf"
   },
   {
    "kind": "deed",
@@ -317476,8 +317476,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we finally got {target}, gz all. {player} was the mvp",
-   "id": "81e2606e3915"
+   "text": "we finally got {target}, gz all! {player} was the mvp",
+   "id": "63c6e6269422"
   },
   {
    "kind": "deed",
@@ -317493,8 +317493,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "we finally got {target}, gz all. {player} did it all",
-   "id": "b7af326551bf"
+   "text": "we finally got {target}, gz all! {player} did it all",
+   "id": "eb361152119d"
   },
   {
    "kind": "deed",
@@ -317510,8 +317510,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group just killed {target}!. {player} carried",
-   "id": "0779c5b8c814"
+   "text": "our group just killed {target}! {player} carried",
+   "id": "5b41f64fad8c"
   },
   {
    "kind": "deed",
@@ -317527,8 +317527,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group just killed {target}!. {player} was the mvp",
-   "id": "7f7e15a6b6b0"
+   "text": "our group just killed {target}! {player} was the mvp",
+   "id": "a1dd6cb440cd"
   },
   {
    "kind": "deed",
@@ -317544,8 +317544,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group just killed {target}!. {player} did it all",
-   "id": "3dd08d30dbe4"
+   "text": "our group just killed {target}! {player} did it all",
+   "id": "8aed742f908a"
   },
   {
    "kind": "deed",
@@ -317561,8 +317561,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group just killed {target}, gz all. {player} carried",
-   "id": "1e90072a19f2"
+   "text": "our group just killed {target}, gz all! {player} carried",
+   "id": "cf7da45d40af"
   },
   {
    "kind": "deed",
@@ -317578,8 +317578,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group just killed {target}, gz all. {player} was the mvp",
-   "id": "f292ec21b390"
+   "text": "our group just killed {target}, gz all! {player} was the mvp",
+   "id": "9b442bb3da14"
   },
   {
    "kind": "deed",
@@ -317595,8 +317595,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group just killed {target}, gz all. {player} did it all",
-   "id": "6fa18d9c28d7"
+   "text": "our group just killed {target}, gz all! {player} did it all",
+   "id": "d2cdc4ad1264"
   },
   {
    "kind": "deed",
@@ -317612,8 +317612,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group just dropped {target}!. {player} carried",
-   "id": "92e7079caa96"
+   "text": "our group just dropped {target}! {player} carried",
+   "id": "05b0c0489cc7"
   },
   {
    "kind": "deed",
@@ -317629,8 +317629,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group just dropped {target}!. {player} was the mvp",
-   "id": "83f00bd8d2f3"
+   "text": "our group just dropped {target}! {player} was the mvp",
+   "id": "45e948da2fc5"
   },
   {
    "kind": "deed",
@@ -317646,8 +317646,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group just dropped {target}!. {player} did it all",
-   "id": "acd66141a1b5"
+   "text": "our group just dropped {target}! {player} did it all",
+   "id": "9022c671efe5"
   },
   {
    "kind": "deed",
@@ -317663,8 +317663,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group just dropped {target}, gz all. {player} carried",
-   "id": "543d27700002"
+   "text": "our group just dropped {target}, gz all! {player} carried",
+   "id": "c76e130612c9"
   },
   {
    "kind": "deed",
@@ -317680,8 +317680,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group just dropped {target}, gz all. {player} was the mvp",
-   "id": "00b38e4a7741"
+   "text": "our group just dropped {target}, gz all! {player} was the mvp",
+   "id": "74b27714a25c"
   },
   {
    "kind": "deed",
@@ -317697,8 +317697,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group just dropped {target}, gz all. {player} did it all",
-   "id": "851d99e4a7db"
+   "text": "our group just dropped {target}, gz all! {player} did it all",
+   "id": "cbee1fee39a0"
   },
   {
    "kind": "deed",
@@ -317714,8 +317714,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group finally got {target}!. {player} carried",
-   "id": "7dde3809b541"
+   "text": "our group finally got {target}! {player} carried",
+   "id": "995e28b03ead"
   },
   {
    "kind": "deed",
@@ -317731,8 +317731,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group finally got {target}!. {player} was the mvp",
-   "id": "a22caf003862"
+   "text": "our group finally got {target}! {player} was the mvp",
+   "id": "9566f24a4021"
   },
   {
    "kind": "deed",
@@ -317748,8 +317748,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group finally got {target}!. {player} did it all",
-   "id": "0eeb147c2fbe"
+   "text": "our group finally got {target}! {player} did it all",
+   "id": "5f6d3c158c1f"
   },
   {
    "kind": "deed",
@@ -317765,8 +317765,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group finally got {target}, gz all. {player} carried",
-   "id": "b5586337b8ea"
+   "text": "our group finally got {target}, gz all! {player} carried",
+   "id": "d7fb6cddb6f1"
   },
   {
    "kind": "deed",
@@ -317782,8 +317782,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group finally got {target}, gz all. {player} was the mvp",
-   "id": "de1710c8714a"
+   "text": "our group finally got {target}, gz all! {player} was the mvp",
+   "id": "22eadef98237"
   },
   {
    "kind": "deed",
@@ -317799,8 +317799,8 @@
    "intent": "",
    "mood": "",
    "weight": 0.1667,
-   "text": "our group finally got {target}, gz all. {player} did it all",
-   "id": "7bc10cb9f475"
+   "text": "our group finally got {target}, gz all! {player} did it all",
+   "id": "6c4f09a37d92"
   },
   {
    "kind": "deed",
@@ -401843,8 +401843,8 @@
    "mood": "",
    "weight": 0.2887,
    "invites": "joke",
-   "text": "we could get lost in a empty field",
-   "id": "afb96c054c04"
+   "text": "we could get lost in an empty field",
+   "id": "5776d7d04656"
   },
   {
    "kind": "guild",
@@ -401897,8 +401897,8 @@
    "mood": "",
    "weight": 0.2887,
    "invites": "joke",
-   "text": "we would get lost in a empty field",
-   "id": "c31bfdbf6896"
+   "text": "we would get lost in an empty field",
+   "id": "1602c193add0"
   },
   {
    "kind": "guild",
@@ -401951,8 +401951,8 @@
    "mood": "",
    "weight": 0.2887,
    "invites": "joke",
-   "text": "this guild could get lost in a empty field",
-   "id": "01582645ed6b"
+   "text": "this guild could get lost in an empty field",
+   "id": "6c259619ab53"
   },
   {
    "kind": "guild",
@@ -402005,8 +402005,8 @@
    "mood": "",
    "weight": 0.2887,
    "invites": "joke",
-   "text": "this guild would get lost in a empty field",
-   "id": "b952fca3fa82"
+   "text": "this guild would get lost in an empty field",
+   "id": "06abefe1f9a9"
   },
   {
    "kind": "guild",
