@@ -65,6 +65,13 @@ namespace LivingServerSetup
                 using (var probe = new Form())
                 using (var gfx = probe.CreateGraphics())
                     Theme.Scale = args.Get("--scale") != null ? float.Parse(args.Get("--scale"), System.Globalization.CultureInfo.InvariantCulture) : Math.Max(1f, gfx.DpiX / 96f);
+                // the window must fit the screen: a 1366x768 laptop at 125 % has only about 1093x560 logical pixels
+                if (args.Get("--scale") == null)
+                {
+                    var work = Screen.PrimaryScreen.WorkingArea;
+                    var fit = Math.Min((work.Width - 16) / (float)SetupForm.W, (work.Height - 16) / (float)SetupForm.H);
+                    if (fit < Theme.Scale) Theme.Scale = Math.Max(0.75f, fit);
+                }
                 Log.Write("Display scale " + Theme.Scale.ToString("0.##"));
 
                 if (args.Get("--screenshots") != null) return Screenshots(args.Get("--screenshots"));
@@ -218,7 +225,8 @@ namespace LivingServerSetup
             using (var bmp = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format32bppArgb))
             {
                 bool ok = false;
-                try
+                bool onScreen = Screen.FromControl(form).WorkingArea.Contains(bounds);
+                if (onScreen) try
                 {
                     using (var g = Graphics.FromImage(bmp)) g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
                     ok = !Blank(bmp);

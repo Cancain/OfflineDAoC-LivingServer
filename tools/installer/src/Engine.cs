@@ -174,6 +174,7 @@ namespace LivingServerSetup
                 if (detail != null) s.Item.Detail = detail;
             }
             Status = status;
+            Detail = "";   // the last step's numbers don't belong to this one
             Recompute();
         }
 
@@ -705,7 +706,7 @@ namespace LivingServerSetup
                 if (m.Success) partWay = m.Groups[1].Value.Trim();
                 if (line.StartsWith("Install failed:")) partWay = line;
                 if (line.StartsWith("Installed ") || line.StartsWith("Already installed") || line.StartsWith("The released server") || line.StartsWith("Rolled back")) lastGreen = line;
-                if (!err && line.StartsWith("  ") && line.Trim().Length > 0) SetStatus(Status, line.Trim());
+                if (!err && Regex.IsMatch(line, @"^\s+runtime[\\/]")) SetStatus(Status, "checking " + line.Trim());
             };
             var code = job.Run(Path.Combine(dir, script), args, CancellationToken.None);
             if (code != 0)

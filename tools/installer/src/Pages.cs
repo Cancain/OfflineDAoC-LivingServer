@@ -303,11 +303,11 @@ namespace LivingServerSetup
                 folder.Box.TextChanged += (s, e) => Changed();
                 y += 84;
                 float y0 = y;
-                editionB = Toggle(new OptionToggle(Payload.BaseRelease + "b: with the Sluaghbinder",
-                    "Adds one custom Hibernia class.", true, "ed"), ref y, 236);
+                editionB = Toggle(new OptionToggle(Payload.BaseRelease + "b + Sluaghbinder",
+                    "Adds shadowofze's custom Hibernia class.", true, "ed"), ref y, 236);
                 float y1 = y;
                 y = y0;
-                editionClassic = Toggle(new OptionToggle(Payload.BaseRelease + ": original classes only",
+                editionClassic = Toggle(new OptionToggle(Payload.BaseRelease + " original classes",
                     "Classic and Shrouded Isles only.", true, "ed"), ref y, 236);
                 editionClassic.Left = Theme.S(40 + 250);
                 y = Math.Max(y, y1);
