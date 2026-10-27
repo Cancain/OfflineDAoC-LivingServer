@@ -2,8 +2,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using DOL.GS.ServerProperties;
+using DOL.Logging;
 
 namespace DOL.GS;
 
@@ -15,6 +17,8 @@ namespace DOL.GS;
 /// </summary>
 public static class AutonomousRoleplayers
 {
+    private static readonly Logger Log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
+
     public static bool On => Properties.BOT_LIVING_CHARACTERS;
 
     public const double ShareOfTypes = 0.04;
@@ -105,6 +109,7 @@ public static class AutonomousRoleplayers
             // Already in character: sent as written (not through the speech pass).
             AutonomousBotChatCoordinator.BroadcastFactionAsWritten(rp.Name, realm, line);
             AutonomousBotChatCoordinator.Note(AutonomousChatThreads.Faction(realm), rp, line, "chat");
+            Log.Info($"ROLEPLAY_AMBIENT realm={GlobalConstants.RealmToName(realm)} bot=\"{rp.Name}\"");
             if (Random.Shared.NextDouble() < 0.6)
                 Mock(rp, realm, now);
         }
@@ -133,6 +138,7 @@ public static class AutonomousRoleplayers
             if (!AutonomousBotVoices.TryEventLine(mocker, "roleplay", out string mock, "mock", new Dictionary<string, string> { ["target"] = rp.Name }))
                 return;
             AutonomousBotChatCoordinator.BroadcastFaction(mocker.Name, realm, mock);
+            Log.Info($"ROLEPLAY_MOCK realm={GlobalConstants.RealmToName(realm)} bot=\"{rp.Name}\" mocker=\"{mocker.Name}\"");
             AutonomousLivingServer.Later(rp, 6_000 + Random.Shared.Next(8_000), () => AutonomousLivingServer.CanTalk(rp), () =>
             {
                 if (AutonomousBotVoices.TryEventLine(rp, "roleplay", out string answer, "answer", new Dictionary<string, string> { ["target"] = mocker.Name }))
