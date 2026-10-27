@@ -68868,9 +68868,9 @@
    "intent": "",
    "mood": "",
    "weight": 1.0,
-   "invites": "ask",
-   "text": "red con? sounds like a challenge",
-   "id": "26684a7ed1dc"
+   "invites": "chat",
+   "text": "red con. sounds like a challenge",
+   "id": "189281679909"
   },
   {
    "kind": "ambient",
