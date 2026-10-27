@@ -479,6 +479,18 @@ public static class AutonomousObjectiveAssignments
         return GameLoop.GameLoopTime - wait.StartedTick >= GroupMatchmakingTimeout.TotalMilliseconds;
     }
 
+    /// <summary>How long an ungrouped bot has waited on its current GroupPve assignment (0 when it isn't waiting).</summary>
+    public static long GroupWaitMilliseconds(GameBot bot)
+    {
+        if (bot?.PersistentRecord == null || bot.Group != null || !Is(bot, eAutonomousObjectiveKind.GroupPve))
+            return 0;
+        long key = bot.DatabaseID > 0 ? bot.DatabaseID : bot.ObjectID;
+        return GroupWaits.TryGetValue(key, out var wait) &&
+               string.Equals(wait.Assignment, bot.PersistentRecord.ObjectiveAssignmentId ?? string.Empty, StringComparison.Ordinal)
+            ? Math.Max(0, GameLoop.GameLoopTime - wait.StartedTick)
+            : 0;
+    }
+
     /// <summary>
     /// Matchmaking owns an ungrouped GroupPvE bot until it assigns the complete
     /// eight-member roster or performs the twenty-minute fallback.  The generic

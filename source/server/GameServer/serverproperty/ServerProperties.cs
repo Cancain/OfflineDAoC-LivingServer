@@ -2478,6 +2478,10 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("bots", "bot_living_deeds", "Server life: bots of your realm that see you solo a named monster, go on a kill streak in the frontier, get zerged or die to something silly tell /faction a few minutes later, and others react. Deeds build a reputation the realm talks about, and a nickname.", true)]
 		public static bool BOT_LIVING_DEEDS;
 
+		/// <summary>Gamebots remember the bots they grouped with; friends group again, grudges keep apart (AutonomousBotBonds).</summary>
+		[ServerProperty("bots", "bot_group_bonds", "Server life: gamebots remember the bots they grouped with. Good runs make friends who look for each other when forming a party; bots who never showed up or wiped the group too often are kept apart until a long wait makes them take anyone.", true)]
+		public static bool BOT_GROUP_BONDS;
+
 		/// <summary>Multi-day dramas between pairs of bots, played as /faction episodes (AutonomousBotStorylines).</summary>
 		[ServerProperty("bots", "bot_living_storylines", "Server life: pairs of bots live out dramas in /faction over days: a kill steal, a guild split, a romance, a ninja-loot trial. The same two bots play every episode; take a side in faction and the ending follows you.", true)]
 		public static bool BOT_LIVING_STORYLINES;

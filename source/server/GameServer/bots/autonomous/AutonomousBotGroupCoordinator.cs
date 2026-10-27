@@ -36,6 +36,8 @@ public static partial class AutonomousBotGroupCoordinator
     public const long UnreachableRouteRetryMilliseconds = 60_000;
     public const long UnreachableRouteGraceMilliseconds = 2 * 60_000L;
     public const long LeaderStagingTimeoutMilliseconds = 20 * 60_000L;
+    /// <summary>PvE leaders tried per 15-second formation pass (a try is a cheap scan of the realm's waiting bots).</summary>
+    public const int MaximumPveLeaderAttemptsPerPass = 80;
     private static readonly object Sync = new();
     private static readonly Dictionary<Group, Session> Sessions = new();
     // Callers hold Sync; the membership property is evaluated just once here.
@@ -132,6 +134,8 @@ public static partial class AutonomousBotGroupCoordinator
         public HashSet<string> DungeonBossesTried { get; } = new(StringComparer.OrdinalIgnoreCase);
         public Dictionary<string, long> RejectedDungeonCamps { get; } = new(StringComparer.Ordinal);
         public int WipePenalty { get; set; }
+        /// <summary>Wipes this party had (AutonomousBotBonds remembers them).</summary>
+        public int Wipes { get; set; }
         public long? NoCampSinceTick { get; set; }
         public AutonomousGroupRecoveryState Recovery { get; } = new();
         public bool RecoveryRendezvousChosen { get; set; }
@@ -1624,7 +1628,8 @@ public static partial class AutonomousBotGroupCoordinator
                             AutonomousRvrEventLayer.IsForceCommitted($"rvr-{bot.DatabaseID}", GameLoop.GameLoopTime)) &&
                           (objectiveKind != eAutonomousObjectiveKind.GroupPve ||
                            CanRecruitPveMember(bot.IsOnStableMasterRoute, bot.IsReturningAfterRelease,
-                               bot.InCombat, bot.IsAttacking, (bot.Brain as BotBrain)?.HasAggro == true, 0d)) &&
+                               bot.InCombat, bot.IsAttacking, (bot.Brain as BotBrain)?.HasAggro == true, 0d,
+                               midFightAllowed: true)) &&
                           AutonomousObjectiveAssignments.Is(bot, objectiveKind))
             .OrderBy(_ => Random.Shared.Next())
             .ToArray();
@@ -1635,6 +1640,19 @@ public static partial class AutonomousBotGroupCoordinator
         // bot closest to it. PvE meets around its leader and keeps the
         // shuffled draw below.
         IEnumerable<GameBot> leaders = available;
+        // PvE: the longest wait leads first, so the bots closest to running out of time get the first try at a
+        // party (the shuffle above breaks ties). Each wait's patience stage is read once per pass.
+        var patience = new Dictionary<GameBot, int>();
+        int PatienceOf(GameBot bot)
+        {
+            if (!patience.TryGetValue(bot, out int stage))
+                patience[bot] = stage = AutonomousGroupMatchmakingPatience.Stage(
+                    AutonomousObjectiveAssignments.GroupWaitMilliseconds(bot));
+            return stage;
+        }
+        int leaderAttempts = 0;
+        if (objectiveKind == eAutonomousObjectiveKind.GroupPve)
+            leaders = available.OrderByDescending(AutonomousObjectiveAssignments.GroupWaitMilliseconds).ToArray();
         if (objectiveKind == eAutonomousObjectiveKind.RvR)
         {
             var crossings = new Dictionary<(eRealm Realm, ushort Region), DbZonePoint>();
@@ -1652,9 +1670,11 @@ public static partial class AutonomousBotGroupCoordinator
             // (Raised from 4 checks / 35% leader draw: only 248 groups formed in
             // an eight-hour run while 3,640 bots timed out waiting.)
             if (rendezvousChecks >= 6) break;
-            if (claimed.Contains(leader) ||
-                objectiveKind != eAutonomousObjectiveKind.RvR && Random.Shared.NextDouble() >= 0.6)
+            if (claimed.Contains(leader))
                 continue;
+            // (PvE used to skip 40% of leaders at random; with the longest waits first, a cap on tries keeps the cost.)
+            if (objectiveKind == eAutonomousObjectiveKind.GroupPve && ++leaderAttempts > MaximumPveLeaderAttemptsPerPass)
+                break;
             // RvR reserves are realm-local: Albion grouping cannot consume the
             // independent Midgard/Hibernia roamer reserve, and vice versa.
             int leaderSlots = objectiveKind == eAutonomousObjectiveKind.RvR
@@ -1667,7 +1687,10 @@ public static partial class AutonomousBotGroupCoordinator
                 : 0));
             // PvE prefers a full eight, but a region short on healers or tanks
             // may start a smaller viable party (see PveRosterTemplates).
-            int minimumRequired = objectiveKind == eAutonomousObjectiveKind.GroupPve ? MinimumPveFormationSize : 2;
+            bool pve = objectiveKind == eAutonomousObjectiveKind.GroupPve;
+            long leaderWaitedMs = pve ? AutonomousObjectiveAssignments.GroupWaitMilliseconds(leader) : 0;
+            int leaderStage = pve ? PatienceOf(leader) : 0;
+            int minimumRequired = pve ? AutonomousGroupMatchmakingPatience.MinimumPartySize(leaderStage) : 2;
             if (largestAllowed < minimumRequired)
             {
                 // One realm's full reserve must not prevent a later realm from
@@ -1686,7 +1709,6 @@ public static partial class AutonomousBotGroupCoordinator
             if (rolledSize == 1)
                 continue;
             // PvE recruits by travel time to the leader, from any region of the realm; RvR keeps the leader's region.
-            bool pve = objectiveKind == eAutonomousObjectiveKind.GroupPve;
             var travel = new Dictionary<GameBot, double>();
             double TravelToLeader(GameBot candidate)
             {
@@ -1702,11 +1724,18 @@ public static partial class AutonomousBotGroupCoordinator
                                      (pve || candidate.CurrentRegionID == leader.CurrentRegionID) &&
                                      LevelsCompatible(leader.Level, candidate.Level) &&
                                      (!pve ||
+                                      !AutonomousBotBonds.WontGroup(leader, candidate,
+                                          AutonomousGroupMatchmakingPatience.PairStage(leaderStage, PatienceOf(candidate))) &&
                                       CanRecruitPveMember(candidate.IsOnStableMasterRoute,
                                           candidate.IsReturningAfterRelease, candidate.InCombat,
                                           candidate.IsAttacking, (candidate.Brain as BotBrain)?.HasAggro == true,
-                                          TravelToLeader(candidate))))
+                                          TravelToLeader(candidate),
+                                          AutonomousGroupMatchmakingPatience.TravelMinutes(
+                                              AutonomousGroupMatchmakingPatience.PairStage(leaderStage, PatienceOf(candidate))),
+                                          midFightAllowed: true)))
                 .OrderBy(candidate => AutonomousBotRealmGuilds.GuildmateRank(leader, candidate))
+                // Then the leader's friends (AutonomousBotBonds): bots who had good groups together look for each other.
+                .ThenBy(candidate => pve ? AutonomousBotBonds.FriendRank(leader, candidate) : 0)
                 .ThenBy(candidate => pve ? 0 : Math.Abs(candidate.Level - leader.Level))
                 .ThenBy(candidate => pve ? TravelToLeader(candidate) : candidate.GetDistanceTo(leader))
                 .ToArray();
@@ -1715,7 +1744,7 @@ public static partial class AutonomousBotGroupCoordinator
             if (objectiveKind == eAutonomousObjectiveKind.GroupPve)
             {
                 if (!TryBuildPveRoster(leader, compatiblePool, out compatible, out pveRoles,
-                        MinimumPveFormationSize, largestAllowed))
+                        minimumRequired, largestAllowed))
                     continue;
                 rolledSize = compatible.Length + 1;
             }
@@ -1767,6 +1796,7 @@ public static partial class AutonomousBotGroupCoordinator
             AutonomousBotGuildSocial.OnGroupFormed(formedMembers, objectiveKind == eAutonomousObjectiveKind.RvR);
             Log.Info($"AUTONOMOUS_GROUP_FORMED group={session.Id} realm={GlobalConstants.RealmToName(leader.Realm)} " +
                      $"size={formedMembers.Length} lockedSize={session.LockedSize} objective={objectiveKind} " +
+                     (pve ? $"leaderWaitedSeconds={leaderWaitedMs / 1000} friendPairs={AutonomousBotBonds.FriendPairs(formedMembers)} " : "") +
                      $"members=\"{string.Join(",", formedMembers.Select(member => member.Name))}\" " +
                      $"rendezvous={session.RendezvousRegion}:{(int)session.Rendezvous.X},{(int)session.Rendezvous.Y},{(int)session.Rendezvous.Z}");
             if (claimed.Count >= 15)
@@ -2064,6 +2094,7 @@ public static partial class AutonomousBotGroupCoordinator
         }
         if (session.Recovery.Observe(RecoveryMembers(session, members, false), session.TaskClock.HasStarted))
         {
+            session.Wipes++;
             session.WipePenalty = session.ObjectiveKind == eAutonomousObjectiveKind.GroupPve
                 ? AutonomousGroupTargetPolicy.PenaltyAfterWipe((int)Math.Round(members.Average(member => member.Level)),
                     members.Length, session.WipePenalty, session.Camp?.TargetLevel ?? 0)
@@ -2289,8 +2320,12 @@ public static partial class AutonomousBotGroupCoordinator
             return;
         if (session.ObjectiveKind == eAutonomousObjectiveKind.GroupPve)
         {
+            GameBot[] waited = members.Where(member => !missing.Contains(member)).ToArray();
             foreach (GameBot member in missing)
+            {
                 LogNoShow(session, member, now);
+                AutonomousBotBonds.OnNoShow(waited, member, session.RendezvousName);
+            }
             ReducePvePartyAfterNoShows(session, members, missing, now);
             return;
         }
@@ -2517,6 +2552,10 @@ public static partial class AutonomousBotGroupCoordinator
                 recoveryCount = member.PersistentRecord?.RecoveryCount ?? 0
             }).ToArray()
         }));
+        if (session.ObjectiveKind == eAutonomousObjectiveKind.GroupPve)
+            AutonomousBotBonds.OnPartyFinished(members, session.TaskClock.HasStarted,
+                session.TaskClock.HasExpired(GameLoop.GameLoopTime), session.Wipes,
+                session.Camp?.ZoneName ?? session.RendezvousName);
         session.Group.DisbandGroup();
         foreach (GameBot member in members)
         {
@@ -2839,6 +2878,10 @@ public static partial class AutonomousBotGroupCoordinator
 
     public const int MinimumPveFormationSize = 5;
 
+    /// <summary>The smallest party formation builds: a four-man, only for a leader that has waited a long time
+    /// (AutonomousGroupMatchmakingPatience). A party that loses no-shows may still go on with three.</summary>
+    public const int SmallestPveFormationSize = 4;
+
     private static readonly BotPveGroupRole[] RequiredPveSlots =
     [
         BotPveGroupRole.Tank, BotPveGroupRole.Tank,
@@ -2860,16 +2903,20 @@ public static partial class AutonomousBotGroupCoordinator
         RequiredPveSlots,
         [T, T, H, H, A, A, A], [T, T, H, B, A, A, A], [T, H, H, B, A, A, A],
         [T, T, H, H, A, A], [T, H, H, B, A, A], [T, T, H, B, A, A], [T, H, B, A, A, A], [T, T, H, A, A, A],
-        [T, H, H, A, A], [T, T, H, A, A], [T, H, B, A, A], [T, H, A, A, A]
+        [T, H, H, A, A], [T, T, H, A, A], [T, H, B, A, A], [T, H, A, A, A],
+        [T, H, A, A], [T, H, B, A]
     ];
 
     public static bool LevelsCompatible(int first, int second) =>
         first >= 50 || second >= 50 ? first >= 50 && second >= 50 : Math.Abs(first - second) <= 5;
 
+    /// <param name="midFightAllowed">Formation passes it: a waiting bot is nearly always mid-pull, and it finishes the
+    /// fight before it travels (combat owns movement in the controller). Riding and corpse runs still rule a bot out.</param>
     public static bool CanRecruitPveMember(bool riding, bool returning, bool inCombat,
-        bool attacking, bool hasAggro, double travelMinutesToLeader) =>
-        !riding && !returning && !inCombat && !attacking && !hasAggro &&
-        travelMinutesToLeader >= 0 && travelMinutesToLeader <= MaximumPveRecruitmentMinutes;
+        bool attacking, bool hasAggro, double travelMinutesToLeader,
+        double maximumTravelMinutes = MaximumPveRecruitmentMinutes, bool midFightAllowed = false) =>
+        !riding && !returning && (midFightAllowed || !inCombat && !attacking && !hasAggro) &&
+        travelMinutesToLeader >= 0 && travelMinutesToLeader <= maximumTravelMinutes;
 
     private static bool TryBuildPveRoster(GameBot leader, GameBot[] candidates, out GameBot[] selected,
         out Dictionary<long, BotPveGroupRole> roles, int minimumSize = 8, int maximumSize = 8)
@@ -2941,7 +2988,7 @@ public static partial class AutonomousBotGroupCoordinator
         out Dictionary<long, BotPveGroupRole> roles)
     {
         roles = null;
-        if (members.Length < MinimumPveFormationSize || members.Length > 8 || leader == null)
+        if (members.Length < SmallestPveFormationSize || members.Length > 8 || leader == null)
             return false;
         return TryBuildPveRoster(leader, members.Where(member => member != leader).ToArray(), out GameBot[] selected,
                    out roles, members.Length, members.Length) &&
@@ -2965,6 +3012,13 @@ public static partial class AutonomousBotGroupCoordinator
         }
         return false;
     }
+
+    /// <summary>Party size formation would build from these classes when it may go as small as <paramref name="minimumSize"/>.</summary>
+    public static int PveFormationSizeAtLeast(int minimumSize, eCharacterClass leader, params eCharacterClass[] candidates) =>
+        TryMatchPveRoster(leader, candidates, minimumSize, 8, out BotPveGroupRole[] template, out _) ||
+        UseOffTanks(leader, candidates) &&
+        TryMatchPveRoster(leader, candidates, minimumSize, 8, out template, out _, offTanks: true)
+            ? template.Length : 0;
 
     /// <summary>Party size PvE formation would build from these classes (0 when none fits).</summary>
     public static int PveFormationSize(eCharacterClass leader, params eCharacterClass[] candidates) =>
