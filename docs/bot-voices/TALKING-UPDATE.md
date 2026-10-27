@@ -238,8 +238,10 @@ are never cast in a debate or a pile-on, and the roasts call the dunce "they".
 ### 11. Beggars
 
 About 4% of the Crafter personalities are beggars (`bot_living_beggars`, on by default; `AutonomousBeggars`; 2% until
-2026-10-26). The choice is a stable roll on the bot's id: 1,397 of 35,802 Crafters in a sample of 300,000 ids
-(3.9%), about 5 bots in every 1,000. A beggar:
+2026-10-26). Each realm gets 4% of its own Crafters (rounded, at least one): the ones with the lowest stable roll on the
+bot's id, so the same bots beg every run. On a 900-per-realm roster that is 4-5 beggars a capital. (Until 2026-10-27 the
+roll alone decided, which gave one owner's roster 1 / 2 / 4 beggars and left Camelot empty when its one logged off.) A
+beggar:
 
 - **Lives in its own capital.** It logs in there, picks a corner beside one of the city's merchants, and every few
   minutes either stays on it or wanders to another merchant, trainer or the broker to beg there. It never groups (an
@@ -298,7 +300,10 @@ arc starts at most every four hours, and a finished arc starts again with a new 
 pair is offline and is dropped after three days. The two protagonists are never replaced by stand-ins: an episode waits up
 to three minutes for a busy one, and ends unfinished (to play again later) if one leaves.
 
-Take a side by naming one of the two in /faction during an episode ("Aelwyn is right", "brannoc is lying", "team aelwy").
+Take a side by naming one of the two in /faction during an episode or up to ten minutes after it ("Aelwyn is right",
+"brannoc is lying", "team aelwy"; a line that names both counts when its clauses agree: "Brannoc ninja'd it, Aelwyn is
+right"). An episode (or any debate) pauses while nobody of the realm is in the game, as when a player releases or changes
+zone, and ends only after two minutes of that.
 The one you backed thanks you by tell, the other tells you off, and the last episode plays that side's ending (`_4a` or
 `_4b`; plain `_4` when nobody took a side), naming you. Storyline scenes never play as ordinary debates.
 
