@@ -1822,12 +1822,22 @@ namespace DOL.GS
 			AbstractQuest quest = HasQuest(questType);
 			if (quest != null)
 			{
+				// Building the quest saves its record, so a full journal refuses first (HearthDAoC).
+				if (QuestJournal.IsFull(player.QuestList.Count))
+				{
+					player.Out.SendMessage(QuestJournal.FullText, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+
 				AbstractQuest newQuest = (AbstractQuest)Activator.CreateInstance(questType, new object[] { player, startStep });
 				if (newQuest != null && player.AddQuest(newQuest))
 				{
 					player.Out.SendNPCsQuestEffect(this, GetQuestIndicator(player));
 					return true;
 				}
+
+				// A quest AddQuest refused leaves no record behind.
+				newQuest?.DeleteFromDatabase();
 			}
 			return false;
 		}

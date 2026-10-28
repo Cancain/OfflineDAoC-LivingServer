@@ -11434,9 +11434,11 @@ namespace DOL.GS
         /// <returns>true if added, false if player is already doing the quest!</returns>
         public bool AddQuest(AbstractQuest quest)
         {
-            if (QuestList.Count > 25)
+            // The journal holds 25 quests, and a quest the player is on isn't added again (HearthDAoC).
+            if (QuestJournal.IsFull(QuestList.Count))
+                return false;
 
-            if (IsDoingQuest(quest) != null)
+            if (QuestList.Keys.Any(q => q.IsDoingQuest() && QuestJournal.Same(q, quest)))
                 return false;
 
             if (!AvailableQuestIndexes.TryDequeue(out byte index))

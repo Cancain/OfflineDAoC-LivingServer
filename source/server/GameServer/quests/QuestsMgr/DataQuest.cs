@@ -2068,6 +2068,8 @@ namespace DOL.GS.Quests
 				{
 					if ((quest.ID + DATAQUEST_CLIENTOFFSET) == qargs.QuestID)
 					{
+						if (RefuseWhenJournalFull(player))
+							return;
 						DbCharacterXDataQuest charQuest = GetCharacterQuest(player, quest.ID, true);
 						DataQuest dq = new DataQuest(player, giver, quest, charQuest);
 						dq.Step = 1;
@@ -2195,6 +2197,8 @@ namespace DOL.GS.Quests
 
 				if (StartType == eStartType.AutoStart)
 				{
+					if (RefuseWhenJournalFull(player))
+						return;
 					DbCharacterXDataQuest charQuest = GetCharacterQuest(player, ID, true);
 					DataQuest dq = new DataQuest(player, obj, DBDataQuest, charQuest);
 					dq.Step = 1;
@@ -2221,6 +2225,8 @@ namespace DOL.GS.Quests
 
                 if (StartType == eStartType.SearchStart)
                 {
+                    if (RefuseWhenJournalFull(player)) // before the start item or any record exists
+                        return;
                     if (m_searchStartItemTemplate != string.Empty)
                     {
                         lock (player.Inventory.Lock)
@@ -2455,6 +2461,19 @@ namespace DOL.GS.Quests
 
 
 		/// <summary>
+		/// Tells the player and returns true when the journal is full; checked before any record, item or text exists,
+		/// so a refused quest isn't half-started (HearthDAoC).
+		/// </summary>
+		private static bool RefuseWhenJournalFull(GamePlayer player)
+		{
+			if (!QuestJournal.IsFull(player.QuestList.Count))
+				return false;
+
+			player.Out.SendMessage(QuestJournal.FullText, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			return true;
+		}
+
+		/// <summary>
 		/// Check offered quests to see if whisper should be processed
 		/// </summary>
 		/// <param name="player"></param>
@@ -2467,6 +2486,9 @@ namespace DOL.GS.Quests
 			if (CheckQuestQualification(player) && DBDataQuest.StartType == (byte)eStartType.Standard && DBDataQuest.AcceptText == text)
 			{
 				TryTurnTo(living, player);
+
+				if (RefuseWhenJournalFull(player))
+					return;
 
 				// A quest whose first step is a delivery hands that item on accept (nothing "begins" step 1), unless the
 				// delivery goes back to the giver; with no free slot the quest does not start (HearthDAoC).
@@ -2492,7 +2514,8 @@ namespace DOL.GS.Quests
 				DbCharacterXDataQuest charQuest = GetCharacterQuest(player, ID, true);
 				DataQuest dq = new DataQuest(player, living, DBDataQuest, charQuest);
 				dq.Step = 1;
-				player.AddQuest(dq);
+				if (!player.AddQuest(dq))
+					return;
 				if (firstItem != null)
 					GiveItem(living, player, firstItem, false);
 				if (m_sourceTexts.Count > 0)
@@ -3328,6 +3351,13 @@ namespace DOL.GS.Quests
 			{
 				m_questPlayer.RemoveFinishedQuest(this);
 				DeleteFromDatabase();
+			}
+			else
+			{
+				// An abandoned repeat keeps its count but goes back to step 0, as a finish leaves it; with its step kept
+				// the next login put it back in the journal (HearthDAoC).
+				m_charQuest.Step = 0;
+				GameServer.Database.SaveObject(m_charQuest);
 			}
 
 			m_questPlayer.Out.SendQuestListUpdate();
