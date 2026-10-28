@@ -208,6 +208,7 @@ Found by playing the Beta 1.1 test build on a fresh 0.37b install made by the ne
 - "Come with me" gets an honest answer: on my way, or how far off the bot is.
 - Fight talk comes only from groupmates who saw the fight, hunting talk only after a recent fight, and a reaction to
   you dying only from groupmates near you.
+- A bot in your group talks in /group, not /say to strangers ("anyone running Stonehenge Barrows today?").
 - A bot in your group no longer quotes its old solo hunt ("mountain algaes at Camelot Hills are the best xp").
 - `/invite` by name says when a far-off bot is busy (riding a stable route, a siege, a raid) instead of "too far
   away".
