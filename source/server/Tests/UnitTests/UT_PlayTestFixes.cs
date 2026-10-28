@@ -154,6 +154,17 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void HuntingTalkWaitsForAFight()
+        {
+            Assert.That(AutonomousBotCombatCalls.IsHuntTalk("you have the patience of a saint with these pulls"), Is.True);
+            Assert.That(AutonomousBotCombatCalls.IsHuntTalk("Loot is yours, I don't need it."), Is.True);
+            Assert.That(AutonomousBotCombatCalls.IsHuntTalk("good spot, this camp suits us"), Is.True);
+            Assert.That(AutonomousBotCombatCalls.IsHuntTalk("glad i grouped with you, honestly"), Is.False);
+            Assert.That(AutonomousBotCombatCalls.IsHuntTalk("brb, door"), Is.False);
+            Assert.That(AutonomousBotCombatCalls.FoughtRecently(null, 0), Is.False);
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.

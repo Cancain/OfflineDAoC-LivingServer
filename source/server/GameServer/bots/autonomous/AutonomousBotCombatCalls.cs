@@ -49,6 +49,29 @@ public static class AutonomousBotCombatCalls
         public long LastAdd = long.MinValue / 2;
         public long LastCall = long.MinValue / 2;
         public long LastObserved = long.MinValue / 2;
+        /// <summary>When the group's last fight ended (game time).</summary>
+        public long LastFightEnded = long.MinValue / 2;
+    }
+
+    /// <summary>How long after a fight hunting talk ("nice pull", "good camp") still fits.</summary>
+    public const int HuntTalkWindowMs = 10 * 60_000;
+
+    /// <summary>Whether this group fought in the last ten minutes (its combat calls track the fights).</summary>
+    public static bool FoughtRecently(Group group, long now) =>
+        group != null && Groups.TryGetValue(group, out GroupState state) &&
+        (state.WasFighting || now - state.LastFightEnded <= HuntTalkWindowMs);
+
+    /// <summary>
+    /// Hunting talk: a line about pulls, kills, the camp, xp or drops. Play test 2026-10-27: "you have the patience of a saint with
+    /// these pulls" and "loot is yours, I don't need it" in a group that had not fought at all. Pure.
+    /// </summary>
+    public static bool IsHuntTalk(string line)
+    {
+        if (string.IsNullOrEmpty(line))
+            return false;
+        string text = " " + new string(line.ToLowerInvariant().Select(c => char.IsLetterOrDigit(c) ? c : ' ').ToArray()) + " ";
+        return new[] { " pull", " camp", " xp ", " drop", " loot", " kill", " bubble", " med ", " mob", " adds ", " this spot",
+            " the spot", " these ", " sit ", " oom", " endurance", " power " }.Any(text.Contains);
     }
 
     public sealed class BotState
@@ -103,6 +126,7 @@ public static class AutonomousBotCombatCalls
         if (state.WasFighting && !view.Fighting)
         {
             state.WasFighting = false;
+            state.LastFightEnded = now;
             // Play test 2026-10-27: "Gj." in /group just after the player died to a myrkcat.
             if (state.WipeCalled || view.Alive <= 0 || view.PlayerDown)
                 return null;

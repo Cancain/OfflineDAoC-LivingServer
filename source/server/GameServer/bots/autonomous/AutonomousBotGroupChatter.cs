@@ -94,7 +94,9 @@ public static class AutonomousBotGroupChatter
         next ??= Groups.GetValue(group, _ => new Next());
         if (!TakeTurn(next, () => next.At, value => next.At = value, GameLoop.GameLoopTime, Random.Shared, known))
             return false;
-        if (!AutonomousBotVoices.TryLine(bot, "group", out VC.Picked picked))
+        bool hunted = AutonomousBotCombatCalls.FoughtRecently(group, GameLoop.GameLoopTime);
+        if (!AutonomousBotVoices.TryLine(bot, "group", out VC.Picked picked,
+                filter: hunted ? null : line => !AutonomousBotCombatCalls.IsHuntTalk(line.Text)))
             return false;
         Send(bot, picked.Text, picked.Line?.Invites ?? "");
         if (!string.IsNullOrEmpty(picked.Correction))
