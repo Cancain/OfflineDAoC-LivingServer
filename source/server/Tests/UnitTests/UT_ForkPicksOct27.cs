@@ -43,10 +43,13 @@ namespace DOL.UnitTests
         [Test]
         public void AHealerLetsTheSameSpellFinishInsteadOfRestartingIt()
         {
-            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(true, 4321, 4321), Is.True);
-            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(true, 1234, 4321), Is.False, "a different spell may replace it");
-            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(false, 4321, 4321), Is.False);
-            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(true, null, 4321), Is.False);
+            object mate = new(), other = new();
+            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(true, 4321, 4321, mate, mate), Is.True);
+            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(true, 1234, 4321, mate, mate), Is.False, "a different spell may replace it");
+            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(true, 4321, 4321, mate, other), Is.False, "the same heal for someone else replaces it");
+            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(false, 4321, 4321, mate, mate), Is.False);
+            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(true, null, 4321, mate, mate), Is.False);
+            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(true, 4321, 4321, null, null), Is.False);
         }
 
         // From rambodolphin13/OfflineDAoC 092701e: with nothing to sell the bot held at the medallion merchant until the

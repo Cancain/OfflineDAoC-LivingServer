@@ -50,6 +50,9 @@ public static class AutonomousFrontierTransport
     /// </summary>
     public static bool KeepWaitingForMedallionRoom(bool backpackFull, bool soldTrash) => backpackFull && soldTrash;
 
+    /// <summary>How long a bot with a full bag and nothing to sell stays away from the medallion merchant.</summary>
+    public const long MedallionNoRoomBackoffMilliseconds = 5 * 60_000;
+
     public static bool SliceFull(int processed, double elapsedMilliseconds) =>
         processed >= SlicePassengerLimit || elapsedMilliseconds >= SliceMilliseconds;
 
