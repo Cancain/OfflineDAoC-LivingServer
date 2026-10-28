@@ -14,6 +14,17 @@ namespace DOL.GS
                 Vector3.DistanceSquared(center, position) <= interactionRadius * interactionRadius;
         }
 
+        /// <summary>
+        /// A spot beside the merchant is searched for only once the bot is in the merchant's zone. From another zone each
+        /// of the 18 attempts proves a multi-zone route (AutonomousRvrRally.HasRoute), and a warband walking to a distant
+        /// frontier medallion merchant stalled the whole NpcService tick for about a second every 15 seconds per bot
+        /// (issue #25, 2026-10-27). Until then the bot just walks toward the merchant.
+        /// </summary>
+        public static bool ResolvesSpotFrom(Zone botZone, Zone merchantZone) => ResolvesSpotFrom(botZone?.ID, merchantZone?.ID);
+
+        public static bool ResolvesSpotFrom(ushort? botZone, ushort? merchantZone) =>
+            botZone.HasValue && merchantZone.HasValue && botZone.Value == merchantZone.Value;
+
         public static Vector3 Offset(long id, int attempt, int interactionRadius)
         {
             float radius = Math.Min(interactionRadius - 32, 160 + attempt % 3 * 24);
@@ -68,6 +79,11 @@ namespace DOL.GS
                 _supplySpaceOriginZone = bot.CurrentZone;
                 _supplySpacePoint = null;
                 _nextSupplySpaceSearch = 0;
+            }
+            if (!_supplySpacePoint.HasValue && !AutonomousSupplyMerchantSpace.ResolvesSpotFrom(bot.CurrentZone, merchant.CurrentZone))
+            {
+                IssuePath(bot, center); // another zone: walk toward the merchant; the spot is resolved on arrival in its zone
+                return false;
             }
             if (!_supplySpacePoint.HasValue && GameLoop.GameLoopTime >= _nextSupplySpaceSearch)
             {
