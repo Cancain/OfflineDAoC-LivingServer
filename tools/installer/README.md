@@ -64,12 +64,21 @@ Exit codes: 0 done, 1 failed, 2 stopped, 3 bad arguments or a game Setup can't h
 ## Tests
 
 `.github/workflows/installer.yml` builds the exe on a Windows runner, saves pictures of every page at 100 % and
-150 %, and runs `test-installer.ps1`, which downloads Offline DAoC for real and checks: a new install, a second run
-(nothing to do), the refusal while the game runs, removal, reinstall, a hand-changed server (refused, then replaced
-with its backup kept), and a 0.36b game with the 0.36 Social Expansion updated to 0.37 with Living Server.
+150 %, and runs `test-installer.ps1` on five more Windows machines with real downloads from shadowofze's releases:
 
-Not covered by the automated tests: the new client (about 31 GB), the progress import from 0.35 or older, turning
-on .NET Framework 3.5, and clicking through the pages by hand.
+- **install paths:** a new install, a second run (nothing to do), the refusal while the game runs, removal, reinstall,
+  a hand-changed server (refused, then replaced with its backup kept), a 0.36b game with the 0.36 Social Expansion
+  updated to 0.37 with Living Server
+- **new client:** a full 0.37c install (about 33 GB) with Living Server in both launchers
+- **stop and crashes:** Stop mid-download, Setup killed mid-download and mid-unpack, then a run that finishes (the
+  half-unpacked folder is moved aside, not deleted)
+- **old games:** a 0.35b game's progress brought into a new install; a hand-changed 0.36b game moved to a fresh copy
+- **.NET 3.5** turned on from "Disabled with Payload Removed"
+- **the game runs:** the installed server starts with `FORK_BUILD name=<build>` in its log, and a login like ENTER
+  REALM works
+- **the window:** `--autopilot` clicks the real pages from Begin to "The realm awaits", with pictures
+
+Not covered: a real player's PC (antivirus, SmartScreen, odd folders), and playing the game.
 
 ## Notes
 
