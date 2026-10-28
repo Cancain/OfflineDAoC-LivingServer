@@ -222,6 +222,14 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void InsultingABotsGuildIsAbuse()
+        {
+            Assert.That(AutonomousChatIntentModel.Predict("ur guild sucks lol"), Is.EqualTo(eAutonomousChatIntent.Abuse));
+            Assert.That(AutonomousChatIntentModel.Predict("your guild is a joke"), Is.EqualTo(eAutonomousChatIntent.Abuse));
+            Assert.That(AutonomousChatIntentModel.Predict("any guilds recruiting newbies?"), Is.Not.EqualTo(eAutonomousChatIntent.Abuse));
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.

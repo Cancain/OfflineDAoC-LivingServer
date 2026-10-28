@@ -128,7 +128,10 @@ public static partial class AutonomousChatIntentModel
                 // The holdout check: "ur the worst healer ive ever seen", "thanks for nothing", "wow great pull genius".
                 "ur the worst", "youre the worst", "you are the worst", "u r the worst", "u are the worst", "thanks for nothing",
                 "thx for nothing", "ty for nothing", "nice one genius", "great pull genius", "good job genius", "way to go genius",
-                "nice pull genius", "nice going genius", "great job genius", "real smooth genius"))
+                "nice pull genius", "nice going genius", "great job genius", "real smooth genius",
+                // Play test 2026-10-27: "Duggreigan ur guild sucks lol" read as banter, and drew "Howth smells like salt and fresh bread."
+                "ur guild sucks", "your guild sucks", "ur guild is trash", "your guild is trash", "ur guild is garbage", "your guild is garbage",
+                "ur guild is terrible", "your guild is terrible", "ur guild is a joke", "your guild is a joke"))
             return true;
         if (!words.Any(Targets.Contains))
             return false;
