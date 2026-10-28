@@ -29,6 +29,14 @@ namespace DOL.UnitTests
             Assert.That(ForkKeepClaims.HoldsLevel(enabled, claimed, battleground), Is.EqualTo(holds));
         }
 
+        [TestCase(true, true, (byte)1, (byte)1)]    // a released battleground keep keeps the level it had before the claim
+        [TestCase(true, false, (byte)5, (byte)4)]   // a frontier keep: starting_keep_level, as upstream
+        [TestCase(false, true, (byte)1, (byte)4)]   // switched off: as upstream
+        public void ReleasedBattlegroundKeep_KeepsItsLevel(bool enabled, bool battleground, byte current, byte expected)
+        {
+            Assert.That(ForkKeepClaims.ReleaseLevel(enabled, battleground, current, startingLevel: 4), Is.EqualTo(expected));
+        }
+
         [Test]
         public void GroupBots_CountOnlyWhenSwitchedOnAliveAndInTheKeepArea()
         {

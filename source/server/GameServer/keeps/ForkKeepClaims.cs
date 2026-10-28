@@ -10,7 +10,8 @@ namespace DOL.GS.Keeps;
 /// easy to merge. Every switch is off by default, and upstream's allow_bg_claim stays off: it would also open the
 /// portal keeps, since it only checks BaseLevel != 50.
 /// - fork_bg_claim: a keep in a region of the Battleground table may be claimed (never a portal or relic keep), and a
-///   claimed battleground keep keeps its level: no starting_keep_claim_level on the claim, no level change over time.
+///   claimed battleground keep keeps its level: no starting_keep_claim_level on the claim, no level change over time, and
+///   a release leaves it at that level instead of starting_keep_level. The lord's "Claim Keep" follows the limits below.
 /// - fork_claim_counts_group_bots: the companions and autonomous bots in the claiming player's group count towards
 ///   claim_num when they are alive and in the keep's area, as the players do. The bot guilds' own claims are not changed.
 /// - fork_bot_guilds_claim_bg: bot guilds may claim battleground keeps too (needs fork_bg_claim).
@@ -60,6 +61,9 @@ public static class ForkKeepClaims
     public static bool HoldsLevel(bool enabled, bool claimed, bool battlegroundKeep) =>
         enabled && claimed && battlegroundKeep;
 
+    public static byte ReleaseLevel(bool enabled, bool battlegroundKeep, byte currentLevel, byte startingLevel) =>
+        enabled && battlegroundKeep ? currentLevel : startingLevel;
+
     public readonly record struct BotPresence(bool Alive, bool InArea);
 
     /// <summary>The players present plus, when switched on, the group's bots that are alive and in the keep's area.</summary>
@@ -85,6 +89,17 @@ public static class ForkKeepClaims
     /// <summary>The guild's claims that count against this keep's limit (AutonomousBotGuildKeeps.TryClaim).</summary>
     public static int ClaimCount(AbstractGameKeep keep, Guild guild) =>
         guild == null ? 0 : ClaimCount(FORK_BG_CLAIM, IsBattlegroundKeep(keep), guild.ClaimedKeeps.ToArray().Select(IsBattlegroundKeep));
+
+    /// <summary>The guild may claim one more keep of this kind (PlayerMgr.IsAllowedToInteract: the lord's "Claim Keep";
+    /// upstream refused a guild that owned any keep at all).</summary>
+    public static bool WithinClaimLimit(AbstractGameKeep keep, Guild guild) =>
+        ClaimLimitRefusal(IsBattlegroundKeep(keep), ClaimLimit(keep), ClaimCount(keep, guild)) == null;
+
+    /// <summary>AbstractGameKeep.Release: the level a released keep goes to. With fork_bg_claim on a battleground keep
+    /// keeps its own (the claim never changed it, so it is the level from before the claim; a capture has already set
+    /// starting_keep_level); otherwise starting_keep_level, as upstream.</summary>
+    public static byte ReleaseLevel(AbstractGameKeep keep, byte startingLevel) =>
+        ReleaseLevel(FORK_BG_CLAIM, IsBattlegroundKeep(keep), keep.Level, startingLevel);
 
     /// <summary>
     /// AbstractGameKeep.CheckForClaim: with fork_bg_claim on, the claim limit is checked here (battleground and frontier

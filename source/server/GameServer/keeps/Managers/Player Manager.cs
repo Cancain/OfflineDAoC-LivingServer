@@ -250,6 +250,8 @@ namespace DOL.GS.Keeps
 					{
 						if (keep.Guild != null)
 							return false;
+						if (ForkKeepClaims.FORK_BG_CLAIM) { if (!ForkKeepClaims.WithinClaimLimit(keep, player.Guild)) return false; } // Fork: own limits for battleground and frontier keeps
+						else
 						foreach (AbstractGameKeep k in GameServer.KeepManager.GetAllKeeps())
 						{
 							if (k.Guild == player.Guild)

@@ -790,7 +790,7 @@ namespace DOL.GS.Keeps
 			Guild = null;
 			StopDeductionTimer();
 			StopChangeLevelTimer();
-			ChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_LEVEL);
+			ChangeLevel(ForkKeepClaims.ReleaseLevel(this, (byte)ServerProperties.Properties.STARTING_KEEP_LEVEL)); // Fork: a battleground keep keeps its level
 
 			foreach (GameKeepGuard guard in Guards.Values)
 			{
