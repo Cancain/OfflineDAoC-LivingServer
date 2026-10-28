@@ -418742,370 +418742,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling armor at cost, pst",
-   "id": "1c0f90a0eefc"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling armor at cost, send a tell",
-   "id": "ab23efc4823d"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling armor cheap, pst",
-   "id": "9ff816a48fdf"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling armor cheap, send a tell",
-   "id": "49b389848d90"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling armor for materials, pst",
-   "id": "7f59ed6cb27e"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling armor for materials, send a tell",
-   "id": "c7b5cee48008"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling weapons at cost, pst",
-   "id": "44666f585300"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling weapons at cost, send a tell",
-   "id": "f656adf49245"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling weapons cheap, pst",
-   "id": "bad5da4895b2"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling weapons cheap, send a tell",
-   "id": "23162c7a1148"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling weapons for materials, pst",
-   "id": "7a9f1547a383"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling weapons for materials, send a tell",
-   "id": "8960c1f014e3"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling tailored stuff at cost, pst",
-   "id": "55de1bb60709"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling tailored stuff at cost, send a tell",
-   "id": "887ebf5fa79b"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling tailored stuff cheap, pst",
-   "id": "5c1f248d6305"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling tailored stuff cheap, send a tell",
-   "id": "fcd0d97feec6"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling tailored stuff for materials, pst",
-   "id": "2eee1ae1080b"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
-   "invites": "trade",
-   "text": "selling tailored stuff for materials, send a tell",
-   "id": "de4d412d6097"
-  },
-  {
-   "kind": "trade",
-   "topic": "selling",
-   "who": [
-    "Crafter"
-   ],
-   "realm": "*",
-   "class": [],
-   "levels": [
-    1,
-    50
-   ],
-   "needs": [],
-   "intent": "",
-   "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "selling stuff from my craft at cost, pst",
-   "id": "1b8979077799"
+   "text": "making armor for the guild, materials cost a fortune",
+   "id": "0d19dafba78a"
   },
   {
    "kind": "trade",
@@ -419122,10 +418762,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "selling stuff from my craft at cost, send a tell",
-   "id": "907cc5ca3c4e"
+   "text": "making armor for the guild",
+   "id": "61c797e77896"
   },
   {
    "kind": "trade",
@@ -419142,10 +418782,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "selling stuff from my craft cheap, pst",
-   "id": "4ad9849978d1"
+   "text": "making armor for my alt, materials cost a fortune",
+   "id": "549d73d2d990"
   },
   {
    "kind": "trade",
@@ -419162,10 +418802,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "selling stuff from my craft cheap, send a tell",
-   "id": "05a97ff5f9ae"
+   "text": "making armor for my alt",
+   "id": "964e637ecbb5"
   },
   {
    "kind": "trade",
@@ -419182,10 +418822,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "selling stuff from my craft for materials, pst",
-   "id": "8a1f1629bf8c"
+   "text": "making armor for skill ups, materials cost a fortune",
+   "id": "91567ad710f5"
   },
   {
    "kind": "trade",
@@ -419202,10 +418842,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "selling stuff from my craft for materials, send a tell",
-   "id": "436ea4c62be0"
+   "text": "making armor for skill ups",
+   "id": "e3631651f384"
   },
   {
    "kind": "trade",
@@ -419222,10 +418862,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making armor at cost, pst",
-   "id": "a02a49e1a6dc"
+   "text": "making weapons for the guild, materials cost a fortune",
+   "id": "36f68c32b88b"
   },
   {
    "kind": "trade",
@@ -419242,10 +418882,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making armor at cost, send a tell",
-   "id": "d01bcc10314d"
+   "text": "making weapons for the guild",
+   "id": "05a5302b9211"
   },
   {
    "kind": "trade",
@@ -419262,10 +418902,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making armor cheap, pst",
-   "id": "9901aeb911fd"
+   "text": "making weapons for my alt, materials cost a fortune",
+   "id": "a5669d24aca1"
   },
   {
    "kind": "trade",
@@ -419282,10 +418922,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making armor cheap, send a tell",
-   "id": "f3acf7c725dc"
+   "text": "making weapons for my alt",
+   "id": "48097dd87050"
   },
   {
    "kind": "trade",
@@ -419302,10 +418942,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making armor for materials, pst",
-   "id": "e3562d07f7dd"
+   "text": "making weapons for skill ups, materials cost a fortune",
+   "id": "857eed51c5cd"
   },
   {
    "kind": "trade",
@@ -419322,10 +418962,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making armor for materials, send a tell",
-   "id": "03e739e8bd04"
+   "text": "making weapons for skill ups",
+   "id": "4a5cfde7b51a"
   },
   {
    "kind": "trade",
@@ -419342,10 +418982,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making weapons at cost, pst",
-   "id": "e1eee4d7d967"
+   "text": "making tailored stuff for the guild, materials cost a fortune",
+   "id": "86421046cdb2"
   },
   {
    "kind": "trade",
@@ -419362,10 +419002,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making weapons at cost, send a tell",
-   "id": "83899a94c089"
+   "text": "making tailored stuff for the guild",
+   "id": "1a8a71380815"
   },
   {
    "kind": "trade",
@@ -419382,10 +419022,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making weapons cheap, pst",
-   "id": "f58466d9e31f"
+   "text": "making tailored stuff for my alt, materials cost a fortune",
+   "id": "861d1d4611e8"
   },
   {
    "kind": "trade",
@@ -419402,10 +419042,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making weapons cheap, send a tell",
-   "id": "3423a4c4a054"
+   "text": "making tailored stuff for my alt",
+   "id": "ab46b0e12e4c"
   },
   {
    "kind": "trade",
@@ -419422,10 +419062,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making weapons for materials, pst",
-   "id": "bd31f92c2f6a"
+   "text": "making tailored stuff for skill ups, materials cost a fortune",
+   "id": "aeb716050992"
   },
   {
    "kind": "trade",
@@ -419442,10 +419082,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making weapons for materials, send a tell",
-   "id": "5ffde7a30d6e"
+   "text": "making tailored stuff for skill ups",
+   "id": "3aa487b57963"
   },
   {
    "kind": "trade",
@@ -419462,10 +419102,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making tailored stuff at cost, pst",
-   "id": "a9b236444f04"
+   "text": "finishing armor for the guild, materials cost a fortune",
+   "id": "4f8c40b9f6da"
   },
   {
    "kind": "trade",
@@ -419482,10 +419122,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making tailored stuff at cost, send a tell",
-   "id": "b7b6d47126bd"
+   "text": "finishing armor for the guild",
+   "id": "53f06afa23fa"
   },
   {
    "kind": "trade",
@@ -419502,10 +419142,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making tailored stuff cheap, pst",
-   "id": "94e77950fbe7"
+   "text": "finishing armor for my alt, materials cost a fortune",
+   "id": "31b09bbc6d28"
   },
   {
    "kind": "trade",
@@ -419522,10 +419162,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making tailored stuff cheap, send a tell",
-   "id": "fce4ece6e1d2"
+   "text": "finishing armor for my alt",
+   "id": "42e90f32a88e"
   },
   {
    "kind": "trade",
@@ -419542,10 +419182,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making tailored stuff for materials, pst",
-   "id": "e9b49df7a42f"
+   "text": "finishing armor for skill ups, materials cost a fortune",
+   "id": "8fdd5ac817d2"
   },
   {
    "kind": "trade",
@@ -419562,10 +419202,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making tailored stuff for materials, send a tell",
-   "id": "ce7d31e0afe6"
+   "text": "finishing armor for skill ups",
+   "id": "99b373281f23"
   },
   {
    "kind": "trade",
@@ -419582,10 +419222,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making stuff from my craft at cost, pst",
-   "id": "1d03bcef131d"
+   "text": "finishing weapons for the guild, materials cost a fortune",
+   "id": "961e9597d595"
   },
   {
    "kind": "trade",
@@ -419602,10 +419242,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making stuff from my craft at cost, send a tell",
-   "id": "454e9759e0ee"
+   "text": "finishing weapons for the guild",
+   "id": "ed36246631a0"
   },
   {
    "kind": "trade",
@@ -419622,10 +419262,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making stuff from my craft cheap, pst",
-   "id": "125424dd70dd"
+   "text": "finishing weapons for my alt, materials cost a fortune",
+   "id": "998b7e5c4c84"
   },
   {
    "kind": "trade",
@@ -419642,10 +419282,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making stuff from my craft cheap, send a tell",
-   "id": "983eb8e6d35e"
+   "text": "finishing weapons for my alt",
+   "id": "9811fad164c2"
   },
   {
    "kind": "trade",
@@ -419662,10 +419302,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making stuff from my craft for materials, pst",
-   "id": "927932471d54"
+   "text": "finishing weapons for skill ups, materials cost a fortune",
+   "id": "a0356520a375"
   },
   {
    "kind": "trade",
@@ -419682,10 +419322,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.1443,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "making stuff from my craft for materials, send a tell",
-   "id": "2e2e5857d142"
+   "text": "finishing weapons for skill ups",
+   "id": "072173507458"
   },
   {
    "kind": "trade",
@@ -419702,10 +419342,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "taking orders, bring materials pst",
-   "id": "42991825439e"
+   "text": "finishing tailored stuff for the guild, materials cost a fortune",
+   "id": "7c336d9d14d9"
   },
   {
    "kind": "trade",
@@ -419722,10 +419362,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "taking orders, bring materials",
-   "id": "91a1731bad2b"
+   "text": "finishing tailored stuff for the guild",
+   "id": "354c3e6bb7b4"
   },
   {
    "kind": "trade",
@@ -419742,10 +419382,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "taking orders, fair prices pst",
-   "id": "a28c09b92719"
+   "text": "finishing tailored stuff for my alt, materials cost a fortune",
+   "id": "dbf54dfe0686"
   },
   {
    "kind": "trade",
@@ -419762,10 +419402,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "taking orders, fair prices",
-   "id": "debebb3b4e0f"
+   "text": "finishing tailored stuff for my alt",
+   "id": "0fc7cd62188a"
   },
   {
    "kind": "trade",
@@ -419782,10 +419422,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "taking orders pst",
-   "id": "eae2024c74a0"
+   "text": "finishing tailored stuff for skill ups, materials cost a fortune",
+   "id": "e99df78523b8"
   },
   {
    "kind": "trade",
@@ -419802,10 +419442,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
+   "weight": 0.1667,
    "invites": "trade",
-   "text": "taking orders",
-   "id": "1a57ea319259"
+   "text": "finishing tailored stuff for skill ups",
+   "id": "cb07bb9665ad"
   },
   {
    "kind": "trade",
@@ -419822,10 +419462,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
+   "weight": 0.4082,
    "invites": "trade",
-   "text": "doing orders, bring materials pst",
-   "id": "5db3bf7855da"
+   "text": "doing guild orders, materials are killing me",
+   "id": "bde8a752dafd"
   },
   {
    "kind": "trade",
@@ -419842,10 +419482,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
+   "weight": 0.4082,
    "invites": "trade",
-   "text": "doing orders, bring materials",
-   "id": "74deb4dd9b86"
+   "text": "doing guild orders, slow going",
+   "id": "f39fbf4eda6d"
   },
   {
    "kind": "trade",
@@ -419862,10 +419502,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
+   "weight": 0.4082,
    "invites": "trade",
-   "text": "doing orders, fair prices pst",
-   "id": "a6233556c0fd"
+   "text": "doing guild orders",
+   "id": "42241543405d"
   },
   {
    "kind": "trade",
@@ -419882,10 +419522,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
+   "weight": 0.4082,
    "invites": "trade",
-   "text": "doing orders, fair prices",
-   "id": "8c42168ad90e"
+   "text": "crafting for the guild, materials are killing me",
+   "id": "b9c85d092164"
   },
   {
    "kind": "trade",
@@ -419902,10 +419542,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
+   "weight": 0.4082,
    "invites": "trade",
-   "text": "doing orders pst",
-   "id": "158c9abee3ba"
+   "text": "crafting for the guild, slow going",
+   "id": "2686d43deb0f"
   },
   {
    "kind": "trade",
@@ -419922,10 +419562,10 @@
    "needs": [],
    "intent": "",
    "mood": "",
-   "weight": 0.2887,
+   "weight": 0.4082,
    "invites": "trade",
-   "text": "doing orders",
-   "id": "2d8e7cc5cdc0"
+   "text": "crafting for the guild",
+   "id": "2a73a3be56f6"
   },
   {
    "kind": "trade",
@@ -419944,8 +419584,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, can make armor for anyone",
-   "id": "0dfd0425d996"
+   "text": "crafter here, making armor for guildies",
+   "id": "d73c1541417f"
   },
   {
    "kind": "trade",
@@ -419964,8 +419604,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, can make armor for lowbies, pst",
-   "id": "5c83ee34a390"
+   "text": "crafter here, making armor for my guild",
+   "id": "9a0619c09554"
   },
   {
    "kind": "trade",
@@ -419984,8 +419624,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, can make arrows for anyone, pst",
-   "id": "10f90a1bb6c0"
+   "text": "crafter here, making armor for my alts",
+   "id": "15bfcaa39d46"
   },
   {
    "kind": "trade",
@@ -420004,8 +419644,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, can make arrows for guildies",
-   "id": "56497baf7deb"
+   "text": "crafter here, making weapons for guildies",
+   "id": "2a23ce822de6"
   },
   {
    "kind": "trade",
@@ -420024,8 +419664,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, can make arrows for guildies, pst",
-   "id": "0b98b49c025e"
+   "text": "crafter here, making weapons for my guild",
+   "id": "b919adc6b66a"
   },
   {
    "kind": "trade",
@@ -420044,8 +419684,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, can make arrows for lowbies, pst",
-   "id": "49c5c8d13203"
+   "text": "crafter here, making weapons for my alts",
+   "id": "70fd2ffb5af4"
   },
   {
    "kind": "trade",
@@ -420064,8 +419704,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, can make tailored gear for anyone, pst",
-   "id": "12b16c78cfe4"
+   "text": "crafter here, making arrows for guildies",
+   "id": "b9f535ab685c"
   },
   {
    "kind": "trade",
@@ -420084,8 +419724,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, can make tailored gear for guildies",
-   "id": "fe8e491e8662"
+   "text": "crafter here, making arrows for my guild",
+   "id": "d9a07d4e1768"
   },
   {
    "kind": "trade",
@@ -420104,8 +419744,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, can make tailored gear for guildies, pst",
-   "id": "66e929156868"
+   "text": "crafter here, making arrows for my alts",
+   "id": "11abb3620a92"
   },
   {
    "kind": "trade",
@@ -420124,8 +419764,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, can make tailored gear for lowbies, pst",
-   "id": "13b4ec9fe77a"
+   "text": "crafter here, making tailored gear for guildies",
+   "id": "71f34910c66d"
   },
   {
    "kind": "trade",
@@ -420144,8 +419784,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, can make weapons for guildies, pst",
-   "id": "e689f988899c"
+   "text": "crafter here, making tailored gear for my guild",
+   "id": "bdafb99d0458"
   },
   {
    "kind": "trade",
@@ -420164,8 +419804,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, will make armor for anyone, pst",
-   "id": "5ab909b4dcad"
+   "text": "crafter here, making tailored gear for my alts",
+   "id": "baa7b0bcc738"
   },
   {
    "kind": "trade",
@@ -420184,8 +419824,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, will make armor for lowbies, pst",
-   "id": "b6fceaa0080a"
+   "text": "crafter here, finishing armor for guildies",
+   "id": "7d3611bdaf66"
   },
   {
    "kind": "trade",
@@ -420204,8 +419844,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, will make arrows for anyone",
-   "id": "21d1c75cf22f"
+   "text": "crafter here, finishing armor for my guild",
+   "id": "09b7b584272e"
   },
   {
    "kind": "trade",
@@ -420224,8 +419864,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, will make arrows for anyone, pst",
-   "id": "dfdba4c51067"
+   "text": "crafter here, finishing armor for my alts",
+   "id": "a0fede794818"
   },
   {
    "kind": "trade",
@@ -420244,8 +419884,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, will make arrows for guildies",
-   "id": "fab38c8409a0"
+   "text": "crafter here, finishing weapons for guildies",
+   "id": "e9b29acebd27"
   },
   {
    "kind": "trade",
@@ -420264,8 +419904,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, will make arrows for lowbies, pst",
-   "id": "2b55aa34d3f0"
+   "text": "crafter here, finishing weapons for my guild",
+   "id": "267d4b35965d"
   },
   {
    "kind": "trade",
@@ -420284,8 +419924,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, will make tailored gear for anyone",
-   "id": "f2918de7e832"
+   "text": "crafter here, finishing weapons for my alts",
+   "id": "02218fe94bde"
   },
   {
    "kind": "trade",
@@ -420304,8 +419944,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, will make tailored gear for anyone, pst",
-   "id": "c6aa4df1e1fa"
+   "text": "crafter here, finishing arrows for guildies",
+   "id": "04615d942087"
   },
   {
    "kind": "trade",
@@ -420324,8 +419964,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, will make tailored gear for guildies",
-   "id": "377810073d93"
+   "text": "crafter here, finishing arrows for my guild",
+   "id": "e2fd21b2212d"
   },
   {
    "kind": "trade",
@@ -420344,8 +419984,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, will make tailored gear for guildies, pst",
-   "id": "13e4aa5c9cf2"
+   "text": "crafter here, finishing arrows for my alts",
+   "id": "732e8b228c6d"
   },
   {
    "kind": "trade",
@@ -420364,8 +420004,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, will make tailored gear for lowbies",
-   "id": "1d4ce72820a8"
+   "text": "crafter here, finishing tailored gear for guildies",
+   "id": "3147661aa8da"
   },
   {
    "kind": "trade",
@@ -420384,8 +420024,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafter here, will make weapons for anyone",
-   "id": "9b15d99894ae"
+   "text": "crafter here, finishing tailored gear for my guild",
+   "id": "346a4d16d55f"
   },
   {
    "kind": "trade",
@@ -420404,8 +420044,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make armor for anyone, pst",
-   "id": "84b43653eaee"
+   "text": "crafter here, finishing tailored gear for my alts",
+   "id": "f2fc75dd8ee6"
   },
   {
    "kind": "trade",
@@ -420424,8 +420064,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make armor for guildies",
-   "id": "ea200704a8ec"
+   "text": "crafting tonight, making armor for guildies",
+   "id": "dade7dcc86f8"
   },
   {
    "kind": "trade",
@@ -420444,8 +420084,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make armor for guildies, pst",
-   "id": "6f9472ac4f57"
+   "text": "crafting tonight, making armor for my guild",
+   "id": "59afeffc7984"
   },
   {
    "kind": "trade",
@@ -420464,8 +420104,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make armor for lowbies, pst",
-   "id": "b3efef60cadd"
+   "text": "crafting tonight, making armor for my alts",
+   "id": "50717b2dae5d"
   },
   {
    "kind": "trade",
@@ -420484,8 +420124,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make arrows for anyone",
-   "id": "70af590f6b79"
+   "text": "crafting tonight, making weapons for guildies",
+   "id": "363b93209080"
   },
   {
    "kind": "trade",
@@ -420504,8 +420144,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make arrows for guildies, pst",
-   "id": "d2474c0258e7"
+   "text": "crafting tonight, making weapons for my guild",
+   "id": "e4a5c1a3b332"
   },
   {
    "kind": "trade",
@@ -420524,8 +420164,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make arrows for lowbies",
-   "id": "9a9ff03b723c"
+   "text": "crafting tonight, making weapons for my alts",
+   "id": "f20a995d5523"
   },
   {
    "kind": "trade",
@@ -420544,8 +420184,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make arrows for lowbies, pst",
-   "id": "63ce097b6a61"
+   "text": "crafting tonight, making arrows for guildies",
+   "id": "5412a2081e23"
   },
   {
    "kind": "trade",
@@ -420564,8 +420204,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make tailored gear for guildies",
-   "id": "63b2431b6b0f"
+   "text": "crafting tonight, making arrows for my guild",
+   "id": "c3dc12755cd8"
   },
   {
    "kind": "trade",
@@ -420584,8 +420224,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make tailored gear for guildies, pst",
-   "id": "5a51117bea7a"
+   "text": "crafting tonight, making arrows for my alts",
+   "id": "05db479f6df9"
   },
   {
    "kind": "trade",
@@ -420604,8 +420244,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make tailored gear for lowbies, pst",
-   "id": "b09a300c502d"
+   "text": "crafting tonight, making tailored gear for guildies",
+   "id": "8e2d40f181d1"
   },
   {
    "kind": "trade",
@@ -420624,8 +420264,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make weapons for anyone",
-   "id": "d67132ffdba2"
+   "text": "crafting tonight, making tailored gear for my guild",
+   "id": "38f097dda388"
   },
   {
    "kind": "trade",
@@ -420644,8 +420284,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make weapons for anyone, pst",
-   "id": "bdfe8a87fb4a"
+   "text": "crafting tonight, making tailored gear for my alts",
+   "id": "b51dc7202cb5"
   },
   {
    "kind": "trade",
@@ -420664,8 +420304,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, can make weapons for guildies, pst",
-   "id": "4e40d3c57353"
+   "text": "crafting tonight, finishing armor for guildies",
+   "id": "df05dfd6cd70"
   },
   {
    "kind": "trade",
@@ -420684,8 +420324,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, will make armor for anyone, pst",
-   "id": "c24bc467c1a6"
+   "text": "crafting tonight, finishing armor for my guild",
+   "id": "96cfcfa2711a"
   },
   {
    "kind": "trade",
@@ -420704,8 +420344,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, will make armor for guildies, pst",
-   "id": "c775b1cc5614"
+   "text": "crafting tonight, finishing armor for my alts",
+   "id": "b6e6954460f9"
   },
   {
    "kind": "trade",
@@ -420724,8 +420364,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, will make arrows for anyone",
-   "id": "5c8a39d62d3d"
+   "text": "crafting tonight, finishing weapons for guildies",
+   "id": "55eff7820a1b"
   },
   {
    "kind": "trade",
@@ -420744,8 +420384,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, will make arrows for lowbies, pst",
-   "id": "aba2bc1d6d02"
+   "text": "crafting tonight, finishing weapons for my guild",
+   "id": "f3ee34213ef0"
   },
   {
    "kind": "trade",
@@ -420764,8 +420404,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, will make tailored gear for anyone",
-   "id": "6b91c116f45a"
+   "text": "crafting tonight, finishing weapons for my alts",
+   "id": "ba296fe3c6bd"
   },
   {
    "kind": "trade",
@@ -420784,8 +420424,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, will make tailored gear for anyone, pst",
-   "id": "c9d124c11a63"
+   "text": "crafting tonight, finishing arrows for guildies",
+   "id": "eba5d5c4a522"
   },
   {
    "kind": "trade",
@@ -420804,8 +420444,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, will make tailored gear for guildies",
-   "id": "aa3d5b6f9867"
+   "text": "crafting tonight, finishing arrows for my guild",
+   "id": "a9b1f58a44cd"
   },
   {
    "kind": "trade",
@@ -420824,8 +420464,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, will make tailored gear for lowbies",
-   "id": "dd53b7314a9e"
+   "text": "crafting tonight, finishing arrows for my alts",
+   "id": "f0e02f57679a"
   },
   {
    "kind": "trade",
@@ -420844,8 +420484,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, will make tailored gear for lowbies, pst",
-   "id": "19f24cdd036f"
+   "text": "crafting tonight, finishing tailored gear for guildies",
+   "id": "807d3529504e"
   },
   {
    "kind": "trade",
@@ -420864,8 +420504,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, will make weapons for anyone, pst",
-   "id": "7fc6623379a2"
+   "text": "crafting tonight, finishing tailored gear for my guild",
+   "id": "afbdf60aba2f"
   },
   {
    "kind": "trade",
@@ -420884,8 +420524,8 @@
    "mood": "",
    "weight": 0.1443,
    "invites": "trade",
-   "text": "crafting tonight, will make weapons for guildies, pst",
-   "id": "08030c3ea236"
+   "text": "crafting tonight, finishing tailored gear for my alts",
+   "id": "ca2516af1ac5"
   },
   {
    "kind": "trade",
@@ -420906,8 +420546,8 @@
    "mood": "",
    "weight": 0.5,
    "invites": "trade",
-   "text": "crafting all evening, send tells for orders",
-   "id": "186f9b46a8b8"
+   "text": "crafting all evening, guild orders first",
+   "id": "cd9e6fa4d858"
   },
   {
    "kind": "trade",
@@ -420928,8 +420568,8 @@
    "mood": "",
    "weight": 0.5,
    "invites": "trade",
-   "text": "crafting all evening, pst if u need something made",
-   "id": "4a8f69cf762f"
+   "text": "crafting all evening, skill ups all night",
+   "id": "05545329308c"
   },
   {
    "kind": "trade",
@@ -420950,8 +420590,8 @@
    "mood": "",
    "weight": 0.5,
    "invites": "trade",
-   "text": "at the forge tonight, send tells for orders",
-   "id": "336893505b91"
+   "text": "at the forge tonight, guild orders first",
+   "id": "49e0b8cdcc41"
   },
   {
    "kind": "trade",
@@ -420972,8 +420612,8 @@
    "mood": "",
    "weight": 0.5,
    "invites": "trade",
-   "text": "at the forge tonight, pst if u need something made",
-   "id": "e58d17218339"
+   "text": "at the forge tonight, skill ups all night",
+   "id": "05db45b5573c"
   },
   {
    "kind": "lfg",
@@ -637516,8 +637156,8 @@
    "mood": "",
    "weight": 1.0,
    "invites": "trade",
-   "text": "taking armor orders, bring your own dye",
-   "id": "bf61151f7641"
+   "text": "armor for half the guild this week, everyone wants their own dye",
+   "id": "45bc72826cd0"
   },
   {
    "kind": "trade",
@@ -637576,8 +637216,8 @@
    "mood": "",
    "weight": 1.0,
    "invites": "trade",
-   "text": "my craft skill is finally useful, takes orders now",
-   "id": "a6c6440fd7f0"
+   "text": "my craft skill is finally useful, guildies keep asking for stuff",
+   "id": "38a9bf4baf6c"
   },
   {
    "kind": "trade",
@@ -637676,8 +637316,8 @@
    "mood": "",
    "weight": 1.0,
    "invites": "trade",
-   "text": "spellcrafting tonight, anyone want their gear gemmed?",
-   "id": "1db4e5cd9770"
+   "text": "spellcrafting tonight, the guild's gear first",
+   "id": "4e7937382bd6"
   },
   {
    "kind": "trade",
@@ -651007,10 +650647,10 @@
     },
     {
      "role": "F",
-     "text": "anyone need resist gear crafted before sunday?",
+     "text": "guild needs resist gear crafted before sunday",
      "variants": [
-      "anyone need resist gear crafted before sunday?",
-      "taking orders for resist armor before the raid"
+      "guild needs resist gear crafted before sunday",
+      "doing resist armor for the guild before the raid"
      ],
      "optional": false
     },
@@ -651847,9 +651487,9 @@
     },
     {
      "role": "A",
-     "text": "i am taking orders now",
+     "text": "i am doing guild orders now",
      "variants": [
-      "i am taking orders now",
+      "i am doing guild orders now",
       "i will be ready, send a tell when you ding"
      ],
      "optional": false
