@@ -38,7 +38,7 @@ public static class AutonomousBotCombatCalls
     public const int OomResetPercent = 40;
 
     /// <summary>The group's fight as one bot sees it this second.</summary>
-    public sealed record GroupView(bool Fighting, int Enemies, int Members, int Alive, bool Worn);
+    public sealed record GroupView(bool Fighting, int Enemies, int Members, int Alive, bool Worn, bool PlayerDown = false);
 
     public sealed class GroupState
     {
@@ -103,7 +103,8 @@ public static class AutonomousBotCombatCalls
         if (state.WasFighting && !view.Fighting)
         {
             state.WasFighting = false;
-            if (state.WipeCalled || view.Alive <= 0)
+            // Play test 2026-10-27: "Gj." in /group just after the player died to a myrkcat.
+            if (state.WipeCalled || view.Alive <= 0 || view.PlayerDown)
                 return null;
             double roll = random.NextDouble();
             if (view.Worn)
@@ -238,7 +239,8 @@ public static class AutonomousBotCombatCalls
                 {
                     state.LastObserved = now;
                     var view = new GroupView(members.Any(m => m.IsAlive && m.InCombat), enemies, members.Length,
-                        members.Count(m => m.IsAlive), members.Any(m => m.IsAlive && (m.HealthPercent < 50 || m.MaxMana > 0 && m.ManaPercent < 40)));
+                        members.Count(m => m.IsAlive), members.Any(m => m.IsAlive && (m.HealthPercent < 50 || m.MaxMana > 0 && m.ManaPercent < 40)),
+                        members.Any(m => m is GamePlayer && !m.IsAlive));
                     string topic = GroupEvent(state, view, now, Random.Shared);
                     if (topic != null)
                         CallForGroup(members, state, topic, now, enemies);

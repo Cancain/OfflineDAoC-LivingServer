@@ -73,6 +73,45 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void NoGoodJobAfterAFightThePlayerDiedIn()
+        {
+            // "Gj." in /group just after the player died to a myrkcat.
+            var lowRoll = new FixedRandom(0.01);
+            var died = new AutonomousBotCombatCalls.GroupState();
+            AutonomousBotCombatCalls.GroupEvent(died, new(true, 1, 2, 2, false), 1_000, lowRoll);
+            Assert.That(AutonomousBotCombatCalls.GroupEvent(died, new(false, 0, 2, 1, false, PlayerDown: true), 60_000, lowRoll), Is.Null);
+            var won = new AutonomousBotCombatCalls.GroupState();
+            AutonomousBotCombatCalls.GroupEvent(won, new(true, 1, 2, 2, false), 1_000, lowRoll);
+            Assert.That(AutonomousBotCombatCalls.GroupEvent(won, new(false, 0, 2, 2, false), 60_000, lowRoll), Is.EqualTo("kill"));
+        }
+
+        private sealed class FixedRandom : System.Random
+        {
+            private readonly double _value;
+            public FixedRandom(double value) => _value = value;
+            public override double NextDouble() => _value;
+            public override int Next(int maxValue) => 0;
+            public override int Next(int minValue, int maxValue) => minValue;
+        }
+
+        [Test]
+        public void AGroupmateAskedToComeAnswersHonestly()
+        {
+            Assert.That(AutonomousBotGroupChatter.AsksToCome("can u come to mularn?"), Is.True);
+            Assert.That(AutonomousBotGroupChatter.AsksToCome("meet me at the bridge"), Is.True);
+            Assert.That(AutonomousBotGroupChatter.AsksToCome("u coming?"), Is.True);
+            Assert.That(AutonomousBotGroupChatter.AsksToCome("where should we hunt?"), Is.False);
+            Assert.That(AutonomousBotGroupChatter.AsksToCome("welcome to the group"), Is.False);
+            for (int seed = 0; seed < 6; seed++)
+            {
+                Assert.That(AutonomousBotGroupChatter.ComeReply(false, int.MaxValue, "Aegir's Landing", new System.Random(seed)),
+                    Does.Contain("Aegir's Landing"), "another region: it says where it is");
+                Assert.That(AutonomousBotGroupChatter.ComeReply(false, int.MaxValue, null, new System.Random(seed)), Does.Not.Contain("{"));
+                Assert.That(AutonomousBotGroupChatter.ComeReply(true, 500, "Vale of Mularn", new System.Random(seed)), Does.Not.Contain("cant"));
+            }
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.

@@ -52,6 +52,29 @@ public static class AutonomousBotGroupChatter
         }
     }
 
+    /// <summary>"can u come to mularn?", "come here", "meet me at the bridge": the player asks a groupmate to come. Pure.</summary>
+    public static bool AsksToCome(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return false;
+        string text = " " + new string(message.ToLowerInvariant().Select(c => char.IsLetterOrDigit(c) ? c : ' ').ToArray()) + " ";
+        while (text.Contains("  "))
+            text = text.Replace("  ", " ");
+        return new[] { " can u come ", " can you come ", " could u come ", " could you come ", " come to me ", " come here ", " meet me ",
+            " come help ", " get over here ", " come find me ", " u coming ", " you coming ", " r u coming ", " are you coming " }.Any(text.Contains);
+    }
+
+    /// <summary>What a groupmate asked to come says. Same region: it is on its way (it follows the player there). Pure.</summary>
+    public static string ComeReply(bool sameRegion, int distance, string zone, Random random)
+    {
+        string where = string.IsNullOrEmpty(zone) ? "the other side of the realm" : zone;
+        if (sameRegion && distance <= 3_000)
+            return random.Next(3) switch { 0 => "right behind you", 1 => "here", _ => "coming" };
+        if (sameRegion)
+            return random.Next(2) == 0 ? "omw" : $"omw, im over in {where}, give me a few";
+        return random.Next(2) == 0 ? $"im over in {where}, cant get to you from here. come find me?" : $"stuck over in {where} for now, meet up later?";
+    }
+
     /// <summary>From the bot's ambient chat check: maybe say a group line. True when the bot spoke.</summary>
     public static bool TryGroupLine(GameBot bot)
     {
@@ -202,6 +225,17 @@ public static class AutonomousBotGroupChatter
             if (AutonomousBotVoices.TryLine(heard, "reply", out VC.Picked ok, answers: "player_headsup", relax: true))
                 AutonomousLivingServer.Later(heard, AutonomousBotChatCoordinator.ReplyDelayMs(ok.Text, 0, Random.Shared) / 2,
                     () => heard.Group == group && heard.IsAlive, () => Send(heard, ok.Text, "none", player.Name));
+            return;
+        }
+        // Play test 2026-10-27: "can u come to mularn?" to Yrilda drew nothing (read as banter). A groupmate asked to come says
+        // honestly whether it can: it follows the player within a region, it can't cross into another region on its own.
+        if (AsksToCome(message))
+        {
+            GameBot asked = pool[0];
+            string answer = ComeReply(asked.CurrentRegion == player.CurrentRegion,
+                asked.CurrentRegion == player.CurrentRegion ? asked.GetDistanceTo(player) : int.MaxValue, asked.CurrentZone?.Description, Random.Shared);
+            AutonomousLivingServer.Later(asked, AutonomousBotChatCoordinator.ReplyDelayMs(answer, 0, Random.Shared),
+                () => asked.Group == group && asked.IsAlive, () => Send(asked, AutonomousBotVoices.StyleFor(asked, answer), "", player.Name));
             return;
         }
         // A group is small: one answer, two for a hello or a ding.
