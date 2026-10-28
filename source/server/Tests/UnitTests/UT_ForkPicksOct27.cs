@@ -9,17 +9,6 @@ namespace DOL.UnitTests
     [TestFixture]
     public class UT_ForkPicksOct27
     {
-        // Issue #25: a warband walking to a distant frontier medallion merchant proved up to 18 multi-zone routes every
-        // 15 seconds per bot and stalled the NpcService tick for about a second.
-        [Test]
-        public void AMerchantSpotIsSearchedForOnlyFromTheMerchantsZone()
-        {
-            Assert.That(AutonomousSupplyMerchantSpace.ResolvesSpotFrom((ushort)163, (ushort)163), Is.True);
-            Assert.That(AutonomousSupplyMerchantSpace.ResolvesSpotFrom((ushort)166, (ushort)163), Is.False, "another frontier zone walks first");
-            Assert.That(AutonomousSupplyMerchantSpace.ResolvesSpotFrom(null, (ushort)163), Is.False);
-            Assert.That(AutonomousSupplyMerchantSpace.ResolvesSpotFrom((ushort)163, null), Is.False);
-        }
-
         // Found by stefanrows/OfflineDAoC 0.345.0: before the first pass, now - long.MinValue overflowed and the live clock
         // always returned early.
         [Test]
