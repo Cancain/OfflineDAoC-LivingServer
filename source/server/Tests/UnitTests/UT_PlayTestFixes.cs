@@ -100,6 +100,7 @@ namespace DOL.GS.Tests
             Assert.That(AutonomousBotGroupChatter.AsksToCome("can u come to mularn?"), Is.True);
             Assert.That(AutonomousBotGroupChatter.AsksToCome("meet me at the bridge"), Is.True);
             Assert.That(AutonomousBotGroupChatter.AsksToCome("u coming?"), Is.True);
+            Assert.That(AutonomousBotGroupChatter.AsksToCome("going to connacht badgers, come with me?"), Is.True);
             Assert.That(AutonomousBotGroupChatter.AsksToCome("where should we hunt?"), Is.False);
             Assert.That(AutonomousBotGroupChatter.AsksToCome("welcome to the group"), Is.False);
             for (int seed = 0; seed < 6; seed++)

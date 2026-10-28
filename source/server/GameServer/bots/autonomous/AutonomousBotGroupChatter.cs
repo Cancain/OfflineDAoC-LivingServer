@@ -61,7 +61,7 @@ public static class AutonomousBotGroupChatter
         while (text.Contains("  "))
             text = text.Replace("  ", " ");
         return new[] { " can u come ", " can you come ", " could u come ", " could you come ", " come to me ", " come here ", " meet me ",
-            " come help ", " get over here ", " come find me ", " u coming ", " you coming ", " r u coming ", " are you coming " }.Any(text.Contains);
+            " come help ", " come with me ", " join me ", " get over here ", " come find me ", " u coming ", " you coming ", " r u coming ", " are you coming " }.Any(text.Contains);
     }
 
     /// <summary>What a groupmate asked to come says. Same region: it is on its way (it follows the player there). Pure.</summary>
