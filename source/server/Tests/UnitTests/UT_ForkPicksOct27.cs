@@ -38,6 +38,17 @@ namespace DOL.UnitTests
             Assert.That(AutonomousRvrEventLayer.ExpireThrottled(999_000, 1_000_000), Is.False, "a clock behind the last pass runs");
         }
 
+        // From stefanrows/OfflineDAoC 714a9e20 via rambodolphin13 88e7414: a cure mezz on a still-mezzed mate was stopped
+        // and restarted every turn.
+        [Test]
+        public void AHealerLetsTheSameSpellFinishInsteadOfRestartingIt()
+        {
+            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(true, 4321, 4321), Is.True);
+            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(true, 1234, 4321), Is.False, "a different spell may replace it");
+            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(false, 4321, 4321), Is.False);
+            Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(true, null, 4321), Is.False);
+        }
+
         // From rambodolphin13/OfflineDAoC 7a8ae69: an ended effect left in the service pulsed forever.
         [Test]
         public void EndedEffectsLeaveTheServiceUnlessRestarting()
