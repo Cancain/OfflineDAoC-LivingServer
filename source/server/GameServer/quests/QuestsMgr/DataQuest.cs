@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
@@ -62,6 +63,8 @@ namespace DOL.GS.Quests
 	/// StepItemTemplates - Any items that need to be given to the player for a step.  Every step can give an item to a player. All
 	/// steps give an item at the completion of the step except Delivery and DeliveryFinish.  If StepItemTemplates are defined for a 
 	/// Delivery step then the item is given at the beginning of the step and accepted by a target to end the step.
+	/// Not when the player already carries it (the copy being handed over doesn't count) or the finishing step hands it.
+	/// Accepting a quest whose first step is a delivery hands that item, unless it goes back to the giver (QuestDeliveryItems).
     /// For Kill and Search steps, StepItemTemplates can include a drop chance behind the template name.  Ex: |some_template_name;50|  
     /// If the item does not drop then the step is not advanced.
 	/// If no items are given to a player at any of the steps then this can be null, otherwise it must have values for each step. 
@@ -242,6 +245,8 @@ namespace DOL.GS.Quests
 		protected List<byte> m_allowedClasses = new List<byte>();
 		string m_classType = string.Empty;
 		string m_additionalData = string.Empty;
+		// The item being handed over while its step advances; it doesn't count as carried.
+		DbInventoryItem m_handingOver;
 
 		#region Construction
 
@@ -1650,9 +1655,11 @@ namespace DOL.GS.Quests
 					{
 						// Allow StepItemTemplate to be empty, assume quest player received item in a previous step or outside of the quest
 
-						if (!string.IsNullOrEmpty(m_stepItemTemplates[Step].Trim()))
+						// Not a second copy of an item the player carries or the finishing step hands (HearthDAoC).
+						string deliveryItem = m_stepItemTemplates[Step].Trim();
+						if (QuestDeliveryItems.ShouldHand(deliveryItem, CarriedItemIds(QuestPlayer), stepTemplates))
 						{
-							stepTemplates.Add(m_stepItemTemplates[Step].Trim());
+							stepTemplates.Add(deliveryItem);
 						}
 					}
 
@@ -1779,6 +1786,98 @@ namespace DOL.GS.Quests
 			return false;
 		}
 
+		/// <summary>
+		/// Advances the step for an item the player hands over. The item is still in the backpack until the step has
+		/// advanced, so it is marked for CarriedItemIds, which leaves it out (HearthDAoC).
+		/// </summary>
+		protected bool AdvanceQuestStepHandingOver(GameObject obj, DbInventoryItem item)
+		{
+			m_handingOver = item;
+			try
+			{
+				return AdvanceQuestStep(obj);
+			}
+			finally
+			{
+				m_handingOver = null;
+			}
+		}
+
+		/// <summary>The backpack's item ids that count as carried: all but the item being handed over (HearthDAoC).</summary>
+		protected List<string> CarriedItemIds(GamePlayer player)
+		{
+			lock (player.Inventory.Lock)
+			{
+				return QuestDeliveryItems.CarriedIds(player.Inventory.AllItems
+					.Where(i => i.SlotPosition >= (int)eInventorySlot.FirstBackpack && i.SlotPosition <= (int)eInventorySlot.LastBackpack)
+					.Select(i => (i.Id_nb, i.Count, ReferenceEquals(i, m_handingOver) ? Math.Max(i.Count, 1) : 0)));
+			}
+		}
+
+		/// <summary>
+		/// For a turn-in that needs <paramref name="needed"/> items ("id;N"), the other backpack items to take with the one
+		/// handed over; empty when one is needed, null (and the player is told) when there are too few (HearthDAoC).
+		/// </summary>
+		protected static List<(DbInventoryItem Item, int Count)> OtherCollectItems(GamePlayer player, GameObject obj, DbInventoryItem item, string id, int needed)
+		{
+			List<(DbInventoryItem Item, int Count)> take = new();
+			if (needed < 2)
+				return take;
+
+			lock (player.Inventory.Lock)
+			{
+				List<DbInventoryItem> others = player.Inventory.AllItems
+					.Where(i => i.SlotPosition >= (int)eInventorySlot.FirstBackpack && i.SlotPosition <= (int)eInventorySlot.LastBackpack && !ReferenceEquals(i, item))
+					.ToList();
+				int[] counts = QuestDeliveryItems.OthersToTake(others.Select(i => (i.Id_nb, i.Count)).ToList(), id, needed, item.Count);
+				if (counts != null)
+				{
+					for (int k = 0; k < others.Count; k++)
+					{
+						if (counts[k] > 0)
+							take.Add((others[k], counts[k]));
+					}
+
+					return take;
+				}
+			}
+
+			player.Out.SendMessage($"{obj.GetName(0, true)} needs {needed} of them.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			return null;
+		}
+
+		/// <summary>Takes the items OtherCollectItems chose, after the step advanced; a stack loses only the copies wanted.</summary>
+		protected void RemoveCollectItems(GameObject obj, GamePlayer player, List<(DbInventoryItem Item, int Count)> take)
+		{
+			foreach ((DbInventoryItem other, int count) in take)
+			{
+				lock (player.Inventory.Lock)
+				{
+					if (other.OwnerID == null || other.SlotPosition < (int)eInventorySlot.FirstBackpack ||
+						other.SlotPosition > (int)eInventorySlot.LastBackpack || other.Count < count)
+					{
+						log.Warn("DataQuest [" + ID + "] " + Name + ": " + other.Id_nb + " was no longer in " + player.Name +
+							"'s backpack when step " + Step + " took it");
+						continue;
+					}
+				}
+
+				if (count >= other.Count)
+				{
+					RemoveItem(obj, player, other, true);
+					continue;
+				}
+
+				lock (player.Inventory.Lock)
+				{
+					if (player.Inventory.RemoveCountFromStack(other, count))
+					{
+						InventoryLogging.LogInventoryAction(player, obj, eInventoryActionType.Quest, other.Template, count);
+						player.Out.SendMessage($"You give {count} {other.Name} to {obj.GetName(0, false)}.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+				}
+			}
+		}
 
 		#endregion Utility
 
@@ -2369,10 +2468,33 @@ namespace DOL.GS.Quests
 			{
 				TryTurnTo(living, player);
 
+				// A quest whose first step is a delivery hands that item on accept (nothing "begins" step 1), unless the
+				// delivery goes back to the giver; with no free slot the quest does not start (HearthDAoC).
+				DbItemTemplate firstItem = null;
+				if (m_stepTypes.Count > 0 && (m_stepTypes[0] == eStepType.Deliver || m_stepTypes[0] == eStepType.DeliverFinish))
+				{
+					string firstTarget = m_targetNames.Count > 0 ? m_targetNames[0] : null;
+					string firstTemplate = QuestDeliveryItems.FirstStepItem(true, m_stepItemTemplates, CarriedItemIds(player), firstTarget, living?.Name);
+					if (firstTemplate != null)
+					{
+						if (!player.Inventory.IsSlotsFree(1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+						{
+							player.Out.SendMessage("You don't have enough inventory space to start this quest.  You need 1 free slot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return;
+						}
+
+						firstItem = GameServer.Database.FindObjectByKey<DbItemTemplate>(firstTemplate);
+						if (firstItem == null)
+							log.Error("DataQuest [" + ID + "] " + Name + ": StepItemTemplate " + firstTemplate + " of step 1 not found in DB, the quest starts without it");
+					}
+				}
+
 				DbCharacterXDataQuest charQuest = GetCharacterQuest(player, ID, true);
 				DataQuest dq = new DataQuest(player, living, DBDataQuest, charQuest);
 				dq.Step = 1;
 				player.AddQuest(dq);
+				if (firstItem != null)
+					GiveItem(living, player, firstItem, false);
 				if (m_sourceTexts.Count > 0)
 				{
 					SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -2469,9 +2591,12 @@ namespace DOL.GS.Quests
 			if (QuestNames.Same(TargetName, obj.Name) && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0)
 			   && player.Level >= Level && player.Level <= MaxLevel)
 			{
-				if (m_collectItems.Count >= Step &&
-					!string.IsNullOrEmpty(m_collectItems[Step - 1]) &&
-					item.Id_nb.ToLower().Contains(m_collectItems[Step - 1].ToLower()) &&
+				// An entry "id;N" (N >= 2) needs N of the item; any other entry is read as before (HearthDAoC).
+				(string collectId, int collectNeeded) = (null, 1);
+				if (m_collectItems.Count >= Step)
+					(collectId, collectNeeded) = QuestDeliveryItems.CollectEntry(m_collectItems[Step - 1]);
+
+				if (QuestDeliveryItems.IsCollectItem(item.Id_nb, collectId) &&
 					ExecuteCustomQuestStep(player, Step, eStepCheckType.GiveItem))
 				{
 					switch (StepType)
@@ -2494,9 +2619,14 @@ namespace DOL.GS.Quests
 									}
 								}
 
-								if (AdvanceQuestStep(obj))
+								List<(DbInventoryItem Item, int Count)> others = OtherCollectItems(player, obj, item, collectId, collectNeeded);
+								if (others == null)
+									break;
+
+								if (AdvanceQuestStepHandingOver(obj, item))
 								{
 									RemoveItem(obj, player, item, true);
+									RemoveCollectItems(obj, player, others);
 								}
 							}
 							break;
@@ -2504,9 +2634,14 @@ namespace DOL.GS.Quests
 						case eStepType.DeliverFinish:
 						case eStepType.CollectFinish:
 							{
+								List<(DbInventoryItem Item, int Count)> others = OtherCollectItems(player, obj, item, collectId, collectNeeded);
+								if (others == null)
+									break;
+
 								if (FinishQuest(obj, true))
 								{
 									RemoveItem(obj, player, item, true);
+									RemoveCollectItems(obj, player, others);
 								}
 							}
 							break;
@@ -2535,7 +2670,7 @@ namespace DOL.GS.Quests
 							}
 						}
 
-						if (AdvanceQuestStep(obj))
+						if (AdvanceQuestStepHandingOver(obj, item))
 						{
 							RemoveItem(obj, player, item, true);
 						}

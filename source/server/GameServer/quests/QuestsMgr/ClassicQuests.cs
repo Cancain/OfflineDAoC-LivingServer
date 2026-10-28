@@ -608,6 +608,7 @@ namespace DOL.GS.Quests
         private static void GiveDeliveryItem(GamePlayer player, DataQuest quest)
         {
             if (quest.StepType is not (DataQuest.eStepType.Deliver or DataQuest.eStepType.DeliverFinish)) return;
+            if (QuestDeliveryItems.BringsToGiver(quest.Step, quest.TargetName, quest.DBDataQuest?.StartName)) return; // the player brings it
             string id = quest.CurrentStepItemTemplate;
             if (string.IsNullOrEmpty(id) || player.Inventory.GetFirstItemByID(id, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) != null) return;
             var key = (player, quest.ID, quest.Step * 100 + 99);
