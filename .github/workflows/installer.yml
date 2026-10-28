@@ -112,7 +112,7 @@ jobs:
           $exe = Get-ChildItem setup -Recurse -Filter *.exe | Select-Object -First 1
           $pkg = Get-ChildItem setup -Recurse -Filter LivingServer.zip | Select-Object -First 1
           $list = '${{ matrix.scenarios }}'
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& 'tools/installer/test-installer.ps1' -Exe '$($exe.FullName)' -Package '$($pkg.FullName)' -Work 'D:\lstest' -Shots 'D:\lstest\shots' -Scenario $list; exit $LASTEXITCODE"
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& 'tools/installer/test-installer.ps1' -Exe '$($exe.FullName)' -Package '$($pkg.FullName)' -Work 'D:\lstest' -Shots 'D:\lstest\shots' -Scenario $list; exit `$LASTEXITCODE"
           exit $LASTEXITCODE
       - uses: actions/upload-artifact@v4
         if: always()
