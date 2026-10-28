@@ -144,6 +144,16 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void ALowLevelAskingWhereToLevelHearsTheStarterZones()
+        {
+            var random = new System.Random(3);
+            Assert.That(AutonomousChatLiveAnswers.StarterZones(eRealm.Hibernia, 1, random), Does.Contain("Connacht"));
+            Assert.That(AutonomousChatLiveAnswers.StarterZones(eRealm.Midgard, 3, random), Does.Contain("Mularn"));
+            Assert.That(AutonomousChatLiveAnswers.StarterZones(eRealm.Albion, 2, random), Does.Contain("Camelot Hills"));
+            Assert.That(AutonomousChatLiveAnswers.StarterZones(eRealm.Albion, 12, random), Is.Null, "past the starter zones");
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.

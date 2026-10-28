@@ -50,7 +50,28 @@ public static class AutonomousChatLiveAnswers
             return random.Next(2) == 0 ? $"{zone}, saw a bunch of {level}s camping there" : $"try {zone}, thats where the {level}s are right now";
         if (dungeon != null)
             return random.Next(2) == 0 ? $"{dungeon} is good around {level} if you can get a group" : $"{dungeon} for {level}, bring a group";
-        return null;
+        return StarterZones(bot.Realm, level, random);
+    }
+
+    /// <summary>
+    /// Play test 2026-10-27: "where should i level?" from a level 1 got no answer, because no bot hunts that low. A new player's
+    /// realm has its starter zones (the zones with the most level 1-5 monsters in the world data: Camelot Hills, Vale of Mularn,
+    /// Connacht and Lough Derg). Below level 10 only. Pure.
+    /// </summary>
+    public static string StarterZones(eRealm realm, int level, Random random)
+    {
+        if (level >= 10)
+            return null;
+        string zones = realm switch
+        {
+            eRealm.Albion => "Camelot Hills, right outside Cotswold",
+            eRealm.Midgard => "the Vale of Mularn, all around town",
+            eRealm.Hibernia => "Connacht or Lough Derg around Mag Mell",
+            _ => null,
+        };
+        if (zones == null)
+            return null;
+        return random.Next(2) == 0 ? $"at {level}? {zones}, everything there is easy" : $"{zones}. stay there till 5 or so";
     }
 
     /// <summary>
