@@ -18,6 +18,23 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void AGroupCallNoBotFitsGetsAnHonestReply()
+        {
+            // "lvl 2 viking lfg pst" with no bot under level 10 drew silence.
+            for (int seed = 0; seed < 20; seed++)
+            {
+                string low = AutonomousBotChatCoordinator.NoneNearLevelReply(2, null, new System.Random(seed));
+                string mid = AutonomousBotChatCoordinator.NoneNearLevelReply(25, null, new System.Random(seed));
+                string healer = AutonomousBotChatCoordinator.NoneNearLevelReply(25, "healer", new System.Random(seed));
+                Assert.That(low, Is.Not.Empty);
+                Assert.That(mid, Does.Not.Contain("lowbie"));
+                Assert.That(healer, Does.Contain("healer"));
+                Assert.That(low + mid + healer, Does.Not.Contain("send me an invite"), "a bot that can't join never offers to");
+            }
+            Assert.That(AutonomousBotChatCoordinator.NoneNearLevelReplyChance, Is.InRange(0.5, 1.0));
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.

@@ -750,6 +750,30 @@ public static class AutonomousBotChatCoordinator
             : $"im {botLevel}, too low for your camps sorry";
     }
 
+    /// <summary>How often a group call nobody near that level could answer still draws one honest reply.</summary>
+    public const double NoneNearLevelReplyChance = 0.8;
+
+    /// <summary>What a bot says to a group call when no bot is near that level (or that role). Pure.</summary>
+    public static string NoneNearLevelReply(int level, string role, Random random)
+    {
+        if (role != null)
+            return random.Next(2) == 0 ? $"no {role}s around your level that i know of, sorry" : $"havent seen a {role} your level on in a while";
+        if (level < 10)
+            return random.Next(4) switch
+            {
+                0 => "not many lowbies on right now, sorry",
+                1 => "everyone's 40+ atm heh. solo a few levels, it goes quick",
+                2 => "no lowbies around that i know of, gl",
+                _ => "most of the realm is 50 right now, cant help sorry",
+            };
+        return random.Next(3) switch
+        {
+            0 => "nobody around your level that i know of, sorry",
+            1 => "quiet at that level right now, gl",
+            _ => "dont think anyone your level is on, sorry",
+        };
+    }
+
     public static string JoinReply(GameBot bot, GamePlayer player, Random random)
     {
         if (bot.PlayerGroupLeader != null && bot.PlayerGroupLeader != player)
@@ -1061,6 +1085,7 @@ public static class AutonomousBotChatCoordinator
             }, ReplyDelayMs(answer, 0, Random.Shared));
             return;
         }
+        string noneNearLevel = null;
         // A group looking for a role ("lfm vendo need healer pst") hears from bots of that role and about that level.
         if (voices && !directed && intent == eAutonomousChatIntent.Grouping)
         {
@@ -1070,7 +1095,15 @@ public static class AutonomousBotChatCoordinator
             // Free bots offer first ("friar here, invite me"): in game 2026-10-27 a friar busy in a five-bot party offered,
             // and answering the invite pulled it out of that party.
             GameBot[] free = fitting.Where(bot => bot.Group == null).ToArray();
-            eligible = free.Length > 0 ? free : fitting;
+            // Play test 2026-10-27: "lvl 2 viking lfg pst" and "any mid healers lfg near mularn?" drew no reply at all, because
+            // no bot was within six levels. On a live server someone says so; one bot of the realm answers honestly.
+            if (fitting.Length == 0 && eligible.Length > 0 && Random.Shared.NextDouble() < NoneNearLevelReplyChance)
+            {
+                noneNearLevel = NoneNearLevelReply(level, role, Random.Shared);
+                eligible = eligible.OrderByDescending(bot => bot.CurrentRegion == player.CurrentRegion).Take(1).ToArray();
+            }
+            else
+                eligible = free.Length > 0 ? free : fitting;
         }
         else if (voices && intent == eAutonomousChatIntent.Congrats)
             // "gz" is for whoever just levelled: only that bot says "ty" (a random bot thanking you would be odd).
@@ -1090,6 +1123,8 @@ public static class AutonomousBotChatCoordinator
         // (live check 2026-10-21).
         if (shape is "ask_hunt" or "ask_enemy" or "ask_price" or "player_offer" or "player_wait")
             count = Math.Min(count, 1);
+        if (noneNearLevel != null)
+            count = Math.Min(1, eligible.Length);
         // A factual question gets one answer (or one honest "not sure"), not a chorus (the talking update audit).
         if (voices && AutonomousChatQuestions.IsFactual(message))
             count = Math.Min(count, 1);
@@ -1103,7 +1138,9 @@ public static class AutonomousBotChatCoordinator
         for (int index = 0; index < count; index++)
         {
             GameBot responder = eligible[index];
-            string response = hasKnowledge
+            string response = noneNearLevel != null
+                ? AutonomousBotVoices.StyleFor(responder, noneNearLevel)
+                : hasKnowledge
                 ? AutonomousBotVoices.StyleFor(responder, knowledge)
                 : directed
                     ? KnownOr(responder, player, message, () => VoicedReply(responder, message, () => GenerateDirectedReply(message), player, intent,
