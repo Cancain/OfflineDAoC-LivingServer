@@ -3301,6 +3301,8 @@ namespace DOL.GS
 				Flags |= eFlags.STEALTH;
 
 			AddToWorld();
+			// True rumours (bot_living_rumours): a rare named monster that just came back may be talked about.
+			AutonomousRumours.OnRespawned(this);
 			return 0;
 		}
 
