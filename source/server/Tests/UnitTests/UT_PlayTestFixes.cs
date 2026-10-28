@@ -185,6 +185,18 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void ABuyPostIsNotAnsweredAsASale()
+        {
+            const string wtb = "wtb a better staff for a lvl 1 mage";
+            Assert.That(AutonomousChatShortTalk.TradeReplyFits(wtb, "how much are you asking?"), Is.False);
+            Assert.That(AutonomousChatShortTalk.TradeReplyFits(wtb, "pst me the stats"), Is.False);
+            Assert.That(AutonomousChatShortTalk.TradeReplyFits(wtb, "check the exchange"), Is.True);
+            Assert.That(AutonomousChatShortTalk.TradeReplyFits("wts nice sword", "how much are you asking?"), Is.True);
+            Assert.That(AutonomousChatShortTalk.TradeReplyFits("wts nice sword", "wts or wtb?"), Is.False);
+            Assert.That(AutonomousChatShortTalk.TradeReplyFits("anyone craft?", "pst me what you need made"), Is.False, "gamebots don't craft");
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.

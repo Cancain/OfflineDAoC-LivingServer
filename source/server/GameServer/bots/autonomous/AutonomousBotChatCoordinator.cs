@@ -1575,6 +1575,7 @@ public static class AutonomousBotChatCoordinator
                          : intent,
                      slots: slots, flags: with, relax: player != null,
                      filter: line => AutonomousChatShortTalk.ReplyFits(incoming, line.Text) &&
+                                     AutonomousChatShortTalk.TradeReplyFits(incoming, line.Text) &&
                                      // "lurikeens are the cutest" drew "bet you cant solo it" and "lol sure u did" (replies to a boast).
                                      !(value is eAutonomousChatIntent.Banter or eAutonomousChatIntent.Dungeon or eAutonomousChatIntent.RvR &&
                                        System.Text.RegularExpressions.Regex.IsMatch(line.Text, @"sure (u|you) did|bet (u|you) cant|bet you can't|pics or|show off",

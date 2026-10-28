@@ -304,6 +304,30 @@ public static class AutonomousChatShortTalk
     private static readonly HashSet<string> OrderVerbs = Set("pull", "heal", "buff", "wait", "stay", "follow", "come", "assist",
         "mez", "root", "taunt", "grab", "loot", "sit", "med", "stop", "run", "help", "kill", "attack", "target", "hold", "speed", "go");
 
+    /// <summary>
+    /// A trade reply that fits the post. Play test 2026-10-27: "wtb a better staff for a lvl 1 mage" drew "how much are you
+    /// asking?", a reply to a seller. A buy post isn't answered as a sale; a sale isn't asked "wts or wtb?"; and no bot offers
+    /// to craft (gamebots don't). Pure.
+    /// </summary>
+    public static bool TradeReplyFits(string incoming, string reply)
+    {
+        if (string.IsNullOrEmpty(reply))
+            return true;
+        string line = reply.ToLowerInvariant();
+        if (line.Contains("need made") || line.Contains("can make") || line.Contains("craft it for"))
+            return false;
+        string text = " " + (incoming ?? string.Empty).ToLowerInvariant() + " ";
+        bool buying = text.Contains(" wtb ") || text.Contains(" looking for ") || text.Contains(" anyone selling ") || text.Contains(" lf ") ||
+                      text.Contains(" buying ");
+        bool selling = text.Contains(" wts ") || text.Contains(" selling ") || text.Contains(" for sale ");
+        if (buying && !selling)
+            return !(line.Contains("asking") || line.Contains("stats") || line.Contains("vendor") || line.Contains("worth") ||
+                     line.Contains("no coin") || line.Contains("wts or wtb") || line.Contains("post it"));
+        if (selling && !buying)
+            return !line.Contains("wts or wtb");
+        return true;
+    }
+
     /// <summary>An order: an imperative verb first, after a name or "ok" ("pull the next one", "heal me", "ok follow me"). Pure.</summary>
     public static bool IsOrder(string[] words)
     {
