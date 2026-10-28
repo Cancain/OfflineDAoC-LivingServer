@@ -1780,7 +1780,7 @@ namespace DOL.GS
 				AbstractQuest quest = pair.Key;
 
 				// Handle Data Quest here.
-				if (quest is DataQuest dataQuest && dataQuest.TargetName == Name && (dataQuest.TargetRegion == 0 || dataQuest.TargetRegion == CurrentRegionID))
+				if (quest is DataQuest dataQuest && QuestNames.Same(dataQuest.TargetName, Name) && (dataQuest.TargetRegion == 0 || dataQuest.TargetRegion == CurrentRegionID))
 				{
 					switch (dataQuest.StepType)
 					{

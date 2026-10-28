@@ -71,6 +71,7 @@ namespace DOL.GS.Quests
 	/// text must be provided for every step.  Empty values || are ok.
 	/// 
 	/// TargetName - Must be in the format Name;RegionID|Name;RegionID.... RegionID can be 0 to indicate any Target of the correct Name can advance the quest
+	/// TargetName and StartName match an object's name without case (QuestNames.Same).
 	/// 
 	/// TargetText - Text shown to player when current step ends.
 	/// 
@@ -1741,7 +1742,7 @@ namespace DOL.GS.Quests
 							foreach (GameNPC n in m_questPlayer.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					        {
 					         	GameNPC npc = n;
-					         	if (npc != null && (TargetName == npc.Name && (TargetRegion == 0 || TargetRegion == npc.CurrentRegionID)))
+					         	if (npc != null && (QuestNames.Same(TargetName, npc.Name) && (TargetRegion == 0 || TargetRegion == npc.CurrentRegionID)))
 					         		UpdateQuestIndicator(npc, m_questPlayer);
 					        }
 						break;
@@ -2396,7 +2397,7 @@ namespace DOL.GS.Quests
 		/// <param name="obj"></param>
 		protected virtual void OnPlayerInteract(GamePlayer player, GameObject obj)
 		{
-			if (TargetName == obj.Name && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0))
+			if (QuestNames.Same(TargetName, obj.Name) && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0))
 			{
 				switch (StepType)
 				{
@@ -2465,7 +2466,7 @@ namespace DOL.GS.Quests
 			if (item == null || item.OwnerID == null || m_collectItems.Count == 0)
 				return;
 
-			if (TargetName == obj.Name && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0)
+			if (QuestNames.Same(TargetName, obj.Name) && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0)
 			   && player.Level >= Level && player.Level <= MaxLevel)
 			{
 				if (m_collectItems.Count >= Step &&
@@ -2603,7 +2604,7 @@ namespace DOL.GS.Quests
 		{
 			//log.DebugFormat("Whisper {0}, listening for {1}, on step type {2}", text, AdvanceText, m_stepTypes[Step - 1]);
 
-			if (TargetName == obj.Name && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0) && AdvanceText == text)
+			if (QuestNames.Same(TargetName, obj.Name) && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0) && AdvanceText == text)
 			{
 				switch (StepType)
 				{
@@ -2760,7 +2761,7 @@ namespace DOL.GS.Quests
 		/// <param name="enemy"></param>
 		protected virtual void OnEnemyKilled(GamePlayer player, GameLiving living)
 		{
-			if (TargetName == living.Name && (TargetRegion == living.CurrentRegionID || TargetRegion == 0))
+			if (QuestNames.Same(TargetName, living.Name) && (TargetRegion == living.CurrentRegionID || TargetRegion == 0))
 			{
 				switch (StepType)
 				{
