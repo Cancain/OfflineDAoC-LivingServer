@@ -91,6 +91,9 @@ public static class AutonomousBotGroupChatter
         Group group = player.Group;
         GameBot[] mates = group.GetMembersInTheGroup().OfType<GameBot>()
             .Where(mate => mate.IsAutonomousWorldBot && !mate.IsTemporaryGroupHelper && mate.IsAlive)
+            // Play test 2026-10-27: Yrilda, in Aegir, said "that one came out of nowhere" when the player died in Midgard.
+            .Where(mate => AutonomousBotCombatCalls.SawTheFight(mate.InCombat,
+                mate.CurrentRegion == player.CurrentRegion ? (int?)mate.GetDistanceTo(player) : null))
             .OrderByDescending(mate => mate.ResurrectionSpell != null && mate.ResurrectionSpell.Level <= mate.Level)
             .ThenBy(_ => Random.Shared.Next()).ToArray();
         if (mates.Length == 0)
