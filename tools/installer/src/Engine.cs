@@ -886,8 +886,18 @@ namespace LivingServerSetup
     {
         public enum Result { On, Restart, Skipped, Failed }
 
+        /// <summary>Whether the Windows feature is on. Asks Windows' optional-features list (readable without admin); the
+        /// registry's NDP\v3.5 "Install" value is only the fallback, because it stays 1 after the feature is turned off
+        /// (found on a Windows runner, 2026-10-28).</summary>
         public static bool IsOn()
         {
+            try
+            {
+                using (var q = new System.Management.ManagementObjectSearcher("SELECT InstallState FROM Win32_OptionalFeature WHERE Name='NetFx3'"))
+                    foreach (System.Management.ManagementObject f in q.Get())
+                        using (f) return Convert.ToInt32(f["InstallState"]) == 1;   // 1 enabled, 2 disabled, 3 absent
+            }
+            catch (Exception e) { Log.Write("Optional features query: " + e.Message); }
             try
             {
                 using (var k = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5"))

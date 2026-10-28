@@ -101,7 +101,8 @@ namespace LivingServerSetup
             {
                 // PowerShell's error record: "<script> : <message>" then "At line:...", "+ ..." lines
                 // the error record's own line ("<script>.ps1 : message") wins over any other stderr text
-                var m = Regex.Match(line, @"^(?:.*\.ps1|Exception\S*|throw)\s*:\s*(.+)$");
+                // ("At C:\...\Get-OfflineDAoC.ps1:497 char:34" is the record's position line, not its message)
+                var m = line.StartsWith("At ") ? Match.Empty : Regex.Match(line, @"^(?:.*\.ps1|Exception\S*|throw)\s*:\s*(.+)$");
                 if (m.Success) { LastError = m.Groups[1].Value.Trim(); sawRecord = true; }
                 else if (!sawRecord && !line.StartsWith("At ") && !line.TrimStart().StartsWith("+")) LastError = line.Trim();
             }

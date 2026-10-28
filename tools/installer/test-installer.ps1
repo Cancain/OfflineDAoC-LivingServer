@@ -274,6 +274,7 @@ if ($Scenario -contains 'freshcopy') {
     $changed = Sha $quests
     $r = Setup 'update-changed-game' @('--game', $old, '--no-shortcuts')
     Check ($r.Code -eq 1 -and $r.Log -match '\[can --fresh-copy\]') 'freshcopy: the update refuses a hand-changed game file and offers a fresh copy'
+    Check ($r.Log -match 'RESULT Failed: [^|]*(Nothing was changed|not the|changed)') 'freshcopy: the player sees the downloader''s own message, not a script position'
     $r = Setup 'fresh-copy' @('--game', $old, '--no-shortcuts', '--fresh-copy')
     Check ($r.Code -eq 0) 'freshcopy: Setup finished'
     $copy = if ($r.Log -match 'RESULT Success \| game (.+)') { $Matches[1].Trim() } else { '' }
