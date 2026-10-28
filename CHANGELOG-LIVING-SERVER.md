@@ -8,27 +8,6 @@ of its feature groups (bots remember you, grats, rezzes, alarms, nemeses, schedu
 language). From Beta 1.0 the whole add-on is the **Living Server** and that group is **Server life**.
 Older entries below keep the names they were written with.
 
-## Next (not released yet)
-
-**Fixes from other forks (2026-10-27)**
-- Effects that ended before they had started no longer stay in the effect service for good (from rambodolphin13's
-  fork, which measured 30 million such effects and 326 ms per tick on a 3,000-bot run).
-- Siege muster deadlines, the march after them, repels and the four-hour cap now run on the live clock: a throttle
-  that started at the lowest possible time overflowed and skipped every pass (found by stefanrows' fork; the same
-  code is in Offline DAoC 0.37). This had been off on every live server since the throttle was added, so sieges will
-  now end, march and repel on their timers where earlier runs did not: the biggest change here to watch in play.
-- Healer bots let a cure they are already casting finish instead of restarting it every turn (stefanrows, via
-  rambodolphin13); the same heal picked for a different member still replaces it.
-- Animists below half power keep one damage shroom on the fight and skip vents and spores, so they regenerate
-  between pulls (rambodolphin13, from a tester report).
-- A bot with a full bag and nothing to sell no longer waits at the medallion merchant until the watchdog sends it
-  home, and stays away from the merchant for five minutes instead of walking back and forth (rambodolphin13).
-- Siege weapons no longer throw an error when a bot lets go of one on another thread (rambodolphin13).
-- Release packages built from a played game no longer keep its bot guilds, nemeses, server firsts and chat heard
-  (rambodolphin13).
-
-**Checked:** automated tests only so far (`UT_ForkPicksOct27`, `UT_AnimistShroomPlanner`). Not yet played.
-
 ## Beta 1.0 — 2026-10-22
 
 The first release under the Living Server name, and the first public build since 0.36-se.1. Beta 1.0 is the build
