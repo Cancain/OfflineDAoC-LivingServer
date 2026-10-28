@@ -238,7 +238,8 @@ namespace LivingServerSetup
             int exit = 4, n = 0, step = 0;
             var lastShot = DateTime.MinValue;
             var deadline = DateTime.UtcNow.AddMinutes(int.TryParse(a.Get("--minutes"), out var m) ? m : 120);
-            void Shot(string name) { Capture(form, Path.Combine(shots, (++n).ToString("00") + "-" + name + ".png")); }
+            // no message pumping inside a tick: a nested tick would drive the pages twice over
+            void Shot(string name) { form.Refresh(); Capture(form, Path.Combine(shots, (++n).ToString("00") + "-" + name + ".png"), pump: false); }
             T Find<T>(Control root, Func<T, bool> pick) where T : Control
             {
                 foreach (Control c in root.Controls)
@@ -252,6 +253,7 @@ namespace LivingServerSetup
             var timer = new System.Windows.Forms.Timer { Interval = 700 };
             timer.Tick += (s, e) =>
             {
+                timer.Stop();
                 try
                 {
                     var page = form.Current;
@@ -292,12 +294,13 @@ namespace LivingServerSetup
                             var r = form.Wizard.Last;
                             Log.Write("[autopilot] finished: " + r.Outcome + (r.Message != null ? " " + r.Message : "") + " | " + r.GamePath);
                             exit = r.Outcome == Outcome.Success ? 0 : 1;
-                            Find<GoldButton>(page, b => b.Text == "CLOSE")?.PerformClick();
-                            if (!form.IsDisposed) form.Close();
+                            timer.Dispose();
+                            form.BeginInvoke((Action)(() => { if (!form.IsDisposed) form.Close(); }));
                             break;
                     }
                 }
                 catch (Exception ex) { Log.Write("[autopilot] " + ex); exit = 4; form.Close(); }
+                finally { if (step < 5 && exit == 4 && !form.IsDisposed && form.Visible) timer.Start(); }
             };
             form.Load += (s, e) => { form.Wizard.Welcome(); timer.Start(); };
             Application.Run(form);
@@ -311,9 +314,9 @@ namespace LivingServerSetup
             while (DateTime.UtcNow < until) { Application.DoEvents(); Thread.Sleep(15); }
         }
 
-        static void Capture(Form form, string path, Form over = null)
+        static void Capture(Form form, string path, Form over = null, bool pump = true)
         {
-            Pump(150);
+            if (pump) Pump(150);
             var bounds = form.Bounds;
             using (var bmp = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format32bppArgb))
             {
