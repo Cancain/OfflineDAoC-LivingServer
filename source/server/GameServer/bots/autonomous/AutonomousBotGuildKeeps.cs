@@ -119,7 +119,7 @@ public static class AutonomousBotGuildKeeps
         ushort region = keep.Region;
         bool tower = keep is GameKeepTower;
         bool claimableType = keep is not RelicGameKeep && !keep.IsPortalKeep &&
-            (keep.DBKeep?.BaseLevel == 50 || Properties.ALLOW_BG_CLAIM);
+            (keep.DBKeep?.BaseLevel == 50 || Properties.ALLOW_BG_CLAIM || ForkKeepClaims.BotGuildsMayClaim(keep)); // Fork: fork_bot_guilds_claim_bg
         bool playerPresent = ClientService.Instance.GetPlayersOfRegion(keep.CurrentRegion)
             .Any(player => player.Realm == keep.Realm && player.IsAlive && player.CurrentAreas.Contains(keep.Area));
 
@@ -140,7 +140,7 @@ public static class AutonomousBotGuildKeeps
         int membersPresent = byGuild.First(group => group.Key.GuildID == chosenId).Count();
 
         var check = new ClaimCheck(guild.Realm == keep.Realm, keep.Guild != null, keep.InCombat, claimableType, playerPresent,
-            guild.ClaimedKeeps.Count, Properties.GUILDS_CLAIM_LIMIT, membersPresent, NeededMembers(Properties.CLAIM_NUM, tower));
+            ForkKeepClaims.ClaimCount(keep, guild), ForkKeepClaims.ClaimLimit(keep), membersPresent, NeededMembers(Properties.CLAIM_NUM, tower)); // Fork: fork_bg_claim_limit
         if (!CanClaim(check))
             return false;
 

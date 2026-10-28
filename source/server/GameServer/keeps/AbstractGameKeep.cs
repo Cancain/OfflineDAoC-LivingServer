@@ -589,7 +589,7 @@ namespace DOL.GS.Keeps
 			}
 			
 			// Disabled check on DBKeep.BaseLevel to allow claiming of BG keeps
-			if (this.DBKeep.BaseLevel != 50 && !ServerProperties.Properties.ALLOW_BG_CLAIM)
+			if (this.DBKeep.BaseLevel != 50 && !ServerProperties.Properties.ALLOW_BG_CLAIM && !ForkKeepClaims.IsClaimableBattlegroundKeep(this)) // Fork: fork_bg_claim
 			{
 			 	player.Out.SendMessage("This keep is not able to be claimed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			 	return false;
@@ -610,6 +610,8 @@ namespace DOL.GS.Keeps
 				player.Out.SendMessage("The keep is already claimed.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
+			if (ForkKeepClaims.HandlesClaimLimit(this, player, out bool withinLimit)) { if (!withinLimit) return false; } // Fork: own limits for battleground and frontier keeps
+			else
 			switch (ServerProperties.Properties.GUILDS_CLAIM_LIMIT)
 			{
 				case 0:
@@ -646,6 +648,7 @@ namespace DOL.GS.Keeps
 					if (p.CurrentAreas.Contains(this.Area)) //Check if player is in keep area
 						count++;
 				}
+				count = ForkKeepClaims.CountPresent(player.Group, this.Area, count); // Fork: fork_claim_counts_group_bots
 
 				int needed = ServerProperties.Properties.CLAIM_NUM;
 				if (this is GameKeepTower)
@@ -811,6 +814,7 @@ namespace DOL.GS.Keeps
 		/// <param name="targetLevel">the target level</param>
 		public virtual void ChangeLevel(byte targetLevel)
 		{
+			if (ForkKeepClaims.HoldsLevel(this)) return; // Fork: a claimed battleground keep keeps its level
 			this.Level = targetLevel;
 
 			foreach (GameKeepComponent comp in this.KeepComponents)
@@ -904,6 +908,7 @@ namespace DOL.GS.Keeps
 		/// <param name="targetLevel">The target level</param>
 		public void StartChangeLevel(byte targetLevel)
 		{
+			if (ForkKeepClaims.HoldsLevel(this)) return; // Fork: a claimed battleground keep keeps its level
 			if (ServerProperties.Properties.ENABLE_KEEP_UPGRADE_TIMER)
 			{
 				if (this.Level == targetLevel)
