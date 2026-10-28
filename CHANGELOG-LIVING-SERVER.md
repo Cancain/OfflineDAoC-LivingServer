@@ -197,8 +197,9 @@ Found by playing the Beta 1.1 test build on a fresh 0.37b install made by the ne
 - A rez offer that ran out unanswered made the bot's next offer cancel itself: it said "You decline to be
   resurrected", and accepting then said "No one is currently trying to resurrect you". Ten casts, no rez. Only the
   offer you are answering can now accept or decline, and an expired one is dropped.
-- A gamebot no longer raises you into a live fight. It first deals with what is fighting or would aggro beside it
-  (you stand where it stands). Gamebot corpses keep the combat rez.
+- A gamebot no longer raises you into a live fight (you stand where it stands). As players do, it steps to a clear
+  spot within rez range and raises you from there; with no such spot it clears what is fighting or would aggro first.
+  Gamebot corpses keep the combat rez.
 - A bot doesn't queue a second rez while one is waiting, and waits a minute after you decline.
 - "You must wait 0 seconds" after an interrupt now shows the real wait.
 
