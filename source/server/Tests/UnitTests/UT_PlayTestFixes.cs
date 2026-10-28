@@ -112,6 +112,17 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void AGamebotGroupmateBesideThePlayerGoesThroughThePortalToo()
+        {
+            int r = TemporaryGroupStableTravel.GroupmateTravelRadius;
+            Assert.That(TemporaryGroupStableTravel.WasBesideDeparture(100, 1_000, 1_000, 100, 1_200, 1_100, true), Is.True);
+            Assert.That(TemporaryGroupStableTravel.WasBesideDeparture(100, 0, 0, 100, r, 0, true), Is.True);
+            Assert.That(TemporaryGroupStableTravel.WasBesideDeparture(100, 0, 0, 100, r + 1, 0, true), Is.False, "too far to have gone along");
+            Assert.That(TemporaryGroupStableTravel.WasBesideDeparture(151, 1_000, 1_000, 100, 1_000, 1_000, true), Is.False, "another region");
+            Assert.That(TemporaryGroupStableTravel.WasBesideDeparture(100, 1_000, 1_000, 100, 1_000, 1_000, false), Is.False, "fighting or on a duty");
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.
