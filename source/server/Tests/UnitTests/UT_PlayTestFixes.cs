@@ -60,6 +60,18 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void ABotNamedMidFightAnswersAfterIt()
+        {
+            for (int seed = 0; seed < 6; seed++)
+            {
+                string line = AutonomousBotChatCoordinator.AfterAFight("sure, send me an invite", new System.Random(seed));
+                Assert.That(line, Does.EndWith("sure, send me an invite"));
+                Assert.That(line.Length, Is.GreaterThan("sure, send me an invite".Length));
+            }
+            Assert.That(AutonomousBotChatCoordinator.NamedWhileFightingWaitMs, Is.InRange(30_000, 180_000));
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.

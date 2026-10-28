@@ -750,6 +750,13 @@ public static class AutonomousBotChatCoordinator
             : $"im {botLevel}, too low for your camps sorry";
     }
 
+    /// <summary>How long a bot named in a group ask while fighting may take to answer.</summary>
+    public const int NamedWhileFightingWaitMs = 90_000;
+
+    /// <summary>A join reply said after the fight the bot was in when asked. Pure.</summary>
+    public static string AfterAFight(string reply, Random random) =>
+        (random.Next(3) switch { 0 => "sorry, was fighting. ", 1 => "had a pull, ", _ => "just saw this, " }) + reply;
+
     /// <summary>How often a group call nobody near that level could answer still draws one honest reply.</summary>
     public const double NoneNearLevelReplyChance = 0.8;
 
@@ -1063,6 +1070,28 @@ public static class AutonomousBotChatCoordinator
         // "gz Aldric" to a bot that didn't just level: it wouldn't know what for, so it says nothing.
         if (voices && directed && intent == eAutonomousChatIntent.Congrats)
             eligible = eligible.Where(AutonomousBotVoices.JustLeveled).ToArray();
+        // Play test 2026-10-27: "Yrilda wanna group?" in /faction drew nothing because Yrilda was in a fight. A player named
+        // mid-fight answers when the fight is over; the bot does the same, within a minute and a half.
+        if (voices && faction && !directed && AsksToJoinGroup(message) &&
+            AutonomousBotRegistry.Snapshot().FirstOrDefault(bot => bot.Realm == player.Realm && bot.IsAutonomousWorldBot &&
+                !bot.IsTemporaryGroupHelper && bot.IsAlive && (bot.InCombat || bot.IsCasting) && ContainsMention(message, bot.Name)) is { } busy)
+        {
+            int waited = 0;
+            _ = new ECSGameTimer(player, _ =>
+            {
+                if (!busy.IsAlive || busy.ObjectState != GameObject.eObjectState.Active)
+                    return 0;
+                if (!Eligible(busy))
+                    return (waited += 5_000) < NamedWhileFightingWaitMs ? 5_000 : 0;
+                string late = AutonomousBotVoices.StyleFor(busy, AfterAFight(JoinReply(busy, player, Random.Shared), Random.Shared));
+                if (!HasFactionAudience(busy.Realm))
+                    return 0;
+                BroadcastFaction(busy.Name, busy.Realm, late);
+                Note(AutonomousChatThreads.Faction(busy.Realm), busy, late, "", player.Name);
+                return 0;
+            }, 5_000);
+            return;
+        }
         // The talking update audit: "want to group?" in /say, "Aldric lfg?" in /faction: the bot asked says whether it will join,
         // with the real reasons (busy, far, a level gap), not a remark on grouping.
         if (voices && eligible.Length > 0 && AsksToJoinGroup(message) && (directed || !faction && !BroadcastsLfg(message)))
