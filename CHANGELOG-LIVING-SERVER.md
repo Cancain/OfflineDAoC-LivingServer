@@ -224,7 +224,11 @@ Found by playing the Beta 1.1 test build on a fresh 0.37b install made by the ne
 **Setup**
 - Shows the real error when the official download fails, and says when the connection dropped.
 - Names the folder of a game program that is still running, and points to Task Manager when it has no window.
-- Removes its own empty "Offline DAoC setup files" folder after cleaning up.
+- Cleaning up after an install removes the "Offline DAoC setup files" folder too, with Setup's copy of the downloader.
+- A new install proposes a folder that is free (`playable-v0.37b-2` when you already have `playable-v0.37b`). Choosing
+  a folder that holds a game says so ("Offline DAoC 0.37b is already installed in ..."), and a folder problem offers
+  CHOOSE ANOTHER FOLDER instead of only Try again.
+- The log leaves out curl's progress fragments, which looked like errors.
 - Replacing another build with the same name says "replaces it with this one" instead of "upgrades Beta 1.1 to Beta
   1.1".
 
@@ -239,7 +243,7 @@ Found by playing the Beta 1.1 test build on a fresh 0.37b install made by the ne
 
 ### Checked (Beta 1.1 so far)
 
-- **Automated:** every branch above merged into `release/1.1`. On Linux the combined tree builds and all 4,072 server
+- **Automated:** every branch above merged into `release/1.1`. On Linux the combined tree builds and all 4,073 server
   tests pass. CI on Windows runs the full suite and the launcher and installer tests, and builds the package.
 - **In game (2026-10-27 and 28, test builds of this tree on a fresh 0.37b install made by Setup):**
   - Setup's new-install, resume after a dropped connection, and update-in-place paths work.
@@ -249,10 +253,13 @@ Found by playing the Beta 1.1 test build on a fresh 0.37b install made by the ne
     - A groupmate follows you, comes along through `/tele` and a release, and buffs you.
     - `/tele mob` lands a level 1 at a starter camp.
     - A rez accepted after an earlier offer ran out now works.
+    - A cleric in a respawning camp steps to a clear spot within range and raises you from there.
+  - A full new install with the release/1.1 Setup on 2026-10-28: 4.8 GB from shadowofze's release, unpacked, updated
+    to 0.37b and Living Server added in about 10 minutes with every step clean; cleanup; first server start
+    (`FORK_BUILD name=1.1-beta`, only the stock world-data errors), automatic account, a new character, into the world.
 - **Not checked here:** the epic chains' world script hasn't been run against a real clean 0.37b world (its test
   needs one).
 - **Not played yet:**
-  - the "clear before raising" rule;
   - sieges (their timers now run);
   - raids (they need many level 50 bots);
   - lag at your usual bot count;
