@@ -5564,11 +5564,32 @@ namespace DOL.AI.Brain
                 if (Body.IsCasting && Body.castingComponent.SpellHandler?.Spell?.SpellType == eSpellType.Resurrect)
                     return BotGroupSupport.ContinueResurrection(BotBody);
                 if (resurrection == null) return false;
+                // A queued resurrection that hasn't started yet is not a reason to queue a second (play test 2026-10-27: two
+                // casts reached the player back to back, and the second dialog's arrival declined the first).
+                if (Body.castingComponent.HasPendingSkillRequests &&
+                    Body.Group.GetMembersInTheGroup().Any(member => member != Body && !member.IsAlive))
+                    return true;
                 if (Body.IsCasting || !CheckHealSpell(resurrection))
                 {
                     ReportResurrectionBlock(resurrection, Body.IsCasting ? "casting another spell" :
                         BotBody.Mana < BotBody.PowerCost(resurrection) ? $"not enough power to cast ({BotBody.Mana}/{BotBody.PowerCost(resurrection)})" :
                         BotBody.IsBeingInterruptedByOther ? "being interrupted" : "resurrection on recast");
+                    return false;
+                }
+                // A real player is raised where the caster stands: clear what would hit them first (play test 2026-10-28).
+                int raiseRange = BotBody.castingComponent.CalculateSpellRange(resurrection);
+                if (Body.Group.GetMembersInTheGroup().Any(member => member is GamePlayer && !member.IsAlive &&
+                        member.ObjectState == GameObject.eObjectState.Active && member.CurrentRegionID == Body.CurrentRegionID &&
+                        Body.IsWithinRadius(member, raiseRange)) &&
+                    BotGroupSupport.ThreatToRaisedPlayer(BotBody) is GameNPC threat)
+                {
+                    if (!Body.InCombat && CanAggroTarget(threat))
+                    {
+                        AddToAggroList(threat, Math.Max(100, threat.EffectiveLevel * 10));
+                        FSM.SetCurrentState(eFSMStateType.AGGRO);
+                        AttackMostWanted();
+                    }
+                    ReportResurrectionBlock(resurrection, $"clearing {threat.Name} before raising a player");
                     return false;
                 }
                 GameLiving corpse = BotGroupSupport.ReserveResurrection(BotBody, resurrection);
