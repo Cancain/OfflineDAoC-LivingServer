@@ -852,6 +852,7 @@ namespace LivingServerSetup
                         "Undo any time: ROLLBACK.cmd in the " + Payload.RootFolder + " folder puts the files Living Server replaced back.",
                         "Updates to Offline DAoC come from shadowofze's downloader; run this Setup (or a newer one) afterwards to add Living Server again.",
                     };
+                    if (r.Note != null) notes.Add(r.Note);
                     if (warn != null) notes.Insert(0, warn);
                     int ny = Theme.S(226);
                     for (int k = 0; k < notes.Count; k++)

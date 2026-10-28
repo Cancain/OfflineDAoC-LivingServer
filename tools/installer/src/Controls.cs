@@ -141,6 +141,7 @@ namespace LivingServerSetup
         public event EventHandler Chosen;
 
         public ChoiceCard() { Cursor = Cursors.Hand; TabStop = true; }
+        public void Choose() => Chosen?.Invoke(this, EventArgs.Empty);
 
         protected override void OnClick(EventArgs e) { Focus(); Chosen?.Invoke(this, EventArgs.Empty); base.OnClick(e); }
         protected override void OnDoubleClick(EventArgs e) { base.OnDoubleClick(e); }

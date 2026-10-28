@@ -50,6 +50,7 @@ namespace LivingServerSetup
         public bool CanFreshCopy;
         public string GamePath;
         public string CacheDir;
+        public string Note;            // something the player should know on the done page
         public long CacheBytes;
         public bool NetFxNeedsRestart;
         public bool NetFxSkipped;
@@ -299,6 +300,8 @@ namespace LivingServerSetup
                 r.GamePath = gamePath;
                 r.NewClient = File.Exists(Path.Combine(gamePath, "new-client", "VERSION.txt"));
                 r.CacheBytes = DirSize(r.CacheDir);
+                r.Note = pendingNote;
+                if (o.NewInstall) { try { File.Delete(StartedRecord(gamePath)); } catch { } }
                 Overall = 1;
                 Status = "Done";
                 Changed?.Invoke();
@@ -388,6 +391,17 @@ namespace LivingServerSetup
                 if (GameScanner.IsGame(dest) && GameScanner.Inspect(dest).IsBase && MarkerExists(dest))
                     throw new StepFailed("Offline DAoC " + GameScanner.Inspect(dest).Edition + " is already installed in " + dest + ".",
                         "Go back and choose that game on the first page to add Living Server to it, or choose a new folder for a second game.");
+                // A folder Setup itself started unpacking into, stopped by a crash or power cut before the downloader
+                // marked it finished: the downloader won't continue it, so move it aside (never delete) and start over
+                // from the verified parts, which are still in the cache.
+                if (Directory.Exists(dest) && !ResumableNewInstall(dest) && File.Exists(StartedRecord(dest)) &&
+                    !File.Exists(Path.Combine(dest, "runtime", "account.txt")))   // never a game someone has played
+                {
+                    var aside = dest + ".unfinished-" + DateTime.Now.ToString("yyyyMMdd-HHmmss");
+                    Directory.Move(dest, aside);
+                    Log.Write("Moved the unfinished copy in " + dest + " aside to " + aside);
+                    pendingNote = "An unfinished copy from an earlier attempt was moved aside to " + aside + ". Delete it when you like.";
+                }
                 if (Directory.Exists(dest) && Directory.EnumerateFileSystemEntries(dest).Any() && !ResumableNewInstall(dest))
                     throw new StepFailed("The folder " + dest + " already has files in it, and they aren't an unfinished Offline DAoC install.", "Choose a new folder: Setup never installs over files it didn't put there.");
             }
@@ -406,6 +420,15 @@ namespace LivingServerSetup
         }
 
         /// <summary>A folder this Setup (or the official downloader) began and didn't finish: the downloader continues it.</summary>
+        string pendingNote;
+
+        /// <summary>Written when Setup starts a new install into a folder that doesn't exist yet: proof the folder is ours.</summary>
+        string StartedRecord(string dest)
+        {
+            var key = System.Security.Cryptography.SHA256.Create().ComputeHash(System.Text.Encoding.UTF8.GetBytes(dest.ToLowerInvariant()));
+            return Path.Combine(setupDir, "started-" + BitConverter.ToString(key).Replace("-", "").Substring(0, 16) + ".txt");
+        }
+
         bool ResumableNewInstall(string dest) => MarkerExists(dest) || File.Exists(Path.Combine(dest, "new-client", ".install", "base.done"));
 
         /// <summary>The downloader's "base game finished" marker for this folder (written once the base install is done).</summary>
@@ -449,6 +472,8 @@ namespace LivingServerSetup
             string release = Payload.BaseRelease + (client ? "c" : (o.NewInstall && o.Classic) || (!o.NewInstall && o.Game.Classic) ? "" : "b");
             string local = string.IsNullOrEmpty(o.LocalAssets) ? "" : " -LocalAssets " + ScriptJob.Quote(o.LocalAssets);
             var runs = new List<string>();
+            if (o.NewInstall && !Directory.Exists(gamePath))
+                File.WriteAllText(StartedRecord(gamePath), gamePath + Environment.NewLine + "Setup began a new install here on " + DateTime.Now.ToString("o") + ".");
             if (o.NewInstall)
             {
                 // A new install with the new client downloads the client inside its first step, and the downloader only

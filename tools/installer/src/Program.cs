@@ -75,6 +75,7 @@ namespace LivingServerSetup
                 Log.Write("Display scale " + Theme.Scale.ToString("0.##"));
 
                 if (args.Get("--screenshots") != null) return Screenshots(args.Get("--screenshots"));
+                if (args.Get("--autopilot") != null) return Autopilot(args);
 
                 var form = new SetupForm();
                 form.Load += (s, e) => form.Wizard.Welcome();
@@ -158,7 +159,19 @@ namespace LivingServerSetup
                 }
             };
             Log.Write("Plan: " + string.Join(" > ", engine.Items.Select(i => i.Title)));
+            // tests: press Stop once it's offered and this many seconds have passed
+            System.Threading.Timer stopper = null;
+            if (int.TryParse(a.Get("--stop-after-seconds"), out var stopAfter))
+            {
+                var started = DateTime.UtcNow;
+                stopper = new System.Threading.Timer(_ =>
+                {
+                    if ((DateTime.UtcNow - started).TotalSeconds >= stopAfter && engine.CanCancel) { Log.Write("[test] pressing Stop"); engine.Cancel(); }
+                }, null, 1000, 1000);
+            }
             var r = engine.Run();
+            stopper?.Dispose();
+            if (r.Note != null) Log.Write("NOTE " + r.Note);
             foreach (var i in engine.Items) Log.Write("STEP " + i.State + ": " + i.Title + (string.IsNullOrEmpty(i.Detail) ? "" : " (" + i.Detail + ")"));
             Log.Write("RESULT " + r.Outcome + (r.Message != null ? ": " + r.Message : "") + (r.Hint != null ? " | " + r.Hint : "") +
                       (r.CanForce ? " [can --force]" : "") + (r.CanFreshCopy ? " [can --fresh-copy]" : "") + " | game " + r.GamePath);
@@ -210,6 +223,86 @@ namespace LivingServerSetup
             Log.Write("Screenshots written to " + dir);
             Environment.Exit(0);
             return 0;
+        }
+
+        // ------------------------------------------------------------------------------------------ GUI autopilot (tests)
+
+        /// <summary>Drives the real window like a player: Begin, the New install card, the folder, Install, then waits for
+        /// the end. Saves a picture of each page and every 30 s while installing. Exit code: 0 done, 1 failed, 4 stuck.</summary>
+        static int Autopilot(Args a)
+        {
+            var dest = a.Get("--autopilot");
+            var shots = a.Get("--shots") ?? Path.Combine(Path.GetTempPath(), "autopilot-shots");
+            Directory.CreateDirectory(shots);
+            var form = new SetupForm { StartPosition = FormStartPosition.Manual, Location = new Point(0, 0) };
+            int exit = 4, n = 0, step = 0;
+            var lastShot = DateTime.MinValue;
+            var deadline = DateTime.UtcNow.AddMinutes(int.TryParse(a.Get("--minutes"), out var m) ? m : 120);
+            void Shot(string name) { Capture(form, Path.Combine(shots, (++n).ToString("00") + "-" + name + ".png")); }
+            T Find<T>(Control root, Func<T, bool> pick) where T : Control
+            {
+                foreach (Control c in root.Controls)
+                {
+                    if (c is T t && pick(t)) return t;
+                    var inner = Find(c, pick);
+                    if (inner != null) return inner;
+                }
+                return null;
+            }
+            var timer = new System.Windows.Forms.Timer { Interval = 700 };
+            timer.Tick += (s, e) =>
+            {
+                try
+                {
+                    var page = form.Current;
+                    if (DateTime.UtcNow > deadline) { Log.Write("[autopilot] out of time on " + page?.GetType().Name); exit = 4; form.Close(); return; }
+                    switch (page)
+                    {
+                        case WelcomePage _ when step == 0:
+                            Shot("welcome"); step = 1;
+                            Log.Write("[autopilot] BEGIN");
+                            Find<GoldButton>(page, b => b.Text == "BEGIN").PerformClick();
+                            break;
+                        case ChoosePage _ when step == 1 && form.Wizard.Scanned:
+                            var card = Find<ChoiceCard>(page, c => c.Title == "New install");
+                            if (card == null) break;
+                            card.Choose(); Shot("choose"); step = 2;
+                            Log.Write("[autopilot] New install, NEXT");
+                            Find<GoldButton>(page, b => b.Text == "NEXT").PerformClick();
+                            break;
+                        case OptionsPage _ when step == 2:
+                            var box = Find<PathBox>(page, x => true);
+                            box.Text = dest;
+                            var netfx = Find<OptionToggle>(page, t => t.Label != null && t.Label.StartsWith("Turn on .NET"));
+                            if (netfx != null) netfx.Checked = false;
+                            step = 3;
+                            break;
+                        case OptionsPage _ when step == 3:
+                            Shot("prepare"); step = 4;
+                            var install = Find<GoldButton>(page, b => b.Text == "INSTALL");
+                            Log.Write("[autopilot] INSTALL into " + dest + (install != null && install.Enabled ? "" : " (button not ready)"));
+                            if (install == null || !install.Enabled) { step = 3; break; }
+                            install.PerformClick();
+                            break;
+                        case InstallPage _:
+                            if ((DateTime.UtcNow - lastShot).TotalSeconds >= 30) { Shot("install"); lastShot = DateTime.UtcNow; }
+                            break;
+                        case DonePage _ when step == 4:
+                            Shot("done"); step = 5;
+                            var r = form.Wizard.Last;
+                            Log.Write("[autopilot] finished: " + r.Outcome + (r.Message != null ? " " + r.Message : "") + " | " + r.GamePath);
+                            exit = r.Outcome == Outcome.Success ? 0 : 1;
+                            Find<GoldButton>(page, b => b.Text == "CLOSE")?.PerformClick();
+                            if (!form.IsDisposed) form.Close();
+                            break;
+                    }
+                }
+                catch (Exception ex) { Log.Write("[autopilot] " + ex); exit = 4; form.Close(); }
+            };
+            form.Load += (s, e) => { form.Wizard.Welcome(); timer.Start(); };
+            Application.Run(form);
+            Log.Write("[autopilot] exit " + exit);
+            return exit;
         }
 
         static void Pump(int ms)

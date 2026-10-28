@@ -8,11 +8,19 @@
 #             game runs; remove; reinstall; refuse a hand-changed server, then -Force
 #   update036 shadowofze's 0.36b installed with his own downloader, the 0.36 Social Expansion build on top, then Setup:
 #             released server back, official update to 0.37, Living Server
+#   client    new install with the 0.37c new client (about 33 GB), Living Server in both launchers
+#   resume    Stop part-way through the download; kill Setup mid-download and mid-unpack (a crash); then finish
+#   import    shadowofze's 0.35b, then a new install that brings its progress over
+#   freshcopy a 0.36b game with a game file changed by hand: the update refuses, then a fresh copy with the progress
+#   netfx     .NET Framework 3.5 turned on through Setup (informational where the runner can't turn it off first)
+#   smoke     the installed game's server starts with Living Server (FORK_BUILD in its log) and a login works
+#   ui        the real window, driven page by page through a new install (--autopilot), with pictures
 param(
     [Parameter(Mandatory)] [string]$Exe,
     [Parameter(Mandatory)] [string]$Package,
     [string]$Work = 'C:\lstest',
-    [string[]]$Scenario = @('fresh', 'update036')
+    [string[]]$Scenario = @('fresh', 'update036'),
+    [string]$Shots = ''
 )
 $ErrorActionPreference = 'Stop'
 $Exe = (Resolve-Path $Exe).Path
@@ -58,12 +66,39 @@ function Setup([string]$name, [string[]]$argList) {
     return [pscustomobject]@{ Code = $p.ExitCode; Log = $text }
 }
 
+function Start-Setup([string]$name, [string[]]$argList) {
+    $script:n++
+    $log = Join-Path $logs ('{0:00}-{1}.log' -f $script:n, $name)
+    $all = @('--silent') + $argList + @('--log', $log)
+    Write-Host ''
+    Write-Host "== $name : Setup $($all -join ' ') (in the background)" -ForegroundColor Cyan
+    $p = Start-Process -FilePath $Exe -ArgumentList ($all | ForEach-Object { if ($_ -match '\s') { '"' + $_ + '"' } else { $_ } }) -PassThru -NoNewWindow
+    return [pscustomobject]@{ Process = $p; Log = $log }
+}
+
+# Kills Setup with everything it started (PowerShell, curl, the patcher), like a crash or a power cut.
+function Crash($run, [string]$pattern, [int]$timeoutSec = 900) {
+    $deadline = (Get-Date).AddSeconds($timeoutSec)
+    while ((Get-Date) -lt $deadline -and !$run.Process.HasExited) {
+        if ((Test-Path $run.Log) -and ((Get-Content -LiteralPath $run.Log -Raw) -match $pattern)) { break }
+        Start-Sleep -Milliseconds 300
+    }
+    $hit = (Test-Path $run.Log) -and ((Get-Content -LiteralPath $run.Log -Raw) -match $pattern)
+    if (!$run.Process.HasExited) { & taskkill.exe /PID $run.Process.Id /T /F | Out-Null }
+    Start-Sleep 2
+    Write-Host "   killed Setup when its log matched '$pattern': $hit"
+    return $hit
+}
+
 function Assert-LivingServer([string]$game, [string]$what) {
     foreach ($f in 'runtime\server', 'runtime\server\lib', 'runtime\server\win-x64') {
         $dll = Join-Path $game "$f\GameServer.dll"
         if (Test-Path $dll) { Check ((Sha $dll) -eq $info['GameServer.dll'].ToLowerInvariant()) "$what : $f\GameServer.dll is the Living Server build" }
     }
     Check ((Sha (Join-Path $game 'runtime\OfflineDAoC.dll')) -eq $info['launcher/OfflineDAoC.dll'].ToLowerInvariant()) "$what : the launcher has the Living Server tab"
+    if (Test-Path (Join-Path $game 'new-client\runtime\OfflineDAoC.dll')) {
+        Check ((Sha (Join-Path $game 'new-client\runtime\OfflineDAoC.dll')) -eq $info['launcher/OfflineDAoC.dll'].ToLowerInvariant()) "$what : the new client's launcher has the Living Server tab"
+    }
     Check (Test-Path (Join-Path $game "$pkgRoot\ROLLBACK.cmd")) "$what : the package folder (with ROLLBACK.cmd) is in the game"
     $rec = Get-ChildItem (Join-Path $game 'runtime\server\deployment-backups') -Directory -Filter 'fork-build-*' | Sort-Object Name | Select-Object -Last 1
     Check ($rec -and (Get-Content (Join-Path $rec.FullName 'install-record.json') -Raw | ConvertFrom-Json).BuildName -eq $info['BuildName']) "$what : the install record names $($info['BuildName'])"
@@ -166,6 +201,132 @@ if ($Scenario -contains 'update036') {
     Check ($r.Log -match 'STEP Done: Put the released server back') 'update036: the released server went back first'
     Check ((Newest-Release $old) -eq $base) "update036: the game is Offline DAoC $base now"
     Assert-LivingServer $old 'update036'
+}
+
+
+if ($Scenario -contains 'client') {
+    $game = Join-Path $root "playable-v$($base)c"
+    $r = Setup 'new-client-install' @('--new', '--dest', $game, '--new-client', '--no-shortcuts')
+    Check ($r.Code -eq 0) 'client: Setup finished'
+    Check ((Newest-Release $game) -eq $base) "client: the game is Offline DAoC $base"
+    Check ((Sha (Join-Path $game 'new-client\VERSION.txt')) -eq '230e6013e920273c7a399b892b92ab91cfa1381e61e845cb8f89b1692b283244') "client: the new client has its $base update"
+    Check (Test-Path (Join-Path $game 'START OFFLINE DAOC - NEW CLIENT.cmd')) 'client: the new client start file'
+    Check ($r.Log -match '\] Download and unpack the new client|Downloading the new client, part') 'client: the client step was recognised from the output'
+    Assert-LivingServer $game 'client'
+    $r = Setup 'scan-client' @('--scan', '--game', $game)
+    Check ($r.Log -match [regex]::Escape("GAME $game | $($base)c | LivingServer=ThisBuild")) 'client: scans as this build'
+    $script:smokeGame = $game
+}
+
+if ($Scenario -contains 'resume') {
+    $game = Join-Path $root "playable-resume"
+    $r = Setup 'stop-mid-download' @('--new', '--dest', $game, '--no-shortcuts', '--stop-after-seconds', '12')
+    Check ($r.Code -eq 2 -and $r.Log -match 'RESULT Cancelled') 'resume: Stop during the download ends as stopped'
+    $cache = Join-Path $root 'Offline DAoC setup files\.downloads'
+    $partial = (Get-ChildItem $cache -Recurse -File -Filter '*.zip.0*' -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum
+    Check ($partial -gt 0) ("resume: downloaded parts are kept ({0:N0} MB)" -f ($partial / 1MB))
+
+    $run = Start-Setup 'crash-mid-download' @('--new', '--dest', $game, '--no-shortcuts')
+    $hit = Crash $run '\] Downloading Offline DAoC \| [\d.]+ GB of'
+    Check $hit 'resume: Setup was killed part-way through the download'
+
+    $run = Start-Setup 'crash-mid-unpack' @('--new', '--dest', $game, '--no-shortcuts')
+    $hit = Crash $run '\] Unpacking the game \| [\d.]+ (MB|GB) of'
+    Check $hit 'resume: Setup was killed part-way through unpacking'
+
+    $r = Setup 'finish-after-crashes' @('--new', '--dest', $game, '--no-shortcuts')
+    Check ($r.Code -eq 0) 'resume: the next run finishes'
+    Check ($r.Log -match 'NOTE An unfinished copy from an earlier attempt was moved aside') 'resume: the half-unpacked copy was moved aside, not deleted'
+    Check (@(Get-ChildItem $root -Directory -Filter 'playable-resume.unfinished-*').Count -ge 1) 'resume: the moved copy is still there'
+    Assert-LivingServer $game 'resume'
+    $script:smokeGame = $game
+}
+
+if ($Scenario -contains 'import') {
+    $old = Join-Path $root 'playable-v0.35b'
+    $setupDir = Join-Path $root 'Offline DAoC setup files'
+    New-Item -ItemType Directory -Force -Path $setupDir | Out-Null
+    Copy-Item (Join-Path $PSScriptRoot '..\..\Get-OfflineDAoC.ps1') (Join-Path $setupDir 'Get-OfflineDAoC.ps1') -Force
+    Write-Host ''
+    Write-Host '== import: shadowofze''s own downloader installs 0.35b' -ForegroundColor Cyan
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $setupDir 'Get-OfflineDAoC.ps1') -ReleaseVersion 0.35b -Destination $old | Select-Object -Last 2
+    $oldDb = Join-Path $old 'runtime\data\opendaoc.sqlite3.db'
+    $before = Sha $oldDb
+    $game = Join-Path $root 'playable-import'
+    $r = Setup 'new-with-import' @('--new', '--dest', $game, '--no-shortcuts', '--import-from', $old)
+    Check ($r.Code -eq 0) 'import: Setup finished'
+    Check ($r.Log -match 'STEP Done: Bring your characters over') 'import: the progress import ran'
+    Check (Test-Path (Join-Path $game 'PROGRESS IMPORT REPORT.txt')) 'import: the importer wrote its report'
+    Check ((Sha $oldDb) -eq $before) 'import: the old game''s world was only read'
+    Assert-LivingServer $game 'import'
+}
+
+if ($Scenario -contains 'freshcopy') {
+    $old = Join-Path $root 'playable-v0.36b'
+    $setupDir = Join-Path $root 'Offline DAoC setup files'
+    New-Item -ItemType Directory -Force -Path $setupDir | Out-Null
+    Copy-Item (Join-Path $PSScriptRoot '..\..\Get-OfflineDAoC.ps1') (Join-Path $setupDir 'Get-OfflineDAoC.ps1') -Force
+    if (!(Test-Path $old)) {
+        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $setupDir 'Get-OfflineDAoC.ps1') -ReleaseVersion 0.36b -Destination $old | Select-Object -Last 2
+    }
+    $quests = Join-Path $old 'runtime\server\classic-quests.json'
+    [IO.File]::AppendAllText($quests, ' ')
+    $changed = Sha $quests
+    $r = Setup 'update-changed-game' @('--game', $old, '--no-shortcuts')
+    Check ($r.Code -eq 1 -and $r.Log -match '\[can --fresh-copy\]') 'freshcopy: the update refuses a hand-changed game file and offers a fresh copy'
+    $r = Setup 'fresh-copy' @('--game', $old, '--no-shortcuts', '--fresh-copy')
+    Check ($r.Code -eq 0) 'freshcopy: Setup finished'
+    $copy = if ($r.Log -match 'RESULT Success \| game (.+)') { $Matches[1].Trim() } else { '' }
+    Check ($copy -and $copy -ne $old -and (Test-Path $copy)) "freshcopy: the game went to a new folder ($copy)"
+    if ($copy -and (Test-Path $copy)) {
+        Check ((Newest-Release $copy) -eq $base) "freshcopy: the new folder is Offline DAoC $base"
+        Assert-LivingServer $copy 'freshcopy'
+    }
+    Check ((Sha $quests) -eq $changed) 'freshcopy: the old folder was left as it was'
+}
+
+if ($Scenario -contains 'netfx') {
+    $game = if ($script:smokeGame) { $script:smokeGame } else { $fresh }
+    $state = (& dism.exe /online /get-featureinfo /featurename:NetFx3 /English | Select-String 'State :').ToString()
+    Write-Host "   .NET 3.5 before: $state"
+    if ($state -match 'Enabled') {
+        & dism.exe /online /disable-feature /featurename:NetFx3 /norestart /quiet | Out-Null
+        $state = (& dism.exe /online /get-featureinfo /featurename:NetFx3 /English | Select-String 'State :').ToString()
+        Write-Host "   after turning it off for the test: $state"
+    }
+    $r = Setup 'netfx' @('--game', $game, '--no-shortcuts', '--netfx')
+    $after = (& dism.exe /online /get-featureinfo /featurename:NetFx3 /English | Select-String 'State :').ToString()
+    Write-Host "   .NET 3.5 after Setup: $after"
+    Write-Host ("   INFO  netfx: Setup's step: " + (($r.Log -split "`r?`n" | Where-Object { $_ -match 'STEP .*NET Framework' }) -join ' / '))
+    if ($state -notmatch 'Enabled') { Check ($after -match 'Enabled' -or $after -match 'Enable Pending') 'netfx: Setup turned .NET Framework 3.5 on' }
+    else { Write-Host '   INFO  netfx: the runner kept it on, so turning it on could not be tested here' }
+}
+
+if ($Scenario -contains 'smoke') {
+    $game = if ($script:smokeGame) { $script:smokeGame } else { $fresh }
+    $test = Join-Path $Work 'smoke'
+    Write-Host ''
+    Write-Host "== smoke: start the installed server and log in ($game)" -ForegroundColor Cyan
+    $out = & python (Join-Path $PSScriptRoot '..\..\source\tools\smoke_release_037.py') $game $test 2>&1 | Out-String
+    Write-Host $out
+    Check ($out -match 'PASS: server started') 'smoke: the installed server starts'
+    $fork = Get-ChildItem $test -Recurse -File -Include *.log -ErrorAction SilentlyContinue | Select-String -Pattern "FORK_BUILD name=$([regex]::Escape($info['BuildName']))" -List | Select-Object -First 1
+    Check ($null -ne $fork) "smoke: its log says FORK_BUILD name=$($info['BuildName'])"
+    if ($fork) { Write-Host "   $($fork.Line.Trim())" }
+    Check ($out -match 'PASS: ENTER REALM login') 'smoke: a login like ENTER REALM works'
+}
+
+if ($Scenario -contains 'ui') {
+    $game = Join-Path $root "playable-ui"
+    $shotDir = if ($Shots) { $Shots } else { Join-Path $Work 'autopilot' }
+    $log = Join-Path $logs 'ui-autopilot.log'
+    Write-Host ''
+    Write-Host "== ui: the real window, clicked through a new install" -ForegroundColor Cyan
+    $p = Start-Process -FilePath $Exe -ArgumentList '--autopilot', ('"' + $game + '"'), '--shots', ('"' + $shotDir + '"'), '--log', ('"' + $log + '"'), '--minutes', '90' -Wait -PassThru
+    Get-Content $log | Where-Object { $_ -match 'autopilot|RESULT|FAILED' } | Select-Object -Last 20 | Write-Host
+    Check ($p.ExitCode -eq 0) "ui: the window went from Begin to The realm awaits (exit $($p.ExitCode))"
+    Check (@(Get-ChildItem $shotDir -Filter *.png).Count -ge 5) 'ui: a picture of every page'
+    if ($p.ExitCode -eq 0) { Assert-LivingServer $game 'ui' }
 }
 
 Write-Host ''
