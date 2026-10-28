@@ -34,6 +34,8 @@ public static class AutonomousChatKnowledge
             return true;
         if (TryAnswerDragon(player.Realm, query, out answer))
             return true;
+        if (TryAnswerTimeToCap(query, out answer))
+            return true;
         if (LooksLikeSpellQuestion(query) && TryAnswerSpell(player, query, out answer))
             return true;
         if (LooksLikeTrainerQuestion(query) && TryAnswerTrainer(player.Realm, query, player.CharacterClass?.ID ?? 0, player, out answer))
@@ -69,6 +71,29 @@ public static class AutonomousChatKnowledge
         if (name == null)
             return false;
         answer = $"yeah, {name}, up in {zone}. thats a full raid, dont go alone";
+        return true;
+    }
+
+    /// <summary>
+    /// "how long does it take to hit 50?": what players of the era said, a couple of weeks /played. Play test 2026-10-27: the
+    /// question drew a lore line about Orasgaen. Pure.
+    /// </summary>
+    public static bool TryAnswerTimeToCap(string text, out string answer)
+    {
+        answer = string.Empty;
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+        string lower = " " + new string(text.ToLowerInvariant().Select(c => char.IsLetterOrDigit(c) ? c : ' ').ToArray()) + " ";
+        bool howLong = lower.Contains(" how long ") || lower.Contains(" how many hours ") || lower.Contains(" how many days ");
+        bool cap = lower.Contains(" 50 ") || lower.Contains(" cap ") || lower.Contains(" max level ");
+        if (!howLong || !cap)
+            return false;
+        answer = Random.Shared.Next(3) switch
+        {
+            0 => "couple weeks /played if you group a lot, way longer solo",
+            1 => "took me about 15 days played. groups are faster, the 40s drag",
+            _ => "depends, two or three weeks played. 1 to 20 goes quick, then it slows down",
+        };
         return true;
     }
 

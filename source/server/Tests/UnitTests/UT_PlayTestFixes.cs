@@ -175,6 +175,16 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void HowLongToFiftyIsAnswered()
+        {
+            Assert.That(AutonomousChatKnowledge.TryAnswerTimeToCap("how long does it take to hit 50?", out string answer), Is.True);
+            Assert.That(answer, Does.Contain("played"));
+            Assert.That(AutonomousChatKnowledge.TryAnswerTimeToCap("how long to max level", out _), Is.True);
+            Assert.That(AutonomousChatKnowledge.TryAnswerTimeToCap("how long is the boat ride", out _), Is.False);
+            Assert.That(AutonomousChatKnowledge.TryAnswerTimeToCap("50 scout lfg", out _), Is.False);
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.
