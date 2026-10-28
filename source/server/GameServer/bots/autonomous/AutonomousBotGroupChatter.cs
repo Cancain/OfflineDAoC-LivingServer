@@ -62,6 +62,11 @@ public static class AutonomousBotGroupChatter
         GameLiving[] members = group.GetMembersInTheGroup().ToArray();
         if (members.Any(member => member.IsAlive && member.InCombat))
             return false;
+        // Group talk is about the hunt the bot shares with the player ("nice pull", "pulling in 5"). Play test 2026-10-27: a
+        // groupmate across the zone said "you have the patience of a saint with these pulls" while the player stood in town.
+        if (!AutonomousBotCombatCalls.SawTheFight(bot.InCombat, members.Where(member => member is GamePlayer && member.CurrentRegion == bot.CurrentRegion)
+                .Select(member => (int?)bot.GetDistanceTo(member)).Min()))
+            return false;
         bool known = Groups.TryGetValue(group, out Next next);
         next ??= Groups.GetValue(group, _ => new Next());
         if (!TakeTurn(next, () => next.At, value => next.At = value, GameLoop.GameLoopTime, Random.Shared, known))

@@ -35,6 +35,31 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void OnlyAGroupmateNearThePlayerCallsTheFight()
+        {
+            // A groupmate across East Svealand said "assisting you" while the player fought alone near Mularn.
+            Assert.That(AutonomousBotCombatCalls.SawTheFight(false, 800), Is.True);
+            Assert.That(AutonomousBotCombatCalls.SawTheFight(false, AutonomousBotCombatCalls.FightHearingRadius), Is.True);
+            Assert.That(AutonomousBotCombatCalls.SawTheFight(false, 25_000), Is.False);
+            Assert.That(AutonomousBotCombatCalls.SawTheFight(false, null), Is.False, "another region");
+            Assert.That(AutonomousBotCombatCalls.SawTheFight(true, null), Is.True, "its own fight");
+        }
+
+        [Test]
+        public void AGamebotWalkingBackTalksLikeAPlayer()
+        {
+            foreach (string stage in new[] { "release", "stable", "mount", "dismount", "arrive", "walk" })
+                for (int seed = 0; seed < 6; seed++)
+                {
+                    string line = GameBot.GamebotReturnLine(stage, new System.Random(seed), "Mularn", "East Svealand");
+                    Assert.That(line, Is.Not.Empty, stage);
+                    Assert.That(line, Does.Not.Contain("formation").And.Not.Contain("I am"), stage);
+                    Assert.That(line, Is.EqualTo(line.ToLowerInvariant().Replace("mularn", "Mularn").Replace("east svealand", "East Svealand")), stage);
+                }
+            Assert.That(GameBot.GamebotReturnLine("mount", new System.Random(1), null, null), Does.Not.Contain("{"));
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.

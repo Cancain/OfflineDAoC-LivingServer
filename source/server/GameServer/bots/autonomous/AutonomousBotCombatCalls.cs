@@ -286,7 +286,7 @@ public static class AutonomousBotCombatCalls
         if (topic != "wipe" && now - state.LastCall < GroupGapMs)
             return;
         GameBot[] bots = members.OfType<GameBot>()
-            .Where(b => b.IsAlive && b.IsAutonomousWorldBot && !b.IsTemporaryGroupHelper && b.DatabaseID > 0)
+            .Where(b => b.IsAlive && b.IsAutonomousWorldBot && !b.IsTemporaryGroupHelper && b.DatabaseID > 0 && SawTheFight(b, members))
             .OrderBy(_ => Random.Shared.Next()).ToArray();
         if (bots.Length == 0)
             return;
@@ -307,6 +307,18 @@ public static class AutonomousBotCombatCalls
             self.LastCall = long.MinValue / 2;
         }
     }
+
+    /// <summary>A group call comes from a bot that was there. Play test 2026-10-27: a groupmate at the other end of East
+    /// Svealand said "assisting you" and "here it comes" while the player fought alone near Mularn.</summary>
+    public const int FightHearingRadius = 3_000;
+
+    public static bool SawTheFight(GameBot bot, IEnumerable<GameLiving> members) =>
+        SawTheFight(bot.InCombat, members.Where(member => member is GamePlayer && member.CurrentRegion == bot.CurrentRegion)
+            .Select(member => (int?)bot.GetDistanceTo(member)).Min());
+
+    /// <summary>The same rule without a world: whether a bot this far from the player (null: another region) saw the fight. Pure.</summary>
+    public static bool SawTheFight(bool inCombat, int? distanceToPlayer) =>
+        inCombat || distanceToPlayer is { } distance && distance <= FightHearingRadius;
 
     private static bool Landed(string topic, GameLiving target) => topic switch
     {
