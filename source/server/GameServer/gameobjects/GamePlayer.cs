@@ -2666,6 +2666,7 @@ namespace DOL.GS
             {
                 Group.UpdateMember(this, false, true);
             }
+            QuestIndicators.Refresh(this); // markers follow a class change (trainer, /player class)
             return true;
         }
 
@@ -4474,6 +4475,8 @@ namespace DOL.GS
                         Out.SendLevelUpSound();
                     }
                 }
+
+                QuestIndicators.Refresh(this); // markers follow the level at once, up or down
             }
         }
 
@@ -11447,6 +11450,7 @@ namespace DOL.GS
             QuestList.TryAdd(quest, index);
             quest.OnQuestAssigned(this);
             Out.SendQuestUpdate(quest);
+            QuestIndicators.Refresh(this); // markers change when a quest is taken
             return true;
         }
 
