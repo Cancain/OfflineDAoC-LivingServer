@@ -3,14 +3,17 @@
 #   set-bg-claim.ps1 -Database D:\OfflineDAOC\dev-v0.37\runtime\data\opendaoc.sqlite3.db -BgClaim on -DryRun
 #   set-bg-claim.ps1 -Database ... -BgClaim on -CountGroupBots on -BgClaimLimit 1
 #   set-bg-claim.ps1 -Database ... -BgClaim off -CountGroupBots off -BotGuildsClaimBg off
+#   set-bg-claim.ps1 -Database D:\OfflineDAOC\Download-OfflineDAoC-v0.37\playable-v0.37\runtime\data\opendaoc.sqlite3.db -AllowPlayCopy -BgClaim on -DryRun
 #
 #   -BgClaim            fork_bg_claim: guilds may claim battleground keeps (never portal or relic keeps), which keep their level
 #   -CountGroupBots     fork_claim_counts_group_bots: the group's companions and bots in the keep area count towards claim_num
 #   -BotGuildsClaimBg   fork_bot_guilds_claim_bg: bot guilds may claim battleground keeps too (needs -BgClaim on)
 #   -BgClaimLimit       fork_bg_claim_limit: battleground keeps a guild may claim (frontier keeps use guilds_claim_limit)
+#   -AllowPlayCopy      also accept the play copy's database (playable-v0.37); without it only the dev copy's is accepted
 #
-# Safe by design: refuses while the server, launcher or game runs; only accepts the dev copy's database for now; shows
-# the changes with the database opened read-only, then backs it up (with its -wal and -shm) before writing anything.
+# Safe by design: refuses while the server, launcher or game runs; accepts only the dev copy's database, or the play
+# copy's with -AllowPlayCopy, and refuses every other path; shows the changes with the database opened read-only, then
+# backs it up (with its -wal and -shm, to fork-backups next to it) before writing anything, for either copy.
 # -DryRun stops after showing them. Needs the .NET 10 SDK (dotnet run set-bg-claim.cs). Settings take effect the next
 # time the server starts.
 param(
@@ -19,17 +22,24 @@ param(
     [ValidateSet('on', 'off')][string]$CountGroupBots,
     [ValidateSet('on', 'off')][string]$BotGuildsClaimBg,
     [ValidateRange(0, 100)][Nullable[int]]$BgClaimLimit,
+    [switch]$AllowPlayCopy,
     [switch]$DryRun
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'fork-build-common.ps1')
 
-# Only the dev copy until this script has been used there (the fork's rules in CLAUDE.md).
-$AllowedFolder = 'D:\OfflineDAOC\dev-v0.37\runtime\data\'
+# The dev copy always; the play copy only when asked for with -AllowPlayCopy (the fork's rules in CLAUDE.md).
+$DevFolder = 'D:\OfflineDAOC\dev-v0.37\runtime\data\'
+$PlayFolder = 'D:\OfflineDAOC\Download-OfflineDAoC-v0.37\playable-v0.37\runtime\data\'
 
 $full = [IO.Path]::GetFullPath($Database)
-if (!$full.StartsWith($AllowedFolder, [StringComparison]::OrdinalIgnoreCase)) {
-    Stop-WithMessage "Only the dev copy's database ($AllowedFolder) is allowed for now, not '$full'."
+$inDev = $full.StartsWith($DevFolder, [StringComparison]::OrdinalIgnoreCase)
+$inPlay = $full.StartsWith($PlayFolder, [StringComparison]::OrdinalIgnoreCase)
+if ($inPlay -and !$AllowPlayCopy) {
+    Stop-WithMessage "'$full' is the play copy's database: add -AllowPlayCopy to change it."
+}
+if (!$inDev -and !$inPlay) {
+    Stop-WithMessage "Only the dev copy's database ($DevFolder) or, with -AllowPlayCopy, the play copy's ($PlayFolder) is allowed, not '$full'."
 }
 if (!(Test-Path -LiteralPath $full)) { Stop-WithMessage "No database at '$full'." }
 
