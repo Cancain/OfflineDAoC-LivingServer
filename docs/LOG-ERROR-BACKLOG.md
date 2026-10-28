@@ -236,3 +236,37 @@ install):
 - **Answered correctly:** "what lvl r u all?" ("28 here") and "where do i train my axe skill?" ("viking trainer is
   Saeunn in East Svealand"). Bots also told the gold-spam bot off ("stfu Dristyrongg, nobody wants your gold"), and
   Yrilda buffed the player on arrival and came to rez.
+
+## Classic-client play test, Hibernia block (2026-10-27 night, build db57318)
+
+Played as Claudehib (Magician, level 1) from 22:52. The owner asked to keep playing, so the build was not
+reinstalled for this block. **Fixed in code, not yet deployed:**
+
+- **Gamebot groupmates walked in a straight line to the player.** `FollowFormation` used `WalkTo` for any bot that
+  isn't a companion, at any distance. Lorcinellan (Druid 17), asked to come from across Shannon Estuary, never
+  arrived. This is the likely cause of Liviardis walking off the map in Midgard. A gamebot in the player's group
+  more than 600 units from its slot now paths (8887d19).
+- **Gamebot groupmates left behind at portals.** A gamebot beside the player when the player teleports now arrives
+  with them (4f87a37).
+- **`/tele mob` ignored level.** `/mobs 3` lists myrkcat and `/tele mob myrkcat` went to level 27 myrkcats. "badger
+  cub" (listed at 1) went to level 5s. The camp nearest the player's level now wins (c19e083).
+- **A gamebot rez never landed.** Lorcinellan cast resurrection about ten times. Each cast was followed by "You
+  decline to be resurrected." with no input from the player, and accepting said "No one is currently trying to
+  resurrect you." The resurrect handler now sends no second dialog while one is pending, and bots wait 60 s after a
+  decline (28e07ff). **The cause is a hypothesis** (a second dialog replaced the first); check it in game.
+- **Chat:**
+  - "where should i level?" at level 1 now names the starter zones (1719c3b).
+  - "how long to 50?" now gets an answer (c3fc68e).
+  - "wtb a staff" no longer draws "how much are you asking?" (a3a1f52).
+  - "come with me?" is now treated as a request to come (eb52aa2).
+  - Group talk about pulls and loot now waits for a real fight (ec5c9c5).
+
+**Seen, not fixed:**
+
+- **New characters can barely fight.** A level 1 Magician (about 30 HP) dies in three hits to a level 1 grass spirit
+  (about 10 damage a hit), while Gleam Ray lands for 2-5. A level 3 Viking hits for 1-4. This may be stock OpenDAoC
+  numbers plus untrained skills; it needs a look before the alt system brings new low-level bots.
+- **The server log runs behind real time.** It was about 40 minutes behind from about 22:00, while the game stayed
+  responsive.
+- **`/mobs` lists every realm's monsters for a Midgard character but only Hibernian ones for a Hibernian.** For example,
+  Midgard's `/mobs 4` showed dryad sprig and skeletal seafarer. Check the zone-access filter.
