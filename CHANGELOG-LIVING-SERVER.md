@@ -10,11 +10,7 @@ Older entries below keep the names they were written with.
 
 ## Next (not released yet)
 
-**Fixes from other forks and issue #25 (2026-10-27)**
-- Fewer lag spikes with large populations (issue #25, reported and diagnosed by Krolgosh-web). Warbands walking to a
-  distant frontier medallion merchant searched for a spot beside it from another zone, proving up to 18 multi-zone
-  routes every 15 seconds each; with many level 50s on RvR the server tick stalled for about a second and killed bots
-  stood at 0 HP before falling. Bots now walk toward the merchant and pick their spot once they reach its zone.
+**Fixes from other forks (2026-10-27)**
 - Effects that ended before they had started no longer stay in the effect service for good (from rambodolphin13's
   fork, which measured 30 million such effects and 326 ms per tick on a 3,000-bot run).
 - Siege muster deadlines, the march after them, repels and the four-hour cap now run on the live clock: a throttle
