@@ -136,6 +136,14 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void AnRvrStatusQuestionIsAnEnemyQuestion()
+        {
+            Assert.That(AutonomousChatShortTalk.QuestionShape("whats going on in rvr tonight?"), Is.EqualTo("ask_enemy"));
+            Assert.That(AutonomousChatShortTalk.QuestionShape("anything happening in rvr?"), Is.EqualTo("ask_enemy"));
+            Assert.That(AutonomousChatShortTalk.QuestionShape("whats going on in emain"), Is.EqualTo("ask_enemy"));
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.

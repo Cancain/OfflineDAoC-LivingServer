@@ -236,7 +236,11 @@ public static class AutonomousChatShortTalk
                 "wheres the enemy", "where is the zerg", "wheres the zerg", "where did the zerg go", "any mids out", "any hibs out", "any albs out",
                 "seen any mids", "seen any hibs", "seen any albs", "any enemies out", "where is the fight", "wheres the fight", "where is the action",
                 "wheres the action", "hows the zerg", "how is the zerg", "hows emain", "how is emain", "hows the frontier", "how is the frontier",
-                "hows rvr", "how is rvr", "hows hadrians", "hows odins", "any action", "any fights", "is emain busy", "is emain quiet"))
+                "hows rvr", "how is rvr", "hows hadrians", "hows odins", "any action", "any fights", "is emain busy", "is emain quiet",
+                // Play test 2026-10-27: "whats going on in rvr tonight?" drew "wish i knew" and an off-topic line.
+                "whats going on in rvr", "what is going on in rvr", "whats happening in rvr", "what is happening in rvr", "whats up in rvr",
+                "anything going on in rvr", "anything happening in rvr", "whats going on in the frontier", "whats happening in the frontier",
+                "whats going on in emain", "whats happening in emain", "hows rvr tonight", "any rvr tonight", "anything in rvr"))
             return "ask_enemy";
         if (HasPhrase(words, "how much", "price check", "pc on", "what do they go for", "what does it go for", "what do these go for",
                 "what are they worth", "what is it worth") || words.Contains("worth") && HasPhrase(words, "what is", "whats", "what are"))
