@@ -123,6 +123,19 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void ADragonQuestionNamesTheRealmsDragon()
+        {
+            Assert.That(AutonomousChatKnowledge.TryAnswerDragon(eRealm.Midgard, "is it true theres a dragon in midgard?", out string mid), Is.True);
+            Assert.That(mid, Does.Contain("Gjalpinulva").And.Contain("Malmohus"));
+            Assert.That(AutonomousChatKnowledge.TryAnswerDragon(eRealm.Midgard, "where is the hib dragon", out string hib), Is.True);
+            Assert.That(hib, Does.Contain("Sheeroe Hills"));
+            Assert.That(AutonomousChatKnowledge.TryAnswerDragon(eRealm.Albion, "any dragons around here?", out string alb), Is.True);
+            Assert.That(alb, Does.Contain("Golestandt").And.Contain("Dartmoor"));
+            Assert.That(AutonomousChatKnowledge.TryAnswerDragon(eRealm.Albion, "killed a dragonfly lol", out _), Is.False);
+            Assert.That(AutonomousChatKnowledge.TryAnswerDragon(eRealm.Albion, "the dragon raid was fun", out _), Is.False, "no question");
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.

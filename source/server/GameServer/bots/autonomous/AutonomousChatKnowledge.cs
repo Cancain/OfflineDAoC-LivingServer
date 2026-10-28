@@ -32,11 +32,44 @@ public static class AutonomousChatKnowledge
             return true;
         if (TryAnswerTicketsInGeneral(query, out answer))
             return true;
+        if (TryAnswerDragon(player.Realm, query, out answer))
+            return true;
         if (LooksLikeSpellQuestion(query) && TryAnswerSpell(player, query, out answer))
             return true;
         if (LooksLikeTrainerQuestion(query) && TryAnswerTrainer(player.Realm, query, player.CharacterClass?.ID ?? 0, player, out answer))
             return true;
         return LooksLikeLocationQuestion(query) && TryAnswerLocation(player.Realm, query, out answer);
+    }
+
+    /// <summary>
+    /// "is it true theres a dragon in midgard?", "where is the hib dragon?": each realm's dragon and its zone (world data:
+    /// Golestandt in Dartmoor, Gjalpinulva in Malmohus, Cuuldurach the Glimmer King in Sheeroe Hills). Play test 2026-10-27:
+    /// the question drew three off-topic lines. Pure.
+    /// </summary>
+    public static bool TryAnswerDragon(eRealm askerRealm, string text, out string answer)
+    {
+        answer = string.Empty;
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+        string lower = " " + new string(text.ToLowerInvariant().Select(c => char.IsLetterOrDigit(c) ? c : ' ').ToArray()) + " ";
+        bool asks = text.Contains('?') || lower.Contains(" where ") || lower.Contains(" is there ") || lower.Contains(" theres ");
+        if (!asks || !(lower.Contains(" dragon ") || lower.Contains(" dragons ")))
+            return false;
+        eRealm realm = lower.Contains(" alb") || lower.Contains(" albion ") ? eRealm.Albion
+            : lower.Contains(" mid") || lower.Contains(" midgard ") ? eRealm.Midgard
+            : lower.Contains(" hib") || lower.Contains(" hibernia ") ? eRealm.Hibernia
+            : askerRealm;
+        (string name, string zone) = realm switch
+        {
+            eRealm.Albion => ("Golestandt", "Dartmoor"),
+            eRealm.Midgard => ("Gjalpinulva", "Malmohus"),
+            eRealm.Hibernia => ("Cuuldurach the Glimmer King", "Sheeroe Hills"),
+            _ => (null, null),
+        };
+        if (name == null)
+            return false;
+        answer = $"yeah, {name}, up in {zone}. thats a full raid, dont go alone";
+        return true;
     }
 
     public static bool TryAnswer(eRealm realm, string message, out string answer)
