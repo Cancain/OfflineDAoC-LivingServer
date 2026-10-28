@@ -1110,6 +1110,9 @@ namespace DOL.AI.Brain
                 out _);
         }
 
+        /// <summary>Beyond this distance from its slot, a gamebot following the player paths instead of walking straight.</summary>
+        public const int GamebotPathFollowDistance = 600;
+
         private void FollowFormation(bool ambientWander = false)
         {
             // Any FOLLOW entry or support path must honor a temporary caster's
@@ -1174,7 +1177,11 @@ namespace DOL.AI.Brain
                     ? (short)Math.Clamp(Body.MaxSpeed * 2 / 5, 60, Body.MaxSpeed)
                     : Body.MaxSpeed;
                 _ambientWanderMovement = ambientWander;
-                if (companionTravel && !ambientWander)
+                // Play test 2026-10-27: a gamebot in the player's group, told "come with me" from across the zone, walked in a
+                // straight line (WalkTo) into hills and, once, off the edge of the map. Far from its formation slot it paths.
+                bool farGamebot = !ambientWander && BotBody.IsAutonomousWorldBot && BotBody.IsPlayerLedGroup &&
+                                  Body.GetDistanceTo(destination) > GamebotPathFollowDistance;
+                if (companionTravel && !ambientWander || farGamebot)
                     Body.PathTo(destination, speed);
                 else
                     Body.WalkTo(destination, speed);
