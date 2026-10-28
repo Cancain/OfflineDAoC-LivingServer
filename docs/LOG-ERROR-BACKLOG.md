@@ -195,3 +195,44 @@ Not log errors, but found while playing and not yet fixed or verified:
   logged back in by the last check. He returns on his next scheduled login.
 - **Classic client test not run.** At 11:18 the classic client was logged in, but screen control stopped when the PC's
   display went to sleep.
+
+## Classic-client play test, Midgard block (2026-10-27 evening, build db57318)
+
+Played as Claudemid (Viking, levels 1-3) from 19:52. **Fixed in code, not yet deployed** (in-game checks after the next
+install):
+
+- **Issue #25: NpcService stalls of 1-1.3 s.** Every slow tick credited to `AutonomousRvrRally.HasRoute` was "Collecting
+  frontier medallion" (393 in the morning log, 57 in this block). Since 7ef2d66 a distant warband walks to its medallion
+  merchant, and each bot ran up to 18 multi-zone route probes every 15 s. The interaction spot is now searched only
+  within 2,000 units (064a387). Baseline for this block: NpcService per-minute maximum averaged 310 ms, 14 of 113
+  minutes over 500 ms, worst 939 ms.
+- **Group calls nobody fits:** "lvl 2 viking lfg pst" and "any mid healers lfg near mularn?" got no reply, because no
+  bot is under level 10. One bot now says so honestly (7a06ae6). `/lfg` from a level 3 still draws nothing; the alt
+  system is the real fix.
+- **Groupmates talking from far away:** Liviardis, across East Svealand, said "assisting you", "here it comes" and "you
+  have the patience of a saint with these pulls". Yrilda, in Aegir, said "That one came out of nowhere." and "Gj." when
+  the player died in Midgard. Fight calls, group idle talk and death remarks now need the bot within 3,000 units of the
+  player or in its own fight (0112f05, 37aedfd). There is also no "gj" after a fight the player died in (cef4187).
+- **A groupmate walked off the map and was dropped silently.** Liviardis walked back after a release to coordinates
+  outside every zone. The watchdog moved him to Jordheim, removed him from the player's group without a word, and the
+  schedule logged him off. The watchdog now moves a gamebot in the player's group to the player and keeps the group
+  (0112f05; the commit message doesn't mention it, fb58701 does). **Root cause of the walk off the map is not found.**
+- **Formal return line:** "I have caught up. Returning to formation." is the companion voice. Gamebots now say
+  "back" and similar lines (0112f05).
+- **Dead players couldn't use /faction**, so "anyone near for a rez?" was refused (fb58701).
+- **A bot named while busy said nothing.** "Yrilda wanna group?" got no reply while she rode a stable route. A named
+  bot now answers after the fight or ride, within 90 s (7536897, c58e527).
+- **"can u come to mularn?"** was read as banter. A groupmate asked to come now says honestly whether it can
+  (cef4187).
+
+**Seen, not fixed:**
+
+- An autonomous gamebot in the player's group doesn't follow the player into another region. Only companion helpers
+  are moved along on a region change (`OnOwnerRegionChanged`). A real groupmate would take the same porter.
+- `/tele <bot>` and `/who` are correct, but bots on stable routes move fast, so `/invite` right after `/tele` can be
+  "too far away".
+- A level 3 Viking hits level 3-4 monsters for 1-4 damage and dies to most of them. This is untrained weapon skill.
+  Training needs the trainer window, which remote control can't open.
+- **Answered correctly:** "what lvl r u all?" ("28 here") and "where do i train my axe skill?" ("viking trainer is
+  Saeunn in East Svealand"). Bots also told the gold-spam bot off ("stfu Dristyrongg, nobody wants your gold"), and
+  Yrilda buffed the player on arrival and came to rez.
