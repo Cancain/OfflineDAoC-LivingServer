@@ -68,6 +68,7 @@ namespace DOL.GS.Tests
                 Assert.That(line, Does.EndWith("sure, send me an invite"));
                 Assert.That(line.Length, Is.GreaterThan("sure, send me an invite".Length));
             }
+            Assert.That(AutonomousBotChatCoordinator.AfterAFight("ok", new System.Random(1), riding: true), Does.Contain("horse"));
             Assert.That(AutonomousBotChatCoordinator.NamedWhileFightingWaitMs, Is.InRange(30_000, 180_000));
         }
 
