@@ -166,6 +166,15 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void TeleMobPrefersTheCampNearThePlayersLevel()
+        {
+            Assert.That(DOL.GS.Commands.PlayerMobNavigator.CampLevelGap(3, 4, 3), Is.EqualTo(0));
+            Assert.That(DOL.GS.Commands.PlayerMobNavigator.CampLevelGap(27, 28, 3), Is.EqualTo(24), "the level 27 myrkcats");
+            Assert.That(DOL.GS.Commands.PlayerMobNavigator.CampLevelGap(1, 2, 5), Is.EqualTo(3));
+            Assert.That(DOL.GS.Commands.PlayerMobNavigator.CampLevelGap(5, 5, 1), Is.LessThan(DOL.GS.Commands.PlayerMobNavigator.CampLevelGap(27, 27, 1)));
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.
