@@ -809,8 +809,12 @@ namespace LivingServerSetup
                 {
                     Directory.Delete(dir, true);
                     Log.Write("Deleted the downloaded setup files in " + dir);
-                    // and the "Offline DAoC setup files" folder itself once nothing else is in it
+                    // and the "Offline DAoC setup files" folder itself once nothing else is in it. Setup's own copy of the
+                    // downloader goes too (each run writes it again); anything else keeps the folder (walkthrough 2026-10-28).
                     var parent = Path.GetDirectoryName(dir);
+                    var downloader = Path.Combine(parent, "Get-OfflineDAoC.ps1");
+                    if (File.Exists(downloader) && Directory.GetFileSystemEntries(parent).Length == 1)
+                        File.Delete(downloader);
                     if (Directory.Exists(parent) && Directory.GetFileSystemEntries(parent).Length == 0)
                     {
                         Directory.Delete(parent);
