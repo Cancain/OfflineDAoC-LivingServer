@@ -49,6 +49,16 @@ namespace DOL.UnitTests
             Assert.That(DOL.AI.Brain.BotBrain.IsAlreadyCastingSpell(true, null, 4321), Is.False);
         }
 
+        // From rambodolphin13/OfflineDAoC 092701e: with nothing to sell the bot held at the medallion merchant until the
+        // fifteen-minute watchdog.
+        [Test]
+        public void AFullBackpackWaitsAtTheMedallionMerchantOnlyWhileASaleMadeRoom()
+        {
+            Assert.That(AutonomousFrontierTransport.KeepWaitingForMedallionRoom(backpackFull: true, soldTrash: true), Is.True);
+            Assert.That(AutonomousFrontierTransport.KeepWaitingForMedallionRoom(backpackFull: true, soldTrash: false), Is.False);
+            Assert.That(AutonomousFrontierTransport.KeepWaitingForMedallionRoom(backpackFull: false, soldTrash: false), Is.False);
+        }
+
         // From rambodolphin13/OfflineDAoC 7a8ae69: an ended effect left in the service pulsed forever.
         [Test]
         public void EndedEffectsLeaveTheServiceUnlessRestarting()

@@ -43,6 +43,13 @@ public static class AutonomousFrontierTransport
 
     public static bool PartialDepartureDue(long blockedSince, long now) =>
         blockedSince > 0 && now - blockedSince >= WarbandWaitMilliseconds;
+    /// <summary>
+    /// A full backpack at the medallion merchant keeps the bot there only while a sale actually made room.
+    /// With nothing sellable it used to hold "Making room for frontier medallion" every turn until the
+    /// fifteen-minute watchdog sent it to its capital (from rambodolphin13/OfflineDAoC 092701e).
+    /// </summary>
+    public static bool KeepWaitingForMedallionRoom(bool backpackFull, bool soldTrash) => backpackFull && soldTrash;
+
     public static bool SliceFull(int processed, double elapsedMilliseconds) =>
         processed >= SlicePassengerLimit || elapsedMilliseconds >= SliceMilliseconds;
 
