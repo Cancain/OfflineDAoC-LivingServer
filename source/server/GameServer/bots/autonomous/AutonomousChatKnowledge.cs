@@ -36,6 +36,9 @@ public static class AutonomousChatKnowledge
             return true;
         if (TryAnswerTimeToCap(query, out answer))
             return true;
+        if (AsksAboutRealmRaid(query) &&
+            TryAnswerRealmRaid(GlobalConstants.RealmToName(player.Realm), player.Level, AutonomousRealmRaid.Snapshot(), out answer))
+            return true;
         if (LooksLikeSpellQuestion(query) && TryAnswerSpell(player, query, out answer))
             return true;
         if (LooksLikeTrainerQuestion(query) && TryAnswerTrainer(player.Realm, query, player.CharacterClass?.ID ?? 0, player, out answer))
@@ -94,6 +97,45 @@ public static class AutonomousChatKnowledge
             1 => "took me about 15 days played. groups are faster, the 40s drag",
             _ => "depends, two or three weeks played. 1 to 20 goes quick, then it slows down",
         };
+        return true;
+    }
+
+    /// <summary>"any hibs doing a dungeon run tonight?", "is there a raid going?", "when is the next dragon raid". Pure.</summary>
+    public static bool AsksAboutRealmRaid(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return false;
+        string lower = " " + new string(text.ToLowerInvariant().Select(c => char.IsLetterOrDigit(c) ? c : ' ').ToArray()) + " ";
+        bool asks = text.Contains('?') || lower.Contains(" any ") || lower.Contains(" when ") || lower.Contains(" is there ");
+        bool raid = lower.Contains(" raid ") || lower.Contains(" raids ") || lower.Contains(" dungeon run") || lower.Contains(" expedition ") ||
+                    lower.Contains(" epic ");
+        return asks && raid;
+    }
+
+    /// <summary>
+    /// What the realm's raids are doing, from the live raid state. Play test 2026-10-27: "any hibs doing a dungeon run tonight?"
+    /// drew "no clue" while 116 Hibernians were fighting in Galladoria. Pure.
+    /// </summary>
+    public static bool TryAnswerRealmRaid(string realmName, int askerLevel, IEnumerable<AutonomousRealmRaid.Summary> raids, out string answer)
+    {
+        answer = string.Empty;
+        var mine = (raids ?? []).Where(raid => string.Equals(raid.Realm, realmName, StringComparison.OrdinalIgnoreCase)).ToArray();
+        string tail = askerLevel < 45 ? ", its a 50 thing though" : ", come along";
+        var battle = mine.FirstOrDefault(raid => raid.Phase == "Battle");
+        if (battle != null)
+        {
+            answer = battle.Present > 0 ? $"yeah, the realm is in {battle.Name} right now, {battle.Present} of us{tail}"
+                : $"yeah, the {battle.Name} raid is underway{tail}";
+            return true;
+        }
+        var forming = mine.FirstOrDefault(raid => raid.Phase is "Muster" or "Staging" or "Waiting");
+        if (forming != null)
+        {
+            answer = forming.Assigned > 0 ? $"{forming.Name} raid is gathering, {forming.Assigned} signed up so far{tail}"
+                : $"{forming.Name} raid is gathering{tail}";
+            return true;
+        }
+        answer = "nothing running right now, the next one gets called when enough 50s are on";
         return true;
     }
 

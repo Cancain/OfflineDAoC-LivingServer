@@ -205,6 +205,23 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void ARaidQuestionIsAnsweredFromTheLiveRaids()
+        {
+            Assert.That(AutonomousChatKnowledge.AsksAboutRealmRaid("any hibs doing a dungeon run tonight?"), Is.True);
+            Assert.That(AutonomousChatKnowledge.AsksAboutRealmRaid("is there a raid going"), Is.True);
+            Assert.That(AutonomousChatKnowledge.AsksAboutRealmRaid("that raid was fun"), Is.False);
+            var raids = new[]
+            {
+                new AutonomousRealmRaid.Summary("epic-hibernia", "Galladoria", "Hibernia", "RAID", 174, 116, 168, 0, "Battle"),
+                new AutonomousRealmRaid.Summary("dragon-albion", "Golestandt", "Albion", "Respawning", 0, 0, 0, 0),
+            };
+            Assert.That(AutonomousChatKnowledge.TryAnswerRealmRaid("Hibernia", 1, raids, out string hib), Is.True);
+            Assert.That(hib, Does.Contain("Galladoria").And.Contain("116").And.Contain("50 thing"));
+            Assert.That(AutonomousChatKnowledge.TryAnswerRealmRaid("Albion", 50, raids, out string alb), Is.True);
+            Assert.That(alb, Does.Contain("nothing running"));
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.
