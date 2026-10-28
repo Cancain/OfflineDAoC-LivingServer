@@ -1099,6 +1099,7 @@ public static class AutonomousBotChatCoordinator
         HashSet<string> scheduledResponses = new(StringComparer.OrdinalIgnoreCase);
         var spoken = new HashSet<GameBot>();
         int due = 0;
+        int planned = 0;
         for (int index = 0; index < count; index++)
         {
             GameBot responder = eligible[index];
@@ -1114,6 +1115,7 @@ public static class AutonomousBotChatCoordinator
                         player, intent, addressed: !faction);
             if (!TryAddDistinctResponse(scheduledResponses, response, out response))
                 continue;
+            planned++;
             due = ReplyDelayMs(response, due, Random.Shared);
             if (faction)
                 NoteFactionResponder(player.Realm, responder);
@@ -1137,7 +1139,14 @@ public static class AutonomousBotChatCoordinator
                 return 0;
             }, due);
         }
+        // One line per player line, so a question that drew no answer in game can be traced (play test 2026-10-27: "what lvl
+        // r u all" and "lvl 2 viking lfg pst" went unanswered and the log could not say why).
+        PlanLog.Debug($"CHAT_PLAYER_REPLY_PLAN player=\"{player.Name}\" channel={(faction ? "faction" : "say")} intent={intent} " +
+                      $"shape={AutonomousChatShortTalk.QuestionShape(message) ?? "-"} knowledge={hasKnowledge} eligible={eligible.Length} " +
+                      $"directed={directed} count={count} planned={planned}");
     }
+
+    private static readonly DOL.Logging.Logger PlanLog = DOL.Logging.LoggerManager.Create(typeof(AutonomousBotChatCoordinator));
 
     /// <summary>Who answers a player first: a bot that can really help (a rezzer near a dead player, a bot in the
     /// frontier for "inc", a bot close in level for a group question), then bots whose task matches the words.</summary>
