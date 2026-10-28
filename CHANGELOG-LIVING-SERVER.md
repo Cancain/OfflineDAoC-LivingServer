@@ -10,7 +10,8 @@ Older entries below keep the names they were written with.
 
 ## Beta 1.1 (in development)
 
-Beta 1.1 is several pieces of work together: the talking update, Offline DAoC 0.38's server fixes ahead of their
+Beta 1.1 is several pieces of work together: the talking update and the living world (beggars, deeds, storylines,
+spammers, roleplayers, rumours, holiday chatter, Leeroy), Offline DAoC 0.38's server fixes ahead of their
 release, fixes taken from other forks of Offline DAoC, bots that react to attacks like players, quests that can be
 finished with their markers and epic chains, and the all-in-one Setup. The plan and its checklist are in
 [docs/RELEASE-1.1.md](docs/RELEASE-1.1.md).
@@ -73,6 +74,29 @@ bots talk; the full design is in [docs/bot-voices/TALKING-UPDATE.md](docs/bot-vo
   plays an evening in each realm, a lost keep, a group fight and three conversations through the real corpus. An
   independent code review found eight defects; all are fixed. Not played in game yet; the list of checks is in
   TALKING-UPDATE.md.
+
+### Server life: the living world
+
+New Server life parts, on by default, each with its own switch in the launcher's Living Server tab. Details are in
+[docs/LIVING-SERVER.md](docs/LIVING-SERVER.md) and [docs/bot-voices/TALKING-UPDATE.md](docs/bot-voices/TALKING-UPDATE.md).
+
+- **Beggars** (`bot_living_beggars`): about 4% of each realm's Crafters beg in their capital, take the coin and items you
+  drag onto them and hoard every copper. Ask anyone for gold and they follow you around the city insulting you.
+- **Deeds and reputation** (`bot_living_deeds`): bots that see you solo a named monster, go on a kill streak, get zerged
+  or die to something silly tell /faction, and you earn a reputation and a nickname.
+- **Storylines** (`bot_living_storylines`): pairs of bots live out dramas in /faction over days (a kill steal, a guild
+  split, a romance, a ninja-loot trial). Take a side and the ending follows you.
+- **Spammers and roleplayers** (`bot_living_characters`): a gold spammer floods /faction until it is banned; a few bots
+  speak in thee and thou and get mocked for it.
+- **True rumours** (`bot_living_rumours`): a rare named monster that just spawned, or an enemy keep with its guards down.
+- **The Dunce Rage Quit:** now and then a bot asks something hopeless in /faction, the realm piles on and it rage quits.
+- **Bots remember each other** (`bot_group_bonds`): good runs make friends who group again, no-shows make grudges, and
+  bots talk about both in /faction.
+- **Holiday chatter** (`bot_living_holidays`): around New Year, Valentine's, St Patrick's, April Fools, Easter, Midsummer,
+  Halloween, Thanksgiving and Christmas on your PC's calendar, bots talk about the holiday the way 2003 players did, in
+  each realm's own flavour (Samhain, Yule, All Hallows' Eve), and answer your holiday wishes in kind.
+- **Leeroy in raids** (`bot_living_leeroy`): one end-game raid in twenty has a raider who charges the final boss before
+  the raid is ready, yelling his name; the raid has to follow him in, and /faction hears about it either way.
 
 ### Lag spikes with a large population (issue #25)
 
@@ -243,7 +267,7 @@ Found by playing the Beta 1.1 test build on a fresh 0.37b install made by the ne
 
 ### Checked (Beta 1.1 so far)
 
-- **Automated:** every branch above merged into `release/1.1`. On Linux the combined tree builds and all 4,073 server
+- **Automated:** every branch above merged into `release/1.1`. On Linux the combined tree builds and all 4,079 server
   tests pass. CI on Windows runs the full suite and the launcher and installer tests, and builds the package.
 - **In game (2026-10-27 and 28, test builds of this tree on a fresh 0.37b install made by Setup):**
   - Setup's new-install, resume after a dropped connection, and update-in-place paths work.
@@ -260,6 +284,8 @@ Found by playing the Beta 1.1 test build on a fresh 0.37b install made by the ne
 - **Not checked here:** the epic chains' world script hasn't been run against a real clean 0.37b world (its test
   needs one).
 - **Not played yet:**
+  - holiday chatter (tested against the corpus: the right lines in each window, holiday wishes answered);
+  - Leeroy (its rules are tested; raids need many level 50 bots);
   - sieges (their timers now run);
   - raids (they need many level 50 bots);
   - lag at your usual bot count;
