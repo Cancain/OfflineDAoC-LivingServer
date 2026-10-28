@@ -197,6 +197,14 @@ namespace DOL.GS.Tests
         }
 
         [Test]
+        public void ADeclinedRezIsNotOfferedAgainForAMinute()
+        {
+            Assert.That(BotGroupSupport.RecentlyDeclined(0, 500_000), Is.False, "never declined");
+            Assert.That(BotGroupSupport.RecentlyDeclined(100_000, 130_000), Is.True);
+            Assert.That(BotGroupSupport.RecentlyDeclined(100_000, 100_000 + BotGroupSupport.DeclinedRezPauseMs), Is.False);
+        }
+
+        [Test]
         public void AMerchantInteractionSpotIsSearchedOnlyNearTheMerchant()
         {
             // Issue #25: distant warbands ran 18 multi-zone route probes every 15 seconds and stalled NpcService.
