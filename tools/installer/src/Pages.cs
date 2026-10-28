@@ -615,8 +615,7 @@ namespace LivingServerSetup
             List<string> lines;
             lock (pending) { lines = pending.ToList(); pending.Clear(); }
             if (lines.Count > 0 && log.Visible) { log.AppendText(string.Join(Environment.NewLine, lines) + Environment.NewLine); }
-            Invalidate(R(520, 186, 400, 160));
-            Invalidate(R(520, 370, 400, 50));
+            Invalidate(R(512, 186, 408, 338));   // the whole status panel, its stop hint included
         }
 
         void ToggleLog()
