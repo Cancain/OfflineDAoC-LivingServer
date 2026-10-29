@@ -337,6 +337,11 @@ public static class AutonomousBotDebates
         bot.Realm == realm && bot.IsAlive && bot.ObjectState == GameObject.eObjectState.Active && !bot.InCombat && !bot.IsCasting &&
         bot.DatabaseID > 0 && !AutonomousBeggars.Is(bot);   // beggars talk only on their corner
 
+    /// <summary>In the game and alive, even if fighting or casting (a storyline protagonist).</summary>
+    private static bool Present(GameBot bot, eRealm realm) => bot?.IsAutonomousWorldBot == true && !bot.IsTemporaryGroupHelper &&
+        bot.Realm == realm && bot.IsAlive && bot.ObjectState == GameObject.eObjectState.Active && bot.DatabaseID > 0 &&
+        !AutonomousBeggars.Is(bot);
+
     private static Candidate CandidateOf(GameBot bot) =>
         new(bot.DatabaseID, AutonomousBotPersonality.For(bot).Type, bot.CharacterClass?.Name ?? bot.ClassName ?? string.Empty, bot.Level,
             bot.PersistentRecord?.ObjectivePhase == AutonomousWorldBotController.TownIdlePhase);
@@ -398,6 +403,7 @@ public static class AutonomousBotDebates
     private static void TryStart(eRealm realm, long now)
     {
         GameBot[] online = AutonomousBotRegistry.Snapshot().Where(bot => Eligible(bot, realm)).ToArray();
+        GameBot[] speakers = online;   // online, plus a storyline's protagonists
         HashSet<string> heard = Heard.GetOrAdd(realm, _ => new HashSet<string>(StringComparer.Ordinal));
         VC.Scene scene;
         bool reset = false;
@@ -406,7 +412,12 @@ public static class AutonomousBotDebates
         AutonomousBotStorylines.Next story = null;
         try
         {
-            story = AutonomousBotStorylines.TryNext(realm, online, DateTime.UtcNow, Random.Shared);
+            // A running arc's pair need only be in the game: the scene waits for a protagonist who is fighting.
+            GameBot[] present = AutonomousBotRegistry.Snapshot().Where(bot => Present(bot, realm)).ToArray();
+            story = AutonomousBotStorylines.TryNext(realm, online, DateTime.UtcNow, Random.Shared, present);
+            if (story != null)
+                speakers = online.Concat(present.Where(bot => bot.DatabaseID == story.BotA || bot.DatabaseID == story.BotB))
+                    .DistinctBy(bot => bot.DatabaseID).ToArray();
         }
         catch (Exception exception)
         {
@@ -442,13 +453,13 @@ public static class AutonomousBotDebates
         Dictionary<string, string> shared = null;
         if (cast != null)
         {
-            GameBot opener = online.First(bot => bot.DatabaseID == cast.Values.First());
+            GameBot opener = speakers.First(bot => bot.DatabaseID == cast.Values.First());
             shared = AutonomousBotVoices.SharedSlots(realm, opener.Level, Random.Shared);
             if (story != null)
                 foreach (var pair in story.Slots)
                     shared[pair.Key] = pair.Value;
             var slotsByRole = cast.ToDictionary(pair => pair.Key,
-                pair => (IReadOnlyDictionary<string, string>)AutonomousBotVoices.SlotsFor(online.First(bot => bot.DatabaseID == pair.Value), Random.Shared, shared),
+                pair => (IReadOnlyDictionary<string, string>)AutonomousBotVoices.SlotsFor(speakers.First(bot => bot.DatabaseID == pair.Value), Random.Shared, shared),
                 StringComparer.Ordinal);
             if (!Playable(scene, role => slotsByRole.GetValueOrDefault(role)))
             {
