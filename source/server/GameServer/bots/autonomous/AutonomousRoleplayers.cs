@@ -89,6 +89,18 @@ public static class AutonomousRoleplayers
     private static readonly ConcurrentDictionary<eRealm, long> LastMockAt = new();
     public const long AmbientMinMs = 20 * 60_000, AmbientSpreadMs = 25 * 60_000, MockRestMs = 4 * 60_000;
 
+    /// <summary>GM test (/lstest roleplayer): an online roleplayer of the realm speaks on the next pulse. Returns how many are online.</summary>
+    public static int SpeakSoon(eRealm realm)
+    {
+        NextAmbientAt[realm] = 0;
+        LastMockAt.TryRemove(realm, out _);
+        return AutonomousBotRegistry.Snapshot().Count(bot => bot.Realm == realm && Is(bot) && AutonomousLivingServer.CanTalk(bot));
+    }
+
+    /// <summary>A new play session (AutonomousLivingWorld): a roleplayer's first line comes 6-18 minutes in.</summary>
+    public static void OnSessionStart(eRealm realm, long now) =>
+        NextAmbientAt[realm] = now + 6 * 60_000 + Random.Shared.Next(12 * 60_000);
+
     /// <summary>Now and then an online roleplayer posts an in-character line in /faction (AutonomousLivingWorld.Pulse).</summary>
     public static void Pulse(long now)
     {

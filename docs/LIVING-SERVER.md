@@ -51,7 +51,7 @@ stopped; they are used at the next start. The server keys (category `bots`) are:
   - you insulting it in chat (the chat model's "abuse" intent).
 - Its mood toward you follows from that: friendly, neutral, or cool after insults.
 - What it does with the memory:
-  - **Greets you** when you pass within about 700 units: at most one greeting every 3 minutes, and
+  - **Greets you** when you pass within about 400 units: at most one greeting every 3 minutes, and
     the same bot at most every 45 minutes. Groupmates don't greet.
   - Sometimes **thanks you for an old rez or a good group**, naming the place.
   - **Answers you by name** (most of the time) when you talk near it, in `/faction`, or by its
@@ -265,12 +265,25 @@ The lines are in `data/chat/holidays.lines`; the calendar is `AutonomousHolidays
 ### Leeroy in raids (`bot_living_leeroy`)
 One end-game raid in twenty (dungeon raids and dragons) has a raider who can't wait. While the raid musters for its
 final encounter, once a quarter of the raid is there but not all of it (half, at a dragon), he yells
-"LEEEEROOOOOOY JENKINS!" and charges in alone. The boss is fighting now, so the raid goes in after him with whoever is
+"LEEEEROOOOOOY JENKINS!" (in /yell and in /faction, so the whole realm hears it) and charges in alone (a raid that arrives all at once gets him too: he jumps its pull). The boss is fighting now, so the raid goes in after him with whoever is
 there; a few raiders react in /say ("oh my god he just ran in", "stick to the plan!!") and one tells /faction. The
 raid's own rules take it from there: a wipe still regroups and tries again. After the raid a raider tells /faction how
 it went ("thanks a lot ..." or "cant believe that worked"). He is a damage dealer, never a healer or support class, and
 usually a Daredevil or No-lifer. Never on a retry after a wipe. Logs `RAID_LEEROY_ROLLED`, `RAID_LEEROY`,
 `REALM_EXPEDITION_LEEROY` (dungeons) and `REALM_RAID_LEEROY_START` (dragons).
+
+### Bot names (always on)
+New bots are named the way a 2003 server's players named themselves:
+- **Three in four in the 2003 style:**
+  - short made-up names (Grizlas-style);
+  - English compounds (Souleater-style);
+  - jokes and puns, everyday first names, class or race jokes, and the odd stretched name (Droooood);
+  - xX and number names (XxShadowxX, Zerga420).
+- **One in four lore names:** the realm's old syllable names, or a real Old English, Norse or Irish name.
+- **Never:** a word players say in chat (a bot named "Axe" would answer "anyone got an axe?"), a name the server's
+  invalid-names list rejects, pop culture, or a joke from after 2003.
+- **Who gets them:** bots made by the launcher's + buttons and by the server. Bots you already have keep their names.
+- **Details:** the research and the mix are in [research/BOT-NAMES-2003.md](research/BOT-NAMES-2003.md).
 
 ## New client (0.36c)
 
@@ -306,6 +319,27 @@ them:
 Writes are batched off the game loop every 5 seconds, under the same database lock as bot status
 saves. The release builder deletes every `bot_living_*` setting and `bot_schedule_mode`, so
 releases ship with everything off.
+
+## Checking it in game: /lstest (GMs)
+
+Most of these parts are rare by design, so a play session may never show one. `/lstest` (GM accounts only: tick
+**Make me GM** in the launcher's Options with the server stopped) makes one part's next moment due now. It then runs
+through the part's own code, lines and logging, in your realm and around you.
+
+| Command | What happens |
+|---|---|
+| `/lstest list` | Every part, on or off |
+| `/lstest storyline`, `debate`, `dunce` | The next /faction scene starts within seconds: a storyline episode, any debate, or a dunce rage quit. When every storyline is waiting for bots that are out of the game, `storyline` drops the one that has waited longest so a new one starts |
+| `/lstest spammer`, `roleplayer`, `rumour` | A gold spammer starts; a roleplayer speaks; a bot tells the realm about a rare named up in your region |
+| `/lstest tell` | A bot that fits starts a tell to you now, or you're told why none fits |
+| `/lstest memory` | What every bot remembers about you |
+| `/lstest remember` | Your target (or the nearest gamebot) remembers two good groups with you; walk away and back to be greeted |
+| `/lstest greet`, `gossip` | A remembered bot near you greets you; a bot that likes you mentions you in /faction. Each happens now, or tells you why not |
+| `/lstest deed <solo, group, streak, ganked, silly, fell>` | A bot near you tells /faction it saw you do that (your reputation counts don't change) |
+| `/lstest holiday <name, off>` | Bots treat today as that holiday until `off` or a restart |
+| `/lstest leeroy` | The next realm raid has a Leeroy (start one with `/lstest raid dragon`) |
+| `/lstest leeroy now` | A raid with a Leeroy that is gathering for its final boss charges at once |
+| `/lstest raid [dragon] [alb, mid, hib]` | A realm's automatic raid (yours unless named) opens now, sized to its free level 50s (at least 40; raids from the launcher need 300) |
 
 ## Tests
 

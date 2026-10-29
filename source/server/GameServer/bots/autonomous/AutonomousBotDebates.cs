@@ -234,6 +234,40 @@ public static class AutonomousBotDebates
     private static readonly object Sync = new();
     private static readonly Dictionary<eRealm, Running> Scenes = new();
     private static readonly Dictionary<eRealm, long> NextStartAt = new();
+    /// <summary>/lstest: the topic the next scene in a realm must have (null: any), used once.</summary>
+    private static readonly Dictionary<eRealm, string> ForcedTopic = new();
+
+    /// <summary>A new play session (AutonomousLivingWorld): the session's first scene comes 5-10 minutes in.</summary>
+    public static void OnSessionStart(eRealm realm, long now)
+    {
+        lock (Sync)
+            if (!Scenes.ContainsKey(realm))
+                NextStartAt[realm] = now + FirstSceneDelayMs + Random.Shared.Next(5 * 60_000);
+    }
+
+    /// <summary>
+    /// GM test (/lstest): the realm's next /faction scene starts on the next tick, of the given topic when one is named
+    /// ("dunce"), or the due storyline episode when <paramref name="topic"/> is null and one is due. False with the reason
+    /// when a scene is already running.
+    /// </summary>
+    public static bool StartSoon(eRealm realm, string topic, out string why)
+    {
+        lock (Sync)
+        {
+            if (Scenes.ContainsKey(realm))
+            {
+                why = "a /faction scene is already running in that realm; wait for it to end";
+                return false;
+            }
+            NextStartAt[realm] = 0;
+            if (topic == null)
+                ForcedTopic.Remove(realm);
+            else
+                ForcedTopic[realm] = topic;
+        }
+        why = null;
+        return true;
+    }
     private static readonly ConcurrentDictionary<eRealm, HashSet<string>> Heard = new();
     private static Timer _timer;
     private static int _posted;
@@ -311,6 +345,11 @@ public static class AutonomousBotDebates
         bot.Realm == realm && bot.IsAlive && bot.ObjectState == GameObject.eObjectState.Active && !bot.InCombat && !bot.IsCasting &&
         bot.DatabaseID > 0 && !AutonomousBeggars.Is(bot);   // beggars talk only on their corner
 
+    /// <summary>In the game and alive, even if fighting or casting (a storyline protagonist).</summary>
+    private static bool Present(GameBot bot, eRealm realm) => bot?.IsAutonomousWorldBot == true && !bot.IsTemporaryGroupHelper &&
+        bot.Realm == realm && bot.IsAlive && bot.ObjectState == GameObject.eObjectState.Active && bot.DatabaseID > 0 &&
+        !AutonomousBeggars.Is(bot);
+
     private static Candidate CandidateOf(GameBot bot) =>
         new(bot.DatabaseID, AutonomousBotPersonality.For(bot).Type, bot.CharacterClass?.Name ?? bot.ClassName ?? string.Empty, bot.Level,
             bot.PersistentRecord?.ObjectivePhase == AutonomousWorldBotController.TownIdlePhase);
@@ -322,6 +361,11 @@ public static class AutonomousBotDebates
             return SpeakerState.Gone;
         return bot.InCombat || bot.IsCasting ? SpeakerState.Busy : SpeakerState.Free;
     }
+
+    /// <summary>The role's bot is in the game but dead (a corpse waiting to release or be raised).</summary>
+    private static bool DeadInWorld(eRealm realm, Running running, string role) =>
+        running.Cast.TryGetValue(role, out long id) && AutonomousBotRegistry.TryGet(id, out GameBot bot) &&
+        bot.IsAutonomousWorldBot && bot.Realm == realm && !bot.IsAlive && bot.ObjectState == GameObject.eObjectState.Active;
 
     private static SpeakerState CastState(eRealm realm, Running running, string role) =>
         running.Cast.TryGetValue(role, out long id) && AutonomousBotRegistry.TryGet(id, out GameBot bot)
@@ -372,6 +416,7 @@ public static class AutonomousBotDebates
     private static void TryStart(eRealm realm, long now)
     {
         GameBot[] online = AutonomousBotRegistry.Snapshot().Where(bot => Eligible(bot, realm)).ToArray();
+        GameBot[] speakers = online;   // online, plus a storyline's protagonists
         HashSet<string> heard = Heard.GetOrAdd(realm, _ => new HashSet<string>(StringComparer.Ordinal));
         VC.Scene scene;
         bool reset = false;
@@ -380,7 +425,12 @@ public static class AutonomousBotDebates
         AutonomousBotStorylines.Next story = null;
         try
         {
-            story = AutonomousBotStorylines.TryNext(realm, online, DateTime.UtcNow, Random.Shared);
+            // A running arc's pair need only be in the game: the scene waits for a protagonist who is fighting.
+            GameBot[] present = AutonomousBotRegistry.Snapshot().Where(bot => Present(bot, realm)).ToArray();
+            story = AutonomousBotStorylines.TryNext(realm, online, DateTime.UtcNow, Random.Shared, present);
+            if (story != null)
+                speakers = online.Concat(present.Where(bot => bot.DatabaseID == story.BotA || bot.DatabaseID == story.BotB))
+                    .DistinctBy(bot => bot.DatabaseID).ToArray();
         }
         catch (Exception exception)
         {
@@ -396,23 +446,33 @@ public static class AutonomousBotDebates
             if (cast == null)
                 story = null;   // not enough others to fill the scene: an ordinary debate instead, the episode waits
         }
+        string forcedTopic;
+        lock (Sync)
+        {
+            ForcedTopic.TryGetValue(realm, out forcedTopic);
+            ForcedTopic.Remove(realm);
+        }
+        if (forcedTopic != null)
+            story = null;   // /lstest asked for a topic: that, not the storyline
         if (story == null)
         {
+            IReadOnlyList<VC.Scene> pool = forcedTopic == null ? AutonomousBotVoices.Corpus.Scenes
+                : AutonomousBotVoices.Corpus.Scenes.Where(s => string.Equals(s.Topic, forcedTopic, StringComparison.OrdinalIgnoreCase)).ToArray();
             lock (heard)
-                scene = ChooseScene(AutonomousBotVoices.Corpus.Scenes, realm, heard, online.Select(bot => (int)bot.Level).ToArray(), Random.Shared, out reset,
-                    VC.TimeFlag(DateTime.Now.Hour));
+                scene = ChooseScene(pool, realm, heard, online.Select(bot => (int)bot.Level).ToArray(), Random.Shared, out reset,
+                    forcedTopic == null ? VC.TimeFlag(DateTime.Now.Hour) : null);
             cast = scene == null ? null : Cast(scene, online.Select(CandidateOf).ToArray(), Random.Shared);
         }
         Dictionary<string, string> shared = null;
         if (cast != null)
         {
-            GameBot opener = online.First(bot => bot.DatabaseID == cast.Values.First());
+            GameBot opener = speakers.First(bot => bot.DatabaseID == cast.Values.First());
             shared = AutonomousBotVoices.SharedSlots(realm, opener.Level, Random.Shared);
             if (story != null)
                 foreach (var pair in story.Slots)
                     shared[pair.Key] = pair.Value;
             var slotsByRole = cast.ToDictionary(pair => pair.Key,
-                pair => (IReadOnlyDictionary<string, string>)AutonomousBotVoices.SlotsFor(online.First(bot => bot.DatabaseID == pair.Value), Random.Shared, shared),
+                pair => (IReadOnlyDictionary<string, string>)AutonomousBotVoices.SlotsFor(speakers.First(bot => bot.DatabaseID == pair.Value), Random.Shared, shared),
                 StringComparer.Ordinal);
             if (!Playable(scene, role => slotsByRole.GetValueOrDefault(role)))
             {
@@ -454,6 +514,10 @@ public static class AutonomousBotDebates
             if (running.WaitingSince == 0 && beat.Optional && Random.Shared.NextDouble() < 0.5 || beat.Variants.Length == 0)
                 continue;
             SpeakerState state = CastState(realm, running, beat.Role);
+            // A protagonist who died is waited for like a busy one: it releases or is raised in well under three minutes
+            // (in-game check 2026-10-28: a romance episode ended "a protagonist left" when one of the pair died mid-scene).
+            if (running.StoryKey != null && beat.Role is "A" or "B" && state == SpeakerState.Gone && DeadInWorld(realm, running, beat.Role))
+                state = SpeakerState.Busy;
             long waited = running.WaitingSince == 0 ? 0 : now - running.WaitingSince;
             // A storyline's protagonist is never replaced: a busy one is waited for (up to three minutes), and one who
             // left or stays busy ends the episode unfinished, so it plays again later with the same pair.

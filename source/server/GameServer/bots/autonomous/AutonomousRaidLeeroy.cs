@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DOL.AI.Brain;
 using DOL.GS.ServerProperties;
 
@@ -29,6 +30,21 @@ public static class AutonomousRaidLeeroy
 
     public static bool Rolls(double draw) => draw < Chance;
 
+    private static int _forceNextRaid, _chargeNow;
+
+    /// <summary>GM test (/lstest leeroy): the next realm raid to form has a Leeroy.</summary>
+    public static void ForceNextRaid() => Volatile.Write(ref _forceNextRaid, 1);
+
+    /// <summary>The raid forming now has a Leeroy: the 5% roll, or once after /lstest leeroy.</summary>
+    public static bool RollForRaid(double draw) => Interlocked.Exchange(ref _forceNextRaid, 0) == 1 || Rolls(draw);
+
+    /// <summary>GM test (/lstest leeroy now): a raid with a Leeroy that is gathering for its final encounter charges at once.</summary>
+    public static void ChargeNow() => Volatile.Write(ref _chargeNow, 1);
+
+    /// <summary>Whether a raid with a Leeroy goes now: its own rules, or a GM's "now" with at least two raiders there (used once).</summary>
+    public static bool GoesNow(bool rulesSay, int present) =>
+        rulesSay || present >= 2 && Interlocked.Exchange(ref _chargeNow, 0) == 1;
+
     /// <summary>
     /// Whether he charges now: a first attempt at the encounter (never a regroup after a wipe), the muster standing for a
     /// minute, a quarter of what the raid waits for already there, and not all of it (then it's just the pull). Pure.
@@ -36,6 +52,14 @@ public static class AutonomousRaidLeeroy
     public static bool ShouldCharge(int mustered, int needed, long musterMilliseconds, int failedAttempts, bool regrouping) =>
         !regrouping && failedAttempts == 0 && musterMilliseconds >= EarliestMusterMilliseconds &&
         mustered < needed && mustered >= Math.Max(FewestFollowers, needed / 4);
+
+    /// <summary>
+    /// The raid reached the muster all at once, so the moment "part of it is there" never came: he jumps the pull instead,
+    /// a first attempt with the whole muster there. Pure. (Overnight check 2026-10-29: the Crystal Cave raid rolled a Leeroy,
+    /// went from 1 to 52 raiders at Xanxicar in ten seconds and engaged as usual, so he never charged.)
+    /// </summary>
+    public static bool JumpsThePull(int mustered, int needed, int failedAttempts, bool regrouping) =>
+        !regrouping && failedAttempts == 0 && mustered >= needed && mustered >= FewestFollowers;
 
     /// <summary>A dragon raid at its staging: half the raid there, not all, after three minutes. Pure.</summary>
     public static bool ShouldChargeStaging(int present, int required, long stagingMilliseconds) =>
@@ -140,6 +164,10 @@ public static class AutonomousRaidLeeroy
         string shout = Shouts[random.Next(Shouts.Length)];
         if (leeroy.Yell(shout) && AutonomousLivingServer.PlayerHears(leeroy))
             BotChatTranscript.Bot("yell", leeroy.Name, leeroy.Realm, shout);
+        // And in /faction, so the whole realm hears him go (owner 2026-10-29: "the leeroy character should also be shouting
+        // in faction when they run in"). Sent as written: the speech pass would tidy it.
+        if (AutonomousBotChatCoordinator.HasFactionAudience(leeroy.Realm))
+            AutonomousBotChatCoordinator.BroadcastFactionAsWritten(leeroy.Name, leeroy.Realm, shout);
         Log.Info($"RAID_LEEROY bot=\"{leeroy.Name}\" class=\"{leeroy.CharacterClass?.Name}\" boss=\"{boss.Name}\" raid=\"{raidName}\" " +
                  $"region={leeroy.CurrentRegionID} raiders={raiders.Count}");
 

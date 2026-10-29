@@ -250,6 +250,41 @@ namespace DOL.GS
                     Log.Warn($"REALM_RAID_SCHEDULE_FAILED event={chosen.Id} realm={realm} online={online} reason=\"{reason}\"");
             }
         }
+        /// <summary>
+        /// GM test (/lstest raid): the realm's automatic raid opens now, sized to its online level 50s like a scheduled one
+        /// (forced raids from the launcher need 300). <paramref name="dragon"/> picks the realm's dragon, else a random
+        /// available raid. Returns false with <paramref name="reason"/>.
+        /// </summary>
+        public static bool StartAutomaticForTest(eRealm realm, bool dragon, out string reason)
+        {
+            lock (Sync)
+            {
+                int online = OnlineLevelFifty(realm);
+                if (Raids.Values.Any(r => r.Definition.Realm == realm))
+                {
+                    reason = "that realm already has a raid running (watch or stop it on the launcher's Realm Events tab)";
+                    return false;
+                }
+                if (online < RealmRaidRecruitmentPolicy.MinimumScaledBots)
+                {
+                    reason = $"only {online} level 50 gamebot(s) of that realm are free for a raid (the rest are at sieges, in groups or in town); at least {RealmRaidRecruitmentPolicy.MinimumScaledBots} are needed";
+                    return false;
+                }
+                Definition chosen = Definitions.Where(d => d.Realm == realm && Available(d.Id) && (!dragon || d.Id.StartsWith("dragon-", StringComparison.Ordinal)))
+                    .OrderBy(_ => Random.Shared.Next()).FirstOrDefault();
+                if (chosen == null)
+                {
+                    reason = dragon ? "that realm's dragon is not up (respawning or on cooldown)" : "no raid encounter of that realm is up";
+                    return false;
+                }
+                if (!Start(chosen.Id, realm, out reason))
+                    return false;
+                reason = $"{chosen.Name}: {Raids[chosen.Id].Required} of {online} free level 50s must gather (at least 15 minutes)";
+                Log.Info($"REALM_RAID_SCHEDULED event={chosen.Id} realm={realm} online={online} required={Raids[chosen.Id].Required} forced=lstest");
+                return true;
+            }
+        }
+
         public static readonly Definition[] Definitions =
         [
             new("dragon-albion", "Golestandt", eRealm.Albion, 1, "AlbGolestandt", 200),
@@ -341,11 +376,12 @@ namespace DOL.GS
                             Log.Info($"REALM_RAID_SHORT_START event={raid.Definition.Id} present={present} required={raid.Required} " +
                                      $"recruited={raid.Support.Length} minutes={(now - raid.Created) / 60_000}");
                         }
-                        // A dragon raid's Leeroy: half the raid is there, not all, and he goes; the raid goes in after him.
+                        // A dragon raid's Leeroy: half the raid is there, not all, and he goes; the raid goes in after him. A raid
+                        // that is ready before that moment came still has him: he jumps its pull.
                         GameBot leeroy = null;
                         GameLiving[] staged = null;
-                        if (!ready && raid.LeeroyRolled && !raid.LeeroyDone && !raid.Definition.IsDungeon && DragonLanded(raid) &&
-                            AutonomousRaidLeeroy.ShouldChargeStaging(present, raid.Required, now - raid.Created))
+                        if (raid.LeeroyRolled && !raid.LeeroyDone && !raid.Definition.IsDungeon && DragonLanded(raid) &&
+                            (ready || AutonomousRaidLeeroy.GoesNow(AutonomousRaidLeeroy.ShouldChargeStaging(present, raid.Required, now - raid.Created), present)))
                         {
                             raid.LeeroyDone = true;
                             staged = StagedBots(raid);
@@ -518,7 +554,7 @@ namespace DOL.GS
                 if (raid == null) return false;
                 Raids[id] = raid;
                 // One raid in twenty has a raider who can't wait for the final encounter (bot_living_leeroy).
-                raid.LeeroyRolled = AutonomousRaidLeeroy.On && AutonomousRaidLeeroy.Rolls(Random.Shared.NextDouble());
+                raid.LeeroyRolled = AutonomousRaidLeeroy.On && AutonomousRaidLeeroy.RollForRaid(Random.Shared.NextDouble());
                 if (raid.DungeonRoute != null) raid.DungeonRoute.LeeroyRolled = raid.LeeroyRolled;
                 if (raid.LeeroyRolled) Log.Info($"RAID_LEEROY_ROLLED event={id}");
                 RealmEventRecords.Begin(id, definition.Name, definition.IsNeutral ? "Neutral raid" : definition.IsDungeon ? "Epic dungeon" : "Dragon",
@@ -1336,7 +1372,9 @@ namespace DOL.GS
                 newsTopic, RaidSlots(raid.Definition.Name, bossName));
             string leeroyName = raid.LeeroyName ?? raid.DungeonRoute?.LeeroyName;
             if (leeroyName != null && newsTopic != null)
-                AutonomousRaidLeeroy.AfterRaid(raid.Definition.Realm, leeroyName, bossName, newsTopic == "raid_won", raid.Support);
+                // The raiders as they were (raid.Support is emptied above when the parties are released: in-game check
+                // 2026-10-29, Golestandt fell after a Leeroy and nobody said a word about him).
+                AutonomousRaidLeeroy.AfterRaid(raid.Definition.Realm, leeroyName, bossName, newsTopic == "raid_won", recipients);
         }
 
         /// <summary>The names a raid's news lines use ({raid}, {boss}).</summary>
