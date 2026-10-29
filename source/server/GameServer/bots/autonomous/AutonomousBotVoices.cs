@@ -117,9 +117,70 @@ public static class AutonomousBotVoices
         flags.Add(VC.TimeFlag(DateTime.Now.Hour));
         if (bot.IsPlayerLedGroup || AutonomousLivingServer.GroupHasPlayer(bot.Group)) flags.Add("in_player_group");
         if (bot.ResurrectionSpell != null && bot.ResurrectionSpell.Level <= bot.Level) flags.Add("can_rez");
+        // Holiday chatter (bot_living_holidays): the PC's calendar, so the lines in holidays.lines can be said.
+        if (AutonomousHolidays.On) flags.UnionWith(AutonomousHolidays.Flags(AutonomousHolidays.Now));
+        AddTalkingUpdateFlags(bot, flags);
         return new VC.Speaker(bot.DatabaseID, bot.Name, bot.Realm, bot.CharacterClass?.Name ?? bot.ClassName ?? string.Empty,
             bot.Level, AutonomousBotPersonality.For(bot).Type, flags);
     }
+
+    /// <summary>
+    /// The talking update's flags: where the bot is and is going ("at:myrkwood", "going:spindelhalla"), what its realm knows
+    /// (a siege on, a keep lost, Darkness Falls held), its xp in the level, its group role, its experience and whether it fights.
+    /// </summary>
+    private static void AddTalkingUpdateFlags(GameBot bot, HashSet<string> flags)
+    {
+        try
+        {
+            foreach (string place in AutonomousChatPlaces.Flags(bot.CurrentZone?.Description, bot.CurrentRegion?.Description, TravelingTo(bot)))
+                flags.Add(place);
+            flags.UnionWith(AutonomousChatNews.For(bot.Realm).Flags);
+        }
+        catch (Exception exception)
+        {
+            Log.Warn($"Bot voices: no world flags for {bot.Name}", exception);
+        }
+        string xp = XpFlag(Bubbles(bot), bot.Level);
+        if (xp != null) flags.Add(xp);
+        if (bot.CharacterClass != null)
+        {
+            var cls = (eCharacterClass)bot.CharacterClass.ID;
+            if (BotPartyRoles.IsHealingClass(cls)) flags.Add("is_healer");
+            if (BotPartyRoles.For(cls) == BotPartyRole.Tank) flags.Add("is_tank");
+            if (BotPartyRoles.For(cls) == BotPartyRole.Support || BotPartyRoles.IsHybridSupport(cls)) flags.Add("is_support");
+            if (IsCasterClass(cls)) flags.Add("is_caster");
+        }
+        if (bot.Level <= 14) flags.Add("newbie");
+        else if (bot.Level >= 40) flags.Add("veteran");
+        if (bot.InCombat) flags.Add("in_combat");
+    }
+
+    /// <summary>Classes that fight with spells from range (the "oom" and "nuking" lines).</summary>
+    public static bool IsCasterClass(eCharacterClass cls) => cls is eCharacterClass.Wizard or eCharacterClass.Theurgist or
+        eCharacterClass.Sorcerer or eCharacterClass.Cabalist or eCharacterClass.Necromancer or eCharacterClass.Runemaster or
+        eCharacterClass.Spiritmaster or eCharacterClass.Bonedancer or eCharacterClass.Eldritch or eCharacterClass.Enchanter or
+        eCharacterClass.Mentalist or eCharacterClass.Animist;
+
+    /// <summary>How many tenths of the way through its level the bot is (0-9); null at the level cap.</summary>
+    public static int? Bubbles(GameBot bot)
+    {
+        if (bot == null || bot.Level >= 50)
+            return null;
+        long low = bot.Level > 1 ? GamePlayer.GetExperienceAmountForLevel(bot.Level - 1) : 0;
+        long high = GamePlayer.GetExperienceAmountForLevel(bot.Level);
+        return BubblesFor(bot.Experience, low, high);
+    }
+
+    public static int? BubblesFor(long experience, long levelStart, long nextLevel)
+    {
+        if (nextLevel <= levelStart)
+            return null;
+        return (int)Math.Clamp((experience - levelStart) * 10 / (nextLevel - levelStart), 0, 9);
+    }
+
+    /// <summary>"xp_low" under 2 bubbles, "xp_mid" 2-7, "xp_high" 8 or 9; none at the level cap.</summary>
+    public static string XpFlag(int? bubbles, int level) =>
+        bubbles is not int b || level >= 50 ? null : b < 2 ? "xp_low" : b < 8 ? "xp_mid" : "xp_high";
 
     /// <summary>The battlegrounds of this world (the Battleground table): Cathal Valley 165, Caledonia 250, Murdaigean 251,
     /// Thidranki 252, Abermenai 253.</summary>
@@ -208,7 +269,12 @@ public static class AutonomousBotVoices
         string zone = bot.CurrentZone?.Description;
         string item = bot.Inventory?.AllItems.FirstOrDefault(entry => entry != null &&
             entry.SlotPosition >= (int)eInventorySlot.FirstBackpack && entry.SlotPosition <= (int)eInventorySlot.LastBackpack)?.Name;
-        string monster = !string.IsNullOrWhiteSpace(record?.TargetName) ? record.TargetName.Trim().ToLowerInvariant() : null;
+        // In a player's group the bot hunts what the player hunts, so its solo camp target and camp are stale. Play test
+        // 2026-10-28: a friar brought along to Camelot Hills said "mountain algaes at Camelot Hills are the best xp for my
+        // level", her last solo target (in Aldland) placed in the zone she stood in. Only a live fight is named then.
+        bool withPlayer = bot.IsPlayerLedGroup;
+        string monster = withPlayer ? FightingNow(bot)
+            : !string.IsNullOrWhiteSpace(record?.TargetName) ? record.TargetName.Trim().ToLowerInvariant() : null;
         var slots = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             ["me"] = bot.Name,
@@ -221,6 +287,7 @@ public static class AutonomousBotVoices
             ["destination"] = TravelingTo(bot),
             ["item"] = item,
             ["count"] = random.Next(2, 5).ToString(),
+            ["bubbles"] = Bubbles(bot)?.ToString(),
             ["q"] = VC.Openers[random.Next(VC.Openers.Length)],
         };
         if (shared != null)
@@ -233,11 +300,16 @@ public static class AutonomousBotVoices
             foreach (var pair in SharedSlots(bot.Realm, bot.Level, random, InDungeon(bot) ? zone : null))
                 slots[pair.Key] = pair.Value;
             // A bot at a camp names where it really is, not a dungeon for its level (audit 2026-10-16).
-            if (!string.IsNullOrEmpty(record?.CurrentCampId) && !string.IsNullOrEmpty(zone))
+            if (!withPlayer && !string.IsNullOrEmpty(record?.CurrentCampId) && !string.IsNullOrEmpty(zone))
                 slots["camp"] = zone;
         }
         return slots;
     }
+
+    /// <summary>The monster the bot is fighting right now (lower case), or null.</summary>
+    private static string FightingNow(GameBot bot) =>
+        bot.TargetObject is GameNPC { IsAlive: true } npc && npc is not GameBot && npc.Realm == eRealm.None &&
+        !string.IsNullOrWhiteSpace(npc.Name) ? npc.Name.Trim().ToLowerInvariant() : null;
 
     /// <summary>Values a whole conversation shares: one keep, one frontier, one enemy, one capital, one dungeon.</summary>
     public static Dictionary<string, string> SharedSlots(eRealm realm, int level, Random random, string currentDungeon = null)
@@ -266,6 +338,12 @@ public static class AutonomousBotVoices
         bool relax = false, bool requireVoices = true)
     {
         bool asked = AutonomousChatShortTalk.AsksHowAreYou(incoming);
+        // A holiday wish gets the holiday's own answer when there is one today (in-game check 2026-10-28: "happy halloween all!"
+        // drew two plain hellos).
+        if (AutonomousChatIntentModel.IsHolidayWish(incoming) && TryLine(bot, "reply", out result, IntentName(eAutonomousChatIntent.Greeting),
+                slots: slots, relax: true, requireVoices: requireVoices,
+                filter: line => line.Needs.Any(need => need.StartsWith("holiday_", StringComparison.Ordinal))))
+            return true;
         if (asked && TryLine(bot, "reply", out result, answers: "ask_howareyou", slots: slots, relax: relax, requireVoices: requireVoices))
             return true;
         return TryLine(bot, "reply", out result, IntentName(eAutonomousChatIntent.Greeting), slots: slots, relax: relax,
@@ -389,11 +467,60 @@ public static class AutonomousBotVoices
                 // once the three-day pool for its kind is used up.
                 RelaxTo = relax ? ShortReplyRest : VC.RecentLines.Relaxed,
                 LocalHour = DateTime.Now.Hour,
+                NeedSlots = NeedSlotsFor(bot),
             }, out result);
         }
         catch (Exception exception)
         {
             Log.Warn($"Bot voices: no line for {bot.Name} ({kind})", exception);
+            return false;
+        }
+    }
+
+    /// <summary>The slots the realm's news and sieges give the lines that need them (AutonomousChatNews).</summary>
+    private static IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> NeedSlotsFor(GameBot bot)
+    {
+        try
+        {
+            return AutonomousChatNews.For(bot.Realm).Slots;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// A corpus line for a speaker that is not a gamebot (a gold spammer's throwaway character): picked and styled like a
+    /// bot's line, remembered for the realm so it doesn't repeat. False without the corpus.
+    /// </summary>
+    public static bool TryLineFor(string name, eRealm realm, string kind, string topic, IReadOnlyDictionary<string, string> slots,
+        out string text, Random random = null)
+    {
+        text = null;
+        if (Corpus == null || string.IsNullOrEmpty(name))
+            return false;
+        random ??= Random.Shared;
+        try
+        {
+            long id = -1 - Math.Abs((long)StringComparer.OrdinalIgnoreCase.GetHashCode(name));
+            var speaker = new VC.Speaker(id, name, realm, string.Empty, 1, BotPersonalityType.Leveler, new HashSet<string>(StringComparer.Ordinal));
+            var all = new Dictionary<string, string>(StringComparer.Ordinal) { ["me"] = name };
+            if (slots != null)
+                foreach (var pair in slots)
+                    all[pair.Key] = pair.Value;
+            bool picked = Corpus.TryPick(new VC.Request(kind, speaker, all, Recent, DateTime.UtcNow, random)
+            {
+                Topic = topic,
+                RelaxTo = VC.RecentLines.Relaxed,
+                LocalHour = DateTime.Now.Hour,
+            }, out VC.Picked result);
+            text = result?.Text;
+            return picked;
+        }
+        catch (Exception exception)
+        {
+            Log.Warn($"Bot voices: no {kind} line for {name}", exception);
             return false;
         }
     }
@@ -436,6 +563,7 @@ public static class AutonomousBotVoices
                 Mood = mood,
                 RelaxTo = VC.RecentLines.Relaxed,
                 LocalHour = DateTime.Now.Hour,
+                NeedSlots = NeedSlotsFor(bot),
             }, out VC.Picked result);
             text = result?.Text;
             return picked;

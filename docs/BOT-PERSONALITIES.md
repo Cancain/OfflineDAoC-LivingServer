@@ -5,7 +5,7 @@ go looking for trouble, and each one writes in its own style. These are the "Liv
 features, alongside [BOT-GUILDS.md](BOT-GUILDS.md).
 
 They affect only **autonomous gamebots**. Companion bots (`/spawn`, `/raid`) and real players keep
-today's behavior. Every part ships **off**. With all of it off, bots behave as in stock 0.36, apart
+today's behavior. Every part shipped **off** until Beta 1.1, which turns bot voices on (personalities stay off). With all of it off, bots behave as in stock 0.36, apart
 from the always-on changes listed in [KNOWN-ISSUES.md](KNOWN-ISSUES.md).
 
 ## 1. Switches
@@ -13,8 +13,10 @@ from the always-on changes listed in [KNOWN-ISSUES.md](KNOWN-ISSUES.md).
 | Setting (`ServerProperty`, category `bots`) | Default | What it does |
 |---|---|---|
 | `bot_personalities_enabled` | False | Personality types and traits tilt how bots spend their time (section 2). |
-| `bot_voices_enabled` | False | Bots say lines from the bot-voices corpus in their own writing style (section 3). |
+| `bot_voices_enabled` | True (since Beta 1.1) | Bots say lines from the bot-voices corpus in their own writing style (section 3). |
 | `bot_voices_debates` | True | When voices are on, bots hold debates and long threads in /faction (section 4). |
+| `bot_voices_tells` | True | When voices and memory are on, a bot now and then starts a tell with you ([bot-voices/TALKING-UPDATE.md](bot-voices/TALKING-UPDATE.md)). |
+| `bot_voices_chat_rate` | 1.0 | How much bots talk unprompted, 0 (only answers) to 3. |
 
 To change them, use the launcher's **Living Server** tab (with the server stopped; it applies at the next start). The same switches are in a script, for those who prefer it: close the
 server, launcher and game, then run (Python 3):
@@ -64,6 +66,7 @@ never bypassed.
 | Dungeon or outdoors | the configured dungeon preference | 60% (Crafter) to 170% (Daredevil) of it; a group uses its leader's |
 | Which outdoor camp | weighted by live spawns | also weighted by taste: Daredevils like yellow and orange cons, Explorers like zones they haven't visited in 6 hours, Levelers like full camps. Every legal camp keeps at least 10% weight |
 | How often it chats | the normal rate | ×0.25 to ×1.56 by chattiness (the realm average stays about the same) |
+| How fast it answers a player's attack (`bot_incoming_fire_reaction`) | a 0.3–2.5 s reaction delay by kind of hit and class | ×1.3 (risk 0) to ×0.75 (risk 9) of that delay, so Daredevils and No-lifers turn first and Crafters last |
 
 Zone memory is kept in memory only (32 zones per bot, forgotten when the server restarts).
 

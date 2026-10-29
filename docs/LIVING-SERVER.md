@@ -22,8 +22,8 @@ stopped; they are used at the next start. The server keys (category `bots`) are:
 
 | Switch | Key | Default |
 |---|---|---|
-| Bots remember you | `bot_living_memory` | False |
-| Grats | `bot_living_grats` | False |
+| Bots remember you | `bot_living_memory` | True (since Beta 1.1) |
+| Grats | `bot_living_grats` | True (since Beta 1.1) |
 | Server firsts | `bot_living_firsts` | False |
 | Rezzes and corpse runs | `bot_living_death` | False |
 | Frontier alarms | `bot_living_alarms` | False |
@@ -31,6 +31,14 @@ stopped; they are used at the next start. The server keys (category `bots`) are:
 | Bot schedule | `bot_schedule_mode` | `off` (also `session`, `clock`) |
 | Breaks and linkdeads | `bot_living_breaks` | False |
 | Body language | `bot_living_body_language` | False |
+| Beggars | `bot_living_beggars` | True |
+| Deeds and reputation | `bot_living_deeds` | True |
+| Storylines | `bot_living_storylines` | True |
+| Spammers and roleplayers | `bot_living_characters` | True |
+| True rumours | `bot_living_rumours` | True |
+| Holiday chatter | `bot_living_holidays` | True (Beta 1.1) |
+| Leeroy in raids | `bot_living_leeroy` | True (Beta 1.1) |
+| Bots remember each other | `bot_group_bonds` | True (server key only; not in the launcher tab yet) |
 
 **ALL OFF** in the tab switches every part off, along with the other Living Server features.
 
@@ -43,7 +51,7 @@ stopped; they are used at the next start. The server keys (category `bots`) are:
   - you insulting it in chat (the chat model's "abuse" intent).
 - Its mood toward you follows from that: friendly, neutral, or cool after insults.
 - What it does with the memory:
-  - **Greets you** when you pass within about 700 units: at most one greeting every 3 minutes, and
+  - **Greets you** when you pass within about 400 units: at most one greeting every 3 minutes, and
     the same bot at most every 45 minutes. Groupmates don't greet.
   - Sometimes **thanks you for an old rez or a good group**, naming the place.
   - **Answers you by name** (most of the time) when you talk near it, in `/faction`, or by its
@@ -197,6 +205,86 @@ is) carry its position, heading and speed but no jump or sit state, and the new 
 on the ground. All emotes used are ones the new client animates (ids 1–46); the original client
 hasn't been tried.
 
+### Beggars (`bot_living_beggars`)
+About 4% of each realm's Crafter bots (4-5 a capital with 900 bots a realm) live as beggars in their own capital. They beg you and
+passing bots for coin and loot, sell what they are given and hoard every copper. Drag coin or an item onto one to give
+it; the gift really moves to the bot. Ask anyone for gold or items, on any channel, and for the next hour every beggar
+in your capital that hears of it or sees you follows you around the city insulting you and defending its corner
+until you leave the city. Beggars never group, fight for
+the realm or talk in /faction. Details: [bot-voices/TALKING-UPDATE.md](bot-voices/TALKING-UPDATE.md) section 11.
+
+### Bots remember each other (`bot_group_bonds`)
+Added 2026-10-27, the groundwork for the bots' memory of one another. Only autonomous gamebots are remembered here;
+companion bots and real players are not.
+- **Recording:** when a PvE party ends after starting its task, every member remembers every other in
+  `offline_bot_bonds`: grouped, a good run (the task ran its full time with at most one wipe), and wipes together. When
+  a member never reaches the meeting point, the members who waited remember it as a no-show.
+- **Feelings:** a score of 2 per good run, 1 per party (up to 5), minus 1 per wipe and 2 per no-show. Two good runs
+  make friends (5 or more); two no-shows make a grudge (-4 or less).
+- **Matchmaking:** a leader takes its guildmates first, then its friends, then the nearest. A leader and a bot with a
+  grudge either way don't group until one of them has waited 12 minutes.
+- **Size:** each bot remembers at most 40 others; the least memorable go first.
+- **Logs:** `BOND_FRIENDS` and `BOND_GRUDGE` when a pair crosses a line, and `friendPairs=` on each
+  `AUTONOMOUS_GROUP_FORMED`.
+- **Talk** (since 2026-10-27, `bonds.lines`): a bot tells its realm's /faction when a groupmate becomes a friend, now and
+  then when a new party has an old friend in it (40%), and grumbles about a no-show (50%). One line per topic per realm
+  every 10 minutes, with up to two reactions. Logs `BOND_TALK`. The Herald doesn't show bonds yet.
+
+### Deeds, storylines, spammers, roleplayers and rumours
+- **Deeds and reputation** (`bot_living_deeds`): bots that see you solo a named monster, go on a kill streak, get zerged
+  or die to something silly tell /faction and others react. It builds a reputation the realm brings up, and a nickname.
+- **Storylines** (`bot_living_storylines`): pairs of bots live out four-episode dramas in /faction over days (a kill steal,
+  a guild split, a romance, a ninja-loot trial). Name one of them during an episode to take a side; the ending follows you.
+- **Spammers and roleplayers** (`bot_living_characters`): a gold spammer floods /faction now and then until it is
+  banned; a few bots always speak in thee and thou and get mocked for it.
+- **True rumours** (`bot_living_rumours`): a rare named monster that just spawned, or an enemy keep with its guards down.
+
+Details: [bot-voices/TALKING-UPDATE.md](bot-voices/TALKING-UPDATE.md) sections 12-15.
+
+### Holiday chatter (`bot_living_holidays`)
+Around a holiday on your PC's calendar, bots talk about it the way 2003 players did, in /faction, /say and your group:
+candy and trick-or-treaters, costume parties, turkey comas, Christmas lists, New Year resolutions. Each realm has its
+own flavour: Samhain in Hibernia, Yule and Midsummer in Midgard, All Hallows' Eve and midwinter in Albion. A "happy
+halloween" or "merry christmas" from you is answered in kind. About one realm line in ten is a holiday line in the days
+around a holiday, and about one in five on the day itself.
+
+| Holiday | Days | The day itself |
+|---|---|---|
+| New Year | 30 December - 2 January | 31 December, 1 January |
+| Valentine's Day | 12-14 February | 14 February |
+| St Patrick's Day | 15-17 March | 17 March |
+| April Fools | 1 April | 1 April |
+| Easter | Good Friday - Easter Monday | Easter Sunday |
+| Midsummer | 19-24 June | 21 June |
+| Halloween | 24 October - 1 November | 31 October |
+| Thanksgiving (US) | Tuesday - Sunday around the fourth Thursday of November | the Thursday |
+| Christmas | 18-26 December | 24-25 December |
+
+The lines are in `data/chat/holidays.lines`; the calendar is `AutonomousHolidays`.
+
+### Leeroy in raids (`bot_living_leeroy`)
+One end-game raid in twenty (dungeon raids and dragons) has a raider who can't wait. While the raid musters for its
+final encounter, once a quarter of the raid is there but not all of it (half, at a dragon), he yells
+"LEEEEROOOOOOY JENKINS!" (in /yell and in /faction, so the whole realm hears it) and charges in alone (a raid that arrives all at once gets him too: he jumps its pull). The boss is fighting now, so the raid goes in after him with whoever is
+there; a few raiders react in /say ("oh my god he just ran in", "stick to the plan!!") and one tells /faction. The
+raid's own rules take it from there: a wipe still regroups and tries again. After the raid a raider tells /faction how
+it went ("thanks a lot ..." or "cant believe that worked"). He is a damage dealer, never a healer or support class, and
+usually a Daredevil or No-lifer. Never on a retry after a wipe. Logs `RAID_LEEROY_ROLLED`, `RAID_LEEROY`,
+`REALM_EXPEDITION_LEEROY` (dungeons) and `REALM_RAID_LEEROY_START` (dragons).
+
+### Bot names (always on)
+New bots are named the way a 2003 server's players named themselves:
+- **Three in four in the 2003 style:**
+  - short made-up names (Grizlas-style);
+  - English compounds (Souleater-style);
+  - jokes and puns, everyday first names, class or race jokes, and the odd stretched name (Droooood);
+  - xX and number names (XxShadowxX, Zerga420).
+- **One in four lore names:** the realm's old syllable names, or a real Old English, Norse or Irish name.
+- **Never:** a word players say in chat (a bot named "Axe" would answer "anyone got an axe?"), a name the server's
+  invalid-names list rejects, pop culture, or a joke from after 2003.
+- **Who gets them:** bots made by the launcher's + buttons and by the server. Bots you already have keep their names.
+- **Details:** the research and the mix are in [research/BOT-NAMES-2003.md](research/BOT-NAMES-2003.md).
+
 ## New client (0.36c)
 
 Everything here runs in the server and the launcher, so it works the same with the original client and the Godot
@@ -226,10 +314,32 @@ them:
 - `offline_bot_memory`
 - `offline_bot_nemesis`
 - `offline_server_firsts`
+- `offline_bot_bonds` (2026-10-27)
 
 Writes are batched off the game loop every 5 seconds, under the same database lock as bot status
 saves. The release builder deletes every `bot_living_*` setting and `bot_schedule_mode`, so
 releases ship with everything off.
+
+## Checking it in game: /lstest (GMs)
+
+Most of these parts are rare by design, so a play session may never show one. `/lstest` (GM accounts only: tick
+**Make me GM** in the launcher's Options with the server stopped) makes one part's next moment due now. It then runs
+through the part's own code, lines and logging, in your realm and around you.
+
+| Command | What happens |
+|---|---|
+| `/lstest list` | Every part, on or off |
+| `/lstest storyline`, `debate`, `dunce` | The next /faction scene starts within seconds: a storyline episode, any debate, or a dunce rage quit. When every storyline is waiting for bots that are out of the game, `storyline` drops the one that has waited longest so a new one starts |
+| `/lstest spammer`, `roleplayer`, `rumour` | A gold spammer starts; a roleplayer speaks; a bot tells the realm about a rare named up in your region |
+| `/lstest tell` | A bot that fits starts a tell to you now, or you're told why none fits |
+| `/lstest memory` | What every bot remembers about you |
+| `/lstest remember` | Your target (or the nearest gamebot) remembers two good groups with you; walk away and back to be greeted |
+| `/lstest greet`, `gossip` | A remembered bot near you greets you; a bot that likes you mentions you in /faction. Each happens now, or tells you why not |
+| `/lstest deed <solo, group, streak, ganked, silly, fell>` | A bot near you tells /faction it saw you do that (your reputation counts don't change) |
+| `/lstest holiday <name, off>` | Bots treat today as that holiday until `off` or a restart |
+| `/lstest leeroy` | The next realm raid has a Leeroy (start one with `/lstest raid dragon`) |
+| `/lstest leeroy now` | A raid with a Leeroy that is gathering for its final boss charges at once |
+| `/lstest raid [dragon] [alb, mid, hib]` | A realm's automatic raid (yours unless named) opens now, sized to its free level 50s (at least 40; raids from the launcher need 300) |
 
 ## Tests
 
