@@ -237,6 +237,14 @@ public static class AutonomousBotDebates
     /// <summary>/lstest: the topic the next scene in a realm must have (null: any), used once.</summary>
     private static readonly Dictionary<eRealm, string> ForcedTopic = new();
 
+    /// <summary>A new play session (AutonomousLivingWorld): the session's first scene comes 5-10 minutes in.</summary>
+    public static void OnSessionStart(eRealm realm, long now)
+    {
+        lock (Sync)
+            if (!Scenes.ContainsKey(realm))
+                NextStartAt[realm] = now + FirstSceneDelayMs + Random.Shared.Next(5 * 60_000);
+    }
+
     /// <summary>
     /// GM test (/lstest): the realm's next /faction scene starts on the next tick, of the given topic when one is named
     /// ("dunce"), or the due storyline episode when <paramref name="topic"/> is null and one is due. False with the reason

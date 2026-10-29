@@ -41,7 +41,7 @@ public sealed class OfflineBotStorylineRecord : DataObject, ILivingServerRow
 /// "nah {name_b} did nothing wrong"): the one they backed thanks them by tell, the other tells them off, and the last
 /// episode plays that side's ending (scene "_4a" or "_4b"; plain "_4" when nobody took a side).
 /// Scenes are "story_&lt;arc&gt;_&lt;episode&gt;[a|b]" with topic "story_&lt;arc&gt;" (storylines.lines). Progress is saved
-/// (offline_bot_storylines), one realm plays at most one episode every 75 minutes, an arc's episodes are 6-20 hours apart,
+/// (offline_bot_storylines), one realm plays at most one episode every 45 minutes, an arc's episodes are 3-10 hours apart,
 /// and a finished arc starts again with a new pair a week later.
 /// </summary>
 public static class AutonomousBotStorylines
@@ -50,10 +50,12 @@ public static class AutonomousBotStorylines
 
     public static bool On => Properties.BOT_LIVING_STORYLINES;
 
-    public static readonly TimeSpan RealmRest = TimeSpan.FromMinutes(75);
-    public static readonly TimeSpan EpisodeGapMin = TimeSpan.FromHours(6), EpisodeGapSpread = TimeSpan.FromHours(14);
+    // Pacing (owner 2026-10-28, for a player on a few hours a week): one episode per realm every 45 minutes at most,
+    // episodes 3-10 hours apart, a new arc every 2 hours (they were 75 minutes, 6-20 hours and 4 hours).
+    public static readonly TimeSpan RealmRest = TimeSpan.FromMinutes(45);
+    public static readonly TimeSpan EpisodeGapMin = TimeSpan.FromHours(3), EpisodeGapSpread = TimeSpan.FromHours(7);
     public static readonly TimeSpan RestartAfter = TimeSpan.FromDays(7);
-    public static readonly TimeSpan NewArcGap = TimeSpan.FromHours(4);
+    public static readonly TimeSpan NewArcGap = TimeSpan.FromHours(2);
     public static readonly TimeSpan AbandonAfter = TimeSpan.FromDays(3);
 
     internal static readonly LivingServerTable<string, OfflineBotStorylineRecord> Stories =
@@ -320,6 +322,16 @@ public static class AutonomousBotStorylines
         else if (waiting.Length > 0)
             note = $"{waiting.Length} storyline(s) wait for bots that are out of the game";
         return playable;
+    }
+
+    /// <summary>
+    /// A new play session (AutonomousLivingWorld): the realm's rests are lifted, so the session's first /faction scene is a
+    /// storyline episode when one is due or a new arc can be cast. Episode gaps are kept.
+    /// </summary>
+    public static void OnSessionStart(eRealm realm)
+    {
+        LastEpisodeUtc.TryRemove(realm, out _);
+        NextNewArcUtc.TryRemove(realm, out _);
     }
 
     /// <summary>A bot already a protagonist of an unfinished arc (one drama at a time).</summary>
