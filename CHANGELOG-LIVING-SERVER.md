@@ -11,7 +11,8 @@ Older entries below keep the names they were written with.
 ## Beta 1.1 (in development)
 
 Beta 1.1 is several pieces of work together: the talking update and the living world (beggars, deeds, storylines,
-spammers, roleplayers, rumours, holiday chatter, Leeroy), Offline DAoC 0.38's server fixes ahead of their
+spammers, roleplayers, rumours, holiday chatter, Leeroy), 2003-style bot names, a first half hour paced for signature
+moments, a GM command to check it all in game, Offline DAoC 0.38's server fixes ahead of their
 release, fixes taken from other forks of Offline DAoC, bots that react to attacks like players, quests that can be
 finished with their markers and epic chains, and the all-in-one Setup. The plan and its checklist are in
 [docs/RELEASE-1.1.md](docs/RELEASE-1.1.md).
@@ -74,6 +75,10 @@ bots talk; the full design is in [docs/bot-voices/TALKING-UPDATE.md](docs/bot-vo
   plays an evening in each realm, a lost keep, a group fight and three conversations through the real corpus. An
   independent code review found eight defects; all are fixed. Not played in game yet; the list of checks is in
   TALKING-UPDATE.md.
+
+**Lore conversations**
+- The lore debates are full conversations now: Albion's five tales, the shared ones, Avalon's, and richer lore talk
+  in every realm, each in its realm's own voice.
 
 ### Server life: the living world
 
@@ -222,6 +227,77 @@ From lometur's HearthDAoC fork.
 - The package ships the new file whole under `content/`: a content-patch entry can now name a file ("File") instead of
   byte changes, for files that are entirely Living Server's own. A damaged copy is refused before anything changes.
 
+### Bot names in the 2003 style
+
+- New bots are named the way a 2003 server's players named themselves (owner 2026-10-29: three in four in the 2003
+  style, after research). Research of about 300 names from 2001-2004 rosters and forums is in
+  [docs/research/BOT-NAMES-2003.md](docs/research/BOT-NAMES-2003.md).
+- The mix:
+  - made-up names, 35% (Hasys, Xegrek, Qwannox);
+  - English compounds, 12% (Steeleater, Frosthide);
+  - jokes, 10% (Mushypeas, Mrbiscuits, Captainjelly);
+  - everyday first names, 7%;
+  - class or race jokes, 3% (Sneakyfriar, Angrycabalist);
+  - stretched letters, 2%;
+  - xX names, 3% (XxShadowxX, Xxpainxx);
+  - number names, 3% (Zerga420, Headshot91);
+  - lore names, 25% (the realm's old syllable names, or real Old English, Norse or Irish ones).
+- A name is never a word players say in chat (a bot named "Axe" would catch "anyone got an axe?"), never on the
+  server's invalid-names list, never pop culture or a joke from after 2003, and never the numbers 88, 14, 18 or 69.
+- The server and the launcher's + buttons share one generator (`OfflineDaoc.Shared.EraBotNames`, linked into the
+  launcher). Bots you already have keep their names.
+
+### The first half hour
+
+Owner 2026-10-28: "I really want this update to feel like a major difference." A 3h20m session had seen two storylines
+and two spam waves.
+- A play session starts at the realm's first login, or after half an hour away.
+- Then:
+  - the first /faction scene comes 5-10 minutes in, and is a storyline episode when one can play;
+  - a roleplayer speaks 6-18 minutes in;
+  - a gold spammer turns up 12-30 minutes in;
+  - a friend's first tell still comes 4-10 minutes in.
+- Storylines: one episode per realm every 45 minutes at most (was 75), episodes 3-10 hours apart (was 6-20), a new
+  arc every 2 hours (was 4).
+- Gold spammers post 5-10 ads before the ban (was 3-6).
+
+### /lstest: every Living Server moment on demand (GMs)
+
+- `/lstest` (GM accounts) fires each part now, so a session can check what is rare by design:
+  - storyline, debate, dunce, spammer, roleplayer, rumour;
+  - tell, greet, gossip, memory, remember;
+  - deeds, holidays;
+  - Leeroy and a realm raid sized to its level 50s (`/lstest raid [dragon] [alb|mid|hib]`).
+- Each says why when nothing fits.
+- Details are in [docs/LIVING-SERVER.md](docs/LIVING-SERVER.md).
+
+### Fixes from the in-game Living Server check (2026-10-28 and 2026-10-29)
+
+**Storylines**
+- A running arc's two bots had to be out of combat at the moment a scene was chosen, and grinding gamebots almost never
+  both are, so arcs hardly ever moved on. Now they only need to be in the game; the scene waits for a busy one.
+- A protagonist who dies mid-episode is waited for, not counted as gone, so the episode doesn't end halfway.
+- An arc waiting on bots that are out of the game is dropped after a day (was three).
+
+**Deeds**
+- A witness mid-pull is retried after 15 seconds (was two minutes), or 60 while a /faction scene plays. A witness who
+  logs out is replaced by another bot near you.
+
+**Greetings**
+- A bot picked its greeting at 700 units, past the 512 a /say carries, so a bot in between used up your greeting
+  unheard. Bots now greet from within 400 units and speak within two seconds.
+
+**Leeroy**
+- A raid that reaches its boss all at once used to leave him no moment to charge. Now he jumps the pull.
+- He shouts his charge in /faction as well as /yell, so the whole realm hears him go.
+- The /faction comment after the raid ("cant believe that worked") never came, because the raid's member list was
+  emptied before a speaker was picked. Fixed.
+
+### Launcher and shortcut
+
+- The **Living Server** tab comes second, after Active Population.
+- Setup's desktop shortcut has its own icon, from the new loading-screen art.
+
 ### Play-test fixes (2026-10-27 and 2026-10-28)
 
 Found by playing the Beta 1.1 test build on a fresh 0.37b install made by the new Setup.
@@ -279,7 +355,7 @@ Found by playing the Beta 1.1 test build on a fresh 0.37b install made by the ne
 
 ### Checked (Beta 1.1 so far)
 
-- **Automated:** every branch above merged into `release/1.1`. On Linux the combined tree builds and all 4,079 server
+- **Automated:** every branch above merged into `release/1.1`. On Linux the combined tree builds and all 4,093 server
   tests pass. CI on Windows runs the full suite and the launcher and installer tests, and builds the package.
 - **In game (2026-10-27 and 28, test builds of this tree on a fresh 0.37b install made by Setup):**
   - Setup's new-install, resume after a dropped connection, and update-in-place paths work.
@@ -295,13 +371,26 @@ Found by playing the Beta 1.1 test build on a fresh 0.37b install made by the ne
     (`FORK_BUILD name=1.1-beta`, only the stock world-data errors), automatic account, a new character, into the world.
 - **Not checked here:** the epic chains' world script hasn't been run against a real clean 0.37b world (its test
   needs one).
-- **Not played yet:**
-  - holiday chatter (tested against the corpus: the right lines in each window, holiday wishes answered);
-  - Leeroy (its rules are tested; raids need many level 50 bots);
-  - sieges (their timers now run);
-  - raids (they need many level 50 bots);
-  - lag at your usual bot count;
-  - quests and markers.
+- **In game, 2026-10-28 and 29 (test builds 2-5 on the owner's test copy, up to about 1,000 bots online, with `/lstest`):**
+  - Seen working:
+    - holiday chatter and replies (Christmas test date);
+    - a gold spammer, banned after 7 ads; a roleplayer line, then mocked;
+    - the dunce rage quit and its parting tell;
+    - rumours with replies;
+    - deeds told to /faction with reactions;
+    - storyline episodes (romance, ninja-loot trial) with side-taking and both protagonists' tells;
+    - greetings, gossip and tells from bots that remember you;
+    - the new session's first half hour: debate at 6 minutes, roleplayer at 18, spammer at 22;
+    - 2003-style names from the launcher (Waffleironer, Xxpainxx, Angrycabalist), shown in the world;
+    - Leeroy charging Golestandt before the raid was ready, the raid following him in, a wipe and then the kill;
+    - a natural Leeroy at Trollheim;
+    - automatic raids opening in all three realms once each had enough free level 50s;
+    - a 9.5-hour overnight run with no errors from this code.
+  - Not yet seen: Leeroy jumping the pull, his /faction shout and his after-raid comment (fixed after the last test
+    build); a storyline protagonist dying mid-episode.
+- **Not played yet:** sieges at your usual bot count (their timers now run); quests and markers.
+- **Known:** automatic raids open only with 80 free level-50 bots in the realm, so a small roster rarely gets them.
+  A roster filled only with the Lv.1 and Lv.50 buttons has no bots between levels 20 and 49 until they level up.
 
 ## Beta 1.0 — 2026-10-22
 

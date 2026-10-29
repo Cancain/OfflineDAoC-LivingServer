@@ -13,6 +13,10 @@ request; `release/1.1` goes to `main` (and is published) once it has been built,
 | `bots/stefanrows-routes-reactions` | (pushed) | stefanrows route-failure fixes; bots react to attacks like players | Merged; tests pass locally |
 | `quests/hearth` | (pushed) | HearthDAoC quest fixes (name matching, deliveries, 25-quest journal), quest markers, epic chains | Merged; tests pass locally |
 | `installer/all-in-one` | #26 | All-in-one themed Setup | Merged at `e543dfa`; still being worked on, merge again for later commits; not run by hand on a real PC |
+| `art/living-server-splash` | (pushed) | New loading screen, welcome art and shortcut icon | Merged 2026-10-29; seen in game |
+| `launcher/living-server-tab-second` | (pushed) | Living Server tab second | Merged 2026-10-29; seen in game |
+| `feature/lstest-gm` | (pushed) | `/lstest`, the in-game check's fixes, pacing, 2003-style names, Leeroy fixes | Merged 2026-10-29; played on test builds |
+| `fix/bot-death-animation` | (pushed) | Bots fall when they die | **Left out**: the client keeps a dead pose only for players, so it had no effect in game |
 
 Every branch above merged into `release/1.1` with no conflicts. The combined tree builds, and all 3,979 server tests
 pass on Linux.
@@ -34,6 +38,8 @@ shadowofze, already in his 0.38 work where he took them) and the old `se`, `ci` 
 - [x] One consolidated Beta 1.1 changelog section
 - [x] Build name set in `ForkBuildInfo.cs` (`1.1-beta`)
 - [x] CI green on `release/1.1` (server, launcher and installer tests; 2026-10-28, recheck after the last merges)
+- [x] Played on the owner's test copy at up to about 1,000 bots online (2026-10-28 and 29; see the changelog's
+      Checked section). Sieges at the normal bot count still to watch.
 - [ ] Played on the owner's PC at the normal bot count. Watch sieges: their expiry timers now run on the live
       clock, so musters, marches, repels and the four-hour cap will fire where earlier builds skipped them.
 - [ ] Reply on issue #25 once the release is out
