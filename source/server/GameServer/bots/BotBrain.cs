@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Numerics;
 using System.Reflection;
 using DOL.Database;
@@ -168,6 +169,11 @@ namespace DOL.AI.Brain
 
         public virtual bool HasAggro => !AggroList.IsEmpty;
 
+        /// <summary>True when the bot is already casting this very spell on this very target, which must be left to finish.
+        /// The same spell picked for someone else (an emergency heal on another member) still replaces it.</summary>
+        public static bool IsAlreadyCastingSpell(bool isCasting, int? currentSpellId, int spellId, object currentTarget, object target) =>
+            isCasting && currentSpellId == spellId && currentTarget != null && ReferenceEquals(currentTarget, target);
+
         private GameLiving _committedDungeonPull;
         private long _committedDungeonPullUntil;
 
@@ -187,10 +193,11 @@ namespace DOL.AI.Brain
         public static bool RetainCommittedDungeonPull(bool alive, bool sameRegion, bool inAggro,
             long now, long until) => alive && sameRegion && inAggro && now < until;
 
-        private bool HasCommittedDungeonPull => _committedDungeonPull != null &&
-            RetainCommittedDungeonPull(_committedDungeonPull.IsAlive,
-                _committedDungeonPull.CurrentRegion == Body.CurrentRegion,
-                AggroList.ContainsKey(_committedDungeonPull), GameLoop.GameLoopTime, _committedDungeonPullUntil);
+        // Read once: ClearAggroList can null the field between a check and a use (NullReferenceException in
+        // BotState_Aggro.Think, 2026-10-27, docs/LOG-ERROR-BACKLOG.md).
+        private bool HasCommittedDungeonPull => _committedDungeonPull is { } pull &&
+            RetainCommittedDungeonPull(pull.IsAlive, pull.CurrentRegion == Body.CurrentRegion,
+                AggroList.ContainsKey(pull), GameLoop.GameLoopTime, _committedDungeonPullUntil);
 
         public virtual void AddToAggroList(GameLiving living, long aggroAmount)
         {
@@ -200,8 +207,14 @@ namespace DOL.AI.Brain
             ForceAddToAggroList(living, aggroAmount);
         }
 
+        // A player cannot target an NPC flagged CANTTARGET, so a bot does not fight one either. Run 27 (2026-10-19): Galladoria's
+        // Corrupt Primal of Fire leaves short-lived "trail of fire" patches (untargetable, 99% resists, gone in 6 s) that burn
+        // whoever stands in them; 145 raiders by the Magical Earthmender were swinging at them and 2 at the Earthmender.
+        public static bool IsUntargetable(GameLiving living) => living is GameNPC { Flags: var flags } && (flags & GameNPC.eFlags.CANTTARGET) != 0;
+
         public void ForceAddToAggroList(GameLiving living, long aggroAmount)
         {
+            if (IsUntargetable(living)) return;
             if (!CompanionEngagementMode.Allows(Body, living)) return;
             if (_autonomousWorldController?.IgnoresTarget(living) == true) return;
             if (CompanionRaidSiege.Ignores(Body as GameBot, living)) return;
@@ -304,6 +317,7 @@ namespace DOL.AI.Brain
         protected virtual bool ShouldBeRemovedFromAggroList(GameLiving living)
         {
             return !living.IsAlive ||
+                   IsUntargetable(living) ||
                    living.ObjectState != GameObject.eObjectState.Active ||
                    living.CurrentRegion != Body.CurrentRegion ||
                    !Body.IsWithinRadius(living, MAX_AGGRO_LIST_DISTANCE) ||
@@ -433,7 +447,10 @@ namespace DOL.AI.Brain
                 if (BotBody?.IsRecoveryResting == true)
                     BotBody.WakeRecoveryRest();
                 ConvertDamageToAggroAmount(ad.Attacker, Math.Max(1, ad.Damage + ad.CriticalDamage));
-                if (ad.Attacker?.IsAlive == true && ad.Attacker != Body)
+                // An autonomous gamebot reacts to a player-shaped attacker like a person (BotIncomingFireReaction): an
+                // area hit from a distance is threat but no personal call, and entering combat draws a reaction delay.
+                BotIncomingFireKind fire = BotIncomingFireReaction.KindOf(BotBody, ad);
+                if (ad.Attacker?.IsAlive == true && ad.Attacker != Body && BotIncomingFireReaction.IsPersonalCall(fire))
                 {
                     _recentDirectAttacker = ad.Attacker;
                     _recentDirectAttackTick = GameLoop.GameLoopTime;
@@ -446,7 +463,7 @@ namespace DOL.AI.Brain
                 if (ShouldEnterAggroStateAfterDirectAttack(
                         HasAggro,
                         FSM.GetCurrentState() == FSM.GetState(eFSMStateType.AGGRO)))
-                    FSM.SetCurrentState(eFSMStateType.AGGRO);
+                    EnterAggroFromIncomingFire(fire, ad.Attacker);
 
                 // Damage is an event, so wake combat immediately without
                 // increasing the ordinary idle/travel AI cadence.
@@ -582,8 +599,8 @@ namespace DOL.AI.Brain
                 if (BotBody?.IsRecoveryResting == true)
                     BotBody.WakeRecoveryRest();
                 NextThinkTick = GameLoop.GameLoopTime;
-                if (FSM.GetState(eFSMStateType.AGGRO) != FSM.GetCurrentState())
-                    FSM.SetCurrentState(eFSMStateType.AGGRO);
+                EnterAggroFromIncomingFire(
+                    BotIncomingFireReaction.MateKindOf(BotBody, attacker, BotIncomingFireReaction.IsAreaEffect(ad)), attacker);
             }
         }
 
@@ -777,12 +794,13 @@ namespace DOL.AI.Brain
         {
             get
             {
-                if (_orderedPullTarget?.IsAlive == true &&
-                    _orderedPullTarget.ObjectState is GameObject.eObjectState.Active &&
-                    CanAggroTarget(_orderedPullTarget))
-                    return _orderedPullTarget;
+                // Read once, as HasCommittedDungeonPull; clear it only if nobody set a new target meanwhile.
+                GameLiving target = _orderedPullTarget;
+                if (target?.IsAlive == true && target.ObjectState is GameObject.eObjectState.Active && CanAggroTarget(target))
+                    return target;
 
-                _orderedPullTarget = null;
+                if (target != null)
+                    Interlocked.CompareExchange(ref _orderedPullTarget, null, target);
                 return null;
             }
         }
@@ -1107,6 +1125,9 @@ namespace DOL.AI.Brain
                 out _);
         }
 
+        /// <summary>Beyond this distance from its slot, a gamebot following the player paths instead of walking straight.</summary>
+        public const int GamebotPathFollowDistance = 600;
+
         private void FollowFormation(bool ambientWander = false)
         {
             // Any FOLLOW entry or support path must honor a temporary caster's
@@ -1171,7 +1192,11 @@ namespace DOL.AI.Brain
                     ? (short)Math.Clamp(Body.MaxSpeed * 2 / 5, 60, Body.MaxSpeed)
                     : Body.MaxSpeed;
                 _ambientWanderMovement = ambientWander;
-                if (companionTravel && !ambientWander)
+                // Play test 2026-10-27: a gamebot in the player's group, told "come with me" from across the zone, walked in a
+                // straight line (WalkTo) into hills and, once, off the edge of the map. Far from its formation slot it paths.
+                bool farGamebot = !ambientWander && BotBody.IsAutonomousWorldBot && BotBody.IsPlayerLedGroup &&
+                                  Body.GetDistanceTo(destination) > GamebotPathFollowDistance;
+                if (companionTravel && !ambientWander || farGamebot)
                     Body.PathTo(destination, speed);
                 else
                     Body.WalkTo(destination, speed);
@@ -1182,7 +1207,10 @@ namespace DOL.AI.Brain
 
         private void MaybeIdleRoleplay()
         {
-            if (!CanAmbientWander || Body.IsMoving || Body.IsCasting || Body.InCombat)
+            // In the player's group a bot talks in /group (MaybeAutonomousWorldChat), not to strangers. Play test 2026-10-28: an
+            // idle cleric in the player's group said a /say line every four or five minutes ("anyone running Stonehenge
+            // Barrows today?") on top of its /group talk.
+            if (!CanAmbientWander || BotBody?.IsPlayerLedGroup == true || Body.IsMoving || Body.IsCasting || Body.InCombat)
                 return;
 
             DateTime now = DateTime.UtcNow;
@@ -1225,6 +1253,9 @@ namespace DOL.AI.Brain
                     BotBody.StopMoving();
                 return;
             }
+            // Beggars (bot_living_beggars): a few Crafters live on a corner of their capital and do nothing else.
+            if (AutonomousBeggars.Think(this))
+                return;
             bool nativeSpeedTravelStarted;
             if (CompanionFollowPolicy.ObserveAndCancelBuffs(BotBody, out nativeSpeedTravelStarted))
             {
@@ -1248,6 +1279,9 @@ namespace DOL.AI.Brain
             AutonomousSummonActivity.RecoverOwner(BotBody);
             BotAnimistPolicy.RestoreEncounterTarget(BotBody);
             ObserveLeaderActivity();
+            // The talking update: in the real player's group a gamebot calls the fight in /group (pull, adds, oom, wipe).
+            if (BotBody?.IsAutonomousWorldBot == true && BotBody.IsPlayerLedGroup)
+                AutonomousBotCombatCalls.Observe(BotBody);
             BotBody?.WakeRecoveryRestIfCombatBlocked();
             BotBody?.EnsureAutonomousRecoveryTimers();
 
@@ -1604,6 +1638,14 @@ namespace DOL.AI.Brain
 
             foreach (GameNPC npc in bot.GetNPCsInRadius(StandardMobBrain.MAX_AGGRO_DISTANCE))
             {
+                // A scripted encounter boss is woken by a raider nearby as by a player, aggressive or not: run 29 (2026-10-20),
+                // Galladoria's Olcasgean slept as a statue with all four primals dead and 264 raiders at its staging, because
+                // only its own (sleeping) brain starts the timer that wakes it.
+                if (npc is IGameEpicNpc && npc.IsAlive && npc.ObjectState == GameObject.eObjectState.Active && npc != bot)
+                {
+                    npc.OnAutonomousBotNearby();
+                    continue;
+                }
                 if (npc == bot || !npc.IsAlive || npc.ObjectState != GameObject.eObjectState.Active ||
                     npc is GameTaxi or GameTrainingDummy || npc.Brain is not StandardMobBrain brain ||
                     brain.AggroLevel <= 0 || brain.AggroRange <= 0 ||
@@ -2896,10 +2938,12 @@ namespace DOL.AI.Brain
                 // otherwise expired before the bot ever acted on it (run 9/10 pull loops, raid
                 // target calls that never landed on Summoner Cunovinda).
                 _aggroEndTime = long.MaxValue;
+                _brain.BeginIncomingFireHold();
             }
 
             public override void Exit()
             {
+                _brain.EndIncomingFireHold();
                 _brain.Body.StopAttack();
                 _brain.Body.TargetObject = null;
                 _brain.ClearAggroList();
@@ -2943,6 +2987,13 @@ namespace DOL.AI.Brain
 
                 // Passive stance: heals only, no attacking
                 if (_brain.BotBody.Stance == eBotStance.Passive)
+                {
+                    _brain.CheckHeals();
+                    return;
+                }
+
+                // Just hit by a player: a moment before answering (heals and cures go out at once).
+                if (_brain.HoldsIncomingFire())
                 {
                     _brain.CheckHeals();
                     return;
@@ -3022,7 +3073,7 @@ namespace DOL.AI.Brain
             if (protectionTarget != null)
                 AddToAggroList(protectionTarget, 10000);
 
-            GameLiving directAttacker = RecentDirectAttacker();
+            GameLiving directAttacker = KillOrderAttacker(RecentDirectAttacker());
 
             // Bow release is driven by AttackAction, not by this brain pulse.
             // Re-entering the general target/movement decision while Aim is
@@ -5220,6 +5271,19 @@ namespace DOL.AI.Brain
                         }
                     }
 
+                    // A dotted group is answered with the group cure, not one cure per member (BotIncomingFireReaction).
+                    if (spellToCast == null && nextCureTime < GameLoop.GameLoopTime && BotIncomingFireReaction.Applies(BotBody) &&
+                        CheckHealSpell(BotBody.CurePoisonGroup))
+                    {
+                        GameLiving[] dotted = cureGroup.GetMembersInTheGroup()
+                            .Where(member => member != null && member.IsAlive && member.IsPoisoned && InSupportReach(member)).ToArray();
+                        if (BotIncomingFireReaction.PrefersGroupCure(dotted.Length))
+                        {
+                            spellToCast = BotBody.CurePoisonGroup;
+                            spellTarget = dotted[0];
+                        }
+                    }
+
                     if (spellToCast == null && nextCureTime < GameLoop.GameLoopTime)
                     {
                         foreach (GameLiving member in cureGroup.GetMembersInTheGroup().OrderBy(member => member == AssistedPlayer ? 0 : 1))
@@ -5301,6 +5365,12 @@ namespace DOL.AI.Brain
                     CheckHealSpell(BotBody.HealInstant) ? BotBody.HealInstant : null;
             if (spellToCast != null && spellTarget != null)
             {
+                // The same spell is already being cast (a cure mezz on a mate who is still mezzed is picked again on
+                // every turn): let it finish. Stopping it below and starting over made the healer recast without end.
+                // (From stefanrows/OfflineDAoC 714a9e20, via rambodolphin13/OfflineDAoC 88e7414.)
+                if (IsAlreadyCastingSpell(BotBody.IsCasting, BotBody.castingComponent?.SpellHandler?.Spell?.ID, spellToCast.ID,
+                        BotBody.castingComponent?.SpellHandler?.Target, spellTarget))
+                    return true;
                 spellTarget = BotGroupSupport.ReserveHeal(BotBody, spellToCast, spellTarget);
                 if (spellTarget == null) return isCastingHeal;
                 if (!BotBody.IsWithinRadius(spellTarget, BotBody.castingComponent.CalculateSpellRange(spellToCast)))
@@ -5442,10 +5512,11 @@ namespace DOL.AI.Brain
             if (resurrection == null || now < _nextSiegeRaiseScanTick || Body.IsCasting)
                 return false;
             _nextSiegeRaiseScanTick = now + 3_000;
-            if (!AutonomousSiegeResurrection.IsSiegeAttacker(BotBody))
+            // An RvR healer of the realm that is not in the siege army itself (a roaming group at the battle) raises the
+            // army's dead too, as any realm-mate would (run 27: 20-100 such checks per 5 minutes with dead beside them).
+            if (!AutonomousSiegeResurrection.IsSiegeAttacker(BotBody) &&
+                !(AutonomousObjectiveAssignments.Is(BotBody, eAutonomousObjectiveKind.RvR) && AutonomousSiegeResurrection.HasFallenComradeNear(BotBody)))
             {
-                if (AutonomousObjectiveAssignments.Is(BotBody, eAutonomousObjectiveKind.RvR) && AutonomousSiegeResurrection.HasFallenComradeNear(BotBody))
-                    AutonomousSiegeResurrection.Note(AutonomousSiegeResurrection.Check.NotAttacker);
                 _nextSiegeRaiseScanTick = now + 15_000;
                 return false;
             }
@@ -5459,8 +5530,9 @@ namespace DOL.AI.Brain
                 AutonomousSiegeResurrection.Note(AutonomousSiegeResurrection.Check.CannotCast);
                 return false;
             }
-            GameBot corpse = AutonomousSiegeResurrection.ClaimCorpse(BotBody, fighting);
-            AutonomousSiegeResurrection.Note(corpse == null ? AutonomousSiegeResurrection.Check.NoCorpse : AutonomousSiegeResurrection.Check.Corpse);
+            GameBot corpse = AutonomousSiegeResurrection.ClaimCorpse(BotBody, fighting, out bool enemyBlocked);
+            AutonomousSiegeResurrection.Note(corpse != null ? AutonomousSiegeResurrection.Check.Corpse :
+                enemyBlocked ? AutonomousSiegeResurrection.Check.EnemyByCorpse : AutonomousSiegeResurrection.Check.NoCorpse);
             if (corpse == null)
                 return false;
             int range = BotBody.castingComponent.CalculateSpellRange(resurrection);
@@ -5495,11 +5567,45 @@ namespace DOL.AI.Brain
                 if (Body.IsCasting && Body.castingComponent.SpellHandler?.Spell?.SpellType == eSpellType.Resurrect)
                     return BotGroupSupport.ContinueResurrection(BotBody);
                 if (resurrection == null) return false;
+                // A queued resurrection that hasn't started yet is not a reason to queue a second (play test 2026-10-27: two
+                // casts reached the player back to back, and the second dialog's arrival declined the first).
+                if (Body.castingComponent.HasPendingSkillRequests &&
+                    Body.Group.GetMembersInTheGroup().Any(member => member != Body && !member.IsAlive))
+                    return true;
                 if (Body.IsCasting || !CheckHealSpell(resurrection))
                 {
                     ReportResurrectionBlock(resurrection, Body.IsCasting ? "casting another spell" :
                         BotBody.Mana < BotBody.PowerCost(resurrection) ? $"not enough power to cast ({BotBody.Mana}/{BotBody.PowerCost(resurrection)})" :
                         BotBody.IsBeingInterruptedByOther ? "being interrupted" : "resurrection on recast");
+                    return false;
+                }
+                // A real player is raised where the caster stands: clear what would hit them first (play test 2026-10-28).
+                int raiseRange = BotBody.castingComponent.CalculateSpellRange(resurrection);
+                GameLiving playerCorpse = Body.Group.GetMembersInTheGroup().FirstOrDefault(member => member is GamePlayer && !member.IsAlive &&
+                    member.ObjectState == GameObject.eObjectState.Active && member.CurrentRegionID == Body.CurrentRegionID &&
+                    Body.IsWithinRadius(member, raiseRange));
+                if (playerCorpse != null && BotGroupSupport.ThreatToRaisedPlayer(BotBody) is GameNPC threat)
+                {
+                    // Back off to a clear spot within rez range, as players rez from the edge of a camp. In a camp that
+                    // respawns (in-game check 2026-10-28) clearing alone never ended. Nothing may be hitting the caster now
+                    // (InCombat lingers after each kill, so it never ended there either); at the spot, fight what is left.
+                    if (Body.attackComponent.AttackerTracker.Count == 0 &&
+                        BotGroupSupport.SafeRaiseSpot(BotBody, playerCorpse, raiseRange) is Vector3 spot &&
+                        Vector2.Distance(new(Body.X, Body.Y), new(spot.X, spot.Y)) > 80)
+                    {
+                        BotBody.attackComponent.StopAttack();
+                        BotBody.StopFollowing();
+                        BotBody.PathTo(spot, BotBody.MaxSpeed);
+                        ReportResurrectionBlock(resurrection, $"moving clear of {threat.Name} before raising a player");
+                        return true;
+                    }
+                    if (!Body.InCombat && CanAggroTarget(threat))
+                    {
+                        AddToAggroList(threat, Math.Max(100, threat.EffectiveLevel * 10));
+                        FSM.SetCurrentState(eFSMStateType.AGGRO);
+                        AttackMostWanted();
+                    }
+                    ReportResurrectionBlock(resurrection, $"clearing {threat.Name} before raising a player");
                     return false;
                 }
                 GameLiving corpse = BotGroupSupport.ReserveResurrection(BotBody, resurrection);

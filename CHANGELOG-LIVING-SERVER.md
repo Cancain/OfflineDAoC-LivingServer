@@ -8,6 +8,390 @@ of its feature groups (bots remember you, grats, rezzes, alarms, nemeses, schedu
 language). From Beta 1.0 the whole add-on is the **Living Server** and that group is **Server life**.
 Older entries below keep the names they were written with.
 
+## Beta 1.1 (in development)
+
+Beta 1.1 is several pieces of work together: the talking update and the living world (beggars, deeds, storylines,
+spammers, roleplayers, rumours, holiday chatter, Leeroy), 2003-style bot names, a first half hour paced for signature
+moments, a GM command to check it all in game, Offline DAoC 0.38's server fixes ahead of their
+release, fixes taken from other forks of Offline DAoC, bots that react to attacks like players, quests that can be
+finished with their markers and epic chains, and the all-in-one Setup. The plan and its checklist are in
+[docs/RELEASE-1.1.md](docs/RELEASE-1.1.md).
+
+### The talking update
+
+A Reddit report from Beta 1.0 had a Hibernian bot in Ardee asking about an Albion dungeon. That led to a rework of how
+bots talk; the full design is in [docs/bot-voices/TALKING-UPDATE.md](docs/bot-voices/TALKING-UPDATE.md).
+
+**Bots say only what is true**
+- Each line that names a place needs the speaker there or on its way, or says it is only talking about it. A place
+  list of about 140 zones, towns and dungeons gives the realm and zones of each. The corpus build rejects lines that
+  name another realm's zone, town or dungeon.
+- Keep, relic, siege, raid and Darkness Falls lines need the news that makes them true, and use the real names.
+  When something happens, a bot tells /faction in its own words about a minute later ("heard we lost Caer
+  Benowyc"), as a witness if it was there, and others react.
+- Xp ("4 bubbles to go"), role ("i can heal"), new-player and veteran lines follow the bot's real state. "Where are
+  the mids?" is answered from what the realm has seen. With nothing true to say, a bot stays quiet instead of
+  using the old formal lines.
+- Lines that promised a bot would invite you are no longer said (a bot can't invite a player). Wizards no longer
+  talk about their pet, and solo bots don't apologize to "my healer".
+
+**Conversations**
+- "why?", "rly?", "where?" right after a bot's line is answered by that bot. An answer to a bot's question gets
+  thanks from the asker, and the others let it be. Tells carry on the same way and answer with where the bot is
+  when it replies.
+
+**Bots read what you say**
+- Questions get true answers: a bot asked by name, tell or in your group says its own level, class, rank, guild,
+  gear, plans or whether it is busy; any bot answers a place's monster levels (from the world data), battleground
+  brackets, who holds Darkness Falls, the relics and keeps. Other factual questions get "not sure", not a remark on the
+  topic. The bot's name in a line is no longer read as part of it.
+- More follows on in /faction, /say and /group: "which one", "how long did that take", "whered they go", "no thanks",
+  "ty" to the bot that helped, "x" to a bot's call for a group. Good news, offers, orders (with an honest "cant"),
+  warnings, "wb" and real-life talk get replies in kind, and a groupmate reacts when you die.
+- Fewer misreadings: "inc" as income, a group only talked about, sarcasm, an insult aimed at a class, a goodbye with
+  thanks in it. Measured on lines written blind and not tuned against, about two in three are now read as a player
+  would expect, and 12-16% draw a reply that misses (automated; see the design doc).
+
+**Your group**
+- Gamebots in your group call the fight: the pull, adds, low health, out of power, the mez, root, stun, taunt, group
+  heal or rez they are casting, a wipe, and gj or med up after. Spaced out, never a flood. A bot that joins your
+  group says hi.
+
+**Tells and channels**
+- Now and then (at most every 25-45 minutes) a bot starts a tell: a friend saying hello or thanks for an old group,
+  passing on news or offering a low-level friend a hand; a guildmate; a solo bot of your level nearby offering to
+  duo. Your /lfg may get a duo offer. "sure" gets "send me an invite".
+- Most bot lfg lines go to /lfg and trade lines to /trade. Realm chat is busier with more bots online and in the
+  evening, quieter late at night; new setting `bot_voices_chat_rate` (0-3). New setting `bot_voices_tells`.
+- Guild lines and answers are written in each bot's style.
+
+**Defaults**
+- Bot voices, bot memory and grats are on by default (chat only). Personalities, guilds and the other Server life
+  parts stay off. On a world that ran an earlier build, 1.1 switches them on once where the server had written the
+  old default; settings saved in the launcher keep their values.
+
+**Checked**
+- Automated: all 3,616 tests in `Tests.dll` (Linux), including 79 new talking-update cases and a chat simulator that
+  plays an evening in each realm, a lost keep, a group fight and three conversations through the real corpus. An
+  independent code review found eight defects; all are fixed. Not played in game yet; the list of checks is in
+  TALKING-UPDATE.md.
+
+**Lore conversations**
+- The lore debates are full conversations now: Albion's five tales, the shared ones, Avalon's, and richer lore talk
+  in every realm, each in its realm's own voice.
+
+### Server life: the living world
+
+New Server life parts, on by default, each with its own switch in the launcher's Living Server tab. Details are in
+[docs/LIVING-SERVER.md](docs/LIVING-SERVER.md) and [docs/bot-voices/TALKING-UPDATE.md](docs/bot-voices/TALKING-UPDATE.md).
+
+- **Beggars** (`bot_living_beggars`): about 4% of each realm's Crafters beg in their capital, take the coin and items you
+  drag onto them and hoard every copper. Ask anyone for gold and they follow you around the city insulting you.
+- **Deeds and reputation** (`bot_living_deeds`): bots that see you solo a named monster, go on a kill streak, get zerged
+  or die to something silly tell /faction, and you earn a reputation and a nickname.
+- **Storylines** (`bot_living_storylines`): pairs of bots live out dramas in /faction over days (a kill steal, a guild
+  split, a romance, a ninja-loot trial). Take a side and the ending follows you.
+- **Spammers and roleplayers** (`bot_living_characters`): a gold spammer floods /faction until it is banned; a few bots
+  speak in thee and thou and get mocked for it.
+- **True rumours** (`bot_living_rumours`): a rare named monster that just spawned, or an enemy keep with its guards down.
+- **The Dunce Rage Quit:** now and then a bot asks something hopeless in /faction, the realm piles on and it rage quits.
+- **Bots remember each other** (`bot_group_bonds`): good runs make friends who group again, no-shows make grudges, and
+  bots talk about both in /faction.
+- **Holiday chatter** (`bot_living_holidays`): around New Year, Valentine's, St Patrick's, April Fools, Easter, Midsummer,
+  Halloween, Thanksgiving and Christmas on your PC's calendar, bots talk about the holiday the way 2003 players did, in
+  each realm's own flavour (Samhain, Yule, All Hallows' Eve), and answer your holiday wishes in kind.
+- **Leeroy in raids** (`bot_living_leeroy`): one end-game raid in twenty has a raider who charges the final boss before
+  the raid is ready, yelling his name; the raid has to follow him in, and /faction hears about it either way.
+
+### Lag spikes with a large population (issue #25)
+
+- Reported and diagnosed by Krolgosh-web. A warband walking to a distant frontier medallion merchant searched for a
+  spot beside it from far away, proving up to 18 multi-zone routes every 15 seconds per bot. With many level 50s on
+  RvR, the server tick stalled for about a second and killed bots stood at 0 HP before they fell. Stock 0.37 never ran
+  this, because its far-off bots gave up on the medallion.
+- Bots now look for the spot only within 2,000 units of the merchant, and wait 30 seconds after a search that found
+  nothing.
+
+### Offline DAoC 0.38's server fixes, ahead of their release
+
+From shadowofze's 0.38 work, which isn't published yet (his `main` at `9da9091`, server code only). Thanks to
+shadowofze.
+
+- **Bot raids:**
+  - A bot raid can start Caer Sidi's four horsemen and kill Apocalypse: the hidden controller that starts their
+    challenge now runs whoever is near.
+  - Galladoria's Olcasgean wakes for a bot raid once the four primals are dead.
+  - Raiders no longer swing at things a player can't target (the Corrupt Primal of Fire's patches, which also hit
+    for less now).
+  - A raid target only a few are fighting draws some of the busy fighters over.
+- **Armies:**
+  - A relic or keep army's new leader is the marcher with most of the army around it, not a straggler far behind.
+  - Siege healers stay behind the line, walk out to their dead and raise them; a fallen attacker waits for a raise
+    while a healer of its army is within 5,000.
+- **Travel:**
+  - Hibernian bots no longer loop at their Odin's Gate portal keep door.
+  - Albion bots step off the walled-in floor beside theirs instead of being sent home.
+- **World code:**
+  - Random helmets never roll a model the client draws nothing for.
+  - A door the server has no record of opens again (and is logged as DOOR_NOT_IN_DATABASE).
+- **Not included:** the new-client changes, the patch tools and the world-data parts (Campacorentin patrols,
+  helmets already stored in a world). Those come with shadowofze's own 0.38 patch.
+
+### Fixes from other forks
+
+- **The effect leak.** An effect that ended before it had started was put back in the effect service and ticked
+  forever, so the server slowed the longer it ran. Such effects are no longer added, and any ended effect still there
+  is removed. From rambodolphin13's fork, which measured 30 million such effects and 326 ms per tick on a 3,000-bot
+  run.
+- **Siege timers.** Muster deadlines, the march after them, repels and the four-hour cap now run on the live clock.
+  A throttle that started at the lowest possible time overflowed and skipped every pass (found by stefanrows' fork;
+  the same code is in Offline DAoC 0.37). This had been off on every live server since the throttle was added, so
+  sieges will now end, march and repel on their timers where earlier builds did not. It is the biggest change here to
+  watch in play.
+- **Healers** let a cure they are already casting on the same member finish instead of restarting it every turn
+  (stefanrows, via rambodolphin13).
+- **Animists** below half power keep one damage shroom on the fight and skip vents and spores, so they regenerate
+  between pulls (rambodolphin13, from a tester report).
+- **A full bag at the medallion merchant.** A bot with a full bag and nothing to sell no longer waits at the merchant
+  until the watchdog sends it home. It stays away for five minutes (rambodolphin13).
+- **Siege weapons** no longer throw an error when a bot lets go of one on another thread (rambodolphin13).
+
+### Fewer failed routes
+
+From stefanrows' fork (their 0.314 to 0.328), for autonomous gamebots only.
+
+- A goal that failed because it lies just off the walkable ground moves onto its floor (dungeons and precise
+  arrivals are left alone; a big height change must still be walkable).
+- An enemy hunt inside another realm's keep courtyard with its outer gate closed is no longer offered. Bots pass the
+  gates of keeps their realm owns, and a force sieging a keep keeps its targets there.
+- A spot a bot gave up on is blocked for six minutes for the bot and its warband, so camp, roam and crossing choices
+  stop picking it again.
+- A bot standing on connected ground is no longer sent to its capital because its goal was off the walkable ground.
+- The existing floor search is budgeted: fewer repeated failed searches.
+- stefanrows measured route give-ups falling from 364 to 122 per game-hour in their world (not checked here). Their
+  evidence is in [docs/NAVMESH_HOTSPOTS.md](docs/NAVMESH_HOTSPOTS.md).
+
+### Bots react to attacks like players
+
+From stefanrows' fork (their 0.271). An autonomous gamebot hit by a player, a bot or their pet reacts like a person:
+
+- It answers after a moment: 0.3-0.8 s for melee, up to 1.2 s for a spell or arrow at it, up to 2.2 s for an area
+  splash, plus up to a second for an attacker it wasn't facing, never more than 2.5 s. Tanks turn first and pure
+  casters last.
+- With personalities on, bold bots (Daredevils, No-lifers) turn first and cautious ones (Crafters) last.
+- An area spell from a distance doesn't make its caster the bot's target. A bomber next to it does.
+- A far attacker doesn't pull a bot off another player it is fighting.
+- Healers heal while they turn, and cure a group with three or more members poisoned with the group cure.
+- Mobs still get the immediate reaction. Companions and bots in your group follow you, so they are left out.
+- Switch: `bot_incoming_fire_reaction` (on).
+
+### Quests
+
+From lometur's HearthDAoC fork.
+
+- **Quests you can now finish:**
+  - Quest targets and givers match a spawn's name whatever its capitals. Kills of "arawnite messenger" for "Path of
+    the Renegade" never counted before.
+  - Delivery items are handed once, on accept, and handed back when a step returns them. "Traveler's Way -- Supply
+    Run" gave two bundles, and quests that start with a delivery handed nothing.
+  - The quest journal holds 25 quests, as the client shows, and a quest you are on can't be given again.
+- **Quest markers.** Every NPC uses one set of rules and they stay current:
+  - a yellow knot over a giver with a quest for you (within 15 levels);
+  - a white knot over an NPC your current step needs;
+  - a blue knot over the one that finishes the quest.
+
+  Markers update as you take, move, finish or abandon a quest and as you level, not only at a level-up.
+- **Epic chains:**
+  - Quest dependencies can name quest IDs, so a chain's steps come in the right order even where two steps share a
+    name.
+  - The Guild of Shadows chain (levels 7 to 48, both the Camelot and Shrouded Isles routes) has its period dialogue.
+  - Every other guild's epic line has its steps pinned in order.
+  - The world part is `tools/claude-version/epic_chains.py`. It is a dry run by default, `--apply` writes after a
+    backup, `rollback --apply` puts the rows back, and saves are never touched.
+  - GMs get `/epic` to see and set a character's chain.
+
+### All-in-one Setup
+
+- `LivingServerSetup.exe` installs Offline DAoC and Living Server for someone who has nothing, or adds or updates
+  Living Server on a game they already have.
+- It runs shadowofze's own downloader (pinned by SHA-256) and the Living Server package's own install and rollback
+  scripts, so every safety check stays.
+- Details are in [tools/installer/README.md](tools/installer/README.md).
+
+### New loading screen and welcome art (owner 2026-10-28)
+
+- The game's loading screen and Setup's welcome page use a new Living Server painting: a Midgard dwarf, an Albion
+  knight with the chalice shield and a Hibernian caster (`tools/installer/art/living-server-splash-source.jpg`).
+- The loading screen (`pregame/splash.mpk`) is replaced only over shadowofze's exact file, and it is backed up first.
+  ROLLBACK.cmd and PREPARE-FOR-UPDATE.cmd put his back. Any other splash is left alone.
+- The package ships the new file whole under `content/`: a content-patch entry can now name a file ("File") instead of
+  byte changes, for files that are entirely Living Server's own. A damaged copy is refused before anything changes.
+
+### Bot names in the 2003 style
+
+- New bots are named the way a 2003 server's players named themselves (owner 2026-10-29: three in four in the 2003
+  style, after research). Research of about 300 names from 2001-2004 rosters and forums is in
+  [docs/research/BOT-NAMES-2003.md](docs/research/BOT-NAMES-2003.md).
+- The mix:
+  - made-up names, 35% (Hasys, Xegrek, Qwannox);
+  - English compounds, 12% (Steeleater, Frosthide);
+  - jokes, 10% (Mushypeas, Mrbiscuits, Captainjelly);
+  - everyday first names, 7%;
+  - class or race jokes, 3% (Sneakyfriar, Angrycabalist);
+  - stretched letters, 2%;
+  - xX names, 3% (XxShadowxX, Xxpainxx);
+  - number names, 3% (Zerga420, Headshot91);
+  - lore names, 25% (the realm's old syllable names, or real Old English, Norse or Irish ones).
+- A name is never a word players say in chat (a bot named "Axe" would catch "anyone got an axe?"), never on the
+  server's invalid-names list, never pop culture or a joke from after 2003, and never the numbers 88, 14, 18 or 69.
+- The server and the launcher's + buttons share one generator (`OfflineDaoc.Shared.EraBotNames`, linked into the
+  launcher). Bots you already have keep their names.
+
+### The first half hour
+
+Owner 2026-10-28: "I really want this update to feel like a major difference." A 3h20m session had seen two storylines
+and two spam waves.
+- A play session starts at the realm's first login, or after half an hour away.
+- Then:
+  - the first /faction scene comes 5-10 minutes in, and is a storyline episode when one can play;
+  - a roleplayer speaks 6-18 minutes in;
+  - a gold spammer turns up 12-30 minutes in;
+  - a friend's first tell still comes 4-10 minutes in.
+- Storylines: one episode per realm every 45 minutes at most (was 75), episodes 3-10 hours apart (was 6-20), a new
+  arc every 2 hours (was 4).
+- Gold spammers post 5-10 ads before the ban (was 3-6).
+
+### /lstest: every Living Server moment on demand (GMs)
+
+- `/lstest` (GM accounts) fires each part now, so a session can check what is rare by design:
+  - storyline, debate, dunce, spammer, roleplayer, rumour;
+  - tell, greet, gossip, memory, remember;
+  - deeds, holidays;
+  - Leeroy and a realm raid sized to its level 50s (`/lstest raid [dragon] [alb|mid|hib]`).
+- Each says why when nothing fits.
+- Details are in [docs/LIVING-SERVER.md](docs/LIVING-SERVER.md).
+
+### Fixes from the in-game Living Server check (2026-10-28 and 2026-10-29)
+
+**Storylines**
+- A running arc's two bots had to be out of combat at the moment a scene was chosen, and grinding gamebots almost never
+  both are, so arcs hardly ever moved on. Now they only need to be in the game; the scene waits for a busy one.
+- A protagonist who dies mid-episode is waited for, not counted as gone, so the episode doesn't end halfway.
+- An arc waiting on bots that are out of the game is dropped after a day (was three).
+
+**Deeds**
+- A witness mid-pull is retried after 15 seconds (was two minutes), or 60 while a /faction scene plays. A witness who
+  logs out is replaced by another bot near you.
+
+**Greetings**
+- A bot picked its greeting at 700 units, past the 512 a /say carries, so a bot in between used up your greeting
+  unheard. Bots now greet from within 400 units and speak within two seconds.
+
+**Leeroy**
+- A raid that reaches its boss all at once used to leave him no moment to charge. Now he jumps the pull.
+- He shouts his charge in /faction as well as /yell, so the whole realm hears him go.
+- The /faction comment after the raid ("cant believe that worked") never came, because the raid's member list was
+  emptied before a speaker was picked. Fixed.
+
+### Launcher and shortcut
+
+- The **Living Server** tab comes second, after Active Population.
+- Setup's desktop shortcut has its own icon, from the new loading-screen art.
+
+### Play-test fixes (2026-10-27 and 2026-10-28)
+
+Found by playing the Beta 1.1 test build on a fresh 0.37b install made by the new Setup.
+
+**Resurrection**
+- A rez offer that ran out unanswered made the bot's next offer cancel itself: it said "You decline to be
+  resurrected", and accepting then said "No one is currently trying to resurrect you". Ten casts, no rez. Only the
+  offer you are answering can now accept or decline, and an expired one is dropped.
+- A gamebot no longer raises you into a live fight (you stand where it stands). As players do, it steps to a clear
+  spot within rez range and raises you from there; with no such spot it clears what is fighting or would aggro first.
+  Gamebot corpses keep the combat rez.
+- A bot doesn't queue a second rez while one is waiting, and waits a minute after you decline.
+- "You must wait 0 seconds" after an interrupt now shows the real wait.
+
+**Your group**
+- Groupmates beside you come along when you teleport, take a portal or release to your bind point, and a groupmate
+  far behind paths to you. A stuck groupmate is brought back to you instead of leaving the group.
+- "Come with me" gets an honest answer: on my way, or how far off the bot is.
+- Fight talk comes only from groupmates who saw the fight, hunting talk only after a recent fight, and a reaction to
+  you dying only from groupmates near you.
+- A bot in your group talks in /group, not /say to strangers ("anyone running Stonehenge Barrows today?").
+- A bot in your group no longer quotes its old solo hunt ("mountain algaes at Camelot Hills are the best xp").
+- `/invite` by name says when a far-off bot is busy (riding a stable route, a siege, a raid) instead of "too far
+  away".
+
+**Answers**
+- LFG with nobody near your level gets an honest reply; "where should I level" names your realm's starter zones; the
+  dragon, time to 50 and the realm's raid get real answers; a "wtb" gets a trade reply that fits; insulting a bot's
+  guild is read as abuse.
+
+**`/tele mob`** ranks camps by their average level and lands you at the spawn nearest your level.
+
+**Setup**
+- A first install turns every Living Server feature on at our suggested settings (bot guilds, personalities, voices,
+  all of server life, the suggested XP by level, the real-clock schedule), shown as a ticked option you can untick.
+  A game that already has Living Server keeps its own choices.
+- Shows the real error when the official download fails, and says when the connection dropped.
+- Names the folder of a game program that is still running, and points to Task Manager when it has no window.
+- Cleaning up after an install removes the "Offline DAoC setup files" folder too, with Setup's copy of the downloader.
+- A new install proposes a folder that is free (`playable-v0.37b-2` when you already have `playable-v0.37b`). Choosing
+  a folder that holds a game says so ("Offline DAoC 0.37b is already installed in ..."), and a folder problem offers
+  CHOOSE ANOTHER FOLDER instead of only Try again.
+- The log leaves out curl's progress fragments, which looked like errors.
+- Replacing another build with the same name says "replaces it with this one" instead of "upgrades Beta 1.1 to Beta
+  1.1".
+
+### Ready for Offline DAoC 0.38
+
+- A build can now fit several releases (`BaseRelease`, e.g. `0.37,0.38`). The installer accepts a game updated to any
+  of them and refuses anything newer. It stays `0.37` until 0.38 is published and merged. Setup reads the same list:
+  a game on any listed release takes Living Server as it is, and new installs and updates go to the newest.
+- Beta 1.1 targets shadowofze's latest release, **0.37** (`v0.37`, `ab4df02`), and carries 0.38's server fixes from his
+  `main` (`9da9091`); 0.38 itself is not published yet (checked 2026-10-28).
+- [docs/UPSTREAM-RELEASES.md](docs/UPSTREAM-RELEASES.md) is the checklist for that day.
+
+### Checked (Beta 1.1 so far)
+
+- **Automated:** every branch above merged into `release/1.1`. On Linux the combined tree builds and all 4,093 server
+  tests pass. CI on Windows runs the full suite and the launcher and installer tests, and builds the package.
+- **In game (2026-10-27 and 28, test builds of this tree on a fresh 0.37b install made by Setup):**
+  - Setup's new-install, resume after a dropped connection, and update-in-place paths work.
+  - The server starts on the build, with no new error types against Beta 1.0.
+  - Checked play:
+    - LFG and starter-zone answers.
+    - A groupmate follows you, comes along through `/tele` and a release, and buffs you.
+    - `/tele mob` lands a level 1 at a starter camp.
+    - A rez accepted after an earlier offer ran out now works.
+    - A cleric in a respawning camp steps to a clear spot within range and raises you from there.
+  - A full new install with the release/1.1 Setup on 2026-10-28: 4.8 GB from shadowofze's release, unpacked, updated
+    to 0.37b and Living Server added in about 10 minutes with every step clean; cleanup; first server start
+    (`FORK_BUILD name=1.1-beta`, only the stock world-data errors), automatic account, a new character, into the world.
+- **Not checked here:** the epic chains' world script hasn't been run against a real clean 0.37b world (its test
+  needs one).
+- **In game, 2026-10-28 and 29 (test builds 2-5 on the owner's test copy, up to about 1,000 bots online, with `/lstest`):**
+  - Seen working:
+    - holiday chatter and replies (Christmas test date);
+    - a gold spammer, banned after 7 ads; a roleplayer line, then mocked;
+    - the dunce rage quit and its parting tell;
+    - rumours with replies;
+    - deeds told to /faction with reactions;
+    - storyline episodes (romance, ninja-loot trial) with side-taking and both protagonists' tells;
+    - greetings, gossip and tells from bots that remember you;
+    - the new session's first half hour: debate at 6 minutes, roleplayer at 18, spammer at 22;
+    - 2003-style names from the launcher (Waffleironer, Xxpainxx, Angrycabalist), shown in the world;
+    - Leeroy charging Golestandt before the raid was ready, the raid following him in, a wipe and then the kill;
+    - a natural Leeroy at Trollheim;
+    - automatic raids opening in all three realms once each had enough free level 50s;
+    - a 9.5-hour overnight run with no errors from this code.
+  - Not yet seen: Leeroy jumping the pull, his /faction shout and his after-raid comment (fixed after the last test
+    build); a storyline protagonist dying mid-episode.
+- **Not played yet:** sieges at your usual bot count (their timers now run); quests and markers.
+- **Known:** automatic raids open only with 80 free level-50 bots in the realm, so a small roster rarely gets them.
+  A roster filled only with the Lv.1 and Lv.50 buttons has no bots between levels 20 and 49 until they level up.
+
 ## Beta 1.0 — 2026-10-22
 
 The first release under the Living Server name, and the first public build since 0.36-se.1. Beta 1.0 is the build

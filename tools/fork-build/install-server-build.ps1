@@ -6,7 +6,7 @@
 #
 # Safe by design:
 # - refuses while the server, launcher or game runs;
-# - installs only into the release it was built for (BaseRelease in BUILD-INFO.txt), checked against
+# - installs only into the release(s) it was built for (BaseRelease in BUILD-INFO.txt, e.g. 0.37 or 0.37,0.38), checked against
 #   the game's own PACKAGE MANIFEST.sha256;
 # - replaces only a GameServer.dll that is the original release file or a fork build this script
 #   installed; anything else is refused unless -Force;
@@ -76,7 +76,8 @@ if ($null -eq $manifest) {
     if (!$Force) { Stop-WithMessage "No PACKAGE MANIFEST.sha256 in the game folder, so it can't be checked as Offline DAoC $base. (-Force skips this check.)" }
     $manifest = @{}
 } elseif (!(Test-ReleaseManifest $manifest $base)) {
-    if (!$Force) { Stop-WithMessage "This game folder isn't Offline DAoC $base (or $($base)b). This build only fits $base; installing it on another release would undo that release's server changes." }
+    $fits = (Get-BaseReleases $base) -join ' or '
+    if (!$Force) { Stop-WithMessage "This game folder isn't Offline DAoC $fits (or their b editions). This build only fits $fits; installing it on another release would undo that release's server changes." }
 }
 
 # 4. What is there now.
@@ -149,6 +150,12 @@ foreach ($patch in $contentPatches) {
         if ($hash -eq $patch.Fixed) { $state = 'fixed already' }
         elseif ($hash -eq $patch.Released) {
             $state = 'released file, will be fixed'
+            if ($patch.File) {
+                $shipped = Get-ContentPatchFile $patch $buildDir
+                if (!(Test-Path -LiteralPath $shipped) -or (Get-Sha256 $shipped) -ne $patch.Fixed) {
+                    Stop-WithMessage "$($patch.File) is missing or doesn't match content-patches.json (damaged download?). Download the build again."
+                }
+            }
             $contentPlan += [pscustomobject]@{ Patch = $patch; Path = $path; Hash = $hash }
         }
         else { $state = 'not the released file, left alone' }
@@ -255,7 +262,7 @@ try {
         }
     }
     foreach ($item in $contentPlan) {
-        $fixed = Expand-ContentPatch $item.Patch ([IO.File]::ReadAllBytes($item.Path))
+        $fixed = Expand-ContentPatch $item.Patch ([IO.File]::ReadAllBytes($item.Path)) $buildDir
         if ((Get-BytesSha256 $fixed) -ne $item.Patch.Fixed) { throw "The fix for $($item.Patch.Path) didn't come out right." }
         [IO.File]::WriteAllBytes($item.Path, $fixed)
         if ((Get-Sha256 $item.Path) -ne $item.Patch.Fixed) { throw "Writing $($item.Patch.Path) failed verification." }

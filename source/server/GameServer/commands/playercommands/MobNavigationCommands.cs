@@ -124,6 +124,10 @@ public static class PlayerMobNavigator
             .DistinctBy(entry => entry.Name, StringComparer.OrdinalIgnoreCase)
             .OrderBy(entry => entry.Name, StringComparer.OrdinalIgnoreCase).ToArray();
 
+    /// <summary>How far a camp's levels are from the player's (0 when the player's level is in its range). Pure.</summary>
+    public static int CampLevelGap(int minimumLevel, int maximumLevel, int playerLevel) =>
+        playerLevel < minimumLevel ? minimumLevel - playerLevel : playerLevel > maximumLevel ? playerLevel - maximumLevel : 0;
+
     public static bool TryStart(GamePlayer player, string exactName, out string message)
     {
         if (AutonomousPlayerPilot.IsActive(player))
@@ -176,9 +180,15 @@ public static class PlayerMobNavigator
             return true;
         }
 
+        // Play test 2026-10-27: "/tele mob myrkcat" (listed by /mobs 3) went to a camp of level 27 myrkcats, and "badger cub"
+        // (listed at 1) to level 5s; the biggest camp won whatever its level. The camp closest to the player's level wins now.
         GameNPC[] chosenCamp = matches
             .GroupBy(npc => (npc.CurrentRegionID, X: npc.X / CampCellSize, Y: npc.Y / CampCellSize))
-            .OrderByDescending(group => group.Count())
+            // Ranked by the camp's average level: a cell mixing level 0 and level 8 bandits is not a level 1 camp (in game
+            // 2026-10-28, a level 1 was sent there and killed by a purple bandit at once).
+            .OrderBy(group => CampLevelGap((int)Math.Round(group.Average(npc => (double)npc.Level)),
+                (int)Math.Round(group.Average(npc => (double)npc.Level)), player.Level))
+            .ThenByDescending(group => group.Count())
             .ThenBy(group => RouteBias(player, group.First()))
             .First()
             .ToArray();
@@ -186,7 +196,9 @@ public static class PlayerMobNavigator
         int y = (int)Math.Round(chosenCamp.Average(npc => npc.Y));
         // An average of several floors/spawn points can land inside a wall.
         // Use a real spawn nearest the camp center instead.
-        GameNPC representative = chosenCamp.OrderBy(npc => DistanceSquared(npc.X, npc.Y, x, y)).First();
+        // The spawn nearest the player's level, then nearest the camp centre.
+        GameNPC representative = chosenCamp.OrderBy(npc => Math.Abs(npc.Level - player.Level))
+            .ThenBy(npc => DistanceSquared(npc.X, npc.Y, x, y)).First();
         x = representative.X; y = representative.Y; int z = representative.Z;
         destination = new(representative.CurrentRegionID, x, y, z, $"{representative.Name} camp", false);
 

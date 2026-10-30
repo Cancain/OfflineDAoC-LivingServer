@@ -13,6 +13,9 @@ namespace DOL.GS.Spells
 	public class ResurrectSpellHandler : SpellHandler
 	{
 		private const string RESURRECT_CASTER_PROPERTY = "RESURRECT_CASTER";
+		/// <summary>The handler whose question the dead player is answering: only that one may accept or decline.</summary>
+		private const string RESURRECT_OFFER_PROPERTY = "RESURRECT_OFFER";
+		public const string RESURRECT_DECLINED_AT_PROPERTY = "RESURRECT_DECLINED_AT";
 		protected readonly ListDictionary m_resTimersByLiving = new ListDictionary();
 		private readonly Lock _lock = new();
 
@@ -40,7 +43,13 @@ namespace DOL.GS.Spells
 			}
 			else
 			{
+				// One question at a time. Play test 2026-10-27: a druid gamebot's rez reached the dead player twice; the second
+				// dialog replaced the first, the client declined the first ("You decline to be resurrected."), that cleared the
+				// pending rez, and accepting the second said "No one is currently trying to resurrect you." Ten casts, no rez.
+				if (targetPlayer.TempProperties.GetProperty<GameLiving>(RESURRECT_CASTER_PROPERTY) != null)
+					return;
 				targetPlayer.TempProperties.SetProperty(RESURRECT_CASTER_PROPERTY, m_caster);
+				targetPlayer.TempProperties.SetProperty(RESURRECT_OFFER_PROPERTY, this);
 				ECSGameTimer resurrectExpiredTimer = new ECSGameTimer(targetPlayer);
 				resurrectExpiredTimer.Callback = new ECSGameTimer.ECSTimerCallback(ResurrectExpiredCallback);
 				resurrectExpiredTimer.Properties.SetProperty("targetPlayer", targetPlayer);
@@ -87,7 +96,13 @@ namespace DOL.GS.Spells
 				resurrectExpiredTimer.Stop();
 			}
 
-			GameLiving rezzer = player.TempProperties.GetProperty<GameLiving>(RESURRECT_CASTER_PROPERTY);
+			// Only the offer the player is looking at may answer. Play test 2026-10-28: an offer expired unanswered, and when the
+			// bot cast again, sending the new dialog called the old offer's callback as a decline (PacketLib168.SendCustomDialog).
+			// It read the new caster, said "You decline to be resurrected", cleared the new offer and made the bot wait a minute.
+			ResurrectSpellHandler offer = player.TempProperties.GetProperty<ResurrectSpellHandler>(RESURRECT_OFFER_PROPERTY);
+			if (offer != null && offer != this)
+				return;
+			GameLiving rezzer = offer == this ? player.TempProperties.GetProperty<GameLiving>(RESURRECT_CASTER_PROPERTY) : null;
 			if (!player.IsAlive)
 			{
 				if (rezzer == null)
@@ -103,6 +118,8 @@ namespace DOL.GS.Spells
 					else
 					{
 						player.Out.SendMessage("You decline to be resurrected.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						// Gamebot resurrectors wait a minute before asking again (BotGroupSupport.ReserveResurrection).
+						player.TempProperties.SetProperty(RESURRECT_DECLINED_AT_PROPERTY, GameLoop.GameLoopTime);
 						//refund mana
 						m_caster.Mana += PowerCost(player);
 
@@ -116,6 +133,7 @@ namespace DOL.GS.Spells
 				}
 			}
 			player.TempProperties.RemoveProperty(RESURRECT_CASTER_PROPERTY);
+			player.TempProperties.RemoveProperty(RESURRECT_OFFER_PROPERTY);
 		}
 
 		/// <summary>
@@ -219,7 +237,15 @@ namespace DOL.GS.Spells
 		{
 			GamePlayer player = callingTimer.Properties.GetProperty<GamePlayer>("targetPlayer");
 			if (player == null) return 0;
+			if (player.TempProperties.GetProperty<ResurrectSpellHandler>(RESURRECT_OFFER_PROPERTY) != this) return 0;
 			player.TempProperties.RemoveProperty(RESURRECT_CASTER_PROPERTY);
+			player.TempProperties.RemoveProperty(RESURRECT_OFFER_PROPERTY);
+			// The expired question is no longer answerable: drop its callback, so the next dialog doesn't call it as a decline.
+			lock (player)
+			{
+				if (player.CustomDialogCallback?.Target == this)
+					player.CustomDialogCallback = null;
+			}
 			player.Out.SendMessage("Your resurrection spell has expired.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return 0;
 		}
