@@ -134,6 +134,7 @@ public static class AutonomousBotRegistry
 
     public static void Unregister(GameBot bot)
     {
+        AutonomousBeggars.Forget(bot);
         if (bot?.DatabaseID > 0 && bot.IsEpicSpecialForce)
         {
             SpecialForces.TryRemove(bot.DatabaseID, out _);

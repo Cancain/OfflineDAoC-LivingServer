@@ -86,10 +86,23 @@ function Read-ManifestFile([string]$path) {
 # keeps the earlier ones, so the newest listed is the game's release (an updated 0.37 lists 0.36 and 0.37). An updated
 # game has no editions\ folder (the 0.37 update removes it), so that check, which the 0.36 full downloads pass, is only
 # the fallback for a manifest without release notes. Found on a real 0.36c game updated to 0.37c (2026-10-18).
+# A build may fit several releases (BaseRelease=0.37,0.38 in BUILD-INFO.txt): once its server code carries a newer
+# release's server changes, that release is added so the build installs on either. The game must be one of them.
+function Get-BaseReleases([string]$base) {
+    return @($base -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+}
+
 function Test-ReleaseManifest($manifest, [string]$base) {
+    $bases = Get-BaseReleases $base
     $versions = @($manifest.Keys | ForEach-Object { if ($_ -match '^docs/RELEASE-(\d+\.\d+)\.md$') { [version]$Matches[1] } })
-    if ($versions.Count -gt 0) { return (($versions | Sort-Object | Select-Object -Last 1) -eq [version]$base) }
-    return [bool]($manifest.Keys | Where-Object { $_ -like "editions/$base-no-custom-class/*" } | Select-Object -First 1)
+    if ($versions.Count -gt 0) {
+        $newest = $versions | Sort-Object | Select-Object -Last 1
+        return [bool]($bases | Where-Object { [version]$_ -eq $newest } | Select-Object -First 1)
+    }
+    foreach ($one in $bases) {
+        if ($manifest.Keys | Where-Object { $_ -like "editions/$one-no-custom-class/*" } | Select-Object -First 1) { return $true }
+    }
+    return $false
 }
 
 function Get-InstallRecords([string]$Game) {
@@ -112,14 +125,24 @@ function Get-BackupName([string]$Folder) { return ($Folder -replace '[\\/]', '_'
 
 # Game files this build fixes in place (content-patches.json, made by make_content_patch.py): byte patches against the
 # released file, so no game file ships whole. A file is changed only when it has the released fingerprint, and the
-# result must have the fixed one. Beta 1.0: Hall of the Corrupt's navmesh and eight new-client gate models.
+# result must have the fixed one. Beta 1.0: Hall of the Corrupt's navmesh and eight new-client gate models; Beta 1.1:
+# the game's loading screen (pregame/splash.mpk, shipped whole under content/).
 function Read-ContentPatches([string]$BuildDir) {
     $path = Join-Path $BuildDir 'content-patches.json'
     if (!(Test-Path -LiteralPath $path)) { return @() }
     return @(Get-Content -LiteralPath $path -Raw | ConvertFrom-Json)
 }
 
-function Expand-ContentPatch($Patch, [byte[]]$Released) {
+# An entry with "File" ships its fixed file whole in the build folder instead of byte ops (Living Server's own art, the
+# game's loading screen, owner 2026-10-28): only for files that are entirely ours, never a game file.
+function Get-ContentPatchFile($Patch, [string]$BuildDir) {
+    $relative = [string]$Patch.File
+    if ([IO.Path]::IsPathRooted($relative) -or $relative -match '(^|[\\/])\.\.([\\/]|$)') { throw "Bad content file path: $relative" }
+    return (Join-Path $BuildDir ($relative.Replace('/', [IO.Path]::DirectorySeparatorChar)))
+}
+
+function Expand-ContentPatch($Patch, [byte[]]$Released, [string]$BuildDir) {
+    if ($Patch.File) { return ,([IO.File]::ReadAllBytes((Get-ContentPatchFile $Patch $BuildDir))) }
     $out = New-Object IO.MemoryStream
     foreach ($op in @($Patch.Ops)) {
         if ($null -ne $op.copy) { $out.Write($Released, [int]$op.copy[0], [int]$op.copy[1]) }

@@ -510,6 +510,12 @@ internal sealed partial class MainForm : Form
         var xpSettings = new TabPage("Options") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
         xpSettings.Controls.Add(BuildXpSettingsPanel());
         tabs.TabPages.Add(population);
+        // Living Server fork (chris4aker/OfflineDAoC-SocialExpansion): its settings tab, second in the list (owner
+        // 2026-10-28: it was second to last, after the Bot Goals tab). SocialExpansionSettingsControl.cs.
+        var socialExpansion = new TabPage("Living Server") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
+        _socialExpansionSettings = new SocialExpansionSettingsControl(_database, BotGoalsServerStopped);
+        socialExpansion.Controls.Add(_socialExpansionSettings);
+        tabs.TabPages.Add(socialExpansion);
         tabs.TabPages.Add(groups);
         tabs.TabPages.Add(rvr);
         var battlegrounds = new TabPage("Battlegrounds") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
@@ -529,11 +535,6 @@ internal sealed partial class MainForm : Form
             Path.Combine(_serverDirectory, OfflineDaoc.Configuration.BotGoalSettings.FileName), BotGoalsServerStopped);
         botGoals.Controls.Add(_botGoalsSettings);
         tabs.TabPages.Add(botGoals);
-        // Living Server fork (chris4aker/OfflineDAoC-SocialExpansion): its settings tab. SocialExpansionSettingsControl.cs.
-        var socialExpansion = new TabPage("Living Server") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
-        _socialExpansionSettings = new SocialExpansionSettingsControl(_database, BotGoalsServerStopped);
-        socialExpansion.Controls.Add(_socialExpansionSettings);
-        tabs.TabPages.Add(socialExpansion);
         tabs.TabPages.Add(auction);
         return tabs;
     }
@@ -2193,10 +2194,12 @@ internal sealed partial class MainForm : Form
         }
 
         bool allowSluaghbinder = SluaghbinderEnabled(connection, transaction);
+        // The server's own invalid-names list, so a launcher bot never gets a name a player couldn't.
+        Func<string, bool> rejected = OfflineDaoc.Shared.EraBotNames.LoadRejected(Path.Combine(_serverDirectory, "config", "invalidnames.txt"));
         var identities = new List<BotCharacterGenerator.Identity>(count);
         for (int index = 0; index < count; index++)
         {
-            BotCharacterGenerator.Identity identity = BotCharacterGenerator.Generate(realm, reserved, allowSluaghbinder);
+            BotCharacterGenerator.Identity identity = BotCharacterGenerator.Generate(realm, reserved, allowSluaghbinder, rejected);
             BotStartingLocation start = level == 50
                 ? CapitalBotStartingLocation(identity.Realm)
                 : ChooseBotStartingLocation(connection, transaction, identity.Realm, identity.RaceId, identity.ClassId);

@@ -132,7 +132,8 @@ public static partial class AutonomousRvrEventLayer
                 CreatedTick = now, ExpiresTick = now + RealmEventPolicy.RecruitmentMilliseconds(Random.Shared.NextDouble())
             };
             SupersedeAutomaticSieges(Events[target.Id], now);
-            RealmEventNotices.Queue(target.Id, attacker, $"Warbands are marching on {Place(target.Name)}. Join the assault as you arrive!");
+            RealmEventNotices.Queue(target.Id, attacker, $"Warbands are marching on {Place(target.Name)}. Join the assault as you arrive!",
+                "siege_attack", RealmEventNotices.KeepSlots(target.Name, target.OwningRealm));
             RealmEventRecords.Begin(target.Id, target.Name, target.IsRelicKeep ? "Relic keep" : "Keep", GlobalConstants.RealmToName(attacker), "Forced continuous siege; defender: " + GlobalConstants.RealmToName(target.OwningRealm));
             // Staged assault: the attackers gather at their physical siege camp and the battle opens
             // when enough are there (or at the one-hour deadline with a viable force). Arriving one
@@ -454,7 +455,8 @@ public static partial class AutonomousRvrEventLayer
                 }
                 RealmEventNotices.Queue(active.TargetId, force.Realm, StagedAssault
                     ? $"Warbands are gathering to assault {Place(selected.Name)}. Join them at the siege camp!"
-                    : $"Warbands are marching on {Place(selected.Name)}. Reinforcements join the battle on arrival.");
+                    : $"Warbands are marching on {Place(selected.Name)}. Reinforcements join the battle on arrival.",
+                    "siege_attack", RealmEventNotices.KeepSlots(selected.Name, selected.OwningRealm));
                 (selected.IsRelicKeep ? SelectedRelics : SelectedKeeps).Add(selected.Id);
                 return ToPlan(intent, selected, true,
                     $"Opening a time-limited {(selected.IsRelicKeep ? "relic-keep" : "keep")} assault; same-realm warbands may rally and defenders may answer.");
@@ -634,7 +636,8 @@ public static partial class AutonomousRvrEventLayer
         Events[target.Id] = retake;
         BeginMuster(retake, nowTick, RetakeMusterMilliseconds);
         string loser = GlobalConstants.RealmToName(retaker);
-        RealmEventNotices.Queue(target.Id, retaker, $"{Place(target.Name)} has fallen! Rally at the outpost: we take it back.");
+        RealmEventNotices.Queue(target.Id, retaker, $"{Place(target.Name)} has fallen! Rally at the outpost: we take it back.",
+            "keep_lost", new Dictionary<string, string>(RealmEventNotices.KeepSlots(target.Name, newOwner)) { ["winner"] = GlobalConstants.RealmToName(newOwner) });
         RealmEventNotices.QueueScreen(target.Id, retaker, $"{loser} rallies to retake {Place(target.Name)}!", AnnouncementKind.RvrBattleground);
         RealmEventNotices.QueueScreen(target.Id, newOwner, $"{loser} is rallying to take back {Place(target.Name)}!", AnnouncementKind.RvrBattleground);
         RealmEventRecords.Begin(target.Id, target.Name, target.IsRelicKeep ? "Relic keep" : "Keep", loser,
@@ -749,7 +752,8 @@ public static partial class AutonomousRvrEventLayer
     {
         if (active.DefenseMarching) return;
         active.DefenseMarching = true;
-        RealmEventNotices.Queue(active.TargetId, active.DefenderRealm, $"The defense rally marches to relieve {Place(active.Target.Name)}!");
+        RealmEventNotices.Queue(active.TargetId, active.DefenderRealm, $"The defense rally marches to relieve {Place(active.Target.Name)}!",
+            "siege_defend", RealmEventNotices.KeepSlots(active.Target.Name, active.AttackerRealm));
         var log = DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
         if (log.IsInfoEnabled) log.Info($"RVR_DEFENSE_MARCH target={active.TargetId} mustered={DefenseMusterAttendance(active, nowTick)} reason=\"{reason}\"");
     }
@@ -767,7 +771,8 @@ public static partial class AutonomousRvrEventLayer
         // Emain Macha muster through the defenders on the way and failed at the one-hour mark.
         active.ExpiresTick = Math.Max(active.ExpiresTick, nowTick + (active.RelicKeep ? RelicMarchMilliseconds
             : RealmEventPolicy.RecruitmentMilliseconds(0)));
-        RealmEventNotices.Queue(active.TargetId, active.AttackerRealm, $"The army marches on {Place(active.Target.Name)}! Form up at the siege camp.");
+        RealmEventNotices.Queue(active.TargetId, active.AttackerRealm, $"The army marches on {Place(active.Target.Name)}! Form up at the siege camp.",
+            "siege_attack", RealmEventNotices.KeepSlots(active.Target.Name, active.DefenderRealm));
         var log = DOL.Logging.LoggerManager.Create(typeof(AutonomousRvrEventLayer));
         if (log.IsInfoEnabled) log.Info($"RVR_SIEGE_MARCH target={active.TargetId} mustered={MusterAttendance(active, nowTick)} reason=\"{reason}\"");
     }
@@ -781,6 +786,34 @@ public static partial class AutonomousRvrEventLayer
     /// "relic keep Dun Dagda" (bot goal lists), and the announcements added "the keep" again: "Our army has laid siege to
     /// the keep keep Caer Sursbrooke!" (owner report 2026-10-16).
     /// </summary>
+    /// <summary>
+    /// The news a siege's end is to each realm (the talking update): the keep taken ("keep_won", "keep_lost", "keep_other"),
+    /// or held ("siege_held" for the defenders, "siege_failed" for the attackers, nothing for the third realm).
+    /// </summary>
+    public static (string Topic, Dictionary<string, string> Slots) SiegeOutcomeNews(string keep, eRealm attacker, eRealm defender,
+        eRealm audience, eRealm winner, bool captured)
+    {
+        var slots = new Dictionary<string, string>(StringComparer.Ordinal) { ["keep"] = Place(keep) };
+        if (captured && winner != eRealm.None && winner != defender)
+        {
+            slots["winner"] = GlobalConstants.RealmToName(winner);
+            slots["loser"] = GlobalConstants.RealmToName(defender);
+            slots["enemy"] = GlobalConstants.RealmToName(audience == winner ? defender : winner);
+            return (audience == winner ? "keep_won" : audience == defender ? "keep_lost" : "keep_other", slots);
+        }
+        if (audience == defender)
+        {
+            slots["enemy"] = GlobalConstants.RealmToName(attacker);
+            return ("siege_held", slots);
+        }
+        if (audience == attacker)
+        {
+            slots["enemy"] = GlobalConstants.RealmToName(defender);
+            return ("siege_failed", slots);
+        }
+        return (null, slots);
+    }
+
     public static string Place(string objectiveName)
     {
         if (string.IsNullOrEmpty(objectiveName)) return objectiveName;
@@ -816,13 +849,44 @@ public static partial class AutonomousRvrEventLayer
             // replaced one every 30 seconds for an hour. Prefer a marcher that is actually taking march turns.
             GameBot[] candidates = active.Mustered.Values.Select(entry => entry.Bot)
                 .Where(bot => IsLiveArmyMember(active, bot) && !active.StaleLeaders.ContainsKey(bot.DatabaseID)).ToArray();
-            active.MarchLeader = candidates
+            // Run 28 (2026-10-20): the next leader was the marcher with the lowest id, wherever it stood. A straggler 64,000
+            // units behind the head of Dun Dagda's column became leader, the front walked back to it, and the siege opened
+            // with 62 of 170 at the keep. The leader is now the marcher with most of the army around it (the main body),
+            // then the one nearest the target.
+            GameBot[] turning = candidates
                 .Where(bot => active.MarchTurns.TryGetValue(bot.DatabaseID, out long turn) && now - turn < MarchLeaderSilenceMilliseconds)
-                .OrderBy(bot => bot.DatabaseID).FirstOrDefault() ?? candidates.OrderBy(bot => bot.DatabaseID).FirstOrDefault();
+                .ToArray();
+            active.MarchLeader = MainBodyLeader(turning.Length > 0 ? turning : candidates, active.Target);
             active.MarchLeaderSinceTick = now;
             return active.MarchLeader;
         }
     }
+
+    /// <summary>The marcher with the most of the column within <see cref="MainBodyRadius"/>, then the one nearest the target.</summary>
+    public static GameBot MainBodyLeader(GameBot[] marchers, LiveObjective target)
+    {
+        GameBot best = null;
+        int bestNear = -1;
+        long bestDistance = long.MaxValue;
+        foreach (GameBot bot in marchers)
+        {
+            int near = 0;
+            foreach (GameBot other in marchers)
+                if (other != bot && other.CurrentRegionID == bot.CurrentRegionID && bot.IsWithinRadius(other, MainBodyRadius))
+                    near++;
+            long dx = bot.X - (target?.X ?? bot.X), dy = bot.Y - (target?.Y ?? bot.Y);
+            long distance = bot.CurrentRegionID == (target?.RegionId ?? bot.CurrentRegionID) ? dx * dx + dy * dy : long.MaxValue / 2;
+            if (near > bestNear || near == bestNear && (distance < bestDistance || distance == bestDistance && bot.DatabaseID < best.DatabaseID))
+            {
+                best = bot;
+                bestNear = near;
+                bestDistance = distance;
+            }
+        }
+        return best;
+    }
+
+    public const int MainBodyRadius = 2_500;
 
     public const long MarchLeaderSilenceMilliseconds = 30_000;
     public const long MarchLeaderStaleMilliseconds = 10 * 60_000;
@@ -1218,9 +1282,11 @@ public static partial class AutonomousRvrEventLayer
             active.Attackers.Values.Sum() + active.Defenders.Values.Sum() + active.ThirdRealm.Values.Sum(),
             Attendance(active, active.AttackerRealm, nowTick) + Attendance(active, active.DefenderRealm, nowTick) + Attendance(active, OtherRealm(active), nowTick));
         RealmEventNotices.Queue(active.TargetId, active.AttackerRealm,
-            $"The assault on {Place(active.Target.Name)} is advancing. Reinforcements are welcome.");
+            $"The assault on {Place(active.Target.Name)} is advancing. Reinforcements are welcome.",
+            "siege_attack", RealmEventNotices.KeepSlots(active.Target.Name, active.DefenderRealm));
         RealmEventNotices.Queue(active.TargetId, active.DefenderRealm,
-            $"The assault on {Place(active.Target.Name)} has begun! Hold the walls and stand by your realm.");
+            $"The assault on {Place(active.Target.Name)} has begun! Hold the walls and stand by your realm.",
+            "siege_defend", RealmEventNotices.KeepSlots(active.Target.Name, active.AttackerRealm));
         if (active.ThirdRealm.Count > 0) RealmEventNotices.Queue(active.TargetId, OtherRealm(active),
             $"The armies at {Place(active.Target.Name)} are committed to battle. Watch their flanks, warbands!");
         string attacker = GlobalConstants.RealmToName(active.AttackerRealm);
@@ -1238,13 +1304,22 @@ public static partial class AutonomousRvrEventLayer
     public const long ExpireIntervalMilliseconds = 500;
     private static long _lastExpireTick = long.MinValue;
 
+    /// <summary>
+    /// True while the last live-clock pass is under <see cref="ExpireIntervalMilliseconds"/> old. Before the first pass
+    /// (<c>long.MinValue</c>) <c>now - last</c> overflowed to a negative number, so every live call returned early and
+    /// muster deadlines, the march after them, repels and the four-hour cap never ran on the live clock (found by
+    /// stefanrows/OfflineDAoC 0.345.0).
+    /// </summary>
+    public static bool ExpireThrottled(long nowTick, long lastTick) =>
+        lastTick != long.MinValue && nowTick >= lastTick && nowTick - lastTick < ExpireIntervalMilliseconds;
+
     private static void Expire(long nowTick)
     {
         // Only the live clock is throttled; a caller asking about another moment (tests step time by a millisecond) runs.
         if (nowTick == GameLoop.GameLoopTime)
         {
             long last = System.Threading.Interlocked.Read(ref _lastExpireTick);
-            if (nowTick >= last && nowTick - last < ExpireIntervalMilliseconds)
+            if (ExpireThrottled(nowTick, last))
                 return;
             if (System.Threading.Interlocked.CompareExchange(ref _lastExpireTick, nowTick, last) != last)
                 return;
@@ -1253,8 +1328,10 @@ public static partial class AutonomousRvrEventLayer
         {
             if (!RealmEventBanter.ReminderDue(active.BattleStarted, active.PreparationNoticeSent, active.ExpiresTick - nowTick)) continue;
             active.PreparationNoticeSent = true;
-            RealmEventNotices.Queue(active.TargetId, active.AttackerRealm, RealmEventBanter.SiegeReminder(Place(active.Target.Name), false));
-            RealmEventNotices.Queue(active.TargetId, active.DefenderRealm, RealmEventBanter.SiegeReminder(Place(active.Target.Name), true));
+            RealmEventNotices.Queue(active.TargetId, active.AttackerRealm, RealmEventBanter.SiegeReminder(Place(active.Target.Name), false),
+                "siege_attack", RealmEventNotices.KeepSlots(active.Target.Name, active.DefenderRealm));
+            RealmEventNotices.Queue(active.TargetId, active.DefenderRealm, RealmEventBanter.SiegeReminder(Place(active.Target.Name), true),
+                "siege_defend", RealmEventNotices.KeepSlots(active.Target.Name, active.AttackerRealm));
             if (active.ThirdRealm.Count > 0) RealmEventNotices.Queue(active.TargetId, OtherRealm(active),
                 $"The armies at {Place(active.Target.Name)} have about twenty minutes left to muster. Keep watch for an opening, scouts.");
         }
@@ -1348,8 +1425,12 @@ public static partial class AutonomousRvrEventLayer
         if (!active.DefenseReaction && (reason.StartsWith("Keep captured") || reason.StartsWith("Siege defended")))
             SiegeDefenseBalance.Record(reason.StartsWith("Keep captured") && (winner == eRealm.None || winner == active.AttackerRealm));
         foreach (eRealm realm in new[] { active.AttackerRealm, active.DefenderRealm, OtherRealm(active) })
+        {
+            (string topic, Dictionary<string, string> slots) = SiegeOutcomeNews(active.Target.Name, active.AttackerRealm, active.DefenderRealm,
+                realm, winner, reason.StartsWith("Keep captured"));
             RealmEventNotices.Queue(active.TargetId, realm, RealmEventBanter.SiegeOutcome(Place(active.Target.Name),
-                realm == active.DefenderRealm, reason.StartsWith("Siege defended"), reason.StartsWith("Rally failed"), winner, realm));
+                realm == active.DefenderRealm, reason.StartsWith("Siege defended"), reason.StartsWith("Rally failed"), winner, realm), topic, slots);
+        }
         RealmEventRecords.Finish(active.TargetId, reason.StartsWith("Rally failed") ? "Failed rally" : reason.StartsWith("Keep captured") ? "Captured" :
             reason.StartsWith("Siege defended") ? reason.Contains("expired") ? "Defended (timeout)" : "Defended" : "Ended (unconfirmed)", reason,
             active.Attackers.Values.Sum() + active.Defenders.Values.Sum() + active.ThirdRealm.Values.Sum());
@@ -1440,7 +1521,8 @@ public static partial class AutonomousRvrEventLayer
                 {
                     active.AttackObserved = true;
                     RealmEventNotices.Queue(active.TargetId, active.DefenderRealm,
-                        $"{Place(active.Target.Name)} is under attack! Available warbands can reinforce the defenders.");
+                        $"{Place(active.Target.Name)} is under attack! Available warbands can reinforce the defenders.",
+                        "siege_defend", RealmEventNotices.KeepSlots(active.Target.Name, active.AttackerRealm));
                     RealmEventNotices.Queue(active.TargetId, OtherRealm(active),
                         $"Fighting has broken out at {Place(active.Target.Name)}. There is an opportunity to intervene.");
                 }
@@ -1500,6 +1582,21 @@ public static partial class AutonomousRvrEventLayer
                 (active.DefenseReaction || !string.IsNullOrEmpty(active.PlayerAccount));
     }
 
+    /// <summary>A siege as chat may describe it (the talking update): which keep, who attacks, who defends, and whether the
+    /// fighting at the walls has begun. A snapshot; it never changes the event.</summary>
+    public sealed record SiegeView(string TargetId, string KeepName, eRealm Attacker, eRealm Defender, ushort RegionId, int X, int Y,
+        bool BattleStarted, bool Marching, bool RelicKeep, bool AttackObserved = false);
+
+    /// <summary>The sieges going on now, for chat (AutonomousChatNews): only keep sieges that have not expired.</summary>
+    public static SiegeView[] ActiveSieges(long nowTick)
+    {
+        lock (Sync)
+            return Events.Values.Where(e => e.ExpiresTick > nowTick && e.Target != null && !e.Target.IsRelicCarrier)
+                .Select(e => new SiegeView(e.TargetId, e.Target.Name, e.AttackerRealm, e.DefenderRealm, e.Target.RegionId, e.Target.X,
+                    e.Target.Y, e.BattleStarted, e.Marching, e.RelicKeep, e.AttackObserved || e.DefenseReaction))
+                .ToArray();
+    }
+
     public static bool IsTargetActive(string targetId, long nowTick)
     {
         if (string.IsNullOrWhiteSpace(targetId))
@@ -1529,7 +1626,9 @@ public static partial class AutonomousRvrEventLayer
                     RealmEventNotices.Queue(targetId, realm, winner == eRealm.None
                         ? $"{name} has been secured at a shrine. The struggle on the road has ended."
                         : realm == winner ? $"{name} is safe in our shrine! Honour to its bearers and defenders."
-                        : $"{GlobalConstants.RealmToName(winner)} has secured {name} at a shrine. Our struggle on the road is over.");
+                        : $"{GlobalConstants.RealmToName(winner)} has secured {name} at a shrine. Our struggle on the road is over.",
+                        // The world news tells the shrine's realm in a bot's words; the other realms keep the notice.
+                        realm == winner ? "-" : null);
             }
             bool removed = CarrierEvents.Remove(targetId, out var carrier);
             if (removed) RealmEventRecords.Finish(targetId, "Captured / returned", "Relic mounted or recovered; escort/interception ended.");
@@ -1561,7 +1660,8 @@ public static partial class AutonomousRvrEventLayer
             CarrierTargets[carrierId] = carrierAnchor ?? active.Target with
                 { Id = carrierId, IsRelicCarrier = true, OwningRealm = active.AttackerRealm };
             foreach (eRealm realm in new[] { active.AttackerRealm, active.DefenderRealm, OtherRealm(active) })
-                RealmEventNotices.Queue(keepId, realm, $"The relic has left {Place(active.Target.Name)}! The battle continues on the road; its fate is not yet decided.");
+                RealmEventNotices.Queue(keepId, realm, $"The relic has left {Place(active.Target.Name)}! The battle continues on the road; its fate is not yet decided.",
+                    realm == active.DefenderRealm ? "-" : null);
             RealmEventRecords.Finish(keepId, "Relic taken", "Relic removed; the battle continued as an escort/interception event.");
             RealmEventRecords.Begin(carrierId, carrierAnchor?.Name ?? active.Target.Name, "Relic", GlobalConstants.RealmToName(active.AttackerRealm), "Continued from " + active.Target.Name);
             RealmEventRecords.Progress(carrierId, "Battle", "Relic escort / interception", active.Attackers.Values.Sum() + active.Defenders.Values.Sum() + active.ThirdRealm.Values.Sum(), 0);
