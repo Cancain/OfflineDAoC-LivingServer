@@ -1173,7 +1173,7 @@ namespace DOL.GS
             }
             if (!moved)
                 return;
-            BotGroupRelease.LogRelease(this, releaseRegion, release, returnToParty); // Fork: a release in a player's group shows in the log
+            BotGroupRelease.NoteRelease(this, releaseRegion, release, returnToParty); // Fork: a release in a player's group shows in the log
             Health = Math.Max(1, MaxHealth / 3);
             Mana = Math.Max(0, MaxMana / 3);
             Endurance = Math.Max(0, MaxEndurance / 3);
@@ -1312,7 +1312,8 @@ namespace DOL.GS
             Point3D destination = leader?.IsAlive == true && leader.CurrentRegionID == CurrentRegionID
                 ? new Point3D(leader.X, leader.Y, leader.Z)
                 : _deathLocation;
-            if (CurrentRegionID != _deathRegionId && (leader == null || leader.CurrentRegionID != CurrentRegionID))
+            if (BotGroupRelease.WaitsForLeader(this)) return true; // Fork: its corpse is no goal, the group goes on where the player comes back
+            if ((CurrentRegionID != _deathRegionId || BotGroupRelease.IsGroupReturn(this)) && (leader == null || leader.CurrentRegionID != CurrentRegionID)) // Fork: its leader left the region it died in
                 return BotGroupRelease.TryReturnToLeader(this, _deathTick); // Fork: it stood here for good, nothing else moves a bot in a player's group
 
             if (GetDistanceTo(destination) <= 350)
@@ -1322,6 +1323,7 @@ namespace DOL.GS
                 CompleteStableMasterRoute();
                 Say(ReturnDialogue("arrive"));
                 Brain?.FSM?.SetCurrentState(eFSMStateType.FOLLOW);
+                BotGroupRelease.FinishReturn(this); // Fork: as an invitation does
                 return false;
             }
 
@@ -1380,7 +1382,9 @@ namespace DOL.GS
         {
             Vector3 current = new(X, Y, Z);
             Vector3 desired = new(destination.X, destination.Y, destination.Z);
-            AutonomousThreatAwarePathing.SafeStep step = AutonomousThreatAwarePathing.ChooseStep(this, current, desired, 900);
+            AutonomousThreatAwarePathing.SafeStep step = BotGroupRelease.IsGroupReturn(this)
+                ? new(desired, false, string.Empty) // Fork: 900-unit steps stopped at the first wall, a planned route finds the door
+                : AutonomousThreatAwarePathing.ChooseStep(this, current, desired, 900);
             PathTo(step.Position, MaxSpeed);
             if (PersistentRecord != null)
             {

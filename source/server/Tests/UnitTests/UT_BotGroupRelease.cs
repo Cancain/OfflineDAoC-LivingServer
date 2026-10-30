@@ -42,6 +42,22 @@ namespace DOL.UnitTests
             Assert.That(BotGroupRelease.ReturnDelayOver(1_000, 1_000 + BotGroupRelease.ReturnToLeaderDelayMilliseconds), Is.True);
         }
 
+        [TestCase(1_000, 301_000, false, 1_001, true, TestName = "Last moment of the watch")]
+        [TestCase(1_000, 301_001, false, 1_001, false, TestName = "The watch is over")]
+        [TestCase(0, 100_000, false, 1_001, false, TestName = "Never released")]
+        [TestCase(1_000, 2_000, true, 1_001, false, TestName = "In combat")]
+        [TestCase(1_000, 2_000, false, 1_000, false, TestName = "Near its leader")]
+        public void ReleaseWatch_OnlySoonAfterARelease_OutOfCombat_FarFromTheLeader(long release, long now, bool inCombat,
+            int distance, bool expected) =>
+            Assert.That(BotGroupRelease.ReleaseWatchApplies(release, now, inCombat, distance), Is.EqualTo(expected));
+
+        [Test]
+        public void ReturnStall_EndsAfterItsTime()
+        {
+            Assert.That(BotGroupRelease.ReturnStalled(1_000, 1_000 + BotGroupRelease.ReturnStallMilliseconds - 1), Is.False);
+            Assert.That(BotGroupRelease.ReturnStalled(1_000, 1_000 + BotGroupRelease.ReturnStallMilliseconds), Is.True);
+        }
+
         [Test]
         public void Report_NoDeadBots()
         {
